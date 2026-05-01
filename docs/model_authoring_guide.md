@@ -116,7 +116,7 @@ See [Pivot Marker Conventions](#pivot-marker-conventions) for full details.
 
 ### 7. Slide markers (click-to-slide)
 
-Any group whose name contains a `_SD<distance>` substring becomes a click-to-slide group — useful for pocket doors, sliding sashes, drawers, sliding car/casement windows, and similar geometry that translates rather than rotates. The marker's local axis origin is the closed-state position; the local **+X axis** is the open direction; distance is in meters. State is session-only.
+Any group whose name contains a `_SD<distance>` substring becomes a click-to-slide group — useful for pocket doors, sliding sashes, drawers, sliding car/casement windows, and similar geometry that translates rather than rotates. The marker's local axis origin is the closed-state position; the local **+X axis** is the open direction; distance is in **millimeters** (integer). State is session-only.
 
 See [Slide Marker Conventions](#slide-marker-conventions) for full details.
 
@@ -425,14 +425,14 @@ State is **session-only**: slides return to closed on page reload, are not store
 
 ### Marker name suffix
 
-A node whose name contains `_SD<distance>` (e.g. `_SD0.8`, `_SD1.2`) — preceded by `_` and followed by `_` or end-of-name — is a click-to-slide group. Distance is in **meters**. Markers can live anywhere in the scene tree; there is no top-level container.
+A node whose name contains `_SD<distance>` (e.g. `_SD800`, `_SD1200`) — preceded by `_` and followed by `_` or end-of-name — is a click-to-slide group. Distance is in **millimeters** (integer). Markers can live anywhere in the scene tree; there is no top-level container.
 
 | Example name | Meaning |
 |---|---|
-| `PocketDoor_Bedroom_SD0.8` | slides 0.8 m along the group's local +X |
-| `KitchenWindow_Sash_SD0.45` | sash slides 0.45 m; +X authored as "up" |
-| `CarDoor_Window_SD0.4` | sliding car window, 0.4 m of travel |
-| `PocketDoor_SD0.8_1` | SketchUp auto-suffixed duplicate; same behavior |
+| `PocketDoor_Bedroom_SD800` | slides 800 mm (0.8 m) along the group's local +X |
+| `KitchenWindow_Sash_SD450` | sash slides 450 mm; +X authored as "up" |
+| `CarDoor_Window_SD400` | sliding car window, 400 mm of travel |
+| `PocketDoor_SD800_1` | SketchUp auto-suffixed duplicate; same behavior |
 
 Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a slide, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
 
@@ -441,6 +441,8 @@ Like pivot markers, slide markers wrap **visible geometry** — the door panel, 
 **The substring is required.** A group without it is not a slide, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.
 
 > **Authoring caution:** the `_SD<digits>` substring is specific enough that accidental collisions are unlikely, but be aware that any group name matching this pattern (e.g. `Brand_SD2024`) will be opted into slide behavior.
+
+> **Why millimeters, not meters with decimals?** SketchUp and many glTF exporters strip periods from component/group names, so `ClosetDoor_SD0.58` becomes `ClosetDoor_SD058` at export time and silently changes meaning (58 m of slide instead of 0.58 m). Integer mm authoring is exporter-proof and matches typical architectural conventions. Decimals *are* still accepted by the regex if your toolchain happens to preserve them.
 
 ### Origin and direction: SketchUp group axes
 
@@ -457,15 +459,15 @@ Misplaced or misoriented axes are the most common authoring mistake: the panel s
 
 ### Distance units
 
-`<distance>` is in **meters** (scene units) — `_SD0.8` slides 0.8 m, `_SD1.2` slides 1.2 m. Decimals are supported. Authors who think in inches/feet should convert when naming.
+`<distance>` is in **millimeters**, integer — `_SD800` slides 800 mm (0.8 m), `_SD1200` slides 1200 mm (1.2 m). Round mm values cover every practical architectural slide. Authors using SketchUp with imperial units should convert: a 24" travel ≈ `_SD610`, a 30" travel ≈ `_SD762`.
 
 ### Multi-panel slides
 
 A single slide marker translates as one rigid unit. For double pocket doors, biparting sashes, or other geometry where panels move independently, **promote each panel to its own marker** with its own axis origin and own +X direction:
 
 ```
-PocketDoor_LeftPanel_SD0.8
-PocketDoor_RightPanel_SD0.8
+PocketDoor_LeftPanel_SD800
+PocketDoor_RightPanel_SD800
 ```
 
 Each panel needs the **Change Axes** step done individually so its own +X aims the right way.
