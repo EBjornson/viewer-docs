@@ -1533,7 +1533,7 @@
 <h3 id="phase-5-merged-picker-in-the-viewer-admin-overlay">Phase 5 — Merged picker in the Viewer admin overlay<a class="headerlink" href="#phase-5-merged-picker-in-the-viewer-admin-overlay" title="Permanent link">&para;</a></h3>
 <p>Two changes:</p>
 <ol>
-<li><strong>Contract:</strong> add <code>viewerInput.materialCatalog</code> per the data shape above. Update <a href="../src/public/BuildAndPriceViewer.jsx"><code>BuildAndPriceViewer.jsx</code></a> and runtime in <a href="../src/viewer/BuildAndPriceViewerRuntime.jsx"><code>BuildAndPriceViewerRuntime.jsx</code></a> to thread the catalog through. Document in <a href="../viewer_contract_v1_7/">Viewer Contract</a>.</li>
+<li><strong>Contract:</strong> add <code>viewerInput.materialCatalog</code> per the data shape above. Update <a href="../src/public/Viewer.jsx"><code>Viewer.jsx</code></a> and runtime in <a href="../src/viewer/ViewerRuntime.jsx"><code>ViewerRuntime.jsx</code></a> to thread the catalog through. Document in <a href="../viewer_contract_v1_7/">Viewer Contract</a>.</li>
 <li><strong>Picker UI:</strong> update the material picker (currently in <a href="../src/viewer/components/ViewerAuthoringDemoPanel.jsx"><code>ViewerAuthoringDemoPanel.jsx</code></a>) to:</li>
 <li>Consume the catalog from input rather than static import.</li>
 <li>Render entries grouped or filterable by source: <code>All</code> / <code>Platform</code> / <code>Yours</code>.</li>

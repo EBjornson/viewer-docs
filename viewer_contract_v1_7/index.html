@@ -1920,7 +1920,7 @@
 <hr />
 <h2 id="public-boundary">Public Boundary<a class="headerlink" href="#public-boundary" title="Permanent link">&para;</a></h2>
 <p>The public integration surface is:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="o">&lt;</span><span class="nx">BuildAndPriceViewer</span><span class="w"> </span><span class="nx">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="nx">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="o">&lt;</span><span class="nx">Viewer</span><span class="w"> </span><span class="nx">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="nx">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="o">/&gt;</span>
 </code></pre></div>
 <p>The public contract is centered on:</p>
 <ul>
@@ -1931,8 +1931,7 @@
 <ul>
 <li><a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a></li>
 </ul>
-<p>The App should always use <code>BuildAndPriceViewer</code> directly. No wrapper is needed.</p>
-<p>The component is currently exported as <code>BuildAndPriceViewer</code> for legacy reasons; conceptually it is "the Viewer." A future code rename to a cleaner name is tracked in <a href="../CLAUDE.md">CLAUDE.md</a>.</p>
+<p>The App should always use <code>Viewer</code> directly. No wrapper is needed.</p>
 <hr />
 <h2 id="design-intent">Design Intent<a class="headerlink" href="#design-intent" title="Permanent link">&para;</a></h2>
 <p>The Viewer is designed to render configurable geometric products — homes, cabins, boats, and similar configurable assemblies — inside a host App that owns the business logic. The host App is sometimes called a <em>CustomApp</em>; <strong>DemoApp</strong> in this repo is the canonical reference example.</p>
@@ -2375,7 +2374,7 @@
 <li>viewer-local debug/admin helpers</li>
 </ul>
 <h3 id="public-wrapper-stays-narrow">Public wrapper stays narrow<a class="headerlink" href="#public-wrapper-stays-narrow" title="Permanent link">&para;</a></h3>
-<p><code>BuildAndPriceViewer</code> should continue to protect the host application from:</p>
+<p><code>Viewer</code> should continue to protect the host application from:</p>
 <ul>
 <li><code>ViewerRoot</code> refactors</li>
 <li>viewer-local bridges</li>

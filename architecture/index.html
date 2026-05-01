@@ -621,10 +621,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#buildandpriceviewer" class="md-nav__link">
+  <a href="#viewer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BuildAndPriceViewer
+        Viewer
       
     </span>
   </a>
@@ -632,10 +632,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#buildandpriceviewerruntime" class="md-nav__link">
+  <a href="#viewerruntime" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BuildAndPriceViewerRuntime
+        ViewerRuntime
       
     </span>
   </a>
@@ -1321,10 +1321,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#buildandpriceviewer" class="md-nav__link">
+  <a href="#viewer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BuildAndPriceViewer
+        Viewer
       
     </span>
   </a>
@@ -1332,10 +1332,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#buildandpriceviewerruntime" class="md-nav__link">
+  <a href="#viewerruntime" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BuildAndPriceViewerRuntime
+        ViewerRuntime
       
     </span>
   </a>
@@ -1686,8 +1686,8 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    end
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    subgraph VIEWER[Viewer]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        PUB[BuildAndPriceViewer\nPublic integration surface]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        RUNTIME[BuildAndPriceViewerRuntime\nInternal wrapper runtime]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        PUB[Viewer\nPublic integration surface]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        RUNTIME[ViewerRuntime\nInternal wrapper runtime]
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        AUTHORING[Admin Authoring Overlay\nSelf-contained when admin.enabled=true]
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        BRIDGE[ViewerAdminNavigationBridge\nViewer-internal helper]
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        ROOT[ViewerRoot\nInternal runtime boundary]
@@ -1730,13 +1730,13 @@
 <li>per-model persistence in <code>localStorage</code> keyed by model ID (<code>demoapp_v2_${modelId}</code>)</li>
 </ul>
 <p>It integrates the Viewer through the public contract only:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>All capture payloads are received via <code>viewerOutput</code> callbacks. All replay intent flows back in via <code>viewerInput</code>. DemoApp does not reach inside the Viewer.</p>
 <p>For the DemoApp header UI, batch-capture button behavior, and developer-oriented aids (Loading/Ready indicator, capture status pills, error banner, payload inspector tooltips), see <a href="../demoapp/">DemoApp</a>.</p>
-<h3 id="buildandpriceviewer">BuildAndPriceViewer<a class="headerlink" href="#buildandpriceviewer" title="Permanent link">&para;</a></h3>
+<h3 id="viewer">Viewer<a class="headerlink" href="#viewer" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/public/BuildAndPriceViewer.jsx">BuildAndPriceViewer.jsx</a><br />
+- <a href="../src/public/Viewer.jsx">Viewer.jsx</a><br />
 - <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a></p>
 <p>This is the stable public integration surface.</p>
 <p>It is responsible for:</p>
@@ -1746,9 +1746,9 @@
 <li>shielding the host from internal viewer refactors</li>
 <li>staying intentionally narrow</li>
 </ul>
-<h3 id="buildandpriceviewerruntime">BuildAndPriceViewerRuntime<a class="headerlink" href="#buildandpriceviewerruntime" title="Permanent link">&para;</a></h3>
+<h3 id="viewerruntime">ViewerRuntime<a class="headerlink" href="#viewerruntime" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/viewer/BuildAndPriceViewerRuntime.jsx">BuildAndPriceViewerRuntime.jsx</a><br />
+- <a href="../src/viewer/ViewerRuntime.jsx">ViewerRuntime.jsx</a><br />
 - <a href="../src/viewer/hooks/index.js">hooks/index.js</a><br />
 - <a href="../src/viewer/components/index.js">components/index.js</a><br />
 - <a href="../src/viewer/hooks/useViewerPresentationState.js">useViewerPresentationState.js</a><br />
@@ -1837,7 +1837,7 @@
 <hr />
 <h2 id="current-authoring-model">Current Authoring Model<a class="headerlink" href="#current-authoring-model" title="Permanent link">&para;</a></h2>
 <h3 id="admin-mode-is-self-contained-in-the-viewer">Admin mode is self-contained in the Viewer<a class="headerlink" href="#admin-mode-is-self-contained-in-the-viewer" title="Permanent link">&para;</a></h3>
-<p>When <code>input.admin.enabled = true</code>, <code>BuildAndPriceViewerRuntime</code> renders the built-in <code>ViewerAuthoringDemoPanel</code> (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App. The <code>NavigationDemoPanel</code> (View row + presentation mode rows along the bottom) renders in both admin and user modes and is purely for navigation — capture/clear actions live in the Authoring Panel.</p>
+<p>When <code>input.admin.enabled = true</code>, <code>ViewerRuntime</code> renders the built-in <code>ViewerAuthoringDemoPanel</code> (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App. The <code>NavigationDemoPanel</code> (View row + presentation mode rows along the bottom) renders in both admin and user modes and is purely for navigation — capture/clear actions live in the Authoring Panel.</p>
 <p>The Authoring Panel is <strong>dynamic by default</strong> — its content is filtered by <code>input.admin.activeAuthoringFocus</code>. See <a href="../integration_guide/#dynamic-authoring-panel">Dynamic Authoring Panel</a> in the integration guide for the focus → controls table and the App-side state-threading pattern.</p>
 <p>The Viewer internally manages:<br />
 - presentation editing state (exposure, HDR, terrain, lighting, solar, point lights)<br />
@@ -1903,7 +1903,7 @@
 <h3 id="product-playback-flow">Product Playback Flow<a class="headerlink" href="#product-playback-flow" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sequenceDiagram
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    participant App as DemoApp / Host App
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    participant Viewer as BuildAndPriceViewer
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    participant Viewer
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    participant Root as ViewerRoot
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    App-&gt;&gt;Viewer: Send ViewerInput
@@ -1925,7 +1925,7 @@
 <h3 id="authoring-capture-flow">Authoring Capture Flow<a class="headerlink" href="#authoring-capture-flow" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sequenceDiagram
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    participant Admin
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    participant Viewer as BuildAndPriceViewerRuntime
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    participant Viewer as ViewerRuntime
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    participant App as DemoApp
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    participant Storage as localStorage
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
@@ -1957,7 +1957,7 @@
 <hr />
 <h2 id="architectural-rules-worth-keeping">Architectural Rules Worth Keeping<a class="headerlink" href="#architectural-rules-worth-keeping" title="Permanent link">&para;</a></h2>
 <h3 id="1-keep-the-public-wrapper-narrow">1. Keep the public wrapper narrow<a class="headerlink" href="#1-keep-the-public-wrapper-narrow" title="Permanent link">&para;</a></h3>
-<p><code>BuildAndPriceViewer</code> should stay centered on:</p>
+<p><code>Viewer</code> should stay centered on:</p>
 <ul>
 <li><code>input</code></li>
 <li><code>output</code></li>

@@ -1315,11 +1315,11 @@
 <strong>Next doc:</strong> <a href="../capture_and_replay/">Capture &amp; Replay deep-dive</a></p>
 <hr />
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>A working code-first example of integrating <code>BuildAndPriceViewer</code> end-to-end — <code>viewerInput</code> construction, all capture callbacks wired up, persistence, and batch image capture. Read <a href="../integration_guide/">How a Host App Talks to the Viewer</a> for the why; this doc is the how.</p>
+<p>A working code-first example of integrating <code>Viewer</code> end-to-end — <code>viewerInput</code> construction, all capture callbacks wired up, persistence, and batch image capture. Read <a href="../integration_guide/">How a Host App Talks to the Viewer</a> for the why; this doc is the how.</p>
 <hr />
 <h2 id="the-starting-point">The Starting Point<a class="headerlink" href="#the-starting-point" title="Permanent link">&para;</a></h2>
 <p>The Viewer is currently integrated like this:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">/&gt;</span>
@@ -1492,7 +1492,7 @@
 <a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">  </span><span class="p">}),</span><span class="w"> </span><span class="p">[])</span>
 <a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>
 <a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">Viewer</span>
 <a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">      </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span>
 <a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">      </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span>
 <a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="w">    </span><span class="p">/&gt;</span>
@@ -1592,7 +1592,7 @@
 <p>When all items are done, the Viewer fires <code>onBatchCaptureComplete</code>. At that point the App triggers downloads, one per accumulated blob. The <code>metadata.sectionLabel</code> the App placed in each item is used to name the download file.</p>
 <hr />
 <h2 id="step-8-persistence-and-replay">Step 8: Persistence and Replay<a class="headerlink" href="#step-8-persistence-and-replay" title="Permanent link">&para;</a></h2>
-<p>The App owns persistence — capture payloads belong wherever the App stores them (backend, browser, file). Replay is straightforward: when loading a saved design, the App reconstructs <code>viewerInput</code> from stored values and passes it to <code>BuildAndPriceViewer</code>. The Viewer reacts to the changed input. There is no "ask the Viewer to remember" path — the App is always the source of truth.</p>
+<p>The App owns persistence — capture payloads belong wherever the App stores them (backend, browser, file). Replay is straightforward: when loading a saved design, the App reconstructs <code>viewerInput</code> from stored values and passes it to <code>Viewer</code>. The Viewer reacts to the changed input. There is no "ask the Viewer to remember" path — the App is always the source of truth.</p>
 <p>DemoApp persists to browser <code>localStorage</code> keyed by model ID (<code>demoapp_v2_${modelId}</code>); a production App would persist to its backend.</p>
 <hr />
 <h2 id="a-full-simple-example">A Full Simple Example<a class="headerlink" href="#a-full-simple-example" title="Permanent link">&para;</a></h2>
@@ -1764,7 +1764,7 @@
 <a id="__codelineno-7-166" name="__codelineno-7-166" href="#__codelineno-7-166"></a><span class="w">  </span><span class="p">}),</span><span class="w"> </span><span class="p">[])</span>
 <a id="__codelineno-7-167" name="__codelineno-7-167" href="#__codelineno-7-167"></a>
 <a id="__codelineno-7-168" name="__codelineno-7-168" href="#__codelineno-7-168"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-7-169" name="__codelineno-7-169" href="#__codelineno-7-169"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span>
+<a id="__codelineno-7-169" name="__codelineno-7-169" href="#__codelineno-7-169"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">Viewer</span>
 <a id="__codelineno-7-170" name="__codelineno-7-170" href="#__codelineno-7-170"></a><span class="w">      </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span>
 <a id="__codelineno-7-171" name="__codelineno-7-171" href="#__codelineno-7-171"></a><span class="w">      </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span>
 <a id="__codelineno-7-172" name="__codelineno-7-172" href="#__codelineno-7-172"></a><span class="w">    </span><span class="p">/&gt;</span>
@@ -1777,7 +1777,7 @@
 <h3 id="do-not-reach-into-viewerroot">Do not reach into <code>ViewerRoot</code><a class="headerlink" href="#do-not-reach-into-viewerroot" title="Permanent link">&para;</a></h3>
 <p>The App should depend on:</p>
 <ul>
-<li><code>BuildAndPriceViewer</code></li>
+<li><code>Viewer</code></li>
 </ul>
 <p>not:</p>
 <ul>
@@ -1793,14 +1793,14 @@
 </ul>
 <h3 id="do-not-rely-on-viewer-internal-implementation-details-as-the-long-term-contract">Do not rely on Viewer-internal implementation details as the long-term contract<a class="headerlink" href="#do-not-rely-on-viewer-internal-implementation-details-as-the-long-term-contract" title="Permanent link">&para;</a></h3>
 <p>The Viewer's internal hooks and bridges are implementation details.</p>
-<p>Always integrate through <code>BuildAndPriceViewer</code> with <code>input</code> and <code>output</code> only.</p>
+<p>Always integrate through <code>Viewer</code> with <code>input</code> and <code>output</code> only.</p>
 <hr />
 <h2 id="short-summary">Short Summary<a class="headerlink" href="#short-summary" title="Permanent link">&para;</a></h2>
 <p>The practical workflow is:</p>
 <ol>
 <li>The App owns the important state</li>
 <li>The App translates that state into <code>viewerInput</code></li>
-<li>The App passes <code>viewerInput</code> into <code>BuildAndPriceViewer</code></li>
+<li>The App passes <code>viewerInput</code> into <code>Viewer</code></li>
 <li>The Viewer renders it</li>
 <li>The Viewer emits events</li>
 <li>The App saves what matters</li>

@@ -1637,27 +1637,26 @@
 <strong>Next doc:</strong> <a href="../integration_walkthrough/">Integration Walkthrough</a></p>
 <hr />
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>How a host App integrates <code>BuildAndPriceViewer</code> — what to push in via <code>input</code>, what comes back via <code>output</code>, and which parts are stable vs. internal. Use <a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> as the reference integration; it covers every touch point in this guide.</p>
+<p>How a host App integrates <code>Viewer</code> — what to push in via <code>input</code>, what comes back via <code>output</code>, and which parts are stable vs. internal. Use <a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> as the reference integration; it covers every touch point in this guide.</p>
 <blockquote>
 <p><strong>Core principle:</strong> the App tells the Viewer what to render; the Viewer fires events when something useful happens. Nothing more.</p>
 </blockquote>
-<p>(The component is currently exported as <code>BuildAndPriceViewer</code> for legacy reasons; conceptually it is "the Viewer." A future code rename is tracked in <a href="../CLAUDE.md">CLAUDE.md</a>.)</p>
 <hr />
 <h2 id="delivery">Delivery<a class="headerlink" href="#delivery" title="Permanent link">&para;</a></h2>
-<p><strong>Today.</strong> Clone this repo and import <code>BuildAndPriceViewer</code> from <code>src/public/</code>. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.</p>
-<p><strong>For non-React hosts (Vue, vanilla, etc.).</strong> A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element (<code>&lt;build-and-price-viewer&gt;</code>) that internally hosts the React component, exposes property setters for <code>input</code>, and emits custom events for <code>output</code>. The wrapper is not yet implemented — flag interest if you need it.</p>
+<p><strong>Today.</strong> Clone this repo and import <code>Viewer</code> from <code>src/public/</code>. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.</p>
+<p><strong>For non-React hosts (Vue, vanilla, etc.).</strong> A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element (e.g. <code>&lt;vew-viewer&gt;</code>) that internally hosts the React component, exposes property setters for <code>input</code>, and emits custom events for <code>output</code>. The wrapper is not yet implemented — flag interest if you need it.</p>
 <p><strong>Intended future delivery.</strong> A self-contained JavaScript bundle hosted at a versioned CDN URL (<code>/v1/</code>, <code>/v2/</code>, etc.) so host App owners can opt into updates on a schedule. That distribution path is not yet in place; the versioning guidance applies once the Viewer is published as a standalone distributable.</p>
 <hr />
 <h2 id="the-public-integration-surface">The Public Integration Surface<a class="headerlink" href="#the-public-integration-surface" title="Permanent link">&para;</a></h2>
 <p>The App and the Viewer communicate through a single component:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>The App builds <code>viewerInput</code> and provides callbacks in <code>viewerOutput</code>. The Viewer renders the input and fires callbacks when something useful happens. The App does not reach inside the Viewer; the Viewer does not persist state on the App's behalf.</p>
-<p>Public surface: <a href="../src/public/BuildAndPriceViewer.jsx">BuildAndPriceViewer.jsx</a>. Code-level contract types: <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a>.</p>
+<p>Public surface: <a href="../src/public/Viewer.jsx">Viewer.jsx</a>. Code-level contract types: <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a>.</p>
 <hr />
 <h2 id="how-the-app-pushes-information-into-the-viewer">How The App Pushes Information Into The Viewer<a class="headerlink" href="#how-the-app-pushes-information-into-the-viewer" title="Permanent link">&para;</a></h2>
 <p>The App pushes information in by building a <code>viewerInput</code> object and passing it to:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">...</span><span class="w"> </span><span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">...</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>That input is divided into a few buckets.</p>
 <h3 id="1-model">1. <code>model</code><a class="headerlink" href="#1-model" title="Permanent link">&para;</a></h3>
@@ -1824,7 +1823,7 @@
 <hr />
 <h2 id="how-the-app-gets-information-back-from-the-viewer">How The App Gets Information Back From The Viewer<a class="headerlink" href="#how-the-app-gets-information-back-from-the-viewer" title="Permanent link">&para;</a></h2>
 <p>The App provides callback functions in <code>viewerOutput</code>; the Viewer fires them when something useful happens. The App stores or reacts to the payload — the App does not "pull" data out of the Viewer.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>For a complete <code>viewerOutput</code> object wired up to App state and persistence, see <a href="../integration_walkthrough/">Integration Walkthrough</a>. The next section enumerates each callback's payload and intended App action.</p>
 <hr />
@@ -2134,7 +2133,7 @@
 <h3 id="1-the-app-should-not-rely-on-viewerroot">1. The App should not rely on <code>ViewerRoot</code><a class="headerlink" href="#1-the-app-should-not-rely-on-viewerroot" title="Permanent link">&para;</a></h3>
 <p>The App should talk to:</p>
 <ul>
-<li><code>BuildAndPriceViewer</code></li>
+<li><code>Viewer</code></li>
 </ul>
 <p>not directly to:</p>
 <ul>
@@ -2143,7 +2142,7 @@
 <p><code>ViewerRoot</code> is an internal implementation boundary and should be free to change.</p>
 <h3 id="2-the-app-should-not-rely-on-viewer-internal-implementation-details">2. The App should not rely on Viewer-internal implementation details<a class="headerlink" href="#2-the-app-should-not-rely-on-viewer-internal-implementation-details" title="Permanent link">&para;</a></h3>
 <p>The Viewer's internal hooks and bridges are implementation details that can change.</p>
-<p>The App should only interact with <code>BuildAndPriceViewer</code> through:</p>
+<p>The App should only interact with <code>Viewer</code> through:</p>
 <ul>
 <li><code>input</code></li>
 <li><code>output</code></li>
@@ -2167,7 +2166,7 @@
 <li>The App pushes instructions through <code>input</code> (<code>model</code>, <code>camera</code>, <code>scene</code>, <code>presentation</code>, <code>admin</code>); the Viewer pushes events back through <code>output</code> callbacks. The App does not "pull" — it receives.</li>
 <li>The App owns persisted truth (product structure, option/section logic, pricing, configuration intent).</li>
 <li>The Viewer owns runtime execution (rendering, animation, playback, transient state, authoring helpers).</li>
-<li>The integration boundary is exactly <code>&lt;BuildAndPriceViewer input={viewerInput} output={viewerOutput} /&gt;</code>. Anything below that surface is internal and may change.</li>
+<li>The integration boundary is exactly <code>&lt;Viewer input={viewerInput} output={viewerOutput} /&gt;</code>. Anything below that surface is internal and may change.</li>
 </ul>
 <hr />
 <h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
