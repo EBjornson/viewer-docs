@@ -2558,7 +2558,7 @@
 <p>Any group whose name contains a <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> substring becomes a click-to-rotate pivot — useful for doors, casement windows, lids, and similar hinged geometry. The marker's local axis origin is the hinge; rotation happens around the SketchUp blue (vertical) axis. State is session-only — pivots open or close in response to user clicks but the open/closed state is not captured or persisted across reloads.</p>
 <p>See <a href="#pivot-marker-conventions">Pivot Marker Conventions</a> for full details.</p>
 <h3 id="7-slide-markers-click-to-slide">7. Slide markers (click-to-slide)<a class="headerlink" href="#7-slide-markers-click-to-slide" title="Permanent link">&para;</a></h3>
-<p>Any group whose name contains a <code>_SD&lt;distance&gt;</code> substring becomes a click-to-slide group — useful for pocket doors, sliding sashes, drawers, sliding car/casement windows, and similar geometry that translates rather than rotates. The marker's local axis origin is the closed-state position; the local <strong>+X axis</strong> is the open direction; distance is in meters. State is session-only.</p>
+<p>Any group whose name contains a <code>_SD&lt;distance&gt;</code> substring becomes a click-to-slide group — useful for pocket doors, sliding sashes, drawers, sliding car/casement windows, and similar geometry that translates rather than rotates. The marker's local axis origin is the closed-state position; the local <strong>+X axis</strong> is the open direction; distance is in <strong>millimeters</strong> (integer). State is session-only.</p>
 <p>See <a href="#slide-marker-conventions">Slide Marker Conventions</a> for full details.</p>
 <hr />
 <h2 id="minimum-good-model-checklist">Minimum Good Model Checklist<a class="headerlink" href="#minimum-good-model-checklist" title="Permanent link">&para;</a></h2>
@@ -2864,7 +2864,7 @@
 <p>Adds click-to-slide behavior to any group in the model — pocket doors, sliding sashes, drawers, sliding car/casement windows, and anything else that translates rather than rotates. The end user clicks the marker geometry; it slides open. Click again; it slides closed. Animation is ~0.45 s with eased motion.</p>
 <p>State is <strong>session-only</strong>: slides return to closed on page reload, are not stored in any capture, and do not affect navigation (the camera passes through closed doors regardless).</p>
 <h3 id="marker-name-suffix_3">Marker name suffix<a class="headerlink" href="#marker-name-suffix_3" title="Permanent link">&para;</a></h3>
-<p>A node whose name contains <code>_SD&lt;distance&gt;</code> (e.g. <code>_SD0.8</code>, <code>_SD1.2</code>) — preceded by <code>_</code> and followed by <code>_</code> or end-of-name — is a click-to-slide group. Distance is in <strong>meters</strong>. Markers can live anywhere in the scene tree; there is no top-level container.</p>
+<p>A node whose name contains <code>_SD&lt;distance&gt;</code> (e.g. <code>_SD800</code>, <code>_SD1200</code>) — preceded by <code>_</code> and followed by <code>_</code> or end-of-name — is a click-to-slide group. Distance is in <strong>millimeters</strong> (integer). Markers can live anywhere in the scene tree; there is no top-level container.</p>
 <table>
 <thead>
 <tr>
@@ -2874,19 +2874,19 @@
 </thead>
 <tbody>
 <tr>
-<td><code>PocketDoor_Bedroom_SD0.8</code></td>
-<td>slides 0.8 m along the group's local +X</td>
+<td><code>PocketDoor_Bedroom_SD800</code></td>
+<td>slides 800 mm (0.8 m) along the group's local +X</td>
 </tr>
 <tr>
-<td><code>KitchenWindow_Sash_SD0.45</code></td>
-<td>sash slides 0.45 m; +X authored as "up"</td>
+<td><code>KitchenWindow_Sash_SD450</code></td>
+<td>sash slides 450 mm; +X authored as "up"</td>
 </tr>
 <tr>
-<td><code>CarDoor_Window_SD0.4</code></td>
-<td>sliding car window, 0.4 m of travel</td>
+<td><code>CarDoor_Window_SD400</code></td>
+<td>sliding car window, 400 mm of travel</td>
 </tr>
 <tr>
-<td><code>PocketDoor_SD0.8_1</code></td>
+<td><code>PocketDoor_SD800_1</code></td>
 <td>SketchUp auto-suffixed duplicate; same behavior</td>
 </tr>
 </tbody>
@@ -2896,6 +2896,7 @@
 <p><strong>The substring is required.</strong> A group without it is not a slide, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.</p>
 <blockquote>
 <p><strong>Authoring caution:</strong> the <code>_SD&lt;digits&gt;</code> substring is specific enough that accidental collisions are unlikely, but be aware that any group name matching this pattern (e.g. <code>Brand_SD2024</code>) will be opted into slide behavior.</p>
+<p><strong>Why millimeters, not meters with decimals?</strong> SketchUp and many glTF exporters strip periods from component/group names, so <code>ClosetDoor_SD0.58</code> becomes <code>ClosetDoor_SD058</code> at export time and silently changes meaning (58 m of slide instead of 0.58 m). Integer mm authoring is exporter-proof and matches typical architectural conventions. Decimals <em>are</em> still accepted by the regex if your toolchain happens to preserve them.</p>
 </blockquote>
 <h3 id="origin-and-direction-sketchup-group-axes">Origin and direction: SketchUp group axes<a class="headerlink" href="#origin-and-direction-sketchup-group-axes" title="Permanent link">&para;</a></h3>
 <p>The marker's <strong>local axis origin is the closed-state reference point</strong>, and motion happens along the SketchUp <strong>red (+X) axis</strong>. The author re-orients the group's axes so that +X points the way the panel slides open. SketchUp's glTF exporter preserves the group's local frame, so the +X direction at authoring time becomes the slide direction in the rendered scene.</p>
@@ -2908,11 +2909,11 @@
 </ol>
 <p>Misplaced or misoriented axes are the most common authoring mistake: the panel slides into the wrong place or the wrong way. Visually inspecting the group axes in SketchUp before exporting is the surest way to catch this.</p>
 <h3 id="distance-units">Distance units<a class="headerlink" href="#distance-units" title="Permanent link">&para;</a></h3>
-<p><code>&lt;distance&gt;</code> is in <strong>meters</strong> (scene units) — <code>_SD0.8</code> slides 0.8 m, <code>_SD1.2</code> slides 1.2 m. Decimals are supported. Authors who think in inches/feet should convert when naming.</p>
+<p><code>&lt;distance&gt;</code> is in <strong>millimeters</strong>, integer — <code>_SD800</code> slides 800 mm (0.8 m), <code>_SD1200</code> slides 1200 mm (1.2 m). Round mm values cover every practical architectural slide. Authors using SketchUp with imperial units should convert: a 24" travel ≈ <code>_SD610</code>, a 30" travel ≈ <code>_SD762</code>.</p>
 <h3 id="multi-panel-slides">Multi-panel slides<a class="headerlink" href="#multi-panel-slides" title="Permanent link">&para;</a></h3>
 <p>A single slide marker translates as one rigid unit. For double pocket doors, biparting sashes, or other geometry where panels move independently, <strong>promote each panel to its own marker</strong> with its own axis origin and own +X direction:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PocketDoor_LeftPanel_SD0.8
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>PocketDoor_RightPanel_SD0.8
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PocketDoor_LeftPanel_SD800
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>PocketDoor_RightPanel_SD800
 </code></pre></div>
 <p>Each panel needs the <strong>Change Axes</strong> step done individually so its own +X aims the right way.</p>
 <h3 id="whats-not-currently-supported_1">What's not currently supported<a class="headerlink" href="#whats-not-currently-supported_1" title="Permanent link">&para;</a></h3>
