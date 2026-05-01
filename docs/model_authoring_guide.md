@@ -74,12 +74,12 @@ That can affect:
 
 ### 3. Navigation markers
 
-Marker geometry under a top-level `Spaces` group describes rooms and the connections between them:
+A node whose name contains `_RM` (room) or `_DW` (doorway) — followed by `_` or end-of-name — describes a walkable space or a connection between spaces. Markers can sit anywhere in the scene tree.
 
 ```
-Spaces
-├── Rooms       (walkable interior spaces — names like LivingDining, Hall)
-└── Doorways    (connections — leaf names <RoomA>_<RoomB> or Exterior_<RoomName>)
+LivingDining_RM             (walkable interior space)
+Hall_FrontBedroom_DW        (connection between two rooms)
+Exterior_LivingDining_DW    (entry from outside into the named room)
 ```
 
 Marker meshes are removed from the scene at load — only the marker node's transform/bounds are read. See [Navigation Marker Conventions](#navigation-marker-conventions).
@@ -123,7 +123,7 @@ For a model to behave well in the current stable viewer, try to satisfy these:
 - exported as `.glb`
 - hierarchy is stable across exports
 - meaningful object names where possible
-- if using navigation markers: a `Spaces` root with `Rooms` and `Doorways` sub-groups
+- if using navigation markers: each room named with `_RM` suffix; each connection named with `_DW` suffix (and the `<RoomA>_<RoomB>` or `Exterior_<RoomName>` form)
 - if using lighting markers: marker components named with `_PL` (point) or `_SL[<degrees>]` (spot) suffix; for fixture-bound lights, wrap the markers and the fixture geometry under a shared parent component
 - if using pivot markers: each marker group's axes set with origin at the hinge edge and the blue axis pointing up
 - room/doorway/entry/light marker names follow the conventions in this guide
@@ -177,56 +177,64 @@ then persistence and mapping become harder.
 
 ## Navigation Marker Conventions
 
-### Root marker container
+Adds room navigation, doorway connections, and exterior entries to the model. The viewer surfaces these as a clickable Rooms panel for end users and uses the connection graph to route the camera between rooms via doorways.
 
-Use an object named exactly `Spaces` at the top of the scene. Inside it, group markers by type:
+### Marker name suffix
+
+A node whose name contains `_RM` (room) or `_DW` (doorway) — preceded by `_` and followed by `_` or end-of-name — is a navigation marker. Markers can live anywhere in the scene tree; there is no top-level container.
+
+| Example name | Meaning |
+|---|---|
+| `LivingDining_RM` | walkable interior space (room) |
+| `Hall_FrontBedroom_DW` | interior connection between two rooms |
+| `Exterior_LivingDining_DW` | entry from outside into the named room |
+| `LivingDining_RM_1` | SketchUp auto-suffixed duplicate of the above room |
+| `Hall_FrontBedroom_DW_2` | SketchUp auto-suffixed duplicate doorway |
+
+Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a marker, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
+
+Marker meshes are SketchUp authoring helpers — they're hidden at load (`visible = false`, tagged `userData.isHiddenMarker = true`) and never rendered. Only the marker node's transform/bounding box drives runtime behavior.
+
+**The substring is required.** A node without it is not a navigation marker, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the node is invisible to the navigation system.
+
+> **Authoring caution:** avoid `_RM` / `_DW` substrings (with the leading-`_` / trailing-`_`-or-end boundary) on non-marker node names — those would be picked up as markers. Names like `DW_Glass_Door` (no leading `_`) or `FARM_Workshop` (no `_RM_` boundary) are safe.
+
+### Rooms (`_RM`)
+
+Each `_RM` node is a walkable space. The marker's bounding box represents the volume of that room.
 
 ```
-Spaces
-├── Rooms       (walkable interior spaces)
-└── Doorways    (connections between spaces)
+LivingDining_RM
+Hall_RM
+FrontBedroom_RM
+RearBedroom_RM
+Bathroom_RM
 ```
 
-All matching is **case-insensitive**, but capitalised PascalCase is the recommended convention for readability. The resolver also tolerates SketchUp's auto-disambiguation suffix on the type containers (`Rooms_1`, `Doorways_2`).
+Room names are free-form, but **PascalCase with no underscores in the room portion** keeps doorway parsing unambiguous (see below). `LivingDining_RM` works; `Living_Dining_RM` does not.
 
-### Rooms
+### Doorways (`_DW`)
 
-Each child of the `Rooms` group is a walkable space. The marker's bounding box represents the volume of that room.
-
-```
-Rooms
-├── LivingDining
-├── Hall
-├── FrontBedroom
-├── RearBedroom
-└── Bathroom
-```
-
-Room names are free-form, but **PascalCase with no underscores** keeps Doorway parsing unambiguous (see below). `LivingDining` works; `Living_Dining` does not.
-
-### Doorways
-
-Each child of the `Doorways` group encodes a connection between two spaces in its name:
+Each `_DW` node encodes a connection. The portion of the name preceding `_DW` follows one of two patterns:
 
 | Pattern | Meaning | Example |
 |---|---|---|
-| `<RoomA>_<RoomB>` | Interior connection between two rooms | `Hall_FrontBedroom` |
-| `Exterior_<RoomName>` | Entry from outside into the named room | `Exterior_LivingDining` |
+| `<RoomA>_<RoomB>_DW` | Interior connection between two rooms | `Hall_FrontBedroom_DW` |
+| `Exterior_<RoomName>_DW` | Entry from outside into the named room | `Exterior_LivingDining_DW` |
 
-The single `_` separates either two rooms, or the reserved word `Exterior` and a room. Both rooms named in a doorway leaf must match (case-insensitively, after normalization) a child of `Rooms`.
+The single `_` between the two rooms (or between `Exterior` and the room) is what makes PascalCase room names a hard requirement. Both rooms named in a doorway must match (case-insensitively, after normalization) some `_RM` marker.
 
 ```
-Doorways
-├── LivingDining_Hall
-├── Hall_FrontBedroom
-├── Hall_RearBedroom
-├── Hall_Bathroom
-├── LivingDining_RearHall
-├── RearHall_UtilityRoom
-└── Exterior_LivingDining
+LivingDining_Hall_DW
+Hall_FrontBedroom_DW
+Hall_RearBedroom_DW
+Hall_Bathroom_DW
+LivingDining_RearHall_DW
+RearHall_UtilityRoom_DW
+Exterior_LivingDining_DW
 ```
 
-**Multiple entries to the same room** (e.g. front and back doors both into `LivingDining`): use the same SketchUp definition for both instances. The exporter auto-disambiguates the second to `Exterior_LivingDining_1`. The resolver strips trailing `_<digits>` before parsing, so both instances connect to the same room.
+**Multiple entries to the same room** (e.g. front and back doors both into `LivingDining`): use the same SketchUp definition for both instances. The exporter auto-disambiguates the second to `Exterior_LivingDining_DW_1`. The resolver strips the `_DW` suffix and any chained `_<digits>` duplicates before parsing, so both instances connect to the same room.
 
 ### Marker placement guidance
 
@@ -237,19 +245,19 @@ Markers should be simple and practical, not beautiful. A good marker:
 - is big enough to be reliably detected
 - does not need to be visible in the final experience (its mesh is removed at runtime)
 
-Box geometry is often ideal. The **Floor Nav** debug toggle in Admin Mode visualizes the actual walkable landing zone derived from each `Rooms` marker, and the **NavPath** toggle shows the path-graph segments. Use these to verify markers produce sensible navigation.
+Box geometry is often ideal. The **Floor Nav** debug toggle in Admin Mode visualizes the actual walkable landing zone derived from each `_RM` marker, and the **NavPath** toggle shows the path-graph segments. Use these to verify markers produce sensible navigation.
 
 ---
 
 ## Lighting Marker Conventions
 
+Adds point and spot lights to the scene at runtime. The viewer surfaces a Light Source Mode toggle (Import / Auto / None) so authored markers can be on, replaced with auto-placed point lights, or disabled.
+
 ### Marker name suffix
 
-A node whose name contains `_PL` (point) or `_SL[<degrees>]` (spot) — followed by `_` or end-of-name — spawns a light at its world position. There is no `Lights` container. Markers can live anywhere in the scene tree.
+A node whose name contains `_PL` (point) or `_SL[<degrees>]` (spot) — preceded by `_` and followed by `_` or end-of-name — spawns a light at its world position. Markers can live anywhere in the scene tree; there is no top-level container.
 
-Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end.
-
-| Example name | Behavior |
+| Example name | Meaning |
 |---|---|
 | `RoomLights_PL` | point light |
 | `EntranceUpBulbs_SL90` | spot light, 90° full beam |
@@ -260,11 +268,13 @@ Matching is case-insensitive and the suffix can appear anywhere in the name; aut
 
 The `<degrees>` value (when present) is the **full beam angle**; default is 90° when omitted. The cyan **SpotLightHelper** cone (visible when the "Spot Cones" toggle in the admin debug panel is on) reflects each marker's actual angle — useful for verifying the suffix was parsed correctly.
 
-The first matching ancestor wins — once a node is identified as a marker, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
+Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a marker, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
 
 Visible authoring helpers (a sphere or cone mesh inside the marker component) are for SketchUp orientation only. They're hidden at load (`visible = false`, tagged `userData.isHiddenMarker = true`) and never rendered.
 
-> **Authoring caution:** avoid `_SL` / `_PL` substrings (followed by `_` or end of name) on non-marker nodes — those would be picked up as markers. Per-mesh prefixes like `Fixture_*`, `Glass_*` are safe (no trailing `_SL` / `_PL`).
+**The substring is required.** A node without it is not a light marker, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the node is invisible to the lighting system.
+
+> **Authoring caution:** avoid `_SL` / `_PL` substrings (preceded by `_` and followed by `_` or end of name) on non-marker nodes — those would be picked up as markers. Per-mesh prefixes like `Fixture_*`, `Glass_*` are safe (no trailing `_SL` / `_PL`).
 
 ### Bound vs. unbound lights
 
@@ -331,7 +341,7 @@ When the bulb is inside a fixture housing AND the spot cone has meaningful later
 The viewer's authoring panel offers a three-way toggle for how to source interior lights:
 
 - **Import** — use the markers discovered by the `_PL` / `_SL` suffix convention (the rule this section describes).
-- **Auto** — auto-place a single point light at the centre of each `Spaces > Rooms` marker. Useful for models without authored light markers.
+- **Auto** — auto-place a single point light at the centre of each `_RM` (room) marker. Useful for models without authored light markers.
 - **None** — no interior lights at all.
 
 The toggle is **captured per presentation mode** (Day, Night, Night Interior, etc.). When loading a model that has authored light markers, uncaptured modes default to `Import`; when the model has no markers, they default to `Auto`. A captured value always wins over the smart default, so capture any mode you want to override.
@@ -340,26 +350,28 @@ The toggle is **captured per presentation mode** (Day, Night, Night Interior, et
 
 ## Pivot Marker Conventions
 
-### What it does
-
 Adds click-to-rotate behavior to any group in the model — doors, casement windows, gates, lids, drawer pulls, hinged anything. The end user clicks the marker geometry; it swings open. Click again; it swings closed. Animation is ~0.45 s with eased motion.
 
 State is **session-only**: pivots return to closed on page reload, are not stored in any capture, and do not affect navigation (the camera passes through closed doors regardless).
 
-### How to mark a group as a pivot
+### Marker name suffix
 
-Append `_<degrees><CW|CCW>` somewhere in the SketchUp group's name. The substring itself is what opts the node in — there is no container, no special parent, and no default behavior for groups without it.
+A node whose name contains `_<degrees><CW|CCW>` (e.g. `_90CCW`, `_45CW`) — preceded by `_` and followed by `_` or end-of-name — is a click-to-rotate pivot. Markers can live anywhere in the scene tree; there is no top-level container.
 
-| Example name | Behavior |
+| Example name | Meaning |
 |---|---|
 | `BedroomDoor_90CCW` | swings 90° counter-clockwise (viewed from above) |
 | `KitchenWindow_45CW` | swings 45° clockwise |
 | `FrenchDoor_120CW` | swings 120° clockwise |
 | `30"_door_Bathroom_90CCW` | descriptive prefix + parameters; same behavior |
 
-Matching is case-insensitive. The substring may sit anywhere in the leaf name, but authors typically place it at the end. The first matching ancestor wins — once a node is identified as a pivot, its descendants are not re-considered as separate pivots.
+Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a pivot, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
+
+Unlike navigation and lighting markers (whose helper meshes are hidden at load), pivot markers wrap **visible geometry** — the door slab, the window pane, plus any handle/trim/frame children — that swings as a unit when the rotation applies to the marker group's transform.
 
 **The substring is required.** A group without it is not a pivot, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.
+
+> **Authoring caution:** the `_<degrees><CW|CCW>` substring is specific enough that accidental collisions with non-marker names are essentially impossible — but be aware that any group name matching this pattern (including unintended ones like `Section_30CW_View`) will be opted into pivot behavior.
 
 ### Hinge placement: SketchUp group axes
 
@@ -376,11 +388,7 @@ Misplaced axes are the most common authoring mistake: the door swings around its
 
 ### Direction: CW vs CCW
 
-`CW` and `CCW` are interpreted **as viewed looking down from above** the model. CW rotates clockwise from that viewpoint; CCW rotates counter-clockwise. If a door swings into a wall instead of into the room after export, swap CW↔CCW in the leaf name and re-export.
-
-### Visible geometry vs invisible markers
-
-Unlike navigation and lighting markers (whose visible helper meshes are hidden at load), pivot markers wrap **visible geometry** — the door slab, the window pane, plus any handle/trim/frame children — that should swing as a unit. The rotation applies to the marker group's transform, so all descendants move together.
+`CW` and `CCW` are interpreted **as viewed looking down from above** the model. CW rotates clockwise from that viewpoint; CCW rotates counter-clockwise. If a door swings into a wall instead of into the room after export, swap CW↔CCW in the name and re-export.
 
 ### Multi-panel pairs
 
@@ -410,7 +418,7 @@ Admin Mode exposes several debug tools in the bottom-right toolbar to verify you
 
 Click **Hierarchy** in the admin debug toolbar to inspect the loaded scene's tree. The popup shows an indented hierarchy with two filters:
 
-- **Markers only** (default ON) — narrows the view to subtrees rooted at recognized container markers (currently `Spaces`). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see *just* your marker structure for verification. Substring-based markers (light, pivot) are scattered through the visual tree by definition and aren't filtered by this toggle.
+- **Markers only** (default ON) — narrows the view to ancestor paths leading to authored marker nodes (`_RM`, `_DW`, `_PL`, `_SL`, `_<deg>(CW|CCW)`). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see *just* your marker structure for verification. Inside each marker subtree the full hierarchy is shown verbatim so authors can sanity-check helper geometry and SketchUp wrapper structure.
 - **Show meshes** (default OFF) — when off, mesh leaves are collapsed to a `… (N meshes)` summary. When on, every mesh is shown by name.
 
 A **Refresh** button re-walks the live scene graph (handy if you load a different model with the popup open). A **Copy** button puts the formatted hierarchy on your clipboard — useful for sharing during authoring iteration.
@@ -426,7 +434,7 @@ Use this to verify each spot is positioned and aimed correctly, that the beam an
 
 ### Floor Nav and NavPath
 
-Toggle **Floor Nav** to visualize the actual walkable landing zone derived from each `Spaces > Rooms` marker (with the wall-margin buffer applied, so you see what users will actually click on, not the raw marker bounds). Toggle **NavPath** to visualize the path-graph segments pathfinding uses for camera routing between rooms via Doorways.
+Toggle **Floor Nav** to visualize the actual walkable landing zone derived from each `_RM` (room) marker (with the wall-margin buffer applied, so you see what users will actually click on, not the raw marker bounds). Toggle **NavPath** to visualize the path-graph segments pathfinding uses for camera routing between rooms via `_DW` doorways.
 
 Both are useful for verifying the navigation graph the resolver builds matches your authoring intent — wrong-sized markers, missing doorways, and broken connections all show up immediately.
 
@@ -570,12 +578,12 @@ Try to avoid:
 - changing hierarchy structure without reason
 - hiding important configurability inside huge merged meshes
 - inconsistent marker naming
-- missing `Spaces` root when using navigation markers, or missing the `Rooms` / `Doorways` sub-groups
+- navigation marker nodes named without the `_RM` / `_DW` suffix, or with the suffix in a position that doesn't satisfy the leading-`_` / trailing-`_`-or-end boundary
 - light marker components named without the `_PL` / `_SL[<degrees>]` suffix, or with the suffix mid-name where it isn't followed by `_` or end-of-name
 - bound-light markers placed in a parent container that also holds unrelated geometry — hide-propagation won't fire because the unrelated meshes stay visible
 - room names containing underscores (`Front_Bedroom`) — they make `<RoomA>_<RoomB>` doorway parsing ambiguous; use PascalCase (`FrontBedroom`) instead
 - doorway markers that do not actually sit in openings
-- exterior entry (`Exterior_<RoomName>`) markers that sit well inside or well outside the building instead of at the opening
+- exterior entry (`Exterior_<RoomName>_DW`) markers that sit well inside or well outside the building instead of at the opening
 - spot light marker apexes (= bulb positions) inside a fixture housing when the cone has wide lateral spread — see [Spot Housing Occlusion Authoring Rule](#spot-housing-occlusion-authoring-rule)
 - pivot marker groups whose axis origin is the geometry's centre or some arbitrary edge instead of the actual hinge edge — the door will swing around the wrong pivot point
 - transparent glass meshes without a `Glass_` prefix — they will block sunlight as solid walls
@@ -611,7 +619,7 @@ If you want the shortest version:
 
 - keep hierarchy stable
 - name things clearly
-- **navigation markers**: `Spaces > Rooms / Doorways > <name>`. Doorway leaves are `<RoomA>_<RoomB>` for interior or `Exterior_<RoomName>` for entries. Room names: PascalCase, no underscores.
+- **navigation markers**: include `_RM` (room) or `_DW` (doorway) suffix anywhere in any node's name (e.g. `LivingDining_RM`, `Hall_FrontBedroom_DW`, `Exterior_LivingDining_DW`). Room names: PascalCase, no underscores. Markers can sit anywhere in the scene tree.
 - **lighting markers**: include `_PL` (point) or `_SL[<degrees>]` (spot, default 90°) suffix anywhere in any node's name (e.g. `RoomLights_PL`, `EntranceUpBulbs_SL90`). For fixture-bound lights, wrap markers + only that fixture's geometry under a shared parent component — the spawned light hides automatically when every fixture mesh is in the active hide set. Loose markers under structural top-level containers stay always-on.
 - **pivot markers** (click-to-rotate): include `_<degrees><CW|CCW>` substring anywhere in any group's name (e.g. `BedroomDoor_90CCW`). Set the SketchUp group axes with the origin at the hinge edge and the blue axis pointing up.
 - **per-mesh shadow prefixes**: `Glass_*`, `Water_*`, `Fixture_*` (translucent fixture parts only) disable shadow casting for that mesh.

@@ -95,11 +95,11 @@ The DemoApp demonstrates this with the **Complete Build** button, which becomes 
 
 ### Viewer-internal navigation aids
 
-The repo supports container markers for viewer-side navigation and authoring aids:
+The repo supports substring-based name markers for viewer-side navigation and authoring aids:
 
-- `Spaces > Rooms > <RoomName>` — walkable interior spaces
-- `Spaces > Doorways > <RoomA>_<RoomB>` — interior connections between two rooms
-- `Spaces > Doorways > Exterior_<RoomName>` — entries from outside into the named room
+- `<RoomName>_RM` — walkable interior spaces (e.g. `LivingDining_RM`)
+- `<RoomA>_<RoomB>_DW` — interior connections between two rooms (e.g. `Hall_FrontBedroom_DW`)
+- `Exterior_<RoomName>_DW` — entries from outside into the named room (e.g. `Exterior_LivingDining_DW`)
 
 A dedicated **Rooms panel** (implemented by the internal `SpaceMenu` component) shows the list of navigable rooms in the right column of the viewer (shown or hidden by the **Rooms** User Visibility toggle). Each room is clickable to navigate to that location. This replaces the inline text footer that was previously in the navigation bar.
 

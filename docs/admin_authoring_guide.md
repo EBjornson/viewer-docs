@@ -333,7 +333,7 @@ A **Floor Nav** button appears in the Views Panel in Admin Mode. Toggling it on 
 - a white ring at the raw cursor position plus a yellow line to the clamped position when the cursor is near a wall and gets pushed inward
 - a warm yellow frustum drape projected onto the visible room surfaces showing what the camera would frame after clicking that floor point
 
-Useful for verifying that `Spaces > Rooms > <name>` markers are sized and positioned correctly in the model, understanding how wall margin clamping affects landing positions near walls and doorways, and previewing the camera framing that results from a floor click before navigating.
+Useful for verifying that `_RM` (room) markers are sized and positioned correctly in the model, understanding how wall margin clamping affects landing positions near walls and doorways, and previewing the camera framing that results from a floor click before navigating.
 
 ---
 
