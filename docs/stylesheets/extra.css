@@ -1,0 +1,10 @@
+/*
+ * Custom styles for the rendered mkdocs-material site at https://ebjornson.github.io/viewer-docs/.
+ * This file is invisible on GitHub (.css isn't rendered there) and only takes effect when mkdocs
+ * builds the site; it lives in the main repo's /docs/ so npm run sync-docs carries it through.
+ */
+
+/* Bump body text up from the Material default of 0.8rem (~16px) to 0.9rem (~18px) for readability. */
+.md-typeset {
+  font-size: 0.9rem;
+}
