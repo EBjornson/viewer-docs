@@ -374,7 +374,7 @@ A node whose name contains `_<degrees><CW|CCW>` (e.g. `_90CCW`, `_45CW`) — pre
 
 Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a pivot, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
 
-Unlike navigation and lighting markers (whose helper meshes are hidden at load), pivot markers wrap **visible geometry** — the door slab, the window pane, plus any handle/trim/frame children — that swings as a unit when the rotation applies to the marker group's transform.
+Unlike navigation and lighting markers (whose helper meshes are hidden at load), pivot markers — like slide markers — wrap **visible geometry**: the door slab, the window pane, plus any handle/trim/frame children. The whole group swings as a unit when the rotation applies to the marker group's transform.
 
 **The substring is required.** A group without it is not a pivot, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.
 
@@ -436,7 +436,7 @@ A node whose name contains `_SD<distance>` (e.g. `_SD800`, `_SD1200`) — preced
 
 Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a slide, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
 
-Like pivot markers, slide markers wrap **visible geometry** — the door panel, the sash, plus any handle/trim/hardware children — that translates as a unit when the position update applies to the marker group's transform.
+Unlike navigation and lighting markers (whose helper meshes are hidden at load), slide markers — like pivot markers — wrap **visible geometry**: the door panel, the sash, plus any handle/trim/hardware children. The whole group translates as a unit when the position update applies to the marker group's transform.
 
 **The substring is required.** A group without it is not a slide, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.
 
@@ -451,7 +451,7 @@ The marker's **local axis origin is the closed-state reference point**, and moti
 Authoring steps:
 
 1. In SketchUp, right-click the group/component → **Change Axes**.
-2. Place the axis origin somewhere on the panel that's natural to think of as "the closed position" — usually the leading edge of the panel in its closed state.
+2. Place the axis origin at any visually-obvious reference point on the panel — a corner is easiest. The slide is a rigid translation of the whole group, so origin location only affects which point you'll mentally track to verify travel; it does not change how the panel slides.
 3. Aim the **red axis (+X) along the open direction**. For a pocket door that slides left into the wall, the red axis points left. For a car window that drops down, the red axis points down. For an upward-sliding sash, the red axis points up.
 4. The green and blue axes can point in whatever directions are natural for the geometry — only the origin position and red-direction matter for sliding.
 
