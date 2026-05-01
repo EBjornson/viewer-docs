@@ -27,4 +27,4 @@ The Viewer is not yet published as an npm package or CDN bundle. Until that exis
 
 ## License
 
-(To be specified.)
+Copyright (c) 2026 Eric Bjornson. All rights reserved. See [LICENSE](LICENSE).
