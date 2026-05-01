@@ -897,10 +897,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#root-marker-container" class="md-nav__link">
+  <a href="#marker-name-suffix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Root marker container
+        Marker name suffix
       
     </span>
   </a>
@@ -908,10 +908,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rooms" class="md-nav__link">
+  <a href="#rooms-_rm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rooms
+        Rooms (_RM)
       
     </span>
   </a>
@@ -919,10 +919,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#doorways" class="md-nav__link">
+  <a href="#doorways-_dw" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Doorways
+        Doorways (_DW)
       
     </span>
   </a>
@@ -958,7 +958,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#marker-name-suffix" class="md-nav__link">
+  <a href="#marker-name-suffix_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Marker name suffix
@@ -1069,21 +1069,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#what-it-does" class="md-nav__link">
+  <a href="#marker-name-suffix_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What it does
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-mark-a-group-as-a-pivot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to mark a group as a pivot
+        Marker name suffix
       
     </span>
   </a>
@@ -1106,17 +1095,6 @@
     <span class="md-ellipsis">
       
         Direction: CW vs CCW
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#visible-geometry-vs-invisible-markers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Visible geometry vs invisible markers
       
     </span>
   </a>
@@ -1797,10 +1775,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#root-marker-container" class="md-nav__link">
+  <a href="#marker-name-suffix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Root marker container
+        Marker name suffix
       
     </span>
   </a>
@@ -1808,10 +1786,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rooms" class="md-nav__link">
+  <a href="#rooms-_rm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rooms
+        Rooms (_RM)
       
     </span>
   </a>
@@ -1819,10 +1797,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#doorways" class="md-nav__link">
+  <a href="#doorways-_dw" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Doorways
+        Doorways (_DW)
       
     </span>
   </a>
@@ -1858,7 +1836,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#marker-name-suffix" class="md-nav__link">
+  <a href="#marker-name-suffix_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Marker name suffix
@@ -1969,21 +1947,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#what-it-does" class="md-nav__link">
+  <a href="#marker-name-suffix_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What it does
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#how-to-mark-a-group-as-a-pivot" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to mark a group as a pivot
+        Marker name suffix
       
     </span>
   </a>
@@ -2006,17 +1973,6 @@
     <span class="md-ellipsis">
       
         Direction: CW vs CCW
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#visible-geometry-vs-invisible-markers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Visible geometry vs invisible markers
       
     </span>
   </a>
@@ -2410,10 +2366,10 @@
 <li>persistence across reloads</li>
 </ul>
 <h3 id="3-navigation-markers">3. Navigation markers<a class="headerlink" href="#3-navigation-markers" title="Permanent link">&para;</a></h3>
-<p>Marker geometry under a top-level <code>Spaces</code> group describes rooms and the connections between them:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Spaces
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Rooms       (walkable interior spaces — names like LivingDining, Hall)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└── Doorways    (connections — leaf names &lt;RoomA&gt;_&lt;RoomB&gt; or Exterior_&lt;RoomName&gt;)
+<p>A node whose name contains <code>_RM</code> (room) or <code>_DW</code> (doorway) — followed by <code>_</code> or end-of-name — describes a walkable space or a connection between spaces. Markers can sit anywhere in the scene tree.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>LivingDining_RM             (walkable interior space)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Hall_FrontBedroom_DW        (connection between two rooms)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Exterior_LivingDining_DW    (entry from outside into the named room)
 </code></pre></div>
 <p>Marker meshes are removed from the scene at load — only the marker node's transform/bounds are read. See <a href="#navigation-marker-conventions">Navigation Marker Conventions</a>.</p>
 <h3 id="4-lighting-markers">4. Lighting markers<a class="headerlink" href="#4-lighting-markers" title="Permanent link">&para;</a></h3>
@@ -2442,7 +2398,7 @@
 <li>exported as <code>.glb</code></li>
 <li>hierarchy is stable across exports</li>
 <li>meaningful object names where possible</li>
-<li>if using navigation markers: a <code>Spaces</code> root with <code>Rooms</code> and <code>Doorways</code> sub-groups</li>
+<li>if using navigation markers: each room named with <code>_RM</code> suffix; each connection named with <code>_DW</code> suffix (and the <code>&lt;RoomA&gt;_&lt;RoomB&gt;</code> or <code>Exterior_&lt;RoomName&gt;</code> form)</li>
 <li>if using lighting markers: marker components named with <code>_PL</code> (point) or <code>_SL[&lt;degrees&gt;]</code> (spot) suffix; for fixture-bound lights, wrap the markers and the fixture geometry under a shared parent component</li>
 <li>if using pivot markers: each marker group's axes set with origin at the hinge edge and the blue axis pointing up</li>
 <li>room/doorway/entry/light marker names follow the conventions in this guide</li>
@@ -2485,25 +2441,56 @@
 <p>then persistence and mapping become harder.</p>
 <hr />
 <h2 id="navigation-marker-conventions">Navigation Marker Conventions<a class="headerlink" href="#navigation-marker-conventions" title="Permanent link">&para;</a></h2>
-<h3 id="root-marker-container">Root marker container<a class="headerlink" href="#root-marker-container" title="Permanent link">&para;</a></h3>
-<p>Use an object named exactly <code>Spaces</code> at the top of the scene. Inside it, group markers by type:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Spaces
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── Rooms       (walkable interior spaces)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>└── Doorways    (connections between spaces)
+<p>Adds room navigation, doorway connections, and exterior entries to the model. The viewer surfaces these as a clickable Rooms panel for end users and uses the connection graph to route the camera between rooms via doorways.</p>
+<h3 id="marker-name-suffix">Marker name suffix<a class="headerlink" href="#marker-name-suffix" title="Permanent link">&para;</a></h3>
+<p>A node whose name contains <code>_RM</code> (room) or <code>_DW</code> (doorway) — preceded by <code>_</code> and followed by <code>_</code> or end-of-name — is a navigation marker. Markers can live anywhere in the scene tree; there is no top-level container.</p>
+<table>
+<thead>
+<tr>
+<th>Example name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LivingDining_RM</code></td>
+<td>walkable interior space (room)</td>
+</tr>
+<tr>
+<td><code>Hall_FrontBedroom_DW</code></td>
+<td>interior connection between two rooms</td>
+</tr>
+<tr>
+<td><code>Exterior_LivingDining_DW</code></td>
+<td>entry from outside into the named room</td>
+</tr>
+<tr>
+<td><code>LivingDining_RM_1</code></td>
+<td>SketchUp auto-suffixed duplicate of the above room</td>
+</tr>
+<tr>
+<td><code>Hall_FrontBedroom_DW_2</code></td>
+<td>SketchUp auto-suffixed duplicate doorway</td>
+</tr>
+</tbody>
+</table>
+<p>Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a marker, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.</p>
+<p>Marker meshes are SketchUp authoring helpers — they're hidden at load (<code>visible = false</code>, tagged <code>userData.isHiddenMarker = true</code>) and never rendered. Only the marker node's transform/bounding box drives runtime behavior.</p>
+<p><strong>The substring is required.</strong> A node without it is not a navigation marker, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the node is invisible to the navigation system.</p>
+<blockquote>
+<p><strong>Authoring caution:</strong> avoid <code>_RM</code> / <code>_DW</code> substrings (with the leading-<code>_</code> / trailing-<code>_</code>-or-end boundary) on non-marker node names — those would be picked up as markers. Names like <code>DW_Glass_Door</code> (no leading <code>_</code>) or <code>FARM_Workshop</code> (no <code>_RM_</code> boundary) are safe.</p>
+</blockquote>
+<h3 id="rooms-_rm">Rooms (<code>_RM</code>)<a class="headerlink" href="#rooms-_rm" title="Permanent link">&para;</a></h3>
+<p>Each <code>_RM</code> node is a walkable space. The marker's bounding box represents the volume of that room.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>LivingDining_RM
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Hall_RM
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>FrontBedroom_RM
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>RearBedroom_RM
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Bathroom_RM
 </code></pre></div>
-<p>All matching is <strong>case-insensitive</strong>, but capitalised PascalCase is the recommended convention for readability. The resolver also tolerates SketchUp's auto-disambiguation suffix on the type containers (<code>Rooms_1</code>, <code>Doorways_2</code>).</p>
-<h3 id="rooms">Rooms<a class="headerlink" href="#rooms" title="Permanent link">&para;</a></h3>
-<p>Each child of the <code>Rooms</code> group is a walkable space. The marker's bounding box represents the volume of that room.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Rooms
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── LivingDining
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── Hall
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── FrontBedroom
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>├── RearBedroom
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>└── Bathroom
-</code></pre></div>
-<p>Room names are free-form, but <strong>PascalCase with no underscores</strong> keeps Doorway parsing unambiguous (see below). <code>LivingDining</code> works; <code>Living_Dining</code> does not.</p>
-<h3 id="doorways">Doorways<a class="headerlink" href="#doorways" title="Permanent link">&para;</a></h3>
-<p>Each child of the <code>Doorways</code> group encodes a connection between two spaces in its name:</p>
+<p>Room names are free-form, but <strong>PascalCase with no underscores in the room portion</strong> keeps doorway parsing unambiguous (see below). <code>LivingDining_RM</code> works; <code>Living_Dining_RM</code> does not.</p>
+<h3 id="doorways-_dw">Doorways (<code>_DW</code>)<a class="headerlink" href="#doorways-_dw" title="Permanent link">&para;</a></h3>
+<p>Each <code>_DW</code> node encodes a connection. The portion of the name preceding <code>_DW</code> follows one of two patterns:</p>
 <table>
 <thead>
 <tr>
@@ -2514,28 +2501,27 @@
 </thead>
 <tbody>
 <tr>
-<td><code>&lt;RoomA&gt;_&lt;RoomB&gt;</code></td>
+<td><code>&lt;RoomA&gt;_&lt;RoomB&gt;_DW</code></td>
 <td>Interior connection between two rooms</td>
-<td><code>Hall_FrontBedroom</code></td>
+<td><code>Hall_FrontBedroom_DW</code></td>
 </tr>
 <tr>
-<td><code>Exterior_&lt;RoomName&gt;</code></td>
+<td><code>Exterior_&lt;RoomName&gt;_DW</code></td>
 <td>Entry from outside into the named room</td>
-<td><code>Exterior_LivingDining</code></td>
+<td><code>Exterior_LivingDining_DW</code></td>
 </tr>
 </tbody>
 </table>
-<p>The single <code>_</code> separates either two rooms, or the reserved word <code>Exterior</code> and a room. Both rooms named in a doorway leaf must match (case-insensitively, after normalization) a child of <code>Rooms</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Doorways
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── LivingDining_Hall
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── Hall_FrontBedroom
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├── Hall_RearBedroom
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>├── Hall_Bathroom
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>├── LivingDining_RearHall
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>├── RearHall_UtilityRoom
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>└── Exterior_LivingDining
+<p>The single <code>_</code> between the two rooms (or between <code>Exterior</code> and the room) is what makes PascalCase room names a hard requirement. Both rooms named in a doorway must match (case-insensitively, after normalization) some <code>_RM</code> marker.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>LivingDining_Hall_DW
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Hall_FrontBedroom_DW
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Hall_RearBedroom_DW
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Hall_Bathroom_DW
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>LivingDining_RearHall_DW
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>RearHall_UtilityRoom_DW
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Exterior_LivingDining_DW
 </code></pre></div>
-<p><strong>Multiple entries to the same room</strong> (e.g. front and back doors both into <code>LivingDining</code>): use the same SketchUp definition for both instances. The exporter auto-disambiguates the second to <code>Exterior_LivingDining_1</code>. The resolver strips trailing <code>_&lt;digits&gt;</code> before parsing, so both instances connect to the same room.</p>
+<p><strong>Multiple entries to the same room</strong> (e.g. front and back doors both into <code>LivingDining</code>): use the same SketchUp definition for both instances. The exporter auto-disambiguates the second to <code>Exterior_LivingDining_DW_1</code>. The resolver strips the <code>_DW</code> suffix and any chained <code>_&lt;digits&gt;</code> duplicates before parsing, so both instances connect to the same room.</p>
 <h3 id="marker-placement-guidance">Marker placement guidance<a class="headerlink" href="#marker-placement-guidance" title="Permanent link">&para;</a></h3>
 <p>Markers should be simple and practical, not beautiful. A good marker:</p>
 <ul>
@@ -2544,17 +2530,17 @@
 <li>is big enough to be reliably detected</li>
 <li>does not need to be visible in the final experience (its mesh is removed at runtime)</li>
 </ul>
-<p>Box geometry is often ideal. The <strong>Floor Nav</strong> debug toggle in Admin Mode visualizes the actual walkable landing zone derived from each <code>Rooms</code> marker, and the <strong>NavPath</strong> toggle shows the path-graph segments. Use these to verify markers produce sensible navigation.</p>
+<p>Box geometry is often ideal. The <strong>Floor Nav</strong> debug toggle in Admin Mode visualizes the actual walkable landing zone derived from each <code>_RM</code> marker, and the <strong>NavPath</strong> toggle shows the path-graph segments. Use these to verify markers produce sensible navigation.</p>
 <hr />
 <h2 id="lighting-marker-conventions">Lighting Marker Conventions<a class="headerlink" href="#lighting-marker-conventions" title="Permanent link">&para;</a></h2>
-<h3 id="marker-name-suffix">Marker name suffix<a class="headerlink" href="#marker-name-suffix" title="Permanent link">&para;</a></h3>
-<p>A node whose name contains <code>_PL</code> (point) or <code>_SL[&lt;degrees&gt;]</code> (spot) — followed by <code>_</code> or end-of-name — spawns a light at its world position. There is no <code>Lights</code> container. Markers can live anywhere in the scene tree.</p>
-<p>Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end.</p>
+<p>Adds point and spot lights to the scene at runtime. The viewer surfaces a Light Source Mode toggle (Import / Auto / None) so authored markers can be on, replaced with auto-placed point lights, or disabled.</p>
+<h3 id="marker-name-suffix_1">Marker name suffix<a class="headerlink" href="#marker-name-suffix_1" title="Permanent link">&para;</a></h3>
+<p>A node whose name contains <code>_PL</code> (point) or <code>_SL[&lt;degrees&gt;]</code> (spot) — preceded by <code>_</code> and followed by <code>_</code> or end-of-name — spawns a light at its world position. Markers can live anywhere in the scene tree; there is no top-level container.</p>
 <table>
 <thead>
 <tr>
 <th>Example name</th>
-<th>Behavior</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
@@ -2585,29 +2571,30 @@
 </tbody>
 </table>
 <p>The <code>&lt;degrees&gt;</code> value (when present) is the <strong>full beam angle</strong>; default is 90° when omitted. The cyan <strong>SpotLightHelper</strong> cone (visible when the "Spot Cones" toggle in the admin debug panel is on) reflects each marker's actual angle — useful for verifying the suffix was parsed correctly.</p>
-<p>The first matching ancestor wins — once a node is identified as a marker, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.</p>
+<p>Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a marker, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.</p>
 <p>Visible authoring helpers (a sphere or cone mesh inside the marker component) are for SketchUp orientation only. They're hidden at load (<code>visible = false</code>, tagged <code>userData.isHiddenMarker = true</code>) and never rendered.</p>
+<p><strong>The substring is required.</strong> A node without it is not a light marker, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the node is invisible to the lighting system.</p>
 <blockquote>
-<p><strong>Authoring caution:</strong> avoid <code>_SL</code> / <code>_PL</code> substrings (followed by <code>_</code> or end of name) on non-marker nodes — those would be picked up as markers. Per-mesh prefixes like <code>Fixture_*</code>, <code>Glass_*</code> are safe (no trailing <code>_SL</code> / <code>_PL</code>).</p>
+<p><strong>Authoring caution:</strong> avoid <code>_SL</code> / <code>_PL</code> substrings (preceded by <code>_</code> and followed by <code>_</code> or end of name) on non-marker nodes — those would be picked up as markers. Per-mesh prefixes like <code>Fixture_*</code>, <code>Glass_*</code> are safe (no trailing <code>_SL</code> / <code>_PL</code>).</p>
 </blockquote>
 <h3 id="bound-vs-unbound-lights">Bound vs. unbound lights<a class="headerlink" href="#bound-vs-unbound-lights" title="Permanent link">&para;</a></h3>
 <p>A marker is <strong>bound to a fixture</strong> when its parent container also holds the fixture's geometry as siblings — i.e., the parent is a dedicated wrapper around the markers + that fixture's meshes. The spawned light is automatically hidden when every fixture mesh is in the active hide set (e.g. when a section/option capture hides the housing). This is what you want for sconces, lamps, chandeliers — anything visible.</p>
 <p>A marker is <strong>unbound</strong> (always-on) when its parent is a structural top-level container holding lots of unrelated geometry — the "all hidden" condition is never satisfied, so the light stays on. This is what you want for ambient room-fill point lights with no visible fixture.</p>
 <p>The rule is structural: the resolver collects the marker's parent's mesh descendants outside any sibling marker subtrees. If every one of those mesh ids is hidden, the light hides too. No special naming on the binding container is required.</p>
 <h4 id="pattern-a-bound-sconce-with-two-lights">Pattern A — bound (sconce with two lights)<a class="headerlink" href="#pattern-a-bound-sconce-with-two-lights" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Component#6_ExteriorRightLight                ← per-fixture wrapper
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── Component#1_EntranceDownBulbs_SL90        ← marker (rotated to point down)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>├── Component#1_EntranceUpBulbs_SL90          ← marker (rotated to point up)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>└── ExteriorFixture                            ← visible housing
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    ├── Wall_Support
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    └── Lamp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Component#6_ExteriorRightLight                ← per-fixture wrapper
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── Component#1_EntranceDownBulbs_SL90        ← marker (rotated to point down)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── Component#1_EntranceUpBulbs_SL90          ← marker (rotated to point up)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>└── ExteriorFixture                            ← visible housing
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    ├── Wall_Support
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    └── Lamp
 </code></pre></div>
 <p>Hide <code>Wall_Support</code> + <code>Lamp</code> in a section/option → both spotlights hide.</p>
 <h4 id="pattern-b-unbound-ambient-room-point-lights">Pattern B — unbound (ambient room point lights)<a class="headerlink" href="#pattern-b-unbound-ambient-room-point-lights" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Assembly-277                                   ← top-level structural root
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── modelskp_RoomLights_PL                     ← marker (no per-fixture wrapper)
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├── modelskp_RoomLights_PL_1
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>└── … (whole rest of the model alongside)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Assembly-277                                   ← top-level structural root
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── modelskp_RoomLights_PL                     ← marker (no per-fixture wrapper)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>├── modelskp_RoomLights_PL_1
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>└── … (whole rest of the model alongside)
 </code></pre></div>
 <p>The parent has hundreds of mesh descendants outside the markers; in practice they're never all hidden together, so the lights stay on.</p>
 <h4 id="authoring-rule-for-binding">Authoring rule for binding<a class="headerlink" href="#authoring-rule-for-binding" title="Permanent link">&para;</a></h4>
@@ -2635,22 +2622,21 @@
 <p>The viewer's authoring panel offers a three-way toggle for how to source interior lights:</p>
 <ul>
 <li><strong>Import</strong> — use the markers discovered by the <code>_PL</code> / <code>_SL</code> suffix convention (the rule this section describes).</li>
-<li><strong>Auto</strong> — auto-place a single point light at the centre of each <code>Spaces &gt; Rooms</code> marker. Useful for models without authored light markers.</li>
+<li><strong>Auto</strong> — auto-place a single point light at the centre of each <code>_RM</code> (room) marker. Useful for models without authored light markers.</li>
 <li><strong>None</strong> — no interior lights at all.</li>
 </ul>
 <p>The toggle is <strong>captured per presentation mode</strong> (Day, Night, Night Interior, etc.). When loading a model that has authored light markers, uncaptured modes default to <code>Import</code>; when the model has no markers, they default to <code>Auto</code>. A captured value always wins over the smart default, so capture any mode you want to override.</p>
 <hr />
 <h2 id="pivot-marker-conventions">Pivot Marker Conventions<a class="headerlink" href="#pivot-marker-conventions" title="Permanent link">&para;</a></h2>
-<h3 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">&para;</a></h3>
 <p>Adds click-to-rotate behavior to any group in the model — doors, casement windows, gates, lids, drawer pulls, hinged anything. The end user clicks the marker geometry; it swings open. Click again; it swings closed. Animation is ~0.45 s with eased motion.</p>
 <p>State is <strong>session-only</strong>: pivots return to closed on page reload, are not stored in any capture, and do not affect navigation (the camera passes through closed doors regardless).</p>
-<h3 id="how-to-mark-a-group-as-a-pivot">How to mark a group as a pivot<a class="headerlink" href="#how-to-mark-a-group-as-a-pivot" title="Permanent link">&para;</a></h3>
-<p>Append <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> somewhere in the SketchUp group's name. The substring itself is what opts the node in — there is no container, no special parent, and no default behavior for groups without it.</p>
+<h3 id="marker-name-suffix_2">Marker name suffix<a class="headerlink" href="#marker-name-suffix_2" title="Permanent link">&para;</a></h3>
+<p>A node whose name contains <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> (e.g. <code>_90CCW</code>, <code>_45CW</code>) — preceded by <code>_</code> and followed by <code>_</code> or end-of-name — is a click-to-rotate pivot. Markers can live anywhere in the scene tree; there is no top-level container.</p>
 <table>
 <thead>
 <tr>
 <th>Example name</th>
-<th>Behavior</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
@@ -2672,8 +2658,12 @@
 </tr>
 </tbody>
 </table>
-<p>Matching is case-insensitive. The substring may sit anywhere in the leaf name, but authors typically place it at the end. The first matching ancestor wins — once a node is identified as a pivot, its descendants are not re-considered as separate pivots.</p>
+<p>Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a pivot, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.</p>
+<p>Unlike navigation and lighting markers (whose helper meshes are hidden at load), pivot markers wrap <strong>visible geometry</strong> — the door slab, the window pane, plus any handle/trim/frame children — that swings as a unit when the rotation applies to the marker group's transform.</p>
 <p><strong>The substring is required.</strong> A group without it is not a pivot, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.</p>
+<blockquote>
+<p><strong>Authoring caution:</strong> the <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> substring is specific enough that accidental collisions with non-marker names are essentially impossible — but be aware that any group name matching this pattern (including unintended ones like <code>Section_30CW_View</code>) will be opted into pivot behavior.</p>
+</blockquote>
 <h3 id="hinge-placement-sketchup-group-axes">Hinge placement: SketchUp group axes<a class="headerlink" href="#hinge-placement-sketchup-group-axes" title="Permanent link">&para;</a></h3>
 <p>The marker's <strong>local axis origin is the hinge position</strong>, and rotation happens around the SketchUp blue (vertical) axis. SketchUp's glTF exporter preserves leaf-level Z-up, so a vertical blue axis at authoring time becomes the correct vertical hinge axis in the rendered scene.</p>
 <p>Authoring steps:</p>
@@ -2685,13 +2675,11 @@
 </ol>
 <p>Misplaced axes are the most common authoring mistake: the door swings around its centre or the wrong edge. Visually inspecting the group axes in SketchUp before exporting is the surest way to catch this.</p>
 <h3 id="direction-cw-vs-ccw">Direction: CW vs CCW<a class="headerlink" href="#direction-cw-vs-ccw" title="Permanent link">&para;</a></h3>
-<p><code>CW</code> and <code>CCW</code> are interpreted <strong>as viewed looking down from above</strong> the model. CW rotates clockwise from that viewpoint; CCW rotates counter-clockwise. If a door swings into a wall instead of into the room after export, swap CW↔CCW in the leaf name and re-export.</p>
-<h3 id="visible-geometry-vs-invisible-markers">Visible geometry vs invisible markers<a class="headerlink" href="#visible-geometry-vs-invisible-markers" title="Permanent link">&para;</a></h3>
-<p>Unlike navigation and lighting markers (whose visible helper meshes are hidden at load), pivot markers wrap <strong>visible geometry</strong> — the door slab, the window pane, plus any handle/trim/frame children — that should swing as a unit. The rotation applies to the marker group's transform, so all descendants move together.</p>
+<p><code>CW</code> and <code>CCW</code> are interpreted <strong>as viewed looking down from above</strong> the model. CW rotates clockwise from that viewpoint; CCW rotates counter-clockwise. If a door swings into a wall instead of into the room after export, swap CW↔CCW in the name and re-export.</p>
 <h3 id="multi-panel-pairs">Multi-panel pairs<a class="headerlink" href="#multi-panel-pairs" title="Permanent link">&para;</a></h3>
 <p>A single pivot marker rotates as one rigid unit. For double-doors, French windows, or bi-fold panels that should swing independently, <strong>promote each panel to its own marker</strong> with the substring suffix and its own axis at its own hinge edge:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PatioDoor_LeftPanel_90CW
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>PatioDoor_RightPanel_90CCW
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>PatioDoor_LeftPanel_90CW
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>PatioDoor_RightPanel_90CCW
 </code></pre></div>
 <p>Each panel needs the <strong>Change Axes</strong> step done individually so its own hinge edge is the origin.</p>
 <h3 id="whats-not-currently-supported">What's not currently supported<a class="headerlink" href="#whats-not-currently-supported" title="Permanent link">&para;</a></h3>
@@ -2707,7 +2695,7 @@
 <h3 id="hierarchy-popup">Hierarchy popup<a class="headerlink" href="#hierarchy-popup" title="Permanent link">&para;</a></h3>
 <p>Click <strong>Hierarchy</strong> in the admin debug toolbar to inspect the loaded scene's tree. The popup shows an indented hierarchy with two filters:</p>
 <ul>
-<li><strong>Markers only</strong> (default ON) — narrows the view to subtrees rooted at recognized container markers (currently <code>Spaces</code>). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see <em>just</em> your marker structure for verification. Substring-based markers (light, pivot) are scattered through the visual tree by definition and aren't filtered by this toggle.</li>
+<li><strong>Markers only</strong> (default ON) — narrows the view to ancestor paths leading to authored marker nodes (<code>_RM</code>, <code>_DW</code>, <code>_PL</code>, <code>_SL</code>, <code>_&lt;deg&gt;(CW|CCW)</code>). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see <em>just</em> your marker structure for verification. Inside each marker subtree the full hierarchy is shown verbatim so authors can sanity-check helper geometry and SketchUp wrapper structure.</li>
 <li><strong>Show meshes</strong> (default OFF) — when off, mesh leaves are collapsed to a <code>… (N meshes)</code> summary. When on, every mesh is shown by name.</li>
 </ul>
 <p>A <strong>Refresh</strong> button re-walks the live scene graph (handy if you load a different model with the popup open). A <strong>Copy</strong> button puts the formatted hierarchy on your clipboard — useful for sharing during authoring iteration.</p>
@@ -2719,7 +2707,7 @@
 </ul>
 <p>Use this to verify each spot is positioned and aimed correctly, that the beam angle matches what you intended, and that occluders (e.g., fixture housings) sit inside the frustum where you expect them. The Spot Cones toggle only takes effect when <strong>Light Source Mode</strong> is <code>Import</code>.</p>
 <h3 id="floor-nav-and-navpath">Floor Nav and NavPath<a class="headerlink" href="#floor-nav-and-navpath" title="Permanent link">&para;</a></h3>
-<p>Toggle <strong>Floor Nav</strong> to visualize the actual walkable landing zone derived from each <code>Spaces &gt; Rooms</code> marker (with the wall-margin buffer applied, so you see what users will actually click on, not the raw marker bounds). Toggle <strong>NavPath</strong> to visualize the path-graph segments pathfinding uses for camera routing between rooms via Doorways.</p>
+<p>Toggle <strong>Floor Nav</strong> to visualize the actual walkable landing zone derived from each <code>_RM</code> (room) marker (with the wall-margin buffer applied, so you see what users will actually click on, not the raw marker bounds). Toggle <strong>NavPath</strong> to visualize the path-graph segments pathfinding uses for camera routing between rooms via <code>_DW</code> doorways.</p>
 <p>Both are useful for verifying the navigation graph the resolver builds matches your authoring intent — wrong-sized markers, missing doorways, and broken connections all show up immediately.</p>
 <hr />
 <h2 id="shadow-naming-conventions">Shadow Naming Conventions<a class="headerlink" href="#shadow-naming-conventions" title="Permanent link">&para;</a></h2>
@@ -2760,13 +2748,13 @@
 <li>Anything after the prefix is free-form: <code>Glass_SlidingDoor</code>, <code>Water_Pool</code>, <code>Fixture_PorchLight</code> all work</li>
 </ul>
 <h3 id="example-names">Example names<a class="headerlink" href="#example-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Glass_Window_Front
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Glass_Window_Side_Left
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Glass_Skylight
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Water_Pool
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Water_Feature_Rear
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Fixture_PorchLight
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Fixture_RecessedCeiling_01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Glass_Window_Front
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Glass_Window_Side_Left
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Glass_Skylight
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Water_Pool
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Water_Feature_Rear
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Fixture_PorchLight
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Fixture_RecessedCeiling_01
 </code></pre></div>
 <hr />
 <h2 id="geometry-grouping-guidance">Geometry Grouping Guidance<a class="headerlink" href="#geometry-grouping-guidance" title="Permanent link">&para;</a></h2>
@@ -2820,9 +2808,9 @@
 <p>If UV coordinates are missing, the Viewer auto-generates them using a world-space box projection (one texture tile per 4 world units, roughly one tile per 4 metres). This makes textures visible and gives a rough sense of the material, but the scale and alignment will rarely be correct for a finished look. Treat it as a preview aid, not an authoring target.</p>
 <h3 id="emissive-materials">Emissive materials<a class="headerlink" href="#emissive-materials" title="Permanent link">&para;</a></h3>
 <p>Meshes intended to glow (light bulbs, LED strips, illuminated panels) should have their material name prefixed with <code>Emissive_</code> in SketchUp:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Emissive_Bulb
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Emissive_LedStrip_01
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Emissive_CeilingLight
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Emissive_Bulb
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Emissive_LedStrip_01
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Emissive_CeilingLight
 </code></pre></div>
 <p>The Viewer detects this prefix at load time and enables emissive rendering for those materials. The <code>Emissive Intensity</code> slider in the authoring panel controls glow strength globally across all emissive materials. The emissive colour is derived from the material’s diffuse colour, so a warm-white bulb material produces a warm glow.</p>
 <p><strong>Note:</strong> the <code>Emissive_</code> prefix applies to the <strong>material name</strong> in SketchUp, not the object name.</p>
@@ -2834,12 +2822,12 @@
 <li>changing hierarchy structure without reason</li>
 <li>hiding important configurability inside huge merged meshes</li>
 <li>inconsistent marker naming</li>
-<li>missing <code>Spaces</code> root when using navigation markers, or missing the <code>Rooms</code> / <code>Doorways</code> sub-groups</li>
+<li>navigation marker nodes named without the <code>_RM</code> / <code>_DW</code> suffix, or with the suffix in a position that doesn't satisfy the leading-<code>_</code> / trailing-<code>_</code>-or-end boundary</li>
 <li>light marker components named without the <code>_PL</code> / <code>_SL[&lt;degrees&gt;]</code> suffix, or with the suffix mid-name where it isn't followed by <code>_</code> or end-of-name</li>
 <li>bound-light markers placed in a parent container that also holds unrelated geometry — hide-propagation won't fire because the unrelated meshes stay visible</li>
 <li>room names containing underscores (<code>Front_Bedroom</code>) — they make <code>&lt;RoomA&gt;_&lt;RoomB&gt;</code> doorway parsing ambiguous; use PascalCase (<code>FrontBedroom</code>) instead</li>
 <li>doorway markers that do not actually sit in openings</li>
-<li>exterior entry (<code>Exterior_&lt;RoomName&gt;</code>) markers that sit well inside or well outside the building instead of at the opening</li>
+<li>exterior entry (<code>Exterior_&lt;RoomName&gt;_DW</code>) markers that sit well inside or well outside the building instead of at the opening</li>
 <li>spot light marker apexes (= bulb positions) inside a fixture housing when the cone has wide lateral spread — see <a href="#spot-housing-occlusion-authoring-rule">Spot Housing Occlusion Authoring Rule</a></li>
 <li>pivot marker groups whose axis origin is the geometry's centre or some arbitrary edge instead of the actual hinge edge — the door will swing around the wrong pivot point</li>
 <li>transparent glass meshes without a <code>Glass_</code> prefix — they will block sunlight as solid walls</li>
@@ -2870,7 +2858,7 @@
 <ul>
 <li>keep hierarchy stable</li>
 <li>name things clearly</li>
-<li><strong>navigation markers</strong>: <code>Spaces &gt; Rooms / Doorways &gt; &lt;name&gt;</code>. Doorway leaves are <code>&lt;RoomA&gt;_&lt;RoomB&gt;</code> for interior or <code>Exterior_&lt;RoomName&gt;</code> for entries. Room names: PascalCase, no underscores.</li>
+<li><strong>navigation markers</strong>: include <code>_RM</code> (room) or <code>_DW</code> (doorway) suffix anywhere in any node's name (e.g. <code>LivingDining_RM</code>, <code>Hall_FrontBedroom_DW</code>, <code>Exterior_LivingDining_DW</code>). Room names: PascalCase, no underscores. Markers can sit anywhere in the scene tree.</li>
 <li><strong>lighting markers</strong>: include <code>_PL</code> (point) or <code>_SL[&lt;degrees&gt;]</code> (spot, default 90°) suffix anywhere in any node's name (e.g. <code>RoomLights_PL</code>, <code>EntranceUpBulbs_SL90</code>). For fixture-bound lights, wrap markers + only that fixture's geometry under a shared parent component — the spawned light hides automatically when every fixture mesh is in the active hide set. Loose markers under structural top-level containers stay always-on.</li>
 <li><strong>pivot markers</strong> (click-to-rotate): include <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> substring anywhere in any group's name (e.g. <code>BedroomDoor_90CCW</code>). Set the SketchUp group axes with the origin at the hinge edge and the blue axis pointing up.</li>
 <li><strong>per-mesh shadow prefixes</strong>: <code>Glass_*</code>, <code>Water_*</code>, <code>Fixture_*</code> (translucent fixture parts only) disable shadow casting for that mesh.</li>

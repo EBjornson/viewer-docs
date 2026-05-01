@@ -1660,11 +1660,11 @@
 <hr />
 <h2 id="capabilities-that-exist-but-are-still-more-prototype-like">Capabilities That Exist But Are Still More Prototype-Like<a class="headerlink" href="#capabilities-that-exist-but-are-still-more-prototype-like" title="Permanent link">&para;</a></h2>
 <h3 id="viewer-internal-navigation-aids">Viewer-internal navigation aids<a class="headerlink" href="#viewer-internal-navigation-aids" title="Permanent link">&para;</a></h3>
-<p>The repo supports container markers for viewer-side navigation and authoring aids:</p>
+<p>The repo supports substring-based name markers for viewer-side navigation and authoring aids:</p>
 <ul>
-<li><code>Spaces &gt; Rooms &gt; &lt;RoomName&gt;</code> — walkable interior spaces</li>
-<li><code>Spaces &gt; Doorways &gt; &lt;RoomA&gt;_&lt;RoomB&gt;</code> — interior connections between two rooms</li>
-<li><code>Spaces &gt; Doorways &gt; Exterior_&lt;RoomName&gt;</code> — entries from outside into the named room</li>
+<li><code>&lt;RoomName&gt;_RM</code> — walkable interior spaces (e.g. <code>LivingDining_RM</code>)</li>
+<li><code>&lt;RoomA&gt;_&lt;RoomB&gt;_DW</code> — interior connections between two rooms (e.g. <code>Hall_FrontBedroom_DW</code>)</li>
+<li><code>Exterior_&lt;RoomName&gt;_DW</code> — entries from outside into the named room (e.g. <code>Exterior_LivingDining_DW</code>)</li>
 </ul>
 <p>A dedicated <strong>Rooms panel</strong> (implemented by the internal <code>SpaceMenu</code> component) shows the list of navigable rooms in the right column of the viewer (shown or hidden by the <strong>Rooms</strong> User Visibility toggle). Each room is clickable to navigate to that location. This replaces the inline text footer that was previously in the navigation bar.</p>
 <p>There are two distinct navigation behaviors depending on how the user reaches a room:</p>
