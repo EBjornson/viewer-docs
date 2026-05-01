@@ -1142,6 +1142,14 @@ export function DemoApp() {
           style={{ display: 'none' }}
         />
 
+        <a
+          href="/downloads/00%20TestModel.skp"
+          download="00 TestModel.skp"
+          style={{ ...primaryBtn, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+        >
+          Download .skp
+        </a>
+
         {modelUrl && (
           <CaptureTooltip payload={viewerReady} position="below" enabled={adminEnabled}>
             <span style={{

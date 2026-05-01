@@ -114,6 +114,12 @@ Any group whose name contains a `_<degrees><CW|CCW>` substring becomes a click-t
 
 See [Pivot Marker Conventions](#pivot-marker-conventions) for full details.
 
+### 7. Slide markers (click-to-slide)
+
+Any group whose name contains a `_SD<distance>` substring becomes a click-to-slide group — useful for pocket doors, sliding sashes, drawers, sliding car/casement windows, and similar geometry that translates rather than rotates. The marker's local axis origin is the closed-state position; the local **+X axis** is the open direction; distance is in meters. State is session-only.
+
+See [Slide Marker Conventions](#slide-marker-conventions) for full details.
+
 ---
 
 ## Minimum Good Model Checklist
@@ -126,6 +132,7 @@ For a model to behave well in the current stable viewer, try to satisfy these:
 - if using navigation markers: each room named with `_RM` suffix; each connection named with `_DW` suffix (and the `<RoomA>_<RoomB>` or `Exterior_<RoomName>` form)
 - if using lighting markers: marker components named with `_PL` (point) or `_SL[<degrees>]` (spot) suffix; for fixture-bound lights, wrap the markers and the fixture geometry under a shared parent component
 - if using pivot markers: each marker group's axes set with origin at the hinge edge and the blue axis pointing up
+- if using slide markers: each marker group's axes set with origin at the closed-state reference point and the **red (+X) axis** pointing in the open direction
 - room/doorway/entry/light marker names follow the conventions in this guide
 - helper markers roughly match the physical walkable/opening volumes they represent
 
@@ -410,6 +417,69 @@ Each panel needs the **Change Axes** step done individually so its own hinge edg
 
 ---
 
+## Slide Marker Conventions
+
+Adds click-to-slide behavior to any group in the model — pocket doors, sliding sashes, drawers, sliding car/casement windows, and anything else that translates rather than rotates. The end user clicks the marker geometry; it slides open. Click again; it slides closed. Animation is ~0.45 s with eased motion.
+
+State is **session-only**: slides return to closed on page reload, are not stored in any capture, and do not affect navigation (the camera passes through closed doors regardless).
+
+### Marker name suffix
+
+A node whose name contains `_SD<distance>` (e.g. `_SD0.8`, `_SD1.2`) — preceded by `_` and followed by `_` or end-of-name — is a click-to-slide group. Distance is in **meters**. Markers can live anywhere in the scene tree; there is no top-level container.
+
+| Example name | Meaning |
+|---|---|
+| `PocketDoor_Bedroom_SD0.8` | slides 0.8 m along the group's local +X |
+| `KitchenWindow_Sash_SD0.45` | sash slides 0.45 m; +X authored as "up" |
+| `CarDoor_Window_SD0.4` | sliding car window, 0.4 m of travel |
+| `PocketDoor_SD0.8_1` | SketchUp auto-suffixed duplicate; same behavior |
+
+Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a slide, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
+
+Like pivot markers, slide markers wrap **visible geometry** — the door panel, the sash, plus any handle/trim/hardware children — that translates as a unit when the position update applies to the marker group's transform.
+
+**The substring is required.** A group without it is not a slide, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.
+
+> **Authoring caution:** the `_SD<digits>` substring is specific enough that accidental collisions are unlikely, but be aware that any group name matching this pattern (e.g. `Brand_SD2024`) will be opted into slide behavior.
+
+### Origin and direction: SketchUp group axes
+
+The marker's **local axis origin is the closed-state reference point**, and motion happens along the SketchUp **red (+X) axis**. The author re-orients the group's axes so that +X points the way the panel slides open. SketchUp's glTF exporter preserves the group's local frame, so the +X direction at authoring time becomes the slide direction in the rendered scene.
+
+Authoring steps:
+
+1. In SketchUp, right-click the group/component → **Change Axes**.
+2. Place the axis origin somewhere on the panel that's natural to think of as "the closed position" — usually the leading edge of the panel in its closed state.
+3. Aim the **red axis (+X) along the open direction**. For a pocket door that slides left into the wall, the red axis points left. For a car window that drops down, the red axis points down. For an upward-sliding sash, the red axis points up.
+4. The green and blue axes can point in whatever directions are natural for the geometry — only the origin position and red-direction matter for sliding.
+
+Misplaced or misoriented axes are the most common authoring mistake: the panel slides into the wrong place or the wrong way. Visually inspecting the group axes in SketchUp before exporting is the surest way to catch this.
+
+### Distance units
+
+`<distance>` is in **meters** (scene units) — `_SD0.8` slides 0.8 m, `_SD1.2` slides 1.2 m. Decimals are supported. Authors who think in inches/feet should convert when naming.
+
+### Multi-panel slides
+
+A single slide marker translates as one rigid unit. For double pocket doors, biparting sashes, or other geometry where panels move independently, **promote each panel to its own marker** with its own axis origin and own +X direction:
+
+```
+PocketDoor_LeftPanel_SD0.8
+PocketDoor_RightPanel_SD0.8
+```
+
+Each panel needs the **Change Axes** step done individually so its own +X aims the right way.
+
+### What's not currently supported
+
+- Open/closed state is not captured or persisted; slides return to closed on every reload.
+- Slide state does not affect path navigation — the camera passes through closed sliding doors regardless of pose.
+- Reversing direction mid-slide is ignored (clicks during animation are dropped).
+- Non-linear paths (e.g. a curved track) are not supported — motion is always a straight line along local +X.
+- Non-unit parent scale would scale the slide distance accordingly. Standard SketchUp glTF exports have unit parent scale throughout, so this is rarely a concern in practice.
+
+---
+
 ## Authoring Debug Tools
 
 Admin Mode exposes several debug tools in the bottom-right toolbar to verify your model authoring against the conventions in this guide.
@@ -418,7 +488,7 @@ Admin Mode exposes several debug tools in the bottom-right toolbar to verify you
 
 Click **Hierarchy** in the admin debug toolbar to inspect the loaded scene's tree. The popup shows an indented hierarchy with two filters:
 
-- **Markers only** (default ON) — narrows the view to ancestor paths leading to authored marker nodes (`_RM`, `_DW`, `_PL`, `_SL`, `_<deg>(CW|CCW)`). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see *just* your marker structure for verification. Inside each marker subtree the full hierarchy is shown verbatim so authors can sanity-check helper geometry and SketchUp wrapper structure.
+- **Markers only** (default ON) — narrows the view to ancestor paths leading to authored marker nodes (`_RM`, `_DW`, `_PL`, `_SL`, `_<deg>(CW|CCW)`, `_SD<distance>`). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see *just* your marker structure for verification. Inside each marker subtree the full hierarchy is shown verbatim so authors can sanity-check helper geometry and SketchUp wrapper structure.
 - **Show meshes** (default OFF) — when off, mesh leaves are collapsed to a `… (N meshes)` summary. When on, every mesh is shown by name.
 
 A **Refresh** button re-walks the live scene graph (handy if you load a different model with the popup open). A **Copy** button puts the formatted hierarchy on your clipboard — useful for sharing during authoring iteration.
