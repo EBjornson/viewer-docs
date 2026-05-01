@@ -476,7 +476,6 @@ Each panel needs the **Change Axes** step done individually so its own +X aims t
 - Slide state does not affect path navigation — the camera passes through closed sliding doors regardless of pose.
 - Reversing direction mid-slide is ignored (clicks during animation are dropped).
 - Non-linear paths (e.g. a curved track) are not supported — motion is always a straight line along local +X.
-- Non-unit parent scale would scale the slide distance accordingly. Standard SketchUp glTF exports have unit parent scale throughout, so this is rarely a concern in practice.
 
 ---
 
