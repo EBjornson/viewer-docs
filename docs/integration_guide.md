@@ -18,7 +18,7 @@ How a host App integrates `Viewer` — what to push in via `input`, what comes b
 
 **Today.** Clone this repo and import `Viewer` from `src/public/`. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.
 
-**For non-React hosts (Vue, vanilla, etc.).** A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element (e.g. `<vew-viewer>`) that internally hosts the React component, exposes property setters for `input`, and emits custom events for `output`. The wrapper is not yet implemented — flag interest if you need it.
+**For non-React hosts (Vue, vanilla, etc.).** A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element that internally hosts the React component, exposes property setters for `input`, and emits custom events for `output`. The wrapper is not yet implemented — flag interest if you need it.
 
 **Intended future delivery.** A self-contained JavaScript bundle hosted at a versioned CDN URL (`/v1/`, `/v2/`, etc.) so host App owners can opt into updates on a schedule. That distribution path is not yet in place; the versioning guidance applies once the Viewer is published as a standalone distributable.
 
