@@ -4,20 +4,9 @@ site_url: https://ebjornson.github.io/viewer-docs/
 repo_url: https://github.com/EBjornson/viewer-docs
 repo_name: EBjornson/viewer-docs
 
-# Use the repo root as the docs source so the existing structure (README.md at top, /docs/, /integration-kit/) renders cleanly without duplication.
-docs_dir: .
+# docs_dir is the existing /docs/ folder; mkdocs requires it be a child of where this config lives.
+docs_dir: docs
 site_dir: site
-
-# Don't try to render or warn about non-doc files at the root.
-exclude_docs: |
-  /node_modules/
-  /site/
-  /.github/
-  /.git/
-
-# Keep the integration-kit files reachable as raw downloads but out of the rendered nav.
-not_in_nav: |
-  /integration-kit/*
 
 theme:
   name: material
@@ -41,7 +30,6 @@ theme:
     - navigation.tracking
     - navigation.sections
     - navigation.top
-    - navigation.indexes
     - search.suggest
     - search.highlight
     - content.code.copy
@@ -63,21 +51,22 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
+# nav paths are relative to docs_dir (so "overview.md" not "docs/overview.md").
+# The first item is what serves as the site's home page.
 nav:
-  - Home: README.md
-  - Overview: docs/overview.md
+  - Overview: overview.md
   - Integration:
-      - Integration Guide: docs/integration_guide.md
-      - Walkthrough: docs/integration_walkthrough.md
-      - Viewer Contract v1.7: docs/viewer_contract_v1_7.md
-      - DemoApp Reference: docs/demoapp.md
+      - Integration Guide: integration_guide.md
+      - Walkthrough: integration_walkthrough.md
+      - Viewer Contract v1.7: viewer_contract_v1_7.md
+      - DemoApp Reference: demoapp.md
   - Internals:
-      - Architecture: docs/architecture.md
-      - Capture & Replay: docs/capture_and_replay.md
+      - Architecture: architecture.md
+      - Capture & Replay: capture_and_replay.md
   - Authoring:
-      - Admin Authoring Guide: docs/admin_authoring_guide.md
-      - Model Authoring Guide: docs/model_authoring_guide.md
-      - Tester Quickstart: docs/tester_quickstart.md
+      - Admin Authoring Guide: admin_authoring_guide.md
+      - Model Authoring Guide: model_authoring_guide.md
+      - Tester Quickstart: tester_quickstart.md
   - Reference:
-      - Capabilities & Limits: docs/capabilities_and_limits.md
-      - Subscriber Materials Plan: docs/subscriber_materials_plan.md
+      - Capabilities & Limits: capabilities_and_limits.md
+      - Subscriber Materials Plan: subscriber_materials_plan.md
