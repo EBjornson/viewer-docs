@@ -1,0 +1,83 @@
+site_name: Viewer Documentation
+site_description: Documentation and integration kit for the Viewer — a React + Three.js runtime for configurable, geometric SaaS products
+site_url: https://ebjornson.github.io/viewer-docs/
+repo_url: https://github.com/EBjornson/viewer-docs
+repo_name: EBjornson/viewer-docs
+
+# Use the repo root as the docs source so the existing structure (README.md at top, /docs/, /integration-kit/) renders cleanly without duplication.
+docs_dir: .
+site_dir: site
+
+# Don't try to render or warn about non-doc files at the root.
+exclude_docs: |
+  /node_modules/
+  /site/
+  /.github/
+  /.git/
+
+# Keep the integration-kit files reachable as raw downloads but out of the rendered nav.
+not_in_nav: |
+  /integration-kit/*
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+
+markdown_extensions:
+  # Treat single newlines as <br> so the 3-line audience header blocks at the top of each doc render correctly.
+  - nl2br
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: README.md
+  - Overview: docs/overview.md
+  - Integration:
+      - Integration Guide: docs/integration_guide.md
+      - Walkthrough: docs/integration_walkthrough.md
+      - Viewer Contract v1.7: docs/viewer_contract_v1_7.md
+      - DemoApp Reference: docs/demoapp.md
+  - Internals:
+      - Architecture: docs/architecture.md
+      - Capture & Replay: docs/capture_and_replay.md
+  - Authoring:
+      - Admin Authoring Guide: docs/admin_authoring_guide.md
+      - Model Authoring Guide: docs/model_authoring_guide.md
+      - Tester Quickstart: docs/tester_quickstart.md
+  - Reference:
+      - Capabilities & Limits: docs/capabilities_and_limits.md
+      - Subscriber Materials Plan: docs/subscriber_materials_plan.md
