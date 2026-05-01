@@ -106,6 +106,12 @@ These are **per-mesh** name prefixes (different from the container markers above
 
 See the [Shadow Naming Conventions](#shadow-naming-conventions) section for full details.
 
+### 6. Pivot markers (click-to-rotate)
+
+Any group whose name contains a `_<degrees><CW|CCW>` substring becomes a click-to-rotate pivot — useful for doors, casement windows, lids, and similar hinged geometry. The marker's local axis origin is the hinge; rotation happens around the SketchUp blue (vertical) axis. State is session-only — pivots open or close in response to user clicks but the open/closed state is not captured or persisted across reloads.
+
+See [Pivot Marker Conventions](#pivot-marker-conventions) for full details.
+
 ---
 
 ## Minimum Good Model Checklist
@@ -117,6 +123,7 @@ For a model to behave well in the current stable viewer, try to satisfy these:
 - meaningful object names where possible
 - if using navigation markers: a `Spaces` root with `Rooms` and `Doorways` sub-groups
 - if using lighting markers: a `Lights` root with `PointLights` and/or `SpotLights` sub-groups
+- if using pivot markers: each marker group's axes set with origin at the hinge edge and the blue axis pointing up
 - room/doorway/entry/light marker names follow the conventions in this guide
 - helper markers roughly match the physical walkable/opening volumes they represent
 
@@ -314,6 +321,70 @@ The toggle is **captured per presentation mode** (Day, Night, Night Interior, et
 
 ---
 
+## Pivot Marker Conventions
+
+### What it does
+
+Adds click-to-rotate behavior to any group in the model — doors, casement windows, gates, lids, drawer pulls, hinged anything. The end user clicks the marker geometry; it swings open. Click again; it swings closed. Animation is ~0.45 s with eased motion.
+
+State is **session-only**: pivots return to closed on page reload, are not stored in any capture, and do not affect navigation (the camera passes through closed doors regardless).
+
+### How to mark a group as a pivot
+
+Append `_<degrees><CW|CCW>` somewhere in the SketchUp group's name. The substring itself is what opts the node in — there is no container, no special parent, and no default behavior for groups without it.
+
+| Example name | Behavior |
+|---|---|
+| `BedroomDoor_90CCW` | swings 90° counter-clockwise (viewed from above) |
+| `KitchenWindow_45CW` | swings 45° clockwise |
+| `FrenchDoor_120CW` | swings 120° clockwise |
+| `30"_door_Bathroom_90CCW` | descriptive prefix + parameters; same behavior |
+
+Matching is case-insensitive. The substring may sit anywhere in the leaf name, but authors typically place it at the end. The first matching ancestor wins — once a node is identified as a pivot, its descendants are not re-considered as separate pivots.
+
+**The substring is required.** A group without it is not a pivot, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.
+
+### Hinge placement: SketchUp group axes
+
+The marker's **local axis origin is the hinge position**, and rotation happens around the SketchUp blue (vertical) axis. SketchUp's glTF exporter preserves leaf-level Z-up, so a vertical blue axis at authoring time becomes the correct vertical hinge axis in the rendered scene.
+
+Authoring steps:
+
+1. In SketchUp, right-click the group/component → **Change Axes**.
+2. Place the axis origin at the **hinge edge** — the side of the door/window that should remain stationary while the rest swings.
+3. Keep the **blue axis pointing up**. This is SketchUp's default vertical orientation.
+4. The red and green axes can point in whatever directions are natural for the geometry — only the origin position and blue-up matter for rotation.
+
+Misplaced axes are the most common authoring mistake: the door swings around its centre or the wrong edge. Visually inspecting the group axes in SketchUp before exporting is the surest way to catch this.
+
+### Direction: CW vs CCW
+
+`CW` and `CCW` are interpreted **as viewed looking down from above** the model. CW rotates clockwise from that viewpoint; CCW rotates counter-clockwise. If a door swings into a wall instead of into the room after export, swap CW↔CCW in the leaf name and re-export.
+
+### Visible geometry vs invisible markers
+
+Unlike navigation and lighting markers (whose visible helper meshes are hidden at load), pivot markers wrap **visible geometry** — the door slab, the window pane, plus any handle/trim/frame children — that should swing as a unit. The rotation applies to the marker group's transform, so all descendants move together.
+
+### Multi-panel pairs
+
+A single pivot marker rotates as one rigid unit. For double-doors, French windows, or bi-fold panels that should swing independently, **promote each panel to its own marker** with the substring suffix and its own axis at its own hinge edge:
+
+```
+PatioDoor_LeftPanel_90CW
+PatioDoor_RightPanel_90CCW
+```
+
+Each panel needs the **Change Axes** step done individually so its own hinge edge is the origin.
+
+### What's not currently supported
+
+- Open/closed state is not captured or persisted; pivots return to closed on every reload.
+- Pivot state does not affect path navigation — the camera passes through doors regardless of pose.
+- Reversing direction mid-swing is ignored (clicks during animation are dropped).
+- Sound effects, latch animations, queued click chains, and hover affordances are not implemented.
+
+---
+
 ## Authoring Debug Tools
 
 Admin Mode exposes several debug tools in the bottom-right toolbar to verify your model authoring against the conventions in this guide.
@@ -488,6 +559,7 @@ Try to avoid:
 - doorway markers that do not actually sit in openings
 - exterior entry (`Exterior_<RoomName>`) markers that sit well inside or well outside the building instead of at the opening
 - spot light marker apexes (= bulb positions) inside a fixture housing when the cone has wide lateral spread — see [Spot Housing Occlusion Authoring Rule](#spot-housing-occlusion-authoring-rule)
+- pivot marker groups whose axis origin is the geometry's centre or some arbitrary edge instead of the actual hinge edge — the door will swing around the wrong pivot point
 - transparent glass meshes without a `Glass_` prefix — they will block sunlight as solid walls
 - leaving faces as solid-colour only when they will be retextured in the Viewer — apply a placeholder texture in SketchUp so UV coordinates are exported
 - relying on the fallback box-projection UVs for finished work — they are a preview aid only
@@ -523,6 +595,7 @@ If you want the shortest version:
 - name things clearly
 - **navigation markers**: `Spaces > Rooms / Doorways > <name>`. Doorway leaves are `<RoomA>_<RoomB>` for interior or `Exterior_<RoomName>` for entries. Room names: PascalCase, no underscores.
 - **lighting markers**: `Lights > PointLights / SpotLights > <name>`. Spot beam angle via `Spotlight_<degrees>` substring anywhere in the marker subtree (default 90°).
+- **pivot markers** (click-to-rotate): include `_<degrees><CW|CCW>` substring anywhere in any group's name (e.g. `BedroomDoor_90CCW`). Set the SketchUp group axes with the origin at the hinge edge and the blue axis pointing up.
 - **per-mesh shadow prefixes**: `Glass_*`, `Water_*`, `Fixture_*` (translucent fixture parts only) disable shadow casting for that mesh.
 - **emissive materials**: prefix the **material name** with `Emissive_` for bulbs / LED strips / glowing panels.
 - all matching is **case-insensitive** — capitalised PascalCase is the recommended convention for readability.

@@ -23,6 +23,7 @@ The current viewer can reliably:
 - replay App-provided camera and presentation intent
 - apply visibility and material assignments
 - render HDR, terrain, lighting, and solar-driven presentation state
+- swing click-to-rotate pivot markers (doors, windows, hinged fixtures) at runtime
 
 ### Section presentation capture/replay
 

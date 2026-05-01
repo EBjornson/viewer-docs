@@ -151,4 +151,5 @@ This is the canonical glossary for the documentation set. Other docs link here r
 - **Entry** — A special doorway with `Exterior_<RoomName>` naming, connecting outside to the named room.
 - **Light marker** — A marker under `Lights > PointLights` or `Lights > SpotLights`. Each marker becomes a Three.js point or spot light at runtime, positioned at the marker node's world transform origin.
 - **Light Source Mode** — Three-way authoring toggle (`Import` / `Auto` / `None`) determining how interior lights are placed. Captured per presentation mode.
+- **Pivot marker** — A group with a `_<degrees><CW|CCW>` substring in its name (e.g. `BedroomDoor_90CCW`). At runtime, clicking the marker's geometry rotates the group around the SketchUp blue (vertical) axis at its local origin. Used for doors, casement windows, lids, and similar hinged geometry. Session-only state — not captured.
 - **Batch Capture** — A programmatic multi-item render sequence triggered by the host App via `admin.batchCapture`. The Viewer captures one JPEG per item, fires `onRenderCaptured` per item, then `onBatchCaptureComplete`.
