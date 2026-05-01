@@ -23,7 +23,7 @@ The contract boundary between the host App and the Viewer: input shape, output c
 The public integration surface is:
 
 ```ts
-<BuildAndPriceViewer input={viewerInput} output={viewerOutput} />
+<Viewer input={viewerInput} output={viewerOutput} />
 ```
 
 The public contract is centered on:
@@ -35,9 +35,7 @@ The current shared code representation of these public shapes lives in:
 
 - [viewerContractTypes.js](../src/public/viewerContractTypes.js)
 
-The App should always use `BuildAndPriceViewer` directly. No wrapper is needed.
-
-The component is currently exported as `BuildAndPriceViewer` for legacy reasons; conceptually it is "the Viewer." A future code rename to a cleaner name is tracked in [CLAUDE.md](../CLAUDE.md).
+The App should always use `Viewer` directly. No wrapper is needed.
 
 ---
 
@@ -548,7 +546,7 @@ Especially for:
 
 ### Public wrapper stays narrow
 
-`BuildAndPriceViewer` should continue to protect the host application from:
+`Viewer` should continue to protect the host application from:
 
 - `ViewerRoot` refactors
 - viewer-local bridges

@@ -25,8 +25,8 @@ flowchart LR
     end
 
     subgraph VIEWER[Viewer]
-        PUB[BuildAndPriceViewer\nPublic integration surface]
-        RUNTIME[BuildAndPriceViewerRuntime\nInternal wrapper runtime]
+        PUB[Viewer\nPublic integration surface]
+        RUNTIME[ViewerRuntime\nInternal wrapper runtime]
         AUTHORING[Admin Authoring Overlay\nSelf-contained when admin.enabled=true]
         BRIDGE[ViewerAdminNavigationBridge\nViewer-internal helper]
         ROOT[ViewerRoot\nInternal runtime boundary]
@@ -77,17 +77,17 @@ It owns:
 It integrates the Viewer through the public contract only:
 
 ```jsx
-<BuildAndPriceViewer input={viewerInput} output={viewerOutput} />
+<Viewer input={viewerInput} output={viewerOutput} />
 ```
 
 All capture payloads are received via `viewerOutput` callbacks. All replay intent flows back in via `viewerInput`. DemoApp does not reach inside the Viewer.
 
 For the DemoApp header UI, batch-capture button behavior, and developer-oriented aids (Loading/Ready indicator, capture status pills, error banner, payload inspector tooltips), see [DemoApp](demoapp.md).
 
-### BuildAndPriceViewer
+### Viewer
 
 Current file:
-- [BuildAndPriceViewer.jsx](../src/public/BuildAndPriceViewer.jsx)
+- [Viewer.jsx](../src/public/Viewer.jsx)
 - [viewerContractTypes.js](../src/public/viewerContractTypes.js)
 
 This is the stable public integration surface.
@@ -99,10 +99,10 @@ It is responsible for:
 - shielding the host from internal viewer refactors
 - staying intentionally narrow
 
-### BuildAndPriceViewerRuntime
+### ViewerRuntime
 
 Current file:
-- [BuildAndPriceViewerRuntime.jsx](../src/viewer/BuildAndPriceViewerRuntime.jsx)
+- [ViewerRuntime.jsx](../src/viewer/ViewerRuntime.jsx)
 - [hooks/index.js](../src/viewer/hooks/index.js)
 - [components/index.js](../src/viewer/components/index.js)
 - [useViewerPresentationState.js](../src/viewer/hooks/useViewerPresentationState.js)
@@ -216,7 +216,7 @@ A `restoreOriginalMaterial: true` entry in `materialAssignments` restores to the
 
 ### Admin mode is self-contained in the Viewer
 
-When `input.admin.enabled = true`, `BuildAndPriceViewerRuntime` renders the built-in `ViewerAuthoringDemoPanel` (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App. The `NavigationDemoPanel` (View row + presentation mode rows along the bottom) renders in both admin and user modes and is purely for navigation — capture/clear actions live in the Authoring Panel.
+When `input.admin.enabled = true`, `ViewerRuntime` renders the built-in `ViewerAuthoringDemoPanel` (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App. The `NavigationDemoPanel` (View row + presentation mode rows along the bottom) renders in both admin and user modes and is purely for navigation — capture/clear actions live in the Authoring Panel.
 
 The Authoring Panel is **dynamic by default** — its content is filtered by `input.admin.activeAuthoringFocus`. See [Dynamic Authoring Panel](integration_guide.md#dynamic-authoring-panel) in the integration guide for the focus → controls table and the App-side state-threading pattern.
 
@@ -305,7 +305,7 @@ Viewer runtime still tolerates UUID fallback in some places for compatibility, b
 ```mermaid
 sequenceDiagram
     participant App as DemoApp / Host App
-    participant Viewer as BuildAndPriceViewer
+    participant Viewer
     participant Root as ViewerRoot
 
     App->>Viewer: Send ViewerInput
@@ -333,7 +333,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Admin
-    participant Viewer as BuildAndPriceViewerRuntime
+    participant Viewer as ViewerRuntime
     participant App as DemoApp
     participant Storage as localStorage
 
@@ -372,7 +372,7 @@ sequenceDiagram
 
 ### 1. Keep the public wrapper narrow
 
-`BuildAndPriceViewer` should stay centered on:
+`Viewer` should stay centered on:
 
 - `input`
 - `output`

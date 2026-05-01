@@ -8,7 +8,7 @@
 
 ## Purpose
 
-A working code-first example of integrating `BuildAndPriceViewer` end-to-end — `viewerInput` construction, all capture callbacks wired up, persistence, and batch image capture. Read [How a Host App Talks to the Viewer](integration_guide.md) for the why; this doc is the how.
+A working code-first example of integrating `Viewer` end-to-end — `viewerInput` construction, all capture callbacks wired up, persistence, and batch image capture. Read [How a Host App Talks to the Viewer](integration_guide.md) for the why; this doc is the how.
 
 ---
 
@@ -17,7 +17,7 @@ A working code-first example of integrating `BuildAndPriceViewer` end-to-end —
 The Viewer is currently integrated like this:
 
 ```tsx
-<BuildAndPriceViewer
+<Viewer
   input={viewerInput}
   output={viewerOutput}
 />
@@ -209,7 +209,7 @@ function ProductPage() {
   }), [])
 
   return (
-    <BuildAndPriceViewer
+    <Viewer
       input={viewerInput}
       output={viewerOutput}
     />
@@ -336,7 +336,7 @@ When all items are done, the Viewer fires `onBatchCaptureComplete`. At that poin
 
 ## Step 8: Persistence and Replay
 
-The App owns persistence — capture payloads belong wherever the App stores them (backend, browser, file). Replay is straightforward: when loading a saved design, the App reconstructs `viewerInput` from stored values and passes it to `BuildAndPriceViewer`. The Viewer reacts to the changed input. There is no "ask the Viewer to remember" path — the App is always the source of truth.
+The App owns persistence — capture payloads belong wherever the App stores them (backend, browser, file). Replay is straightforward: when loading a saved design, the App reconstructs `viewerInput` from stored values and passes it to `Viewer`. The Viewer reacts to the changed input. There is no "ask the Viewer to remember" path — the App is always the source of truth.
 
 DemoApp persists to browser `localStorage` keyed by model ID (`demoapp_v2_${modelId}`); a production App would persist to its backend.
 
@@ -513,7 +513,7 @@ function ProductViewerContainer({ savedDesign }) {
   }), [])
 
   return (
-    <BuildAndPriceViewer
+    <Viewer
       input={viewerInput}
       output={viewerOutput}
     />
@@ -531,7 +531,7 @@ This example is intentionally simple, but it shows the right flow.
 
 The App should depend on:
 
-- `BuildAndPriceViewer`
+- `Viewer`
 
 not:
 
@@ -550,7 +550,7 @@ The Viewer should not become the source of truth for:
 
 The Viewer's internal hooks and bridges are implementation details.
 
-Always integrate through `BuildAndPriceViewer` with `input` and `output` only.
+Always integrate through `Viewer` with `input` and `output` only.
 
 ---
 
@@ -560,7 +560,7 @@ The practical workflow is:
 
 1. The App owns the important state
 2. The App translates that state into `viewerInput`
-3. The App passes `viewerInput` into `BuildAndPriceViewer`
+3. The App passes `viewerInput` into `Viewer`
 4. The Viewer renders it
 5. The Viewer emits events
 6. The App saves what matters

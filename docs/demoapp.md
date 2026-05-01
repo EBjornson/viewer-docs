@@ -15,7 +15,7 @@ It demonstrates the full capture/replay pattern in a minimal host. It is **not**
 It integrates the Viewer through the public contract only:
 
 ```jsx
-<BuildAndPriceViewer input={viewerInput} output={viewerOutput} />
+<Viewer input={viewerInput} output={viewerOutput} />
 ```
 
 All capture payloads are received via `viewerOutput` callbacks. All replay intent flows back in via `viewerInput`. DemoApp does not reach inside the Viewer.

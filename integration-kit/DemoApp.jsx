@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BuildAndPriceViewer } from '../public/BuildAndPriceViewer'
+import { Viewer } from '../public/Viewer'
 import { SECTION_DEMO_ITEMS } from '../config/sectionDemoConfig'
 import { modelManifest } from '../config/modelManifest'
 import { decimalToTimeString12h, dayOfYearToDateString } from '../utils/solarUtils'
@@ -1544,7 +1544,7 @@ export function DemoApp() {
             }} />
           )}
           {modelUrl ? (
-            <BuildAndPriceViewer input={viewerInput} output={viewerOutput} />
+            <Viewer input={viewerInput} output={viewerOutput} />
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 16, opacity: 0.4 }}>
               <p style={{ margin: 0, fontSize: 14 }}>Select a model or upload a .glb file to get started</p>

@@ -8,19 +8,17 @@
 
 ## Purpose
 
-How a host App integrates `BuildAndPriceViewer` — what to push in via `input`, what comes back via `output`, and which parts are stable vs. internal. Use [DemoApp.jsx](../src/DemoApp/DemoApp.jsx) as the reference integration; it covers every touch point in this guide.
+How a host App integrates `Viewer` — what to push in via `input`, what comes back via `output`, and which parts are stable vs. internal. Use [DemoApp.jsx](../src/DemoApp/DemoApp.jsx) as the reference integration; it covers every touch point in this guide.
 
 > **Core principle:** the App tells the Viewer what to render; the Viewer fires events when something useful happens. Nothing more.
-
-(The component is currently exported as `BuildAndPriceViewer` for legacy reasons; conceptually it is "the Viewer." A future code rename is tracked in [CLAUDE.md](../CLAUDE.md).)
 
 ---
 
 ## Delivery
 
-**Today.** Clone this repo and import `BuildAndPriceViewer` from `src/public/`. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.
+**Today.** Clone this repo and import `Viewer` from `src/public/`. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.
 
-**For non-React hosts (Vue, vanilla, etc.).** A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element (`<build-and-price-viewer>`) that internally hosts the React component, exposes property setters for `input`, and emits custom events for `output`. The wrapper is not yet implemented — flag interest if you need it.
+**For non-React hosts (Vue, vanilla, etc.).** A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element (e.g. `<vew-viewer>`) that internally hosts the React component, exposes property setters for `input`, and emits custom events for `output`. The wrapper is not yet implemented — flag interest if you need it.
 
 **Intended future delivery.** A self-contained JavaScript bundle hosted at a versioned CDN URL (`/v1/`, `/v2/`, etc.) so host App owners can opt into updates on a schedule. That distribution path is not yet in place; the versioning guidance applies once the Viewer is published as a standalone distributable.
 
@@ -31,12 +29,12 @@ How a host App integrates `BuildAndPriceViewer` — what to push in via `input`,
 The App and the Viewer communicate through a single component:
 
 ```tsx
-<BuildAndPriceViewer input={viewerInput} output={viewerOutput} />
+<Viewer input={viewerInput} output={viewerOutput} />
 ```
 
 The App builds `viewerInput` and provides callbacks in `viewerOutput`. The Viewer renders the input and fires callbacks when something useful happens. The App does not reach inside the Viewer; the Viewer does not persist state on the App's behalf.
 
-Public surface: [BuildAndPriceViewer.jsx](../src/public/BuildAndPriceViewer.jsx). Code-level contract types: [viewerContractTypes.js](../src/public/viewerContractTypes.js).
+Public surface: [Viewer.jsx](../src/public/Viewer.jsx). Code-level contract types: [viewerContractTypes.js](../src/public/viewerContractTypes.js).
 
 ---
 
@@ -45,7 +43,7 @@ Public surface: [BuildAndPriceViewer.jsx](../src/public/BuildAndPriceViewer.jsx)
 The App pushes information in by building a `viewerInput` object and passing it to:
 
 ```tsx
-<BuildAndPriceViewer input={viewerInput} ... />
+<Viewer input={viewerInput} ... />
 ```
 
 That input is divided into a few buckets.
@@ -250,7 +248,7 @@ The App only needs to implement the `ViewerOutput` capture callbacks to receive 
 The App provides callback functions in `viewerOutput`; the Viewer fires them when something useful happens. The App stores or reacts to the payload — the App does not "pull" data out of the Viewer.
 
 ```tsx
-<BuildAndPriceViewer input={viewerInput} output={viewerOutput} />
+<Viewer input={viewerInput} output={viewerOutput} />
 ```
 
 For a complete `viewerOutput` object wired up to App state and persistence, see [Integration Walkthrough](integration_walkthrough.md). The next section enumerates each callback's payload and intended App action.
@@ -530,7 +528,7 @@ admin: { enabled: adminEnabled, activeAuthoringFocus }
 
 The App should talk to:
 
-- `BuildAndPriceViewer`
+- `Viewer`
 
 not directly to:
 
@@ -542,7 +540,7 @@ not directly to:
 
 The Viewer's internal hooks and bridges are implementation details that can change.
 
-The App should only interact with `BuildAndPriceViewer` through:
+The App should only interact with `Viewer` through:
 
 - `input`
 - `output`
@@ -573,7 +571,7 @@ Common gotchas and their fixes will accumulate here as integration patterns emer
 - The App pushes instructions through `input` (`model`, `camera`, `scene`, `presentation`, `admin`); the Viewer pushes events back through `output` callbacks. The App does not "pull" — it receives.
 - The App owns persisted truth (product structure, option/section logic, pricing, configuration intent).
 - The Viewer owns runtime execution (rendering, animation, playback, transient state, authoring helpers).
-- The integration boundary is exactly `<BuildAndPriceViewer input={viewerInput} output={viewerOutput} />`. Anything below that surface is internal and may change.
+- The integration boundary is exactly `<Viewer input={viewerInput} output={viewerOutput} />`. Anything below that surface is internal and may change.
 
 ---
 

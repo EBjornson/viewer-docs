@@ -135,7 +135,7 @@ The repo’s current authoring workflow is very useful, but it still lives in a 
 
 The stable public integration boundary is:
 
-- `BuildAndPriceViewer`
+- `Viewer`
 - `input`
 - `output`
 

@@ -199,7 +199,7 @@ Add a small dedicated area in the DemoApp header — e.g. a "Materials" button t
 
 Two changes:
 
-1. **Contract:** add `viewerInput.materialCatalog` per the data shape above. Update [`BuildAndPriceViewer.jsx`](../src/public/BuildAndPriceViewer.jsx) and runtime in [`BuildAndPriceViewerRuntime.jsx`](../src/viewer/BuildAndPriceViewerRuntime.jsx) to thread the catalog through. Document in [Viewer Contract](viewer_contract_v1_7.md).
+1. **Contract:** add `viewerInput.materialCatalog` per the data shape above. Update [`Viewer.jsx`](../src/public/Viewer.jsx) and runtime in [`ViewerRuntime.jsx`](../src/viewer/ViewerRuntime.jsx) to thread the catalog through. Document in [Viewer Contract](viewer_contract_v1_7.md).
 2. **Picker UI:** update the material picker (currently in [`ViewerAuthoringDemoPanel.jsx`](../src/viewer/components/ViewerAuthoringDemoPanel.jsx)) to:
    - Consume the catalog from input rather than static import.
    - Render entries grouped or filterable by source: `All` / `Platform` / `Yours`.

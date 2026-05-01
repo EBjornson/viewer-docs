@@ -17,10 +17,8 @@ This repo ships **DemoApp** as the canonical reference host App. DemoApp demonst
 The public integration surface is a single React component:
 
 ```tsx
-<BuildAndPriceViewer input={viewerInput} output={viewerOutput} />
+<Viewer input={viewerInput} output={viewerOutput} />
 ```
-
-(Conceptually this is "the Viewer." It is currently exported as `BuildAndPriceViewer` for legacy reasons; a code rename is tracked in [CLAUDE.md](../CLAUDE.md).)
 
 ---
 
@@ -127,7 +125,6 @@ This is the canonical glossary for the documentation set. Other docs link here r
 - **Viewer** — The rendering/runtime layer (this repository's primary product). Loads the model, animates the camera, applies scene/presentation instructions, exposes capture tooling.
 - **Host App** (also: *CustomApp*) — Any business/application layer that consumes the Viewer. Owns persisted intent, pricing, product logic, and saved configurations. **DemoApp** is the reference example shipped in this repo; **Build & Price** is one planned future CustomApp.
 - **DemoApp** — The reference host App in this repo (`src/DemoApp/DemoApp.jsx`). Demonstrates the full capture/replay pattern; not a published API or production target. See [DemoApp](demoapp.md).
-- **`BuildAndPriceViewer`** — The current legacy export name for the Viewer's public component. Conceptually "the Viewer." A code rename is tracked in `CLAUDE.md`.
 - **Viewer Input** — The structured object the host App passes into the Viewer to control what it renders. Buckets: `model`, `camera`, `scene`, `presentation`, `presentationModeCaptures`, `admin`, plus `presentationSyncKey`.
 - **Viewer Output** — The set of callbacks the Viewer uses to send events back to the host App — readiness, capture payloads, geometry picks, render captures, errors.
 - **Section** — A major product decision area such as Roof, Flooring, or Solar Package. Host-App-owned identity.
