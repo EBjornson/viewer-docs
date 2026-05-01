@@ -1,0 +1,2235 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation and integration kit for the Viewer — a React + Three.js runtime for configurable, geometric SaaS products">
+      
+      
+      
+        <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/integration_guide/">
+      
+      
+        <link rel="prev" href="../overview/">
+      
+      
+        <link rel="next" href="../integration_walkthrough/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Integration Guide - Viewer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-a-host-app-talks-to-the-viewer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Viewer Documentation" class="md-header__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Viewer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Integration Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Viewer Documentation" class="md-nav__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Viewer Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-public-integration-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Public Integration Surface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-app-pushes-information-into-the-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How The App Pushes Information Into The Viewer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How The App Pushes Information Into The Viewer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. camera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-scene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. scene
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-presentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. presentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-app-gets-information-back-from-the-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How The App Gets Information Back From The Viewer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-main-viewer-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Main Viewer Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Main Viewer Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#onviewerready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onViewerReady
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture callbacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ongeometrypicked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onGeometryPicked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onrendercaptured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onRenderCaptured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onbatchcapturecomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onBatchCaptureComplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onError
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-geometry-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option Geometry Visibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-section-ownership-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Section Ownership Enforcement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cross-Section Ownership Enforcement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifying-the-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifying the user
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-contract-change-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No contract change required
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-authoring-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Authoring Panel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-app-should-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What The App Should Not Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What The App Should Not Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-app-should-not-rely-on-viewerroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The App should not rely on ViewerRoot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-app-should-not-rely-on-viewer-internal-implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The App should not rely on Viewer-internal implementation details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-the-app-should-not-ask-the-viewer-to-own-business-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The App should not ask the Viewer to own business rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Contract v1.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demoapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DemoApp Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capture_and_replay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture & Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tester_quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tester Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capabilities_and_limits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities & Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subscriber_materials_plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subscriber Materials Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-public-integration-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Public Integration Surface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-app-pushes-information-into-the-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How The App Pushes Information Into The Viewer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How The App Pushes Information Into The Viewer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. camera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-scene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. scene
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-presentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. presentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-app-gets-information-back-from-the-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How The App Gets Information Back From The Viewer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-main-viewer-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Main Viewer Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Main Viewer Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#onviewerready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onViewerReady
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture callbacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ongeometrypicked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onGeometryPicked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onrendercaptured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onRenderCaptured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onbatchcapturecomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onBatchCaptureComplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onError
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-geometry-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option Geometry Visibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-section-ownership-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Section Ownership Enforcement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cross-Section Ownership Enforcement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifying-the-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifying the user
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-contract-change-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No contract change required
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-authoring-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Authoring Panel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-app-should-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What The App Should Not Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What The App Should Not Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-app-should-not-rely-on-viewerroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The App should not rely on ViewerRoot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-app-should-not-rely-on-viewer-internal-implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The App should not rely on Viewer-internal implementation details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-the-app-should-not-ask-the-viewer-to-own-business-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The App should not ask the Viewer to own business rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="how-a-host-app-talks-to-the-viewer">How a Host App Talks to the Viewer<a class="headerlink" href="#how-a-host-app-talks-to-the-viewer" title="Permanent link">&para;</a></h1>
+<p><strong>Primary reader:</strong> App-side developer<br />
+<strong>Job-to-be-done:</strong> Wire the Viewer into a host App<br />
+<strong>Next doc:</strong> <a href="../integration_walkthrough/">Integration Walkthrough</a></p>
+<hr />
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>How a host App integrates <code>BuildAndPriceViewer</code> — what to push in via <code>input</code>, what comes back via <code>output</code>, and which parts are stable vs. internal. Use <a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> as the reference integration; it covers every touch point in this guide.</p>
+<blockquote>
+<p><strong>Core principle:</strong> the App tells the Viewer what to render; the Viewer fires events when something useful happens. Nothing more.</p>
+</blockquote>
+<p>(The component is currently exported as <code>BuildAndPriceViewer</code> for legacy reasons; conceptually it is "the Viewer." A future code rename is tracked in <a href="../CLAUDE.md">CLAUDE.md</a>.)</p>
+<hr />
+<h2 id="delivery">Delivery<a class="headerlink" href="#delivery" title="Permanent link">&para;</a></h2>
+<p><strong>Today.</strong> Clone this repo and import <code>BuildAndPriceViewer</code> from <code>src/public/</code>. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.</p>
+<p><strong>For non-React hosts (Vue, vanilla, etc.).</strong> A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element (<code>&lt;build-and-price-viewer&gt;</code>) that internally hosts the React component, exposes property setters for <code>input</code>, and emits custom events for <code>output</code>. The wrapper is not yet implemented — flag interest if you need it.</p>
+<p><strong>Intended future delivery.</strong> A self-contained JavaScript bundle hosted at a versioned CDN URL (<code>/v1/</code>, <code>/v2/</code>, etc.) so host App owners can opt into updates on a schedule. That distribution path is not yet in place; the versioning guidance applies once the Viewer is published as a standalone distributable.</p>
+<hr />
+<h2 id="the-public-integration-surface">The Public Integration Surface<a class="headerlink" href="#the-public-integration-surface" title="Permanent link">&para;</a></h2>
+<p>The App and the Viewer communicate through a single component:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+</code></pre></div>
+<p>The App builds <code>viewerInput</code> and provides callbacks in <code>viewerOutput</code>. The Viewer renders the input and fires callbacks when something useful happens. The App does not reach inside the Viewer; the Viewer does not persist state on the App's behalf.</p>
+<p>Public surface: <a href="../src/public/BuildAndPriceViewer.jsx">BuildAndPriceViewer.jsx</a>. Code-level contract types: <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a>.</p>
+<hr />
+<h2 id="how-the-app-pushes-information-into-the-viewer">How The App Pushes Information Into The Viewer<a class="headerlink" href="#how-the-app-pushes-information-into-the-viewer" title="Permanent link">&para;</a></h2>
+<p>The App pushes information in by building a <code>viewerInput</code> object and passing it to:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">...</span><span class="w"> </span><span class="p">/&gt;</span>
+</code></pre></div>
+<p>That input is divided into a few buckets.</p>
+<h3 id="1-model">1. <code>model</code><a class="headerlink" href="#1-model" title="Permanent link">&para;</a></h3>
+<p>This tells the Viewer which 3D model to load.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">viewerInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nx">modelUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/models/test.glb&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nx">productId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;product-123&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nx">modelVersion</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;v1&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>Think of this as:</p>
+<ul>
+<li>“Here is the product model you should show.”</li>
+</ul>
+<h3 id="2-camera">2. <code>camera</code><a class="headerlink" href="#2-camera" title="Permanent link">&para;</a></h3>
+<p>This tells the Viewer how you want the camera presented.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;exterior&#39;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">12</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">,</span><span class="w"> </span><span class="mf">18</span><span class="p">],</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nx">fov</span><span class="o">:</span><span class="w"> </span><span class="kt">45</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>Think of this as:</p>
+<ul>
+<li>“Please show this model from this general camera mode”</li>
+<li>“Please animate or move the camera to this pose”</li>
+</ul>
+<p>Important:</p>
+<ul>
+<li>The App owns this <strong>intent</strong></li>
+<li>The Viewer owns the actual runtime execution of that motion</li>
+<li>When the user presses a View button in User Mode, the Viewer fires <code>onViewSelected(cameraMode)</code>. The App looks up its stored view capture for that slot and replays it by rebuilding <code>viewerInput</code> with the capture's <code>pose</code>, <code>cameraMode</code>, and <code>visibilityAssignments</code>, plus the resolved presentation snapshot (<code>presentationModeCaptures[capture.presentationMode]</code>) with <code>capture.ui</code> spread on top — the same path as section replay.</li>
+<li>When the admin captures a view, the Viewer fires <code>onViewCaptured(payload)</code>. The App stores the payload keyed by camera mode.</li>
+</ul>
+<h3 id="3-scene">3. <code>scene</code><a class="headerlink" href="#3-scene" title="Permanent link">&para;</a></h3>
+<p>This tells the Viewer what geometry/material state to apply.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-101&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;geom-202&#39;</span><span class="p">],</span><span class="w">  </span><span class="c1">// hide these (fade)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-202&#39;</span><span class="p">],</span><span class="w">               </span><span class="c1">// show these even if in hiddenGeometryIds</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nx">isolatedGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nx">defaultMaterialAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-305&#39;</span><span class="p">],</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#d4c5a9&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nx">roughness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.8</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="nx">materialAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-305&#39;</span><span class="p">],</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#ffffff&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">      </span><span class="nx">roughness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.7</span><span class="p">,</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">      </span><span class="nx">metalness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.1</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-410&#39;</span><span class="p">],</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">      </span><span class="nx">restoreOriginalMaterial</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="p">}</span>
+</code></pre></div>
+<p>Think of this as:</p>
+<ul>
+<li>“Hide these parts” (<code>hiddenGeometryIds</code>)</li>
+<li>“Show these parts even if they are in the hide list” (<code>shownGeometryIds</code>) — the Viewer resolves the difference; the App never needs to compute a set</li>
+<li>“Isolate or show all” (<code>isolatedGeometryIds</code>)</li>
+<li>“Apply these model-level default materials” (<code>defaultMaterialAssignments</code>)</li>
+<li>“Apply these option-driven material overrides” (<code>materialAssignments</code>)</li>
+<li>“Restore this part to its original material” (or model default, if one was set)</li>
+</ul>
+<p>The Viewer merges the two material layers internally:</p>
+<ul>
+<li><code>defaultMaterialAssignments</code> is the model-level baseline, applied first.</li>
+<li><code>materialAssignments</code> are option-driven overrides, applied second — they win for any geometry both layers target.</li>
+<li>A <code>restoreOriginalMaterial: true</code> entry in <code>materialAssignments</code> falls back to the model default for that geometry (not the baked original) when a default has been set.</li>
+</ul>
+<p>Important:</p>
+<ul>
+<li>these are rendering instructions</li>
+<li>they do <strong>not</strong> by themselves explain product business meaning</li>
+<li>the App owns and computes both arrays; the Viewer does not know about your <code>modelDefaultCapture</code> data structure</li>
+</ul>
+<h3 id="4-presentation">4. <code>presentation</code><a class="headerlink" href="#4-presentation" title="Permanent link">&para;</a></h3>
+<p>This tells the Viewer how the scene should feel visually.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">presentation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">environmentId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/hdri/meadow.exr&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">environmentRotation</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">hdrIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">backgroundIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nx">terrainPresetId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ground&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nx">terrainIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nx">exposure</span><span class="o">:</span><span class="w"> </span><span class="kt">0.6</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nx">sunIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nx">ambientIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">0.5</span><span class="p">,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nx">solar</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nx">latitude</span><span class="o">:</span><span class="w"> </span><span class="kt">50.4983</span><span class="p">,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nx">longitude</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">99.914</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nx">northOffset</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nx">showSolarSitePanel</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nx">showNorthArrow</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="nx">showPresetViews</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="nx">showPresentationPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nx">showWinterPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="nx">showSpaceMenu</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">}</span>
+</code></pre></div>
+<p>Think of this as:</p>
+<ul>
+<li>“Use this environment”</li>
+<li>“Use this lighting”</li>
+<li>“Use this terrain”</li>
+<li>“Use these solar settings”</li>
+</ul>
+<p><strong>Initial load defaults:</strong> all six presentation modes (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>) have hardcoded defaults built into the Viewer. The <code>presentation</code> field is entirely optional on initial model load — if omitted, the Viewer renders using its built-in defaults. Providing a <code>presentation</code> payload is only necessary when the App needs to replay a stored capture.</p>
+<p><strong><code>presentationSyncKey</code>:</strong> A companion field to <code>presentation</code>. It is an optional monotonically-increasing counter the App bumps to signal <strong>"App selection changed"</strong> — captured or not. The Viewer interprets a changed value at two layers:</p>
+<ol>
+<li><strong>View-button highlight clearing</strong> — fires unconditionally. The Viewer clears any active view-button highlight so the App's section/view selection is the single "active" indicator across both layers.</li>
+<li><strong>Presentation re-sync</strong> — fires only when <code>input.presentation</code> is provided. When it is, the Viewer re-runs its initialization and resets local admin overrides to match. When <code>input.presentation</code> is <code>undefined</code> (the active section has no capture), the Viewer <strong>preserves its current state</strong> so authoring tweaks aren't stomped by a navigation that has nothing to replay.</li>
+</ol>
+<p><strong>Bump on every section/view selection change.</strong> The App does not need to gate the bump on capture availability; the Viewer's two-layer interpretation handles both cases correctly. (This is a v1.7 contract change — earlier versions advised gating the bump on capture availability, which has been replaced by the in-Viewer guard.)</p>
+<p><strong><code>presentationModeCaptures</code>:</strong> Map of all presentation-mode captures the App has persisted, keyed by mode id. The Viewer reads it when the user clicks a presentation mode tile inside the Viewer — if a capture exists for that mode, the Viewer applies it; otherwise it falls back to its built-in lighting defaults. The App owns this map; the Viewer only reads. Pass the App's full persisted map (e.g. a <code>useState</code>-stored object) every render.</p>
+<h3 id="5-admin">5. <code>admin</code><a class="headerlink" href="#5-admin" title="Permanent link">&para;</a></h3>
+<p>This tells the Viewer whether it should behave in an authoring/admin-friendly way, and can also trigger a programmatic batch render.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">batchCapture</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nx">nonce</span><span class="o">:</span><span class="w"> </span><span class="kt">batchNonce</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="nx">metadata</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">sectionId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;section1&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionLabel</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Roof&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCaptures.section1.pose</span><span class="p">,</span><span class="w"> </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCaptures.section1.cameraMode</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">        </span><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[...]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span><span class="nx">presentation</span><span class="o">:</span><span class="w"> </span><span class="kt">presentationModeCaptures</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">}</span>
+</code></pre></div>
+<p>Think of this as:</p>
+<ul>
+<li>“We are authoring right now” (<code>enabled: true</code>)</li>
+<li>“Render these items as a batch” (<code>batchCapture</code>)</li>
+</ul>
+<p>When <code>input.admin.enabled = true</code>, the Viewer renders its built-in <strong>Authoring Panel</strong> (left-side overlay) containing all capture/clear actions and authoring tools. No extra setup required from the App beyond setting this flag. The Navigation Panel (View row + Summer/Winter presentation mode rows along the bottom) renders identically in admin and user modes and contains no capture controls.</p>
+<p>The Authoring Panel is <strong>dynamic by default</strong> — it filters its content based on <code>input.admin.activeAuthoringFocus</code>. The App should set this field on every authoring-relevant click so the panel adapts to the current context. See <em>Dynamic Authoring Panel</em> below for details.</p>
+<p>To trigger a batch render, set <code>admin.batchCapture = { nonce, items }</code> and increment <code>nonce</code>. Each item supplies the camera pose, scene visibility, and presentation for one render. The Viewer processes the items in sequence and fires <code>onRenderCaptured</code> per item, then <code>onBatchCaptureComplete</code> when done. Admin overlays are hidden automatically during capture.</p>
+<p>The App only needs to implement the <code>ViewerOutput</code> capture callbacks to receive and store the payloads the Viewer fires.</p>
+<hr />
+<h2 id="how-the-app-gets-information-back-from-the-viewer">How The App Gets Information Back From The Viewer<a class="headerlink" href="#how-the-app-gets-information-back-from-the-viewer" title="Permanent link">&para;</a></h2>
+<p>The App provides callback functions in <code>viewerOutput</code>; the Viewer fires them when something useful happens. The App stores or reacts to the payload — the App does not "pull" data out of the Viewer.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+</code></pre></div>
+<p>For a complete <code>viewerOutput</code> object wired up to App state and persistence, see <a href="../integration_walkthrough/">Integration Walkthrough</a>. The next section enumerates each callback's payload and intended App action.</p>
+<hr />
+<h2 id="the-main-viewer-events">The Main Viewer Events<a class="headerlink" href="#the-main-viewer-events" title="Permanent link">&para;</a></h2>
+<h3 id="onviewerready"><code>onViewerReady</code><a class="headerlink" href="#onviewerready" title="Permanent link">&para;</a></h3>
+<p>This tells The App:</p>
+<ul>
+<li>the model is ready</li>
+<li>the viewer has enough information to start working</li>
+</ul>
+<p>Current payload can include:</p>
+<ul>
+<li><code>modelUrl</code></li>
+<li><code>productId</code></li>
+<li><code>modelVersion</code></li>
+<li><code>cameraMode</code></li>
+<li><code>cameraInfo</code> — computed fit data: <code>target</code>, <code>size</code>, <code>maxDim</code>, <code>distance</code></li>
+</ul>
+<p>This is useful for:</p>
+<ul>
+<li>app awareness</li>
+<li>debugging</li>
+<li>knowing when the viewer is ready for user interaction</li>
+</ul>
+<p><strong>DemoApp implementation:</strong> a Loading / Ready badge in the header reflects this event. It shows "Loading…" until <code>onViewerReady</code> fires, then turns green and shows "Ready". Hovering the badge displays the full payload (with a Copy button) so integrators can inspect the event data without opening DevTools. The badge resets on every model switch.</p>
+<h3 id="capture-callbacks">Capture callbacks<a class="headerlink" href="#capture-callbacks" title="Permanent link">&para;</a></h3>
+<p>These are the primary authoring output events. The Viewer fires them when the admin clicks a capture button:</p>
+<table>
+<thead>
+<tr>
+<th>Callback</th>
+<th>Payload</th>
+<th>App action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onSectionCaptured(payload)</code></td>
+<td>pose + cameraMode + presentationMode + visibilityAssignments + ui</td>
+<td>store as <code>sectionCaptures[activeSectionId]</code></td>
+</tr>
+<tr>
+<td><code>onSectionCaptureCleared()</code></td>
+<td>—</td>
+<td>clear <code>sectionCaptures[activeSectionId]</code></td>
+</tr>
+<tr>
+<td><code>onOptionCaptured(payload)</code></td>
+<td>geometryIds + materialAssignments</td>
+<td>Validate cross-section ownership (see <em>Cross-Section Ownership Enforcement</em> below). On no conflict, <strong>merge additively</strong> into <code>optionCaptures[sectionId][optionId]</code>: union geometry IDs, incoming wins per geometryId for materials. On conflict, reject the capture and notify the user.</td>
+</tr>
+<tr>
+<td><code>onOptionCaptureCleared()</code></td>
+<td>—</td>
+<td>clear <code>optionCaptures[sectionId][optionId]</code></td>
+</tr>
+<tr>
+<td><code>onMaterialDefaultsCaptured(payload)</code></td>
+<td>model-wide material defaults</td>
+<td>store as <code>materialDefaultCapture</code></td>
+</tr>
+<tr>
+<td><code>onMaterialDefaultsCleared()</code></td>
+<td>—</td>
+<td>clear <code>materialDefaultCapture</code></td>
+</tr>
+<tr>
+<td><code>onViewCaptured(payload)</code></td>
+<td>cameraMode + pose + presentationMode + visibilityAssignments + ui</td>
+<td>store as <code>viewCaptures[payload.cameraMode]</code></td>
+</tr>
+<tr>
+<td><code>onViewCaptureCleared(cameraMode)</code></td>
+<td>—</td>
+<td>remove <code>viewCaptures[cameraMode]</code></td>
+</tr>
+<tr>
+<td><code>onViewSelected(cameraMode)</code></td>
+<td>cameraMode string</td>
+<td>In User Mode: look up <code>viewCaptures[cameraMode]</code>, resolve <code>presentationModeCaptures[capture.presentationMode]</code>, and replay via <code>viewerInput</code>. In Admin Mode: callback IS fired (to allow the App to clear section tab highlighting), but the App should NOT trigger camera/presentation replay — the Viewer handles navigation internally.</td>
+</tr>
+<tr>
+<td><code>onSpaceTileWalkActivated(cameraMode)</code></td>
+<td>cameraMode string</td>
+<td>Fires in User Mode only when an overhead space-tile click (<code>SpaceTileClickNav</code>) initiates a walk into the interior. Admin Mode applies the corresponding presentation state directly to internal state without firing this callback. In User Mode: resolve presentation from <code>viewCaptures[cameraMode]</code> via <code>presentationModeCaptures</code>, apply with visibilityAssignments — do <strong>not</strong> set camera pose (Viewer is already navigating)</td>
+</tr>
+<tr>
+<td><code>onPresentationModeCaptured(payload)</code></td>
+<td><code>{ mode: string, presentation: ViewerPresentationInput }</code></td>
+<td>store as <code>presentationModeCaptures[payload.mode] = payload.presentation</code></td>
+</tr>
+<tr>
+<td><code>onActivePresentationModeChanged(mode)</code></td>
+<td>mode string</td>
+<td>track active mode; apply <code>presentationModeCaptures[mode]</code> to <code>input.presentation</code> if desired</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>⚠️ <code>onViewSelected</code> in Admin Mode:</strong> The Viewer fires <code>onViewSelected</code> in both User Mode and Admin Mode. In Admin Mode the Viewer handles view navigation internally and does <strong>not</strong> expect the App to drive a camera or presentation replay in response. Driving replay from the App in Admin Mode would cause a double-animation. Guard any replay logic with a check on <code>isAdminMode</code> before acting on this callback.</p>
+</blockquote>
+<p>Replay resolves the presentation mode reference before building <code>viewerInput</code>, then merges the capture's <code>ui</code> flags on top of the mode snapshot:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sectionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">modeSnapshot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentationModeCaptures</span><span class="p">[</span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">defaultPresentation</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="p">,</span><span class="w"> </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">capture</span><span class="p">.</span><span class="nx">ui</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="nx">modeSnapshot</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">camera</span><span class="p">.</span><span class="nx">pose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">pose</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">scene</span><span class="p">.</span><span class="nx">visibilityAssignments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">visibilityAssignments</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentation</span>
+</code></pre></div>
+<h3 id="ongeometrypicked"><code>onGeometryPicked</code><a class="headerlink" href="#ongeometrypicked" title="Permanent link">&para;</a></h3>
+<p>This tells The App:</p>
+<ul>
+<li>which piece of geometry was selected or picked</li>
+</ul>
+<p>Useful for:</p>
+<ul>
+<li>authoring mappings</li>
+<li>admin/debug workflows</li>
+<li>future richer configuration tooling</li>
+</ul>
+<h3 id="onrendercaptured"><code>onRenderCaptured</code><a class="headerlink" href="#onrendercaptured" title="Permanent link">&para;</a></h3>
+<p>Fires once per item during a batch capture sequence. The payload is <code>{ imageUrl, blob, metadata }</code>:</p>
+<ul>
+<li><code>blob</code> — a JPEG Blob of the off-screen 3840×2160 render</li>
+<li><code>imageUrl</code> — a data URL of the same image, usable directly in <code>&lt;img&gt;</code> elements</li>
+<li><code>metadata</code> — whatever object the App placed in the corresponding <code>ViewerBatchRenderCaptureItem</code>; use it to correlate the image to its source section or item</li>
+</ul>
+<p>The App should accumulate blobs (or URLs) as each <code>onRenderCaptured</code> fires and then act on the full set when <code>onBatchCaptureComplete</code> fires.</p>
+<h3 id="onbatchcapturecomplete"><code>onBatchCaptureComplete</code><a class="headerlink" href="#onbatchcapturecomplete" title="Permanent link">&para;</a></h3>
+<p>Fires after all items in a batch have been captured. The App should use this signal to trigger downloads, backend uploads, or any other post-batch processing of the accumulated blobs.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nx">onBatchCaptureComplete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span><span class="w"> </span><span class="nx">metadata</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">metadata</span><span class="o">?</span><span class="p">.</span><span class="nx">sectionLabel</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="si">}</span><span class="sb">.jpg`</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">),</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="p">},</span>
+</code></pre></div>
+<h3 id="onerror"><code>onError</code><a class="headerlink" href="#onerror" title="Permanent link">&para;</a></h3>
+<p>This gives The App a way to know:</p>
+<ul>
+<li>something went wrong</li>
+<li>the Viewer encountered an issue that should not stay invisible</li>
+</ul>
+<p>Payload includes <code>message</code>, <code>code</code>, and <code>details</code>.</p>
+<p><strong>DemoApp implementation:</strong> a dismissible red banner appears overlaid on the viewer panel showing the error code and message. It clears on dismiss or model switch.</p>
+<hr />
+<h2 id="option-geometry-visibility">Option Geometry Visibility<a class="headerlink" href="#option-geometry-visibility" title="Permanent link">&para;</a></h2>
+<p>When the App drives option-based geometry visibility, it passes two lists:</p>
+<ul>
+<li><code>hiddenGeometryIds</code> — every geometry ID owned by any option in the section (the full pool)</li>
+<li><code>shownGeometryIds</code> — geometry IDs owned by the currently active option</li>
+</ul>
+<p>The Viewer's rule: <strong>show list wins over hide list</strong>. The App never computes a set difference — it collects and passes; the Viewer resolves.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">allOptionGeometryIds</span><span class="p">,</span><span class="w">   </span><span class="c1">// flatMap all options → all their IDs</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">activeOptionGeometryIds</span><span class="p">,</span><span class="w"> </span><span class="c1">// flatMap active option → its IDs</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nx">instantHiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCapture?.visibilityAssignments?.hiddenGeometryIds</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>instantHiddenGeometryIds</code> is used for section-level geometry here rather than <code>hiddenGeometryIds</code> because section-level hides take effect during the camera animation triggered by a section change. There is no benefit from a fade animation in that context — the geometry should disappear immediately as the section loads. Using <code>instantHiddenGeometryIds</code> avoids a visible fade artifact during the transition.</p>
+<p>This pattern supports <strong>combinatorial ownership</strong> — where one option owns a superset of geometry that other options partially overlap (e.g. O4 owns both lights, O2 owns left only, O3 owns right only). The hide/show split handles all combinations without the App needing to understand the geometry relationships.</p>
+<hr />
+<h2 id="cross-section-ownership-enforcement">Cross-Section Ownership Enforcement<a class="headerlink" href="#cross-section-ownership-enforcement" title="Permanent link">&para;</a></h2>
+<p>The App is responsible for enforcing two <strong>independent</strong> rules to keep replay deterministic:</p>
+<ol>
+<li><strong>Show/hide geometry rule:</strong> a geometry item may appear in the show/hide list (<code>geometryIds</code>) of multiple options within the same section, but cannot appear in show/hide lists of options across multiple different sections.</li>
+<li><strong>Material assignment rule:</strong> a geometry item can be targeted by material assignments from only one section. If section A's option assigns a material to geometry G, no option in any other section can assign a material to G.</li>
+</ol>
+<p>The rules are intentionally independent. The same geometry may be in section A's show/hide list <strong>and</strong> section B's material assignments simultaneously — that combination is allowed because each rule individually still holds.</p>
+<p>Enforcement is at the App layer because section identity is App-owned; the Viewer fires <code>onOptionCaptured</code> with no section context. The Viewer is intentionally agnostic to which section/option the admin had selected when the capture button was pressed — that routing is the App's job, and so is validating the routing.</p>
+<h3 id="recommended-pattern">Recommended pattern<a class="headerlink" href="#recommended-pattern" title="Permanent link">&para;</a></h3>
+<p>In the <code>onOptionCaptured</code> handler, scan the existing <code>optionCaptures</code> map separately for each rule. Reject if either rule is violated.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">geometry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="c1">// Rule 1: incoming show/hide list vs other sections&#39; show/hide lists</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">          </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="c1">// Rule 2: incoming material targets vs other sections&#39; material targets</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">materialTargets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">()</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">  </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">owned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">          </span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">        </span><span class="p">)</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">owned</span><span class="p">)</span><span class="w"> </span><span class="nx">material</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">geometry</span><span class="p">,</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="p">}</span>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="nx">onOptionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">material</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="w">    </span><span class="nx">setCaptureConflict</span><span class="p">({</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">activeOptionId</span><span class="p">,</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a><span class="w">    </span><span class="k">return</span><span class="w">  </span><span class="c1">// do not merge</span>
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="w">  </span><span class="nx">setOptionCaptures</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="w">    </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a><span class="w">    </span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="w">      </span><span class="p">...</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">],</span>
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a><span class="w">      </span><span class="p">[</span><span class="nx">activeOptionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">mergeOptionCapture</span><span class="p">(</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">activeOptionId</span><span class="p">],</span><span class="w"> </span><span class="nx">payload</span><span class="p">),</span>
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a><span class="w">  </span><span class="p">}))</span>
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a><span class="p">}</span>
+</code></pre></div>
+<p>The two checks are intentionally separate. An incoming material-only payload (no <code>geometryIds</code>) only triggers the material rule. An incoming show/hide-only payload only triggers the show/hide rule. A payload that captures both kinds of intent at once is checked against both rules independently.</p>
+<p>The Viewer's authoring overlay exposes a <strong>Capture Material Only</strong> button alongside the standard <strong>Option Capture</strong> button. Capture Material Only fires <code>onOptionCaptured</code> with <code>materialAssignments</code> only — no <code>geometryIds</code> — letting the admin route material-only intent without inadvertently claiming show/hide ownership of the selected geometry. This makes the cross-section material assignment workflow (option in section B colors geometry already show/hide-owned by section A) a single-click operation that doesn't trip Rule 1.</p>
+<h3 id="notifying-the-user">Notifying the user<a class="headerlink" href="#notifying-the-user" title="Permanent link">&para;</a></h3>
+<p>DemoApp uses a red banner overlaid on the viewer panel that names the conflicting geometry IDs and the owning section/option, distinguishing show/hide conflicts from material conflicts:</p>
+<blockquote>
+<p><em>Capture rejected — cross-section ownership conflict.</em><br />
+<em>Already in show/hide list of </em><em>Section 1 / Option 2</em><em>: G_roof_01, G_roof_02.</em><br />
+<em>Clear that capture first, or pick different geometry.</em></p>
+</blockquote>
+<p>A separate amber banner surfaces pre-existing cross-section violations from persisted state on load (e.g. localStorage snapshots from before enforcement existed), grouped into "show/hide ownership" and "material assignment ownership" sections so the admin can address each kind separately.</p>
+<h3 id="no-contract-change-required">No contract change required<a class="headerlink" href="#no-contract-change-required" title="Permanent link">&para;</a></h3>
+<p>The Viewer continues to fire <code>onOptionCaptured</code> exactly as before — rejection is purely an App-layer policy decision. There is no <code>onOptionCaptureRejected</code> callback in the current contract; the Viewer's draft material assignments are cleared synchronously after firing the callback regardless of whether the App ultimately stores the capture. For a material-only conflict this means the user briefly sees painted-but-uncaptured material edits revert on the next render rebuild — a minor flicker. If the friction proves significant in practice, a small contract addition (an <code>onOptionCaptureRejected</code> callback so the Viewer can defer draft clearing) would be the natural follow-up.</p>
+<hr />
+<h2 id="dynamic-authoring-panel">Dynamic Authoring Panel<a class="headerlink" href="#dynamic-authoring-panel" title="Permanent link">&para;</a></h2>
+<p>The Authoring Panel (left-side overlay rendered when <code>input.admin.enabled = true</code>) filters its content based on <code>input.admin.activeAuthoringFocus</code>. The App should track the admin's "last clicked" authoring target and pass it through this field so the panel adapts as the admin works.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">ViewerAuthoringFocus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;option&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;view&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;presentationMode&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;all&#39;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Last admin click</th>
+<th>App should set</th>
+<th>Panel surfaces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Section tab (App-side)</td>
+<td><code>'section'</code></td>
+<td>Section Capture/Clear, Geometry tools, User Visibility, Camera Mode</td>
+</tr>
+<tr>
+<td>Option button (App-side)</td>
+<td><code>'option'</code></td>
+<td>Option Capture / Material Only / Clear, Material Defaults, Geometry tools, Assembly Inspector, Materials picker</td>
+</tr>
+<tr>
+<td>View Preset button (Viewer-side, fires <code>onViewSelected</code>)</td>
+<td><code>'view'</code></td>
+<td>View Capture/Clear, Geometry tools, User Visibility, Camera Mode</td>
+</tr>
+<tr>
+<td>Presentation Mode button (Viewer-side, fires <code>onActivePresentationModeChanged</code>)</td>
+<td><code>'presentationMode'</code></td>
+<td>Mode Capture/Clear, User Visibility, Presentation sliders, HDR Environment, Terrain Preset</td>
+</tr>
+<tr>
+<td><code>'all'</code> or omitted</td>
+<td>—</td>
+<td>Legacy two-tab fallback, all controls visible</td>
+</tr>
+</tbody>
+</table>
+<p>For Section/Option clicks (which originate in the App), the App tracks state directly. For View/Presentation Mode clicks (which originate in the Viewer), the App listens to the corresponding output callback and updates focus there. DemoApp shows the full pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">activeAuthoringFocus</span><span class="p">,</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1">// Section tab click handler:</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedSectionId</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1">// Option button click handler:</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedOption</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1">// Viewer callbacks:</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nx">onViewSelected</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;view&#39;</span><span class="p">);</span><span class="w"> </span><span class="cm">/* …existing logic… */</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nx">onActivePresentationModeChanged</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">mode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;presentationMode&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1">// Threaded into viewerInput:</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="nx">adminEnabled</span><span class="p">,</span><span class="w"> </span><span class="nx">activeAuthoringFocus</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><code>'all'</code> (or omitting the field entirely) puts the panel into a legacy two-tab fallback. The Viewer also exposes a debug toggle that overrides any value sent by the App and forces the legacy layout — used for testing only. Production-style apps should always pass a focus value.</p>
+<hr />
+<h2 id="what-the-app-should-not-do">What The App Should Not Do<a class="headerlink" href="#what-the-app-should-not-do" title="Permanent link">&para;</a></h2>
+<h3 id="1-the-app-should-not-rely-on-viewerroot">1. The App should not rely on <code>ViewerRoot</code><a class="headerlink" href="#1-the-app-should-not-rely-on-viewerroot" title="Permanent link">&para;</a></h3>
+<p>The App should talk to:</p>
+<ul>
+<li><code>BuildAndPriceViewer</code></li>
+</ul>
+<p>not directly to:</p>
+<ul>
+<li><code>ViewerRoot</code></li>
+</ul>
+<p><code>ViewerRoot</code> is an internal implementation boundary and should be free to change.</p>
+<h3 id="2-the-app-should-not-rely-on-viewer-internal-implementation-details">2. The App should not rely on Viewer-internal implementation details<a class="headerlink" href="#2-the-app-should-not-rely-on-viewer-internal-implementation-details" title="Permanent link">&para;</a></h3>
+<p>The Viewer's internal hooks and bridges are implementation details that can change.</p>
+<p>The App should only interact with <code>BuildAndPriceViewer</code> through:</p>
+<ul>
+<li><code>input</code></li>
+<li><code>output</code></li>
+</ul>
+<p>Any internal modules below that boundary are not part of the host-app contract.</p>
+<h3 id="3-the-app-should-not-ask-the-viewer-to-own-business-rules">3. The App should not ask the Viewer to own business rules<a class="headerlink" href="#3-the-app-should-not-ask-the-viewer-to-own-business-rules" title="Permanent link">&para;</a></h3>
+<p>The Viewer should not be the source of truth for:</p>
+<ul>
+<li>which option is valid</li>
+<li>what the product means</li>
+<li>what pricing should be</li>
+<li>what should be persisted</li>
+</ul>
+<p>Those decisions belong to The App.</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p>Common gotchas and their fixes will accumulate here as integration patterns emerge. (Placeholder — populate as real questions land from host-App integrators.)</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The App pushes instructions through <code>input</code> (<code>model</code>, <code>camera</code>, <code>scene</code>, <code>presentation</code>, <code>admin</code>); the Viewer pushes events back through <code>output</code> callbacks. The App does not "pull" — it receives.</li>
+<li>The App owns persisted truth (product structure, option/section logic, pricing, configuration intent).</li>
+<li>The Viewer owns runtime execution (rendering, animation, playback, transient state, authoring helpers).</li>
+<li>The integration boundary is exactly <code>&lt;BuildAndPriceViewer input={viewerInput} output={viewerOutput} /&gt;</code>. Anything below that surface is internal and may change.</li>
+</ul>
+<hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<p>See <a href="../overview/#glossary">Overview</a> for the canonical glossary.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

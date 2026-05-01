@@ -1,0 +1,2059 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation and integration kit for the Viewer — a React + Three.js runtime for configurable, geometric SaaS products">
+      
+      
+      
+        <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/architecture/">
+      
+      
+        <link rel="prev" href="../demoapp/">
+      
+      
+        <link rel="next" href="../capture_and_replay/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Architecture - Viewer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#system-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Viewer Documentation" class="md-header__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Viewer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Viewer Documentation" class="md-nav__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Viewer Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Contract v1.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demoapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DemoApp Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-level-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-Level Shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demoapp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DemoApp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildandpriceviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BuildAndPriceViewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildandpriceviewerruntime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BuildAndPriceViewerRuntime
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vieweradminnavigationbridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ViewerAdminNavigationBridge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewerroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ViewerRoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ViewerRoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batch-capture-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Capture Runtime
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scene-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene Runtime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scene Runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Materials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-authoring-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Authoring Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Authoring Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#admin-mode-is-self-contained-in-the-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin mode is self-contained in the Viewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ownership-rules-app-enforced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ownership rules (App-enforced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistence-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistence Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camera-presentation-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera / Presentation Runtime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Camera / Presentation Runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solar-time-two-tracks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solar Time — Two Tracks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry Identity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime Flows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runtime Flows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#product-playback-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Product Playback Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-activation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Activation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authoring-capture-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring Capture Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-capture-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Capture Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-rules-worth-keeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Rules Worth Keeping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architectural Rules Worth Keeping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-keep-the-public-wrapper-narrow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Keep the public wrapper narrow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-keep-app-intent-separate-from-viewer-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Keep App intent separate from Viewer execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-demoapp-is-scaffolding-not-the-final-saas-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. DemoApp is scaffolding, not the final SaaS product
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capture_and_replay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture & Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tester_quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tester Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capabilities_and_limits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities & Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subscriber_materials_plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subscriber Materials Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-level-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-Level Shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demoapp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DemoApp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildandpriceviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BuildAndPriceViewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildandpriceviewerruntime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BuildAndPriceViewerRuntime
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vieweradminnavigationbridge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ViewerAdminNavigationBridge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewerroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ViewerRoot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ViewerRoot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batch-capture-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Capture Runtime
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scene-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene Runtime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scene Runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Materials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-authoring-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Authoring Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Authoring Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#admin-mode-is-self-contained-in-the-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin mode is self-contained in the Viewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ownership-rules-app-enforced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ownership rules (App-enforced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistence-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistence Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#camera-presentation-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera / Presentation Runtime
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Camera / Presentation Runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solar-time-two-tracks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solar Time — Two Tracks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry Identity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime Flows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runtime Flows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#product-playback-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Product Playback Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-activation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Activation Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authoring-capture-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring Capture Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-capture-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Capture Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-rules-worth-keeping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Rules Worth Keeping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architectural Rules Worth Keeping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-keep-the-public-wrapper-narrow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Keep the public wrapper narrow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-keep-app-intent-separate-from-viewer-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Keep App intent separate from Viewer execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-demoapp-is-scaffolding-not-the-final-saas-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. DemoApp is scaffolding, not the final SaaS product
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">&para;</a></h1>
+<p><strong>Primary reader:</strong> Engineer working on Viewer internals<br />
+<strong>Job-to-be-done:</strong> Understand layer boundaries and runtime composition<br />
+<strong>Next doc:</strong> <a href="../capture_and_replay/">Capture &amp; Replay deep-dive</a></p>
+<hr />
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>The current stable architecture of this repository — public Viewer boundary, internal Viewer runtime layers, and the DemoApp authoring/persistence model. This is the architectural map; for the contract surface see <a href="../viewer_contract_v1_7/">Viewer Contract v1.7</a>, and for the capture lifecycle see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
+<hr />
+<h2 id="top-level-shape">Top-Level Shape<a class="headerlink" href="#top-level-shape" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart LR
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    U[End User / Admin User]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    subgraph APP[Host App / DemoApp]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        DA[DemoApp\nReference host application]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        APPSTATE[App-owned state\nSections / Options / Captures / Persistence]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        STORAGE[Browser localStorage\nCapture snapshots keyed by model ID]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    end
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    subgraph VIEWER[Viewer]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        PUB[BuildAndPriceViewer\nPublic integration surface]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        RUNTIME[BuildAndPriceViewerRuntime\nInternal wrapper runtime]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        AUTHORING[Admin Authoring Overlay\nSelf-contained when admin.enabled=true]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        BRIDGE[ViewerAdminNavigationBridge\nViewer-internal helper]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        ROOT[ViewerRoot\nInternal runtime boundary]
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        SCENE[Scene Assignment Runtime\nVisibility / Materials]
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        CAM[Camera + Presentation Runtime]
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        RENDER[Three.js / React Three Fiber Renderer]
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        OUT[Viewer output events + capture callbacks]
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    end
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    U --&gt; DA
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    DA --&gt; APPSTATE
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    APPSTATE --&gt; STORAGE
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    STORAGE --&gt; APPSTATE
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    APPSTATE --&gt; PUB
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    PUB --&gt; RUNTIME
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    RUNTIME --&gt; AUTHORING
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    RUNTIME --&gt; BRIDGE
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    RUNTIME --&gt; ROOT
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    BRIDGE --&gt; ROOT
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    ROOT --&gt; CAM
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    ROOT --&gt; SCENE
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    CAM --&gt; RENDER
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    SCENE --&gt; RENDER
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    ROOT --&gt; OUT
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    OUT --&gt; DA
+</code></pre></div>
+<hr />
+<h2 id="current-layers">Current Layers<a class="headerlink" href="#current-layers" title="Permanent link">&para;</a></h2>
+<h3 id="demoapp">DemoApp<a class="headerlink" href="#demoapp" title="Permanent link">&para;</a></h3>
+<p>Current file:<br />
+- <a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a></p>
+<p><code>DemoApp</code> is the reference host application. It demonstrates the full capture/replay pattern in a minimal host.</p>
+<p>It owns:</p>
+<ul>
+<li>demo model selection (manifest models + file upload)</li>
+<li>section and option state</li>
+<li>capture/replay orchestration</li>
+<li>admin mode toggle</li>
+<li>per-model persistence in <code>localStorage</code> keyed by model ID (<code>demoapp_v2_${modelId}</code>)</li>
+</ul>
+<p>It integrates the Viewer through the public contract only:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">BuildAndPriceViewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+</code></pre></div>
+<p>All capture payloads are received via <code>viewerOutput</code> callbacks. All replay intent flows back in via <code>viewerInput</code>. DemoApp does not reach inside the Viewer.</p>
+<p>For the DemoApp header UI, batch-capture button behavior, and developer-oriented aids (Loading/Ready indicator, capture status pills, error banner, payload inspector tooltips), see <a href="../demoapp/">DemoApp</a>.</p>
+<h3 id="buildandpriceviewer">BuildAndPriceViewer<a class="headerlink" href="#buildandpriceviewer" title="Permanent link">&para;</a></h3>
+<p>Current file:<br />
+- <a href="../src/public/BuildAndPriceViewer.jsx">BuildAndPriceViewer.jsx</a><br />
+- <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a></p>
+<p>This is the stable public integration surface.</p>
+<p>It is responsible for:</p>
+<ul>
+<li>accepting <code>input</code></li>
+<li>forwarding <code>output</code></li>
+<li>shielding the host from internal viewer refactors</li>
+<li>staying intentionally narrow</li>
+</ul>
+<h3 id="buildandpriceviewerruntime">BuildAndPriceViewerRuntime<a class="headerlink" href="#buildandpriceviewerruntime" title="Permanent link">&para;</a></h3>
+<p>Current file:<br />
+- <a href="../src/viewer/BuildAndPriceViewerRuntime.jsx">BuildAndPriceViewerRuntime.jsx</a><br />
+- <a href="../src/viewer/hooks/index.js">hooks/index.js</a><br />
+- <a href="../src/viewer/components/index.js">components/index.js</a><br />
+- <a href="../src/viewer/hooks/useViewerPresentationState.js">useViewerPresentationState.js</a><br />
+- <a href="../src/viewer/hooks/useViewerSelectionRuntime.js">useViewerSelectionRuntime.js</a><br />
+- <a href="../src/viewer/hooks/useViewerAuthoringCapture.js">useViewerAuthoringCapture.js</a></p>
+<p>This is the shared internal wrapper runtime. It currently owns:</p>
+<ul>
+<li>presentation editing state (<code>useViewerPresentationState</code>)</li>
+<li>mesh selection and material editing state (<code>useViewerSelectionRuntime</code>, <code>useSelectionMaterialState</code>)</li>
+<li>authoring capture coordination (<code>useViewerAuthoringCapture</code>) — fires <code>ViewerOutput</code> capture callbacks when admin clicks a capture action</li>
+<li>visibility state (<code>useVisibilityState</code>)</li>
+<li><code>ViewerAdminNavigationBridge</code> composition</li>
+<li>when <code>input.admin.enabled = true</code>: renders the built-in <code>ViewerAuthoringDemoPanel</code> (the authoring overlay on the left) as a viewer-side overlay. The panel is dynamic by default — its content is filtered by <code>input.admin.activeAuthoringFocus</code> (<code>'section' | 'option' | 'view' | 'presentationMode' | 'all'</code>); a debug-panel toggle can force legacy two-tab mode for testing/revert</li>
+<li>always renders <code>NavigationDemoPanel</code> (View row + Summer/Winter mode rows along the bottom) — identical in admin and user modes; it is for navigation only and contains no capture controls</li>
+<li><code>ViewerRoot</code> handoff</li>
+</ul>
+<h3 id="vieweradminnavigationbridge">ViewerAdminNavigationBridge<a class="headerlink" href="#vieweradminnavigationbridge" title="Permanent link">&para;</a></h3>
+<p>Current file:<br />
+- <a href="../src/viewer/components/ViewerAdminNavigationBridge.jsx">ViewerAdminNavigationBridge.jsx</a><br />
+- <a href="../src/viewer/hooks/useViewerAdminNavigationBridgeRuntime.js">useViewerAdminNavigationBridgeRuntime.js</a></p>
+<p>This is a viewer-internal helper layer that:</p>
+<ul>
+<li>composes the navigation bridge runtime hook</li>
+<li>supports viewer-internal navigation helpers</li>
+</ul>
+<p>This is intentionally kept out of the public wrapper contract.</p>
+<h3 id="viewerroot">ViewerRoot<a class="headerlink" href="#viewerroot" title="Permanent link">&para;</a></h3>
+<p>Current file:<br />
+- <a href="../src/viewer/ViewerRoot.jsx">ViewerRoot.jsx</a><br />
+- <a href="../src/viewer/components/ViewerSceneCanvas.jsx">ViewerSceneCanvas.jsx</a><br />
+- <a href="../src/viewer/components/ViewerPerformanceOverlay.jsx">ViewerPerformanceOverlay.jsx</a><br />
+- <a href="../src/viewer/components/ViewerDebugCanvasHelpers.jsx">ViewerDebugCanvasHelpers.jsx</a><br />
+- <a href="../src/viewer/hooks/useViewerCameraRuntime.js">useViewerCameraRuntime.js</a><br />
+- <a href="../src/viewer/hooks/useViewerSceneInteraction.js">useViewerSceneInteraction.js</a></p>
+<p><code>ViewerRoot</code> is the internal runtime boundary.</p>
+<p><code>ViewerDebugCanvasHelpers.jsx</code> powers navigation debug visuals and contains a parked custom axis-helper implementation that is intentionally left disabled for now.</p>
+<p>It owns:</p>
+<ul>
+<li>model rendering</li>
+<li>composition of camera/runtime orchestration</li>
+<li>quick views and startup reveal behavior</li>
+<li>presentation playback</li>
+<li>scene assignment execution</li>
+<li>composition of scene interaction handoff</li>
+<li>lazy composition of the heavy canvas/renderer scene path</li>
+<li>composition of viewer-local debug/admin helper components</li>
+</ul>
+<p><code>ViewerRoot</code> consumes contract-shaped input but remains an internal implementation detail.</p>
+<h4 id="batch-capture-runtime">Batch Capture Runtime<a class="headerlink" href="#batch-capture-runtime" title="Permanent link">&para;</a></h4>
+<p><code>ViewerRoot</code> watches <code>adminInput.batchCapture.nonce</code> and delegates to <code>useBatchRenderCapture</code> when the nonce increments. The hook processes the item queue in sequence: it snaps the camera to each item's pose, waits 1500ms for materials and shadows to settle, triggers an off-screen 3840×2160 JPEG render via <code>RenderCaptureHandler</code>, fires <code>onRenderCaptured</code> with the resulting blob and metadata, then advances to the next item. When all items are done it fires <code>onBatchCaptureComplete</code>. Admin overlays and debug helpers are suppressed during the capture sequence so they do not appear in rendered images.</p>
+<hr />
+<h2 id="scene-runtime">Scene Runtime<a class="headerlink" href="#scene-runtime" title="Permanent link">&para;</a></h2>
+<h3 id="visibility">Visibility<a class="headerlink" href="#visibility" title="Permanent link">&para;</a></h3>
+<p>Current file:<br />
+- <a href="../src/hooks/useVisibilityState.js">useVisibilityState.js</a></p>
+<p>Current stable visibility model separates:</p>
+<ul>
+<li>manual hidden geometry</li>
+<li>section-driven hidden geometry</li>
+<li>temporary isolation/focus state</li>
+</ul>
+<p>Section presentation replay and authoring tools both affect visibility, but they are not the same kind of state.</p>
+<p>Visibility assignments are included in section and view capture payloads and replayed by the App via <code>viewerInput.scene.visibilityAssignments</code>. The full shape is <code>{ hiddenGeometryIds, shownGeometryIds, instantHiddenGeometryIds, isolatedGeometryIds }</code>. The Viewer resolves show/hide priority: <code>shownGeometryIds</code> wins over <code>hiddenGeometryIds</code>; <code>instantHiddenGeometryIds</code> hides without fade.</p>
+<h3 id="materials">Materials<a class="headerlink" href="#materials" title="Permanent link">&para;</a></h3>
+<p>Current files:<br />
+- <a href="../src/hooks/useSelectionMaterialState.js">useSelectionMaterialState.js</a><br />
+- <a href="../src/viewer/hooks/useSceneAssignments.js">useSceneAssignments.js</a></p>
+<p><code>useSceneAssignments</code> is a thin coordinator that delegates to two sub-hooks:<br />
+- <code>useSceneVisibility</code> — fade animation and mesh visibility<br />
+- <code>useSceneMaterialAssignments</code> — texture and scalar material application</p>
+<p>Helper functions for those sub-hooks live in <code>materialUtils.js</code> and <code>modelPreparationUtils.js</code>.</p>
+<p>Current stable material state supports:</p>
+<ul>
+<li>direct material editing of selected geometry</li>
+<li>recent/pending material change tracking</li>
+<li>restore-original material behavior</li>
+<li>replay of option-owned material assignments</li>
+<li>replay of model-level default material assignments</li>
+</ul>
+<p>The Viewer applies materials in two layers received through <code>ViewerSceneInput</code>:</p>
+<ol>
+<li><code>defaultMaterialAssignments</code> — the model-level baseline; applied first</li>
+<li><code>materialAssignments</code> — option-driven overrides; applied second, winning for any geometry both layers target</li>
+</ol>
+<p>A <code>restoreOriginalMaterial: true</code> entry in <code>materialAssignments</code> restores to the model default for that geometry if one exists, or to the baked original otherwise.</p>
+<hr />
+<h2 id="current-authoring-model">Current Authoring Model<a class="headerlink" href="#current-authoring-model" title="Permanent link">&para;</a></h2>
+<h3 id="admin-mode-is-self-contained-in-the-viewer">Admin mode is self-contained in the Viewer<a class="headerlink" href="#admin-mode-is-self-contained-in-the-viewer" title="Permanent link">&para;</a></h3>
+<p>When <code>input.admin.enabled = true</code>, <code>BuildAndPriceViewerRuntime</code> renders the built-in <code>ViewerAuthoringDemoPanel</code> (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App. The <code>NavigationDemoPanel</code> (View row + presentation mode rows along the bottom) renders in both admin and user modes and is purely for navigation — capture/clear actions live in the Authoring Panel.</p>
+<p>The Authoring Panel is <strong>dynamic by default</strong> — its content is filtered by <code>input.admin.activeAuthoringFocus</code>. See <a href="../integration_guide/#dynamic-authoring-panel">Dynamic Authoring Panel</a> in the integration guide for the focus → controls table and the App-side state-threading pattern.</p>
+<p>The Viewer internally manages:<br />
+- presentation editing state (exposure, HDR, terrain, lighting, solar, point lights)<br />
+- mesh selection and material editing state<br />
+- authoring capture coordination</p>
+<p>In Admin Mode, all UI panels (Views, Summer presets, Winter presets, Spaces, Solar, North Arrow) are always visible regardless of their User Visibility flag values. Panels hidden from users show a dashed orange outline so the admin can distinguish them without losing readability.</p>
+<p>Capture results are communicated back to the App via <code>ViewerOutput</code> callbacks. Five capture families exist:</p>
+<ul>
+<li><strong>Section captures</strong> — pose + cameraMode + presentationMode reference + visibility + UI flags, per section</li>
+<li><strong>View captures</strong> — same shape as section captures, keyed by camera mode (Exterior / Interior / Overhead)</li>
+<li><strong>Presentation mode captures</strong> — full <code>ViewerPresentationInput</code> snapshot, per named mode (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>)</li>
+<li><strong>Option captures</strong> — geometry membership + material assignments, per option</li>
+<li><strong>Model default materials</strong> — model-level baseline material assignments</li>
+</ul>
+<p>Section and view captures store a <code>presentationMode</code> <em>name</em> rather than inline presentation values. The App resolves the full snapshot via <code>presentationModeCaptures[capture.presentationMode]</code> at replay time; <code>capture.ui</code> flags take precedence over the mode snapshot's flags. The App also pushes its full presentation-mode capture map via <code>viewerInput.presentationModeCaptures</code> (added in Contract v1.7) so the Viewer can resolve in-Viewer mode-tile clicks without round-tripping through the App. View captures also drive <code>SpaceTileClickNav</code>: clicking a space tile from overhead view applies the Interior view capture automatically.</p>
+<p>For payload shapes, replay paths, last-one-wins semantics, and Admin vs User Mode rendering paths, see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
+<h3 id="ownership-rules-app-enforced">Ownership rules (App-enforced)<a class="headerlink" href="#ownership-rules-app-enforced" title="Permanent link">&para;</a></h3>
+<p>Two <strong>independent</strong> cross-section ownership rules apply at the App's <code>onOptionCaptured</code> handler — show/hide ownership and material assignment ownership, each exclusive across sections. Enforcement lives at the App layer because section identity is App-owned (the Viewer fires <code>onOptionCaptured</code> with no section context). DemoApp implements the enforcement; any production App integrating the Viewer is expected to apply equivalent rules.</p>
+<p>See <a href="../integration_guide/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> in the integration guide for the canonical rules, the conflict-detection code, and the rejection-banner pattern.</p>
+<hr />
+<h2 id="persistence-model">Persistence Model<a class="headerlink" href="#persistence-model" title="Permanent link">&para;</a></h2>
+<p>Current stable DemoApp behavior:</p>
+<ul>
+<li>authored state is persisted per model, keyed by model ID (<code>demoapp_v2_${modelId}</code>)</li>
+<li>storage mechanism is browser <code>localStorage</code></li>
+<li>manifest models use a stable model ID; uploaded ad hoc files are not persisted</li>
+</ul>
+<p>Persisted snapshot contents include:<br />
+- section captures (<code>pose</code>, <code>cameraMode</code>, <code>presentationMode</code> reference, <code>visibilityAssignments</code>, <code>ui</code> flags)<br />
+- chosen options by section<br />
+- option captures (<code>geometryIds</code>, <code>materialAssignments</code>)<br />
+- model default material capture<br />
+- view captures (keyed by camera mode; same shape as section captures) — replayed by the App via <code>viewerInput</code> when <code>onViewSelected</code> fires<br />
+- presentation mode captures (keyed by mode; full <code>ViewerPresentationInput</code> snapshot; six modes: day / nightExt / nightInt / winterDay / winterNight / winterNightInt)</p>
+<hr />
+<h2 id="camera-presentation-runtime">Camera / Presentation Runtime<a class="headerlink" href="#camera-presentation-runtime" title="Permanent link">&para;</a></h2>
+<p>The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section and view-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead space-tile click (<code>SpaceTileClickNav</code>) that navigates to a clicked space via pathNav while applying the Interior view capture's presentation and visibility on arrival.</p>
+<p>The presentation runtime owns the visual state — HDR environment, terrain preset, exposure, lighting, solar, point/spot lights — plus User Visibility flags for the panel set (Solar / Site, North Arrow, Views row, Summer/Winter rows, Space Menu). Field-level details live in <a href="../viewer_contract_v1_7/#presentation"><code>ViewerPresentationInput</code></a>.</p>
+<p>Solar date/time is included in section and view capture snapshots as part of the <code>presentation.solar.time</code> field. When a capture is replayed, the sun angle is restored to exactly what it was at capture time. There is no standalone App-level solar time control — interactive solar adjustment lives in the Viewer's SolarPanel. The App acts as a transparent conduit: it stores <code>solar.time</code> as part of the capture payload and passes it back through <code>viewerInput.presentation.solar.time</code> during replay.</p>
+<h3 id="solar-time-two-tracks">Solar Time — Two Tracks<a class="headerlink" href="#solar-time-two-tracks" title="Permanent link">&para;</a></h3>
+<p>Solar time has two separate tracks:</p>
+<ol>
+<li>
+<p><strong>Authoritative solar time</strong> — stored in <code>snapshot.solar.time</code> as part of the captured presentation snapshot. Sourced from App input (replayed via <code>input.presentation.solar.time</code>) or a hardcoded default when no capture exists. This is the time used for all captures and is the ground truth for deterministic replay.</p>
+</li>
+<li>
+<p><strong>Preview solar time</strong> (<code>previewSolar</code> state) — set by the Solar playback panel for real-time preview during authoring. This is a viewer-local override for interactive viewing only. It is <strong>never</strong> written into the snapshot or fired back to the App. It is cleared automatically when any section or view change occurs (via <code>applyPresentation</code>) and when <code>applyPresentation</code> is called due to the App's <code>presentation</code> input reference changing with different values.</p>
+</li>
+</ol>
+<hr />
+<h2 id="geometry-identity">Geometry Identity<a class="headerlink" href="#geometry-identity" title="Permanent link">&para;</a></h2>
+<p>Current implementation assigns stable <code>geometryId</code> values during model preparation.</p>
+<p>That stable identity is important for:</p>
+<ul>
+<li>visibility replay</li>
+<li>material replay</li>
+<li>option geometry ownership</li>
+<li>persistence across reloads</li>
+</ul>
+<p>Viewer runtime still tolerates UUID fallback in some places for compatibility, but stable <code>geometryId</code> is the architectural direction.</p>
+<hr />
+<h2 id="runtime-flows">Runtime Flows<a class="headerlink" href="#runtime-flows" title="Permanent link">&para;</a></h2>
+<h3 id="product-playback-flow">Product Playback Flow<a class="headerlink" href="#product-playback-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sequenceDiagram
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    participant App as DemoApp / Host App
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    participant Viewer as BuildAndPriceViewer
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    participant Root as ViewerRoot
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    App-&gt;&gt;Viewer: Send ViewerInput
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    Viewer-&gt;&gt;Root: Forward contract-shaped input
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    Root-&gt;&gt;Root: Apply camera / presentation / scene runtime
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    Root--&gt;&gt;App: Emit optional viewer events
+</code></pre></div>
+<h3 id="section-activation-flow">Section Activation Flow<a class="headerlink" href="#section-activation-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sequenceDiagram
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    participant User
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    participant App as DemoApp
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    participant Viewer as ViewerRoot
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    User-&gt;&gt;App: Activate section
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    App-&gt;&gt;App: Resolve capture payload + chosen options
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    App-&gt;&gt;Viewer: Send requested pose / presentation / visibility / scene assignments
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    Viewer-&gt;&gt;Viewer: Replay section presentation and option effects
+</code></pre></div>
+<h3 id="authoring-capture-flow">Authoring Capture Flow<a class="headerlink" href="#authoring-capture-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sequenceDiagram
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    participant Admin
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    participant Viewer as BuildAndPriceViewerRuntime
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    participant App as DemoApp
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    participant Storage as localStorage
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    Admin-&gt;&gt;Viewer: Adjust camera / visibility / materials (in admin mode)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    Admin-&gt;&gt;Viewer: Click capture button
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    Viewer--&gt;&gt;App: Fire output capture callback with payload
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    App-&gt;&gt;App: Store capture payload in state
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    App-&gt;&gt;Storage: Persist per-model snapshot
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    App-&gt;&gt;Viewer: Pass stored values back as viewerInput (replay)
+</code></pre></div>
+<h3 id="batch-capture-flow">Batch Capture Flow<a class="headerlink" href="#batch-capture-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sequenceDiagram
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    participant App as DemoApp
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    participant Viewer as ViewerRoot
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    participant Renderer as RenderCaptureHandler
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    App-&gt;&gt;App: User clicks &quot;Complete Build&quot;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    App-&gt;&gt;App: Build items from sectionCaptures
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    App-&gt;&gt;Viewer: Send admin.batchCapture = { nonce, items }
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    loop For each item
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>        Viewer-&gt;&gt;Viewer: Snap camera to item pose (1500ms settle)
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        Viewer-&gt;&gt;Renderer: Trigger off-screen 3840×2160 render
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        Renderer--&gt;&gt;Viewer: Return JPEG blob
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        Viewer--&gt;&gt;App: onRenderCaptured({ imageUrl, blob, metadata })
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    end
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    Viewer--&gt;&gt;App: onBatchCaptureComplete()
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    App-&gt;&gt;App: Download one JPEG per section
+</code></pre></div>
+<hr />
+<h2 id="architectural-rules-worth-keeping">Architectural Rules Worth Keeping<a class="headerlink" href="#architectural-rules-worth-keeping" title="Permanent link">&para;</a></h2>
+<h3 id="1-keep-the-public-wrapper-narrow">1. Keep the public wrapper narrow<a class="headerlink" href="#1-keep-the-public-wrapper-narrow" title="Permanent link">&para;</a></h3>
+<p><code>BuildAndPriceViewer</code> should stay centered on:</p>
+<ul>
+<li><code>input</code></li>
+<li><code>output</code></li>
+</ul>
+<p>and should continue to hide:</p>
+<ul>
+<li><code>ViewerRoot</code></li>
+<li>viewer-local debug tools</li>
+<li>authoring UI internals</li>
+</ul>
+<h3 id="2-keep-app-intent-separate-from-viewer-execution">2. Keep App intent separate from Viewer execution<a class="headerlink" href="#2-keep-app-intent-separate-from-viewer-execution" title="Permanent link">&para;</a></h3>
+<p>The App should continue to own:</p>
+<ul>
+<li>what configuration is chosen</li>
+<li>what presentation should be replayed</li>
+<li>what should persist</li>
+</ul>
+<p>The Viewer should continue to own:</p>
+<ul>
+<li>how that intent is executed at runtime</li>
+<li>all admin panel UI when <code>admin.enabled = true</code></li>
+</ul>
+<h3 id="3-demoapp-is-scaffolding-not-the-final-saas-product">3. DemoApp is scaffolding, not the final SaaS product<a class="headerlink" href="#3-demoapp-is-scaffolding-not-the-final-saas-product" title="Permanent link">&para;</a></h3>
+<p><code>DemoApp</code> demonstrates the capture/replay contract and is the reference integration example.</p>
+<p>It is not yet the final production SaaS admin application. Persistence, pricing, product catalogues, and multi-user workflows are App-layer concerns that DemoApp intentionally leaves minimal.</p>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>The architecture is in a clean single-owner state:</p>
+<ul>
+<li>the Viewer owns its own admin UI (no external bridge hosting required)</li>
+<li>the App owns stored captures and replay intent</li>
+<li>all communication goes through <code>input</code>/<code>output</code> — no internal bridges, no dual-state sync</li>
+<li>DemoApp is the canonical reference for how a real App integrates the Viewer</li>
+</ul>
+<p>Adding a new capture type means: add a <code>ViewerOutput</code> callback, capture it in the Viewer, store it in the App, replay it through <code>viewerInput</code>. The pattern is consistent across all capture types.</p>
+<hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<p>See <a href="../overview/#glossary">Overview</a> for the canonical glossary.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2491 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation and integration kit for the Viewer — a React + Three.js runtime for configurable, geometric SaaS products">
+      
+      
+      
+        <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/admin_authoring_guide/">
+      
+      
+        <link rel="prev" href="../capture_and_replay/">
+      
+      
+        <link rel="next" href="../model_authoring_guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Admin Authoring Guide - Viewer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#admin-authoring-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Viewer Documentation" class="md-header__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Viewer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Admin Authoring Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Viewer Documentation" class="md-nav__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Viewer Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Contract v1.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demoapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DemoApp Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capture_and_replay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture & Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Admin Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-authoring-panel-is-context-aware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Authoring Panel is context-aware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-clear-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture / clear pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-are-authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Are Authoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What You Are Authoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-presentation-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Presentation modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-section-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Section captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-option-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Option captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-model-default-materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Model default materials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-authoring-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Authoring Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#presentation-mode-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation Mode Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="View Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overhead-space-tile-click-spacetileclicknav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overhead space-tile click (SpaceTileClickNav)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-activate-the-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — activate the section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-adjust-the-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — adjust the view
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-test-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — test replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-clear-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — clear if needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-choose-the-section-then-the-option" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — choose the section, then the option
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-capture-geometry-membership-if-relevant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — capture geometry membership (if relevant)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-capture-material-assignments-if-relevant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — capture material assignments (if relevant)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-a-texture-material-with-a-flat-color" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replacing a texture material with a flat color
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-material-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture Material Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear-recent-material-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clear Recent Material Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear-option-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clear Option Capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-defaults-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Defaults Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Defaults Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-you-might-want-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When you might want them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-you-can-skip-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When you can skip them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-section-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-section ownership
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cross-section ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-see-when-you-trip-a-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you'll see when you trip a rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-resolve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to resolve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-you-only-want-to-color-geometry-that-another-section-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When you only want to color geometry that another section owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-existing-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-existing conflicts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-visibility-toggles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Visibility toggles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rooms-panel-spacemenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rooms panel (SpaceMenu)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#floor-nav-debug-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Floor Nav debug tool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing replay
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persistence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reset-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-indicators-in-the-overlay-vs-the-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture indicators in the overlay vs. the header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear-buttons-are-always-enabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clear buttons are always enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renaming-sections-and-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renaming sections and options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#good-habits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Good habits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tester_quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tester Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capabilities_and_limits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities & Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subscriber_materials_plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subscriber Materials Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Admin Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-authoring-panel-is-context-aware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Authoring Panel is context-aware
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-clear-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture / clear pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-are-authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Are Authoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What You Are Authoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-presentation-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Presentation modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-section-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Section captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-option-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Option captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-model-default-materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Model default materials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-authoring-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Authoring Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#presentation-mode-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation Mode Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="View Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overhead-space-tile-click-spacetileclicknav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overhead space-tile click (SpaceTileClickNav)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-activate-the-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — activate the section
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-adjust-the-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — adjust the view
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-test-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — test replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-clear-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — clear if needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-choose-the-section-then-the-option" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — choose the section, then the option
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-capture-geometry-membership-if-relevant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — capture geometry membership (if relevant)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-capture-material-assignments-if-relevant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — capture material assignments (if relevant)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replacing-a-texture-material-with-a-flat-color" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replacing a texture material with a flat color
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-material-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture Material Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear-recent-material-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clear Recent Material Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear-option-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clear Option Capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-defaults-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Defaults Workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Defaults Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-you-might-want-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When you might want them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-you-can-skip-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When you can skip them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-section-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-section ownership
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cross-section ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-see-when-you-trip-a-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What you'll see when you trip a rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-resolve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to resolve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-you-only-want-to-color-geometry-that-another-section-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When you only want to color geometry that another section owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-existing-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-existing conflicts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-visibility-toggles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Visibility toggles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rooms-panel-spacemenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rooms panel (SpaceMenu)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#floor-nav-debug-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Floor Nav debug tool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing replay
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Persistence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reset-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-indicators-in-the-overlay-vs-the-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture indicators in the overlay vs. the header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear-buttons-are-always-enabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clear buttons are always enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renaming-sections-and-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renaming sections and options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#good-habits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Good habits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="admin-authoring-guide">Admin Authoring Guide<a class="headerlink" href="#admin-authoring-guide" title="Permanent link">&para;</a></h1>
+<p><strong>Primary reader:</strong> Admin author preparing a model<br />
+<strong>Job-to-be-done:</strong> Author a model day-to-day — captures, options, materials, sections<br />
+<strong>Next doc:</strong> <a href="../model_authoring_guide/">Model Authoring Guide</a></p>
+<hr />
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>This guide explains how to author a model — the camera moments, lighting, geometry visibility, and material choices that make up a configurable product experience. It is written for the person doing the authoring, not for developers integrating the system.</p>
+<p>If you are working through this for the first time, the <a href="../tester_quickstart/">Tester Quickstart</a> gets you to your first working configuration in about 15 minutes. This guide is the deeper reference once you are comfortable with the basics.</p>
+<hr />
+<h2 id="admin-mode">Admin Mode<a class="headerlink" href="#admin-mode" title="Permanent link">&para;</a></h2>
+<p>Click <strong>Admin Mode</strong> in the header to enter authoring. The button highlights when active. The <strong>Authoring Panel</strong> appears as a left-side overlay containing all capture and clear actions. Click it again to leave authoring and return to the clean customer-facing view.</p>
+<p>The bottom <strong>Navigation Panel</strong> (View buttons + Summer / Winter presentation mode buttons) renders the same in admin and user modes — it is for navigation only.</p>
+<h3 id="the-authoring-panel-is-context-aware">The Authoring Panel is context-aware<a class="headerlink" href="#the-authoring-panel-is-context-aware" title="Permanent link">&para;</a></h3>
+<p>The panel adapts to whatever you most recently clicked. You don't need to switch tabs.</p>
+<table>
+<thead>
+<tr>
+<th>Last click</th>
+<th>Panel surfaces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Section tab</strong></td>
+<td>Section Capture/Clear, geometry tools, User Visibility toggles, Camera Mode selector</td>
+</tr>
+<tr>
+<td><strong>Option button</strong></td>
+<td>Option Capture / Capture Material Only / Clear, Material Defaults, geometry tools, Assembly Inspector, Materials picker</td>
+</tr>
+<tr>
+<td><strong>View button</strong> (Exterior / Interior / Overhead)</td>
+<td>View Capture/Clear, geometry tools, User Visibility toggles, Camera Mode selector</td>
+</tr>
+<tr>
+<td><strong>Presentation Mode button</strong> (Summer Day, Winter Night, etc.)</td>
+<td>Mode Capture/Clear, User Visibility toggles, Presentation sliders, HDR Environment, Terrain Preset</td>
+</tr>
+</tbody>
+</table>
+<p>Each focus shows exactly the controls that belong to its capture. For example, a presentation mode capture stores the full visual environment (HDR, terrain, lighting, solar) so its panel exposes those sliders. A section capture stores a <em>reference</em> to a presentation mode rather than the raw values, so its panel exposes camera and visibility controls but not the lighting sliders.</p>
+<h3 id="capture-clear-pattern">Capture / clear pattern<a class="headerlink" href="#capture-clear-pattern" title="Permanent link">&para;</a></h3>
+<p>All five capture families share the same shape — a Capture / Clear button pair at the top of the focus context, styled consistently:</p>
+<ul>
+<li><strong>Section focus</strong> → Section Capture / Section Clear</li>
+<li><strong>View focus</strong> → View Capture / View Clear</li>
+<li><strong>Presentation Mode focus</strong> → Mode Capture / Mode Clear</li>
+<li><strong>Option focus</strong> → Option Capture / Option Clear (plus the Capture Material Only variant)</li>
+<li><strong>Model defaults</strong> (always available in option focus) → Capture Material Defaults / Clear Material Defaults</li>
+</ul>
+<hr />
+<h2 id="what-you-are-authoring">What You Are Authoring<a class="headerlink" href="#what-you-are-authoring" title="Permanent link">&para;</a></h2>
+<p>There are five kinds of authored state. The <strong>recommended order</strong> (next section) walks through them in the sequence that flows most smoothly — but they are largely independent and can be revisited in any order.</p>
+<h3 id="1-presentation-modes">1. Presentation modes<a class="headerlink" href="#1-presentation-modes" title="Permanent link">&para;</a></h3>
+<p>A presentation mode is a complete visual environment — HDR sky, terrain, lighting, solar position, exposure, point lights, and User Visibility flags — saved under one of six named slots:</p>
+<ul>
+<li>Summer Day, Summer Night, Summer Night Interior</li>
+<li>Winter Day, Winter Night, Winter Night Interior</li>
+</ul>
+<p>Sections and views <em>reference</em> a presentation mode by name. Capturing a mode once means every section that uses Summer Day always renders with the same sky and lighting.</p>
+<p>The Summer and Winter rows can each be hidden from users via the User Visibility toggles. Use this when a product does not need a winter presentation.</p>
+<h3 id="2-views">2. Views<a class="headerlink" href="#2-views" title="Permanent link">&para;</a></h3>
+<p>A view capture stores a camera pose, a presentation mode reference, geometry visibility, and User Visibility flags under one of three named slots: <strong>Exterior</strong>, <strong>Interior</strong>, <strong>Overhead</strong>. Pressing a View button replays the capture.</p>
+<p>Views give you reusable basepoints. They are especially useful as starting positions when authoring sections — you can return to a known good Exterior pose and then frame each section's hero shot from there.</p>
+<h3 id="3-section-captures">3. Section captures<a class="headerlink" href="#3-section-captures" title="Permanent link">&para;</a></h3>
+<p>A section capture stores a camera pose, a presentation mode reference, geometry visibility, User Visibility flags, and the camera mode for one product section (Roof, Flooring, Solar Package, etc.).</p>
+<p>Activating a section in user mode replays the capture: the camera animates to the pose, the presentation switches to the referenced mode, and the geometry visibility updates.</p>
+<h3 id="4-option-captures">4. Option captures<a class="headerlink" href="#4-option-captures" title="Permanent link">&para;</a></h3>
+<p>An option capture stores two kinds of intent for a chosen option within a section:</p>
+<ul>
+<li><strong>Geometry membership</strong> — which parts of the model belong to this option (used to show the active option's parts and hide the other options' parts)</li>
+<li><strong>Material assignments</strong> — what those parts should look like (color, roughness, metalness, textures)</li>
+</ul>
+<p>An option can own one, the other, or both. The same option capture button can collect either intent or both at once.</p>
+<h3 id="5-model-default-materials">5. Model default materials<a class="headerlink" href="#5-model-default-materials" title="Permanent link">&para;</a></h3>
+<p>The model as a whole can own a set of material assignments that replay automatically on every load, before any option assignments are applied. This is the baseline appearance — the colors, roughness, and textures the model should default to before the user makes any choices.</p>
+<p>Option assignments always override model defaults for the same geometry. When an option is deactivated, the geometry falls back to the model default.</p>
+<p>Model defaults are <strong>optional</strong>. If every option for a given piece of geometry assigns its own material (e.g. every siding color option captures its own material), the default appearance is never visible to the user, so capturing a default for that geometry is unnecessary.</p>
+<hr />
+<h2 id="recommended-authoring-order">Recommended Authoring Order<a class="headerlink" href="#recommended-authoring-order" title="Permanent link">&para;</a></h2>
+<p>Use this order when authoring a new model. Each step builds on the previous in a way that minimizes back-and-forth.</p>
+<ol>
+<li><strong>Capture at least one Presentation Mode.</strong> Start with Summer Day — adjust HDR, terrain, exposure, sun, and ambient light until the daytime exterior looks right, then click <strong>Mode Capture</strong> with Summer Day active. You can return to capture additional modes (Summer Night, Winter Day, etc.) later.</li>
+<li><strong>Capture the three Views</strong> (Exterior, Interior, Overhead). For each one: navigate to the position you want, set the matching Camera Mode in the panel, choose the Presentation Mode you want for that view, set the User Visibility toggles for that view, and click <strong>View Capture</strong>. Views give you reliable basepoints to return to before each section capture.</li>
+<li><strong>Capture Sections.</strong> For each section: click the section tab, navigate (often by pressing a View button first to land at a basepoint, then adjusting), confirm the Presentation Mode is what you want for the section, set User Visibility for the section, hide any presentation-context geometry (e.g. roof for an overhead view), and click <strong>Section Capture</strong>.</li>
+<li><strong>Capture Option geometry membership.</strong> Per section, per option: click the option, select the parts of the model that belong to that option, and click <strong>Option Capture</strong>.</li>
+<li><strong>Capture Option material assignments.</strong> Per option that needs custom materials: click the option, select the geometry, edit the material (color, roughness, metalness, or apply a library texture), and click <strong>Option Capture</strong>. If the geometry is already owned for show/hide by a different section, use <strong>Capture Material Only</strong> (see <a href="#cross-section-ownership">Cross-section ownership</a> below).</li>
+<li><strong>Capture Model Defaults — anytime, optionally.</strong> Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. Some authors prefer to do this immediately after Views; others leave it to the end. There is no wrong time.</li>
+</ol>
+<p>You do not have to work in this exact order, but it is the cleanest path on a fresh model.</p>
+<hr />
+<h2 id="presentation-mode-workflow">Presentation Mode Workflow<a class="headerlink" href="#presentation-mode-workflow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Click the presentation mode button you want to author (Summer Day, Summer Night, Winter Day, etc.). The panel switches to mode-authoring controls.</li>
+<li>Adjust the presentation sliders — exposure, sun, ambient, HDR rotation, point lights, emissive intensity — and pick the HDR environment and terrain preset.</li>
+<li>Set User Visibility toggles if this mode should hide certain panels from users (e.g. hide the Solar / Site panel for night modes).</li>
+<li>Click <strong>Mode Capture</strong>.</li>
+</ol>
+<p>To replace an existing capture, just capture again — it overwrites in place, no need to clear first.</p>
+<p>To remove a stored mode, click <strong>Mode Clear</strong>.</p>
+<p><strong>Winter mode defaults.</strong> When you switch to a winter mode that has no capture yet, the HDR environment is automatically set to <em>Horn Koppe Snow</em> and the terrain preset to <em>Snow</em>. All other settings stay where they are. This gives a sensible winter starting point. Summer modes have no equivalent default — switching to an uncaptured summer mode leaves all settings as-is.</p>
+<hr />
+<h2 id="view-workflow">View Workflow<a class="headerlink" href="#view-workflow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Click the view button (Exterior, Interior, or Overhead). The panel switches to view-authoring controls.</li>
+<li>Position the camera. Orbit, pan, zoom freely.</li>
+<li>Set the <strong>Camera Mode</strong> in the panel (Ext / Int / Ovh) to match the view you are capturing. <strong>This is purely declarative</strong> — clicking Camera Mode does not move the camera. It only tags which mode the capture stores. Set it to label the pose correctly before capturing.</li>
+<li>Choose the Presentation Mode you want for this view (e.g. Summer Day for Exterior, Summer Night Interior for Interior).</li>
+<li>Set User Visibility toggles for what users should see when in this view (e.g. hide the Solar panel for interior views, hide the Rooms panel for exterior views).</li>
+<li>Click <strong>View Capture</strong>.</li>
+</ol>
+<p>To remove a stored view, click <strong>View Clear</strong>.</p>
+<h3 id="overhead-space-tile-click-spacetileclicknav">Overhead space-tile click (<code>SpaceTileClickNav</code>)<a class="headerlink" href="#overhead-space-tile-click-spacetileclicknav" title="Permanent link">&para;</a></h3>
+<p>When in Overhead view, clicking a space tile navigates the camera into that interior space and <strong>also applies the Interior view capture</strong> — including its presentation and geometry visibility. This means the user lands inside with the correct interior lighting already applied, instead of arriving with overhead lighting still active.</p>
+<p>The Interior view capture is the shared source of truth for both the Interior button press and overhead space-tile clicks. Authoring once covers both.</p>
+<p>If no Interior view capture has been authored, the click still navigates the camera but leaves the lighting unchanged.</p>
+<hr />
+<h2 id="section-workflow">Section Workflow<a class="headerlink" href="#section-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-activate-the-section">Step 1 — activate the section<a class="headerlink" href="#step-1-activate-the-section" title="Permanent link">&para;</a></h3>
+<p>Click the section tab to make it active.</p>
+<p>If the section already has a captured preset, activating it replays that preset. If it does not, activating it leaves the current presentation alone.</p>
+<h3 id="step-2-adjust-the-view">Step 2 — adjust the view<a class="headerlink" href="#step-2-adjust-the-view" title="Permanent link">&para;</a></h3>
+<p>A common starting move is to press a View button (often Exterior or Overhead) to land at a known basepoint, then orbit / pan / zoom to the section's hero angle.</p>
+<p>Adjust as needed:</p>
+<ul>
+<li>camera pose</li>
+<li>camera mode (Ext / Int / Ovh in the authoring panel — declarative, see View workflow)</li>
+<li>presentation mode (which mode this section should use)</li>
+<li>geometry to hide as presentation context (e.g. hide the roof for an overhead view)</li>
+<li>User Visibility toggles for what users should see when this section is active</li>
+</ul>
+<h3 id="step-3-capture">Step 3 — capture<a class="headerlink" href="#step-3-capture" title="Permanent link">&para;</a></h3>
+<p>Click <strong>Section Capture</strong>.</p>
+<h3 id="step-4-test-replay">Step 4 — test replay<a class="headerlink" href="#step-4-test-replay" title="Permanent link">&para;</a></h3>
+<p>Click between sections to confirm the camera animates to each captured pose with the right lighting and visibility. Switching to a section that has no capture leaves the current presentation unchanged.</p>
+<h3 id="step-5-clear-if-needed">Step 5 — clear if needed<a class="headerlink" href="#step-5-clear-if-needed" title="Permanent link">&para;</a></h3>
+<p>Click <strong>Section Clear</strong> to remove the active section's stored capture.</p>
+<hr />
+<h2 id="option-workflow">Option Workflow<a class="headerlink" href="#option-workflow" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-choose-the-section-then-the-option">Step 1 — choose the section, then the option<a class="headerlink" href="#step-1-choose-the-section-then-the-option" title="Permanent link">&para;</a></h3>
+<p>This sequence matters. The option capture button stores whatever is currently selected and changed <em>under whichever option is active</em>. If the wrong option is active when you capture, the work lands under the wrong key. Always select the section and option <em>first</em>, then make changes, then capture.</p>
+<h3 id="step-2-capture-geometry-membership-if-relevant">Step 2 — capture geometry membership (if relevant)<a class="headerlink" href="#step-2-capture-geometry-membership-if-relevant" title="Permanent link">&para;</a></h3>
+<p>Select the parts of the model that should belong to this option.</p>
+<p>Click <strong>Option Capture</strong>. The selected geometry IDs are stored against the active option.</p>
+<h3 id="step-3-capture-material-assignments-if-relevant">Step 3 — capture material assignments (if relevant)<a class="headerlink" href="#step-3-capture-material-assignments-if-relevant" title="Permanent link">&para;</a></h3>
+<p>With the option still active:</p>
+<ol>
+<li>Select the geometry to retexture</li>
+<li>Adjust the color, roughness, metalness, or apply a library material</li>
+<li>Click <strong>Option Capture</strong></li>
+</ol>
+<p>The material assignments are stored against the active option. They replay whenever this option is selected.</p>
+<p>You can capture geometry and materials in the same click, or in separate clicks — Option Capture <strong>additively merges</strong> into the existing stored payload. New geometry is added to the option's set; materials for newly-touched geometry overwrite while materials for previously-stored geometry stay put. To replace from scratch, click <strong>Option Clear</strong> first.</p>
+<h3 id="replacing-a-texture-material-with-a-flat-color">Replacing a texture material with a flat color<a class="headerlink" href="#replacing-a-texture-material-with-a-flat-color" title="Permanent link">&para;</a></h3>
+<p>If an option already has a texture assigned and you want to replace it with a solid color:</p>
+<ol>
+<li>Click the option to make it active (this replays its current material, including the texture)</li>
+<li>Select the geometry</li>
+<li>Click <strong>Reset Selected Part</strong></li>
+<li>Pick the new color and adjust roughness / metalness</li>
+<li>Click <strong>Option Capture</strong></li>
+</ol>
+<p>The reset is necessary because the color picker preserves any existing texture maps when adjusting an active assignment. Without the reset, you get a color-tinted version of the texture instead of a flat face.</p>
+<h3 id="capture-material-only">Capture Material Only<a class="headerlink" href="#capture-material-only" title="Permanent link">&para;</a></h3>
+<p>The <strong>Capture Material Only</strong> button is a variant of Option Capture that fires <em>only</em> the material assignments — no geometry membership claim.</p>
+<p>Use it when the active option's only intent is to <em>color</em> geometry that is already owned for show/hide by a different section. See <a href="#cross-section-ownership">Cross-section ownership</a> below.</p>
+<p>The button is enabled whenever there are pending material changes, regardless of whether geometry is selected.</p>
+<h3 id="clear-recent-material-changes">Clear Recent Material Changes<a class="headerlink" href="#clear-recent-material-changes" title="Permanent link">&para;</a></h3>
+<p>This is a local reset for pending material edits before they are captured. It clears the in-progress changes you have made but not yet stored. It does <strong>not</strong> affect already-captured option materials.</p>
+<h3 id="clear-option-capture">Clear Option Capture<a class="headerlink" href="#clear-option-capture" title="Permanent link">&para;</a></h3>
+<p>Removes both the geometry membership and the material assignments stored against the active option.</p>
+<hr />
+<h2 id="model-defaults-workflow">Model Defaults Workflow<a class="headerlink" href="#model-defaults-workflow" title="Permanent link">&para;</a></h2>
+<p>Model defaults are the baseline appearance of the model — applied on every load, before any option assignments. They are optional.</p>
+<h3 id="when-you-might-want-them">When you might want them<a class="headerlink" href="#when-you-might-want-them" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The exported model has no useful default colors and you want to set them once instead of re-exporting.</li>
+<li>One section assigns custom materials only on some options, and the other options should fall back to a polished default rather than the bare exported look.</li>
+</ul>
+<h3 id="when-you-can-skip-them">When you can skip them<a class="headerlink" href="#when-you-can-skip-them" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Every option for the relevant geometry already captures its own material. The default would never be seen by users, so there is no reason to set one.</li>
+</ul>
+<h3 id="how-to-capture">How to capture<a class="headerlink" href="#how-to-capture" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Make sure no option is active that already has a captured material on the geometry you are about to edit (otherwise you will be working on top of an option assignment).</li>
+<li>Select the geometry.</li>
+<li>Adjust color, roughness, metalness, or apply a library material.</li>
+<li>Click <strong>Capture Material Defaults</strong> (in the option focus panel).</li>
+</ol>
+<p>The model defaults are stored at the model level and replay on every load, regardless of which section or option is active. Option assignments always override defaults for the same geometry.</p>
+<h3 id="clearing">Clearing<a class="headerlink" href="#clearing" title="Permanent link">&para;</a></h3>
+<p>Click <strong>Clear Material Defaults</strong> to remove the stored baseline. Even if the panel currently shows no captured value (e.g. after a page reload), the button is always enabled — clicking it clears any persisted default from a prior session.</p>
+<p>The <strong>"Mat. Defaults"</strong> indicator in the header lights up blue when material defaults are stored. Hovering it after a 3-second delay shows the stored payload in a tooltip with a Copy button.</p>
+<hr />
+<h2 id="cross-section-ownership">Cross-section ownership<a class="headerlink" href="#cross-section-ownership" title="Permanent link">&para;</a></h2>
+<p>Replay needs to be deterministic — the same configuration always produces the same display. To guarantee that, two <strong>independent</strong> ownership rules apply across sections:</p>
+<ol>
+<li><strong>Show/hide ownership.</strong> A piece of geometry can appear in the geometry-membership list of options within only one section. (It can appear in multiple options <em>within</em> the same section — that's how combinatorial choices like "left light only / right light only / both lights" work.)</li>
+<li><strong>Material assignment ownership.</strong> A piece of geometry can be material-assigned by options within only one section.</li>
+</ol>
+<p>The two rules are independent. The same geometry <strong>may</strong> be owned for show/hide by Section A <em>and</em> material-assigned by Section B — that combination is allowed. What is not allowed is the same geometry being on the show/hide list of options across multiple sections, or being material-assigned by options across multiple sections.</p>
+<h3 id="what-youll-see-when-you-trip-a-rule">What you'll see when you trip a rule<a class="headerlink" href="#what-youll-see-when-you-trip-a-rule" title="Permanent link">&para;</a></h3>
+<p>If you click Option Capture and the capture would violate either rule, the capture is <strong>rejected</strong> — nothing is stored — and a red banner appears at the top of the viewer:</p>
+<blockquote>
+<p><em>Capture rejected — cross-section ownership conflict.</em><br />
+<em>Already in show/hide list of </em><em>Section 1 / Option 2</em><em>: G_roof_01, G_roof_02.</em><br />
+<em>Clear that capture first, or pick different geometry.</em></p>
+</blockquote>
+<h3 id="how-to-resolve">How to resolve<a class="headerlink" href="#how-to-resolve" title="Permanent link">&para;</a></h3>
+<p>You have two options:</p>
+<ul>
+<li><strong>Pick different geometry.</strong> Often the simplest fix.</li>
+<li><strong>Clear the conflicting option's capture first.</strong> Switch to the named section and option, click Option Clear, then come back and capture.</li>
+</ul>
+<h3 id="when-you-only-want-to-color-geometry-that-another-section-owns">When you only want to color geometry that another section owns<a class="headerlink" href="#when-you-only-want-to-color-geometry-that-another-section-owns" title="Permanent link">&para;</a></h3>
+<p>A common case: Section A owns the roof's show/hide (which roof shapes appear), and you want Section B to control the roof's color. If you click Option Capture in Section B with roof geometry selected, Rule 1 fires (Section A already owns it).</p>
+<p>The fix: use <strong>Capture Material Only</strong>. This fires the material assignment without claiming show/hide ownership, so Rule 1 is not triggered. Rule 2 still applies — only one section can assign materials to that roof geometry.</p>
+<h3 id="pre-existing-conflicts">Pre-existing conflicts<a class="headerlink" href="#pre-existing-conflicts" title="Permanent link">&para;</a></h3>
+<p>If an older saved model has cross-section conflicts from before the rules were enforced, an amber banner surfaces them on load. The banner lists show/hide and material conflicts in separate groups so each kind can be addressed independently.</p>
+<hr />
+<h2 id="user-visibility-toggles">User Visibility toggles<a class="headerlink" href="#user-visibility-toggles" title="Permanent link">&para;</a></h2>
+<p>The User Visibility section in the Authoring Panel controls which UI panels users see in non-admin mode. There are six toggles:</p>
+<ul>
+<li><strong>Solar</strong> — Solar / Site panel</li>
+<li><strong>Views</strong> — Views row (Exterior / Interior / Overhead buttons)</li>
+<li><strong>Summer</strong> — Summer presentation mode row</li>
+<li><strong>Winter</strong> — Winter presentation mode row</li>
+<li><strong>Rooms</strong> — SpaceMenu / Rooms panel (scrollable list of navigable rooms)</li>
+<li><strong>North</strong> — North Arrow overlay</li>
+</ul>
+<p>In Admin Mode, all six panels are always visible regardless of toggle state — so you can always author them. When a panel is toggled off (hidden from users), it shows a <strong>dashed orange outline</strong> in admin so you can tell it is hidden without losing readability. The North Arrow has no orange outline indicator; it shows or hides as-is in both modes.</p>
+<p>User Visibility toggles are part of the section / view / presentation mode capture payload. Each capture independently controls which panels are visible when it is active — you can hide the Solar panel for interior views and show it for exterior views.</p>
+<hr />
+<h2 id="rooms-panel-spacemenu">Rooms panel (SpaceMenu)<a class="headerlink" href="#rooms-panel-spacemenu" title="Permanent link">&para;</a></h2>
+<p>The Rooms panel — implemented by the internal <code>SpaceMenu</code> component — is a scrollable list of navigable rooms displayed in the right column of the viewer, below the Solar panel. Each room is clickable to navigate to that location. In Admin Mode the panel is always visible; the <strong>Rooms</strong> User Visibility toggle controls whether users see it.</p>
+<p>Two things to know about Rooms panel navigation:</p>
+<ul>
+<li>Clicking a room in the Rooms panel <strong>only navigates the camera</strong>. It does not change lighting, environment, exposure, materials, or geometry visibility.</li>
+<li>The exception is the overhead space-tile click (<code>SpaceTileClickNav</code>). See <a href="#overhead-space-tile-click-spacetileclicknav">Overhead space-tile click</a> above.</li>
+</ul>
+<hr />
+<h2 id="floor-nav-debug-tool">Floor Nav debug tool<a class="headerlink" href="#floor-nav-debug-tool" title="Permanent link">&para;</a></h2>
+<p>A <strong>Floor Nav</strong> button appears in the Views Panel in Admin Mode. Toggling it on overlays a debug visualization showing:</p>
+<ul>
+<li>green rectangles on each room's floor indicating the walkable landing zone (inset by the wall margin)</li>
+<li>a green disc and ring at the clamped landing point when hovering a floor zone</li>
+<li>a white ring at the raw cursor position plus a yellow line to the clamped position when the cursor is near a wall and gets pushed inward</li>
+<li>a warm yellow frustum drape projected onto the visible room surfaces showing what the camera would frame after clicking that floor point</li>
+</ul>
+<p>Useful for verifying that <code>Spaces &gt; Rooms &gt; &lt;name&gt;</code> markers are sized and positioned correctly in the model, understanding how wall margin clamping affects landing positions near walls and doorways, and previewing the camera framing that results from a floor click before navigating.</p>
+<hr />
+<h2 id="testing-replay">Testing replay<a class="headerlink" href="#testing-replay" title="Permanent link">&para;</a></h2>
+<p>After authoring, simulate real use:</p>
+<ol>
+<li>Activate each section and confirm the camera, lighting, and visibility match what you captured.</li>
+<li>Click between options inside a section and confirm geometry and materials change correctly.</li>
+<li>Press each View button and confirm it replays the captured pose.</li>
+<li>Switch presentation modes and confirm each mode renders the captured environment.</li>
+<li>Reload the page and confirm everything still works (persistence is browser-local — see below).</li>
+</ol>
+<p>A useful diagnostic: hover any capture indicator in the header (section tabs, option buttons, view indicators, presentation mode indicators, Mat. Defaults). After a 3-second delay a tooltip appears showing the exact stored payload, with a Copy button. This is the easy way to verify what was captured without opening browser developer tools.</p>
+<hr />
+<h2 id="persistence">Persistence<a class="headerlink" href="#persistence" title="Permanent link">&para;</a></h2>
+<p>Authored work is saved automatically to your browser's local storage, keyed by model. Reload the page and your captures come back — for the built-in demo models.</p>
+<p>What persists:</p>
+<ul>
+<li>Section captures, view captures, presentation mode captures, option captures, model defaults.</li>
+<li>Section/option label renames.</li>
+</ul>
+<p>What does <strong>not</strong> persist:</p>
+<ul>
+<li>Work on uploaded ad-hoc <code>.glb</code> files. Reloading clears them.</li>
+</ul>
+<h3 id="reset-model">Reset Model<a class="headerlink" href="#reset-model" title="Permanent link">&para;</a></h3>
+<p>The <strong>Reset Model</strong> button in the header clears all captures for the current model in one action — section captures, view captures, presentation mode captures, option captures, and model defaults. It asks you to confirm before clearing.</p>
+<h3 id="capture-indicators-in-the-overlay-vs-the-header">Capture indicators in the overlay vs. the header<a class="headerlink" href="#capture-indicators-in-the-overlay-vs-the-header" title="Permanent link">&para;</a></h3>
+<p>Two sets of capture indicators exist:</p>
+<ul>
+<li><strong>Header indicators</strong> (Summer Day, Summer Night, Exterior, Interior, etc., plus Mat. Defaults). These reflect what is actually stored in your saved state. They survive reloads and are the reliable source of truth for what has been captured. They light up blue when a capture is stored.</li>
+<li><strong>Authoring overlay indicators</strong> (the highlighted state on individual capture buttons). These reflect the current session only. They reset on page reload because the system has no way to distinguish "this is a freshly captured value" from "this value was just loaded from storage." Use the header indicators for capture status.</li>
+</ul>
+<h3 id="clear-buttons-are-always-enabled">Clear buttons are always enabled<a class="headerlink" href="#clear-buttons-are-always-enabled" title="Permanent link">&para;</a></h3>
+<p><strong>Clear Material Defaults</strong>, <strong>Clear View Capture</strong>, and <strong>Clear Mode Capture</strong> are always clickable, even when the overlay shows no captured value for the current session. This is intentional — your saved state may hold a capture from a previous session that the overlay doesn't know about. Clicking the clear button always removes any persisted value.</p>
+<hr />
+<h2 id="renaming-sections-and-options">Renaming sections and options<a class="headerlink" href="#renaming-sections-and-options" title="Permanent link">&para;</a></h2>
+<p>Section and option labels are renameable. Click <strong>Rename</strong> beside any section or option in Admin Mode to give it a meaningful name. Label changes are display-only — they do not affect any captured data.</p>
+<hr />
+<h2 id="good-habits">Good habits<a class="headerlink" href="#good-habits" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Name and structure your model cleanly.</strong> Configurable parts should be selectable as discrete groups. See the <a href="../model_authoring_guide/">Model Authoring Guide</a> for naming conventions and hierarchy guidance.</li>
+<li><strong>Capture sections intentionally.</strong> Think "what visual moment belongs to this section?" rather than "where was the camera sitting when I clicked?".</li>
+<li><strong>Test after each meaningful capture.</strong> Catching a problem at one section is much easier than catching it after fifteen.</li>
+<li><strong>Keep option meaning clean.</strong> Options that represent understandable user choices (Metal Roof / Shingle Roof, Standard Lighting / Premium Lighting) make later authoring and customer use much easier than options that mix unrelated changes.</li>
+</ul>
+<hr />
+<h2 id="short-summary">Short summary<a class="headerlink" href="#short-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Sections own presentation</strong> — pose, presentation mode reference, visibility, User Visibility flags</li>
+<li><strong>Views own reusable basepoints</strong> — pose, presentation mode reference, visibility, User Visibility flags, per camera mode slot</li>
+<li><strong>Presentation modes own the full visual environment</strong> — HDR, terrain, lighting, solar, point lights, exposure</li>
+<li><strong>Options own configuration effects</strong> — geometry membership and material assignments per option</li>
+<li><strong>Model defaults own the baseline appearance</strong> — material assignments applied before any option assignments</li>
+</ul>
+<p>Recommended order for a new model: Presentation Mode → Views → Sections → Options (geometry then materials) → Model Defaults (anytime, optional).</p>
+<p>Admin Mode is for authoring; turn it off to enter display mode.</p>
+<hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<p>See <a href="../overview/#glossary">Overview</a> for the canonical glossary.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

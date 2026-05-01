@@ -1,0 +1,2573 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation and integration kit for the Viewer — a React + Three.js runtime for configurable, geometric SaaS products">
+      
+      
+      
+        <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/model_authoring_guide/">
+      
+      
+        <link rel="prev" href="../admin_authoring_guide/">
+      
+      
+        <link rel="next" href="../tester_quickstart/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Model Authoring Guide - Viewer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-authoring-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Viewer Documentation" class="md-header__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Viewer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model Authoring Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Viewer Documentation" class="md-nav__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Viewer Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Contract v1.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demoapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DemoApp Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capture_and_replay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture & Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-big-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Big Idea
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-viewer-uses-from-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What The Viewer Uses From The Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What The Viewer Uses From The Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-renderable-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Renderable geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-stable-geometry-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Stable geometry identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-navigation-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Navigation markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-lighting-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Lighting markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-shadow-behavior-prefixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Shadow behavior prefixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimum-good-model-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Good Model Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchy-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchy Guidance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hierarchy Guidance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keep-the-hierarchy-stable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep the hierarchy stable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-meaningful-names-when-practical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use meaningful names when practical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-unnecessary-randomization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid unnecessary randomization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#navigation-marker-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation Marker Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Navigation Marker Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#root-marker-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root marker container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rooms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rooms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doorways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doorways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#marker-placement-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marker placement guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lighting-marker-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lighting Marker Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lighting Marker Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#root-marker-container_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root marker container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pointlights-and-spotlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PointLights and SpotLights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-marker-spot-beam-angle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-marker spot beam angle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#light-marker-placement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light marker placement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spot-housing-occlusion-authoring-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spot housing occlusion authoring rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#light-source-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light Source Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authoring-debug-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring Debug Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authoring Debug Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hierarchy-popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchy popup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spot-cones-cyan-helpers-frustum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spot Cones (cyan helpers + frustum)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#floor-nav-and-navpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Floor Nav and NavPath
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shadow-naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shadow Naming Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shadow Naming Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objects-that-cast-shadows-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objects that cast shadows (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objects-that-do-not-cast-shadows-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objects that do not cast shadows (automatic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry-grouping-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry Grouping Guidance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#materials-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Materials Guidance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Materials Guidance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-default-material-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model default material capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#texture-uv-authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture UV Authoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Texture UV Authoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-flat-colour-faces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem with flat-colour faces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fix-apply-a-placeholder-texture-in-sketchup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The fix: apply a placeholder texture in SketchUp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallback-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emissive-materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emissive materials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What To Avoid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-working-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Working Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended Working Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-modelers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For modelers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-technical-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For technical validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-practical-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short Practical Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tester_quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tester Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capabilities_and_limits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities & Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subscriber_materials_plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subscriber Materials Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-big-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Big Idea
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-viewer-uses-from-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What The Viewer Uses From The Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What The Viewer Uses From The Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-renderable-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Renderable geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-stable-geometry-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Stable geometry identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-navigation-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Navigation markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-lighting-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Lighting markers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-shadow-behavior-prefixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Shadow behavior prefixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimum-good-model-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Good Model Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchy-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchy Guidance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hierarchy Guidance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keep-the-hierarchy-stable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep the hierarchy stable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-meaningful-names-when-practical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use meaningful names when practical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-unnecessary-randomization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid unnecessary randomization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#navigation-marker-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation Marker Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Navigation Marker Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#root-marker-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root marker container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rooms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rooms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#doorways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doorways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#marker-placement-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marker placement guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lighting-marker-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lighting Marker Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lighting Marker Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#root-marker-container_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root marker container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pointlights-and-spotlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PointLights and SpotLights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-marker-spot-beam-angle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-marker spot beam angle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#light-marker-placement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light marker placement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spot-housing-occlusion-authoring-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spot housing occlusion authoring rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#light-source-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Light Source Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authoring-debug-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring Debug Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authoring Debug Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hierarchy-popup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchy popup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spot-cones-cyan-helpers-frustum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spot Cones (cyan helpers + frustum)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#floor-nav-and-navpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Floor Nav and NavPath
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shadow-naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shadow Naming Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shadow Naming Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objects-that-cast-shadows-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objects that cast shadows (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#objects-that-do-not-cast-shadows-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objects that do not cast shadows (automatic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example names
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry-grouping-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometry Grouping Guidance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#materials-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Materials Guidance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Materials Guidance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-default-material-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model default material capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#texture-uv-authoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture UV Authoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Texture UV Authoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-with-flat-colour-faces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem with flat-colour faces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fix-apply-a-placeholder-texture-in-sketchup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The fix: apply a placeholder texture in SketchUp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fallback-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback behaviour
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emissive-materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emissive materials
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What To Avoid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-working-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Working Process
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended Working Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-modelers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For modelers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-technical-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For technical validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#short-practical-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short Practical Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="model-authoring-guide">Model Authoring Guide<a class="headerlink" href="#model-authoring-guide" title="Permanent link">&para;</a></h1>
+<p><strong>Primary reader:</strong> 3D modeler (typically a SketchUp user) preparing a <code>.glb</code><br />
+<strong>Job-to-be-done:</strong> Prepare a model that behaves predictably in the Viewer<br />
+<strong>Next doc:</strong> <a href="../admin_authoring_guide/">Admin Authoring Guide</a></p>
+<hr />
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>This guide is for the people preparing <code>.glb</code> files for the Viewer.</p>
+<p>It explains:</p>
+<ul>
+<li>how to name navigation markers</li>
+<li>what hierarchy patterns help the Viewer work well</li>
+<li>how stable geometry targeting works</li>
+<li>what makes a model easier to configure, replay, and persist</li>
+</ul>
+<p>The goal is not to force one artistic workflow. The goal is to help exported models behave predictably in the Viewer.</p>
+<hr />
+<h2 id="the-big-idea">The Big Idea<a class="headerlink" href="#the-big-idea" title="Permanent link">&para;</a></h2>
+<p>The Viewer works best when the model is:</p>
+<ul>
+<li>clearly structured</li>
+<li>consistently named</li>
+<li>exported in a stable hierarchy</li>
+<li>prepared with simple helper geometry for navigation markers</li>
+</ul>
+<p>You do <strong>not</strong> have to author every product the same way visually.</p>
+<p>But you <strong>do</strong> want the exported scene graph to be disciplined.</p>
+<hr />
+<h2 id="what-the-viewer-uses-from-the-model">What The Viewer Uses From The Model<a class="headerlink" href="#what-the-viewer-uses-from-the-model" title="Permanent link">&para;</a></h2>
+<p>The current stable viewer relies on these kinds of model information:</p>
+<h3 id="1-renderable-geometry">1. Renderable geometry<a class="headerlink" href="#1-renderable-geometry" title="Permanent link">&para;</a></h3>
+<p>This is the actual product geometry that users see.</p>
+<p>Examples:</p>
+<ul>
+<li>roof parts</li>
+<li>walls</li>
+<li>siding</li>
+<li>doors</li>
+<li>cabinetry</li>
+<li>solar panels</li>
+</ul>
+<h3 id="2-stable-geometry-identity">2. Stable geometry identity<a class="headerlink" href="#2-stable-geometry-identity" title="Permanent link">&para;</a></h3>
+<p>At load time, the Viewer assigns each mesh a stable <code>geometryId</code> based on its scene hierarchy path.</p>
+<p>That means:</p>
+<ul>
+<li>hierarchy order matters</li>
+<li>object names matter</li>
+<li>repeatable exports matter</li>
+</ul>
+<p>If the exported hierarchy changes significantly, the generated <code>geometryId</code> values may also change.</p>
+<p>That can affect:</p>
+<ul>
+<li>saved visibility mappings</li>
+<li>saved material mappings</li>
+<li>option associations</li>
+<li>persistence across reloads</li>
+</ul>
+<h3 id="3-navigation-markers">3. Navigation markers<a class="headerlink" href="#3-navigation-markers" title="Permanent link">&para;</a></h3>
+<p>Marker geometry under a top-level <code>Spaces</code> group describes rooms and the connections between them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Spaces
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Rooms       (walkable interior spaces — names like LivingDining, Hall)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└── Doorways    (connections — leaf names &lt;RoomA&gt;_&lt;RoomB&gt; or Exterior_&lt;RoomName&gt;)
+</code></pre></div>
+<p>Marker meshes are removed from the scene at load — only the marker node's transform/bounds are read. See <a href="#navigation-marker-conventions">Navigation Marker Conventions</a>.</p>
+<h3 id="4-lighting-markers">4. Lighting markers<a class="headerlink" href="#4-lighting-markers" title="Permanent link">&para;</a></h3>
+<p>Marker geometry under a top-level <code>Lights</code> group places point and spot lights at specific positions:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Lights
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── PointLights   (each child becomes a Three.js point light)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>└── SpotLights    (each child becomes a spot light; optional Spotlight_&lt;degrees&gt; in name)
+</code></pre></div>
+<p>The marker's world transform origin is the light position. Visible helper geometry inside the marker is for SketchUp authoring only. See <a href="#lighting-marker-conventions">Lighting Marker Conventions</a>.</p>
+<h3 id="5-shadow-behavior-prefixes">5. Shadow behavior prefixes<a class="headerlink" href="#5-shadow-behavior-prefixes" title="Permanent link">&para;</a></h3>
+<p>These are <strong>per-mesh</strong> name prefixes (different from the container markers above) that adjust how individual meshes interact with the shadow system:</p>
+<ul>
+<li><code>Glass_*</code> — transparent glazing; shadow casting disabled</li>
+<li><code>Water_*</code> — water surfaces; shadow casting disabled</li>
+<li><code>Fixture_*</code> — translucent fixture parts (shades, etc.); shadow casting disabled</li>
+</ul>
+<p>See the <a href="#shadow-naming-conventions">Shadow Naming Conventions</a> section for full details.</p>
+<hr />
+<h2 id="minimum-good-model-checklist">Minimum Good Model Checklist<a class="headerlink" href="#minimum-good-model-checklist" title="Permanent link">&para;</a></h2>
+<p>For a model to behave well in the current stable viewer, try to satisfy these:</p>
+<ul>
+<li>exported as <code>.glb</code></li>
+<li>hierarchy is stable across exports</li>
+<li>meaningful object names where possible</li>
+<li>if using navigation markers: a <code>Spaces</code> root with <code>Rooms</code> and <code>Doorways</code> sub-groups</li>
+<li>if using lighting markers: a <code>Lights</code> root with <code>PointLights</code> and/or <code>SpotLights</code> sub-groups</li>
+<li>room/doorway/entry/light marker names follow the conventions in this guide</li>
+<li>helper markers roughly match the physical walkable/opening volumes they represent</li>
+</ul>
+<hr />
+<h2 id="hierarchy-guidance">Hierarchy Guidance<a class="headerlink" href="#hierarchy-guidance" title="Permanent link">&para;</a></h2>
+<h3 id="keep-the-hierarchy-stable">Keep the hierarchy stable<a class="headerlink" href="#keep-the-hierarchy-stable" title="Permanent link">&para;</a></h3>
+<p>This matters a lot.</p>
+<p>Because stable <code>geometryId</code> values are derived from hierarchy path, the Viewer is happiest when:</p>
+<ul>
+<li>sibling order is stable</li>
+<li>names are stable</li>
+<li>the product is exported consistently from version to version</li>
+</ul>
+<p>If a mesh moves to a different branch or gets renamed casually, its stable <code>geometryId</code> may change.</p>
+<h3 id="use-meaningful-names-when-practical">Use meaningful names when practical<a class="headerlink" href="#use-meaningful-names-when-practical" title="Permanent link">&para;</a></h3>
+<p>Good names help:</p>
+<ul>
+<li>debugging</li>
+<li>authoring</li>
+<li>hierarchy inspection</li>
+<li>communication between modeling and app teams</li>
+</ul>
+<p>Examples of good names:</p>
+<ul>
+<li><code>Roof_Assembly</code></li>
+<li><code>Siding_Panels</code></li>
+<li><code>Solar_Array</code></li>
+<li><code>Front_Entry_Door</code></li>
+</ul>
+<p>The system can still function with weaker names, but meaningful names reduce friction.</p>
+<h3 id="avoid-unnecessary-randomization">Avoid unnecessary randomization<a class="headerlink" href="#avoid-unnecessary-randomization" title="Permanent link">&para;</a></h3>
+<p>If the exporter or modeling workflow produces:</p>
+<ul>
+<li>unstable naming</li>
+<li>unstable grouping</li>
+<li>unstable object order</li>
+</ul>
+<p>then persistence and mapping become harder.</p>
+<hr />
+<h2 id="navigation-marker-conventions">Navigation Marker Conventions<a class="headerlink" href="#navigation-marker-conventions" title="Permanent link">&para;</a></h2>
+<h3 id="root-marker-container">Root marker container<a class="headerlink" href="#root-marker-container" title="Permanent link">&para;</a></h3>
+<p>Use an object named exactly <code>Spaces</code> at the top of the scene. Inside it, group markers by type:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Spaces
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── Rooms       (walkable interior spaces)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>└── Doorways    (connections between spaces)
+</code></pre></div>
+<p>All matching is <strong>case-insensitive</strong>, but capitalised PascalCase is the recommended convention for readability. The resolver also tolerates SketchUp's auto-disambiguation suffix on the type containers (<code>Rooms_1</code>, <code>Doorways_2</code>).</p>
+<h3 id="rooms">Rooms<a class="headerlink" href="#rooms" title="Permanent link">&para;</a></h3>
+<p>Each child of the <code>Rooms</code> group is a walkable space. The marker's bounding box represents the volume of that room.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Rooms
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── LivingDining
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├── Hall
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>├── FrontBedroom
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>├── RearBedroom
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>└── Bathroom
+</code></pre></div>
+<p>Room names are free-form, but <strong>PascalCase with no underscores</strong> keeps Doorway parsing unambiguous (see below). <code>LivingDining</code> works; <code>Living_Dining</code> does not.</p>
+<h3 id="doorways">Doorways<a class="headerlink" href="#doorways" title="Permanent link">&para;</a></h3>
+<p>Each child of the <code>Doorways</code> group encodes a connection between two spaces in its name:</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;RoomA&gt;_&lt;RoomB&gt;</code></td>
+<td>Interior connection between two rooms</td>
+<td><code>Hall_FrontBedroom</code></td>
+</tr>
+<tr>
+<td><code>Exterior_&lt;RoomName&gt;</code></td>
+<td>Entry from outside into the named room</td>
+<td><code>Exterior_LivingDining</code></td>
+</tr>
+</tbody>
+</table>
+<p>The single <code>_</code> separates either two rooms, or the reserved word <code>Exterior</code> and a room. Both rooms named in a doorway leaf must match (case-insensitively, after normalization) a child of <code>Rooms</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Doorways
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── LivingDining_Hall
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── Hall_FrontBedroom
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├── Hall_RearBedroom
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>├── Hall_Bathroom
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>├── LivingDining_RearHall
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>├── RearHall_UtilityRoom
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>└── Exterior_LivingDining
+</code></pre></div>
+<p><strong>Multiple entries to the same room</strong> (e.g. front and back doors both into <code>LivingDining</code>): use the same SketchUp definition for both instances. The exporter auto-disambiguates the second to <code>Exterior_LivingDining_1</code>. The resolver strips trailing <code>_&lt;digits&gt;</code> before parsing, so both instances connect to the same room.</p>
+<h3 id="marker-placement-guidance">Marker placement guidance<a class="headerlink" href="#marker-placement-guidance" title="Permanent link">&para;</a></h3>
+<p>Markers should be simple and practical, not beautiful. A good marker:</p>
+<ul>
+<li>sits where traversal should happen</li>
+<li>roughly matches the opening or walkable zone</li>
+<li>is big enough to be reliably detected</li>
+<li>does not need to be visible in the final experience (its mesh is removed at runtime)</li>
+</ul>
+<p>Box geometry is often ideal. The <strong>Floor Nav</strong> debug toggle in Admin Mode visualizes the actual walkable landing zone derived from each <code>Rooms</code> marker, and the <strong>NavPath</strong> toggle shows the path-graph segments. Use these to verify markers produce sensible navigation.</p>
+<hr />
+<h2 id="lighting-marker-conventions">Lighting Marker Conventions<a class="headerlink" href="#lighting-marker-conventions" title="Permanent link">&para;</a></h2>
+<h3 id="root-marker-container_1">Root marker container<a class="headerlink" href="#root-marker-container_1" title="Permanent link">&para;</a></h3>
+<p>Use an object named exactly <code>Lights</code> at the top of the scene. Inside it, group markers by type:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Lights
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── PointLights
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>└── SpotLights
+</code></pre></div>
+<p>Same matching rules as <code>Spaces</code>: case-insensitive, with tolerance for SketchUp auto-disambiguation suffix on the type containers (<code>PointLights_1</code>, <code>SpotLights_2</code>).</p>
+<h3 id="pointlights-and-spotlights">PointLights and SpotLights<a class="headerlink" href="#pointlights-and-spotlights" title="Permanent link">&para;</a></h3>
+<p>Each child of <code>PointLights</code> or <code>SpotLights</code> is a single light marker. <strong>Names below the type container are free-form</strong> — the resolver classifies by the parent container name, not the leaf name.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Lights
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── PointLights
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│   ├── BedroomCeiling_01     (any name works)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│   ├── BedroomCeiling_02
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│   └── …
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>└── SpotLights
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    ├── EntryLamp_Spotlight_45
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    ├── KitchenAccent_Spotlight_30
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    └── …
+</code></pre></div>
+<p>Visible authoring helpers (a sphere or cone mesh inside the marker component) are for SketchUp orientation only. They're removed from the scene at load and never rendered.</p>
+<h3 id="per-marker-spot-beam-angle">Per-marker spot beam angle<a class="headerlink" href="#per-marker-spot-beam-angle" title="Permanent link">&para;</a></h3>
+<p>Spot light beam angle is read from a <code>Spotlight_&lt;degrees&gt;</code> substring anywhere in the marker's component name <em>or</em> the name of any descendant Object3D. <code>&lt;degrees&gt;</code> is the <strong>full beam angle</strong> in degrees:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>test_Spotlight_30                     →  30° beam (narrow)
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>test_Spotlight_45                     →  45° beam
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>test_Spotlight_60                     →  60° beam
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>test_Spotlight_90                     →  90° beam (wide / default)
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>test#1_Spotlight_60 &gt; Spotlight_60    →  60° beam (also matched on a child)
+</code></pre></div>
+<p>Default if no substring is found: <strong>90°</strong> full beam.</p>
+<p>The cyan <strong>SpotLightHelper</strong> cone (visible when the "Spot Cones" toggle in the admin debug panel is on) reflects each marker's actual angle — useful for verifying the substring was parsed correctly.</p>
+<h3 id="light-marker-placement">Light marker placement<a class="headerlink" href="#light-marker-placement" title="Permanent link">&para;</a></h3>
+<p>The system places each light at the marker NODE's <strong>world transform origin</strong> — i.e., the SketchUp component's insertion point. Not the bounding-box centre of any visible helper inside the marker.</p>
+<p>Practical implications:</p>
+<ul>
+<li>To move just the light without touching the visual representation: drag the marker component in SketchUp (changes the instance transform → moves the origin).</li>
+<li>To move just the visible helper without changing the light: edit the geometry inside the component definition (changes mesh-local positions, doesn't affect the origin).</li>
+<li>The visible sphere/cone helper inside the marker can be any shape or size — its only job is to make the marker locatable and orientable in SketchUp.</li>
+</ul>
+<p>For spot lights, the <strong>aim direction</strong> is the marker's local <code>+Z</code> transformed to world space. Orient the marker component so its local <code>+Z</code> points where you want the cone to shine. The visible cone helper inside the component should be authored to match this orientation as a sanity check, but only the marker node's transform actually drives the light.</p>
+<h3 id="spot-housing-occlusion-authoring-rule">Spot housing occlusion authoring rule<a class="headerlink" href="#spot-housing-occlusion-authoring-rule" title="Permanent link">&para;</a></h3>
+<p>Marker-driven spot lights cast shadows; their cone is occluded by mesh geometry it intersects. Authoring rule:</p>
+<blockquote>
+<p><strong>The spot cone must clear the housing geometry.</strong></p>
+</blockquote>
+<p>For wide-beam spots (~60°+) inside a fixture housing, the marker apex (= bulb position) needs to be outside the housing's open opening so the lateral cone spread doesn't interact with the housing walls. For narrow-beam spots (~30°), the bulb can sit deeper inside without issue — the tight cone barely spreads laterally.</p>
+<p>When the bulb is inside a fixture housing AND the spot cone has meaningful lateral spread inside the walls, shadow occlusion silently fails. The mechanism isn't fully understood (extensive elimination history is in the project memory <code>project_spot_marker_authoring</code>); the practical fixes are either to narrow the beam angle or to move the marker apex outside the housing opening.</p>
+<h3 id="light-source-mode">Light Source Mode<a class="headerlink" href="#light-source-mode" title="Permanent link">&para;</a></h3>
+<p>The viewer's authoring panel offers a three-way toggle for how to source interior lights:</p>
+<ul>
+<li><strong>Import</strong> — use the markers under <code>Lights &gt; PointLights / SpotLights</code> (the convention this section describes).</li>
+<li><strong>Auto</strong> — auto-place a single point light at the centre of each <code>Spaces &gt; Rooms</code> marker. Useful for models without authored light markers.</li>
+<li><strong>None</strong> — no interior lights at all.</li>
+</ul>
+<p>The toggle is <strong>captured per presentation mode</strong> (Day, Night, Night Interior, etc.). When loading a model that has authored light markers, uncaptured modes default to <code>Import</code>; when the model has no markers, they default to <code>Auto</code>. A captured value always wins over the smart default, so capture any mode you want to override.</p>
+<hr />
+<h2 id="authoring-debug-tools">Authoring Debug Tools<a class="headerlink" href="#authoring-debug-tools" title="Permanent link">&para;</a></h2>
+<p>Admin Mode exposes several debug tools in the bottom-right toolbar to verify your model authoring against the conventions in this guide.</p>
+<h3 id="hierarchy-popup">Hierarchy popup<a class="headerlink" href="#hierarchy-popup" title="Permanent link">&para;</a></h3>
+<p>Click <strong>Hierarchy</strong> in the admin debug toolbar to inspect the loaded scene's tree. The popup shows an indented hierarchy with two filters:</p>
+<ul>
+<li><strong>Markers only</strong> (default ON) — narrows the view to subtrees rooted at recognized container markers (<code>Spaces</code>, <code>Lights</code>). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see <em>just</em> your marker structure for verification.</li>
+<li><strong>Show meshes</strong> (default OFF) — when off, mesh leaves are collapsed to a <code>… (N meshes)</code> summary. When on, every mesh is shown by name.</li>
+</ul>
+<p>A <strong>Refresh</strong> button re-walks the live scene graph (handy if you load a different model with the popup open). A <strong>Copy</strong> button puts the formatted hierarchy on your clipboard — useful for sharing during authoring iteration.</p>
+<h3 id="spot-cones-cyan-helpers-frustum">Spot Cones (cyan helpers + frustum)<a class="headerlink" href="#spot-cones-cyan-helpers-frustum" title="Permanent link">&para;</a></h3>
+<p>Toggle <strong>Spot Cones</strong> in the admin debug toolbar to visualize each marker-driven spot light:</p>
+<ul>
+<li>A <strong>cyan SpotLightHelper cone</strong> shows the light's beam shape based on its position, aim direction, and angle (parsed from the marker's <code>Spotlight_&lt;degrees&gt;</code> substring or the 90° default).</li>
+<li>A <strong>wireframe CameraHelper pyramid</strong> shows the spot's shadow camera frustum, including the near and far clip planes.</li>
+</ul>
+<p>Use this to verify each spot is positioned and aimed correctly, that the beam angle matches what you intended, and that occluders (e.g., fixture housings) sit inside the frustum where you expect them. The Spot Cones toggle only takes effect when <strong>Light Source Mode</strong> is <code>Import</code>.</p>
+<h3 id="floor-nav-and-navpath">Floor Nav and NavPath<a class="headerlink" href="#floor-nav-and-navpath" title="Permanent link">&para;</a></h3>
+<p>Toggle <strong>Floor Nav</strong> to visualize the actual walkable landing zone derived from each <code>Spaces &gt; Rooms</code> marker (with the wall-margin buffer applied, so you see what users will actually click on, not the raw marker bounds). Toggle <strong>NavPath</strong> to visualize the path-graph segments pathfinding uses for camera routing between rooms via Doorways.</p>
+<p>Both are useful for verifying the navigation graph the resolver builds matches your authoring intent — wrong-sized markers, missing doorways, and broken connections all show up immediately.</p>
+<hr />
+<h2 id="shadow-naming-conventions">Shadow Naming Conventions<a class="headerlink" href="#shadow-naming-conventions" title="Permanent link">&para;</a></h2>
+<p>The Viewer automatically controls shadow casting at load time based on object name prefixes.</p>
+<h3 id="objects-that-cast-shadows-default">Objects that cast shadows (default)<a class="headerlink" href="#objects-that-cast-shadows-default" title="Permanent link">&para;</a></h3>
+<p>All meshes cast shadows by default. No special naming required.</p>
+<h3 id="objects-that-do-not-cast-shadows-automatic">Objects that do not cast shadows (automatic)<a class="headerlink" href="#objects-that-do-not-cast-shadows-automatic" title="Permanent link">&para;</a></h3>
+<p>The following prefixes disable shadow casting automatically:</p>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Intended use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Glass_</code></td>
+<td>Window panes, skylights, glass doors, any transparent glazing</td>
+</tr>
+<tr>
+<td><code>Water_</code></td>
+<td>Water features, pools, reflective water surfaces</td>
+</tr>
+<tr>
+<td><code>Fixture_</code></td>
+<td>Translucent fixture parts (glass shades, frosted globes) where solid shadow casting would look wrong. Generic opaque fixture housings should NOT use this prefix — they'll cast shadow correctly by default and let you see the housing's silhouette in the spot light shadow.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why this matters:</strong></p>
+<p>Three.js shadow maps render geometry as fully opaque in the shadow pass regardless of material transparency settings. A window mesh named without <code>Glass_</code> will block sunlight as if it were a solid wall. Naming it <code>Glass_Window_Front</code> (or any <code>Glass_*</code> name) tells the Viewer to let light pass through.</p>
+<p>All three types still <strong>receive</strong> shadows — only shadow casting is disabled.</p>
+<h3 id="naming-rules">Naming rules<a class="headerlink" href="#naming-rules" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Prefixes are <strong>case-insensitive</strong> — <code>Glass_</code>, <code>glass_</code>, and <code>GLASS_</code> all match. The recommended casing is the documented form (e.g. <code>Glass_*</code>) for readability across team members and exports.</li>
+<li>The prefix must be at the start of the mesh name, not a parent group name</li>
+<li>Anything after the prefix is free-form: <code>Glass_SlidingDoor</code>, <code>Water_Pool</code>, <code>Fixture_PorchLight</code> all work</li>
+</ul>
+<h3 id="example-names">Example names<a class="headerlink" href="#example-names" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Glass_Window_Front
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Glass_Window_Side_Left
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Glass_Skylight
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Water_Pool
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Water_Feature_Rear
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Fixture_PorchLight
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Fixture_RecessedCeiling_01
+</code></pre></div>
+<hr />
+<h2 id="geometry-grouping-guidance">Geometry Grouping Guidance<a class="headerlink" href="#geometry-grouping-guidance" title="Permanent link">&para;</a></h2>
+<p>The current stable authoring model lets admins associate geometry with options.</p>
+<p>That is easier when configurable parts are logically grouped.</p>
+<p>Helpful examples:</p>
+<ul>
+<li>all roof shingles grouped together</li>
+<li>solar panels grouped together</li>
+<li>siding panels grouped by side or system</li>
+<li>lights grouped by fixture or side</li>
+</ul>
+<p>Less helpful examples:</p>
+<ul>
+<li>one configuration feature spread across many unrelated mesh fragments</li>
+<li>merged geometry that prevents selective association</li>
+</ul>
+<p>You do not need to over-fragment the model, but configurable features should be targetable.</p>
+<hr />
+<h2 id="materials-guidance">Materials Guidance<a class="headerlink" href="#materials-guidance" title="Permanent link">&para;</a></h2>
+<p>At load time, the Viewer captures each mesh’s original material state.</p>
+<p>That is used later for:</p>
+<ul>
+<li>restoring original appearance</li>
+<li>removing captured material associations</li>
+</ul>
+<p>This means the export should start from a sensible “default look.”</p>
+<p>Best practice:</p>
+<ul>
+<li>make the exported model’s base materials the true default presentation</li>
+</ul>
+<p>That gives the restore path something meaningful to go back to.</p>
+<h3 id="model-default-material-capture">Model default material capture<a class="headerlink" href="#model-default-material-capture" title="Permanent link">&para;</a></h3>
+<p>The authoring workflow also supports an additional material layer: the admin can adjust any mesh’s material using the material tools and then click <strong>Capture Material Defaults</strong>. Those changes are stored as the model's baseline appearance and replayed automatically on every subsequent load, before any option assignments are applied.</p>
+<p>This lets you fix or fine-tune the baseline appearance of the model — colour, texture, roughness — without re-exporting from SketchUp. Option assignments always override model defaults for the same geometry. When an option is deactivated, the mesh falls back to the model default (not the baked original) if a default exists.</p>
+<hr />
+<h2 id="texture-uv-authoring">Texture UV Authoring<a class="headerlink" href="#texture-uv-authoring" title="Permanent link">&para;</a></h2>
+<p>The Viewer’s material library lets admins apply real-world texture materials (wood, concrete, etc.) to any mesh. For those textures to display correctly, the mesh must have UV texture coordinates (<code>TEXCOORD_0</code>) in its GLTF export.</p>
+<h3 id="the-problem-with-flat-colour-faces">The problem with flat-colour faces<a class="headerlink" href="#the-problem-with-flat-colour-faces" title="Permanent link">&para;</a></h3>
+<p>When a face in SketchUp is painted with a solid colour and no texture, SketchUp’s GLTF exporter omits UV coordinates for that face entirely. When the Viewer tries to apply a texture library material to such a mesh, it has no UV data to work from and the texture cannot be sampled correctly.</p>
+<h3 id="the-fix-apply-a-placeholder-texture-in-sketchup">The fix: apply a placeholder texture in SketchUp<a class="headerlink" href="#the-fix-apply-a-placeholder-texture-in-sketchup" title="Permanent link">&para;</a></h3>
+<p>Any face you intend to retexture in the Viewer should have a texture applied to it in SketchUp — even a rough placeholder. The UV coordinates that SketchUp exports are determined by how that texture is scaled and positioned on the face, not by which texture image you used. The Viewer’s material library replaces the texture at runtime; it keeps the UV layout from SketchUp.</p>
+<p><strong>Workflow:</strong></p>
+<ol>
+<li>In SketchUp, paint the face with any texture (a solid-colour texture at 1 × 1 px is fine as a placeholder)</li>
+<li>Adjust the texture scale on the face to set how large you want the pattern to tile in the final viewer — e.g. scale a wood grain placeholder to roughly the size of a real board</li>
+<li>Export to <code>.glb</code></li>
+<li>In the Viewer, apply the real library material — it tiles at the scale you defined in step 2</li>
+</ol>
+<h3 id="fallback-behaviour">Fallback behaviour<a class="headerlink" href="#fallback-behaviour" title="Permanent link">&para;</a></h3>
+<p>If UV coordinates are missing, the Viewer auto-generates them using a world-space box projection (one texture tile per 4 world units, roughly one tile per 4 metres). This makes textures visible and gives a rough sense of the material, but the scale and alignment will rarely be correct for a finished look. Treat it as a preview aid, not an authoring target.</p>
+<h3 id="emissive-materials">Emissive materials<a class="headerlink" href="#emissive-materials" title="Permanent link">&para;</a></h3>
+<p>Meshes intended to glow (light bulbs, LED strips, illuminated panels) should have their material name prefixed with <code>Emissive_</code> in SketchUp:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Emissive_Bulb
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Emissive_LedStrip_01
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Emissive_CeilingLight
+</code></pre></div>
+<p>The Viewer detects this prefix at load time and enables emissive rendering for those materials. The <code>Emissive Intensity</code> slider in the authoring panel controls glow strength globally across all emissive materials. The emissive colour is derived from the material’s diffuse colour, so a warm-white bulb material produces a warm glow.</p>
+<p><strong>Note:</strong> the <code>Emissive_</code> prefix applies to the <strong>material name</strong> in SketchUp, not the object name.</p>
+<hr />
+<h2 id="what-to-avoid">What To Avoid<a class="headerlink" href="#what-to-avoid" title="Permanent link">&para;</a></h2>
+<p>Try to avoid:</p>
+<ul>
+<li>renaming objects casually between exports</li>
+<li>changing hierarchy structure without reason</li>
+<li>hiding important configurability inside huge merged meshes</li>
+<li>inconsistent marker naming</li>
+<li>missing <code>Spaces</code> root when using navigation markers, or missing the <code>Rooms</code> / <code>Doorways</code> sub-groups</li>
+<li>missing <code>Lights</code> root when using authored lighting markers, or missing the <code>PointLights</code> / <code>SpotLights</code> sub-groups</li>
+<li>room names containing underscores (<code>Front_Bedroom</code>) — they make <code>&lt;RoomA&gt;_&lt;RoomB&gt;</code> doorway parsing ambiguous; use PascalCase (<code>FrontBedroom</code>) instead</li>
+<li>doorway markers that do not actually sit in openings</li>
+<li>exterior entry (<code>Exterior_&lt;RoomName&gt;</code>) markers that sit well inside or well outside the building instead of at the opening</li>
+<li>spot light marker apexes (= bulb positions) inside a fixture housing when the cone has wide lateral spread — see <a href="#spot-housing-occlusion-authoring-rule">Spot Housing Occlusion Authoring Rule</a></li>
+<li>transparent glass meshes without a <code>Glass_</code> prefix — they will block sunlight as solid walls</li>
+<li>leaving faces as solid-colour only when they will be retextured in the Viewer — apply a placeholder texture in SketchUp so UV coordinates are exported</li>
+<li>relying on the fallback box-projection UVs for finished work — they are a preview aid only</li>
+</ul>
+<hr />
+<h2 id="recommended-working-process">Recommended Working Process<a class="headerlink" href="#recommended-working-process" title="Permanent link">&para;</a></h2>
+<h3 id="for-modelers">For modelers<a class="headerlink" href="#for-modelers" title="Permanent link">&para;</a></h3>
+<ol>
+<li>build the product cleanly</li>
+<li>group configurable features logically</li>
+<li>add marker geometry if interior navigation/authoring aids are needed</li>
+<li>name markers consistently</li>
+<li>export <code>.glb</code></li>
+</ol>
+<h3 id="for-technical-validation">For technical validation<a class="headerlink" href="#for-technical-validation" title="Permanent link">&para;</a></h3>
+<p>After export, check:</p>
+<ul>
+<li>printed hierarchy</li>
+<li>whether stable geometry IDs remain consistent across reloads/exports</li>
+<li>whether markers resolve correctly</li>
+<li>whether configurable parts are easy to select and capture</li>
+</ul>
+<hr />
+<h2 id="short-practical-rules">Short Practical Rules<a class="headerlink" href="#short-practical-rules" title="Permanent link">&para;</a></h2>
+<p>If you want the shortest version:</p>
+<ul>
+<li>keep hierarchy stable</li>
+<li>name things clearly</li>
+<li><strong>navigation markers</strong>: <code>Spaces &gt; Rooms / Doorways &gt; &lt;name&gt;</code>. Doorway leaves are <code>&lt;RoomA&gt;_&lt;RoomB&gt;</code> for interior or <code>Exterior_&lt;RoomName&gt;</code> for entries. Room names: PascalCase, no underscores.</li>
+<li><strong>lighting markers</strong>: <code>Lights &gt; PointLights / SpotLights &gt; &lt;name&gt;</code>. Spot beam angle via <code>Spotlight_&lt;degrees&gt;</code> substring anywhere in the marker subtree (default 90°).</li>
+<li><strong>per-mesh shadow prefixes</strong>: <code>Glass_*</code>, <code>Water_*</code>, <code>Fixture_*</code> (translucent fixture parts only) disable shadow casting for that mesh.</li>
+<li><strong>emissive materials</strong>: prefix the <strong>material name</strong> with <code>Emissive_</code> for bulbs / LED strips / glowing panels.</li>
+<li>all matching is <strong>case-insensitive</strong> — capitalised PascalCase is the recommended convention for readability.</li>
+<li>make configurable geometry easy to target</li>
+<li>export with a sensible default material state</li>
+<li>apply a placeholder texture in SketchUp to any face you plan to retexture in the Viewer — this exports UV coordinates and lets you control tiling scale</li>
+</ul>
+<p>That will take you a long way.</p>
+<hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<p>See <a href="../overview/#glossary">Overview</a> for the canonical glossary.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

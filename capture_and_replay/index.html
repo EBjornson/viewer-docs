@@ -1,0 +1,2381 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation and integration kit for the Viewer — a React + Three.js runtime for configurable, geometric SaaS products">
+      
+      
+      
+        <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/capture_and_replay/">
+      
+      
+        <link rel="prev" href="../architecture/">
+      
+      
+        <link rel="next" href="../admin_authoring_guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Capture & Replay - Viewer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#capture-replay" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Viewer Documentation" class="md-header__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Viewer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Capture & Replay
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Viewer Documentation" class="md-nav__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Viewer Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration_walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Contract v1.7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demoapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DemoApp Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture & Replay
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture & Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Principle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capture-types-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture Types at a Glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#last-one-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last-One-Wins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-section-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a section capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capturing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capturing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="View Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-view-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a view capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-captures-are-treated-like-section-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View captures are treated like section captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capturing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capturing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-onviewselected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay — onViewSelected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-an-option-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What an option capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intentionally-context-free-payloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intentionally context-free payloads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#material-default-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Material Default Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Material Default Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-material-default-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a material default capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage-and-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage and replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#presentation-mode-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation Mode Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Presentation Mode Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-presentation-mode-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a presentation mode capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewer-defaults-before-first-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viewer defaults before first capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capturing_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capturing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-two-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay — two roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing-presentation-mode-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing presentation mode captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overhead-space-tile-click-spacetileclicknav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overhead Space-Tile Click (SpaceTileClickNav)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#space-menu-space-entry-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space Menu — Space / Entry Buttons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-button-highlight-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Button Highlight State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-mode-vs-user-mode-presentation-rendering-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Mode vs User Mode — Presentation Rendering Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Admin Mode vs User Mode — Presentation Rendering Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-mode-inputadminenabled-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Mode (input.admin.enabled = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin-mode-inputadminenabled-true" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Mode (input.admin.enabled = true)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authoring-interaction-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring Interaction Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tester_quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tester Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capabilities_and_limits/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capabilities & Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subscriber_materials_plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subscriber Materials Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Principle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capture-types-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture Types at a Glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#last-one-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Last-One-Wins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-section-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a section capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capturing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capturing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="View Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-view-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a view capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-captures-are-treated-like-section-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View captures are treated like section captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capturing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capturing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-onviewselected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay — onViewSelected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Option Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-an-option-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What an option capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intentionally-context-free-payloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intentionally context-free payloads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#material-default-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Material Default Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Material Default Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-material-default-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a material default capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage-and-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage and replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#presentation-mode-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation Mode Captures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Presentation Mode Captures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-a-presentation-mode-capture-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a presentation mode capture owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewer-defaults-before-first-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viewer defaults before first capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capturing_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capturing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#app-storage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-two-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay — two roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing-presentation-mode-captures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clearing presentation mode captures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overhead-space-tile-click-spacetileclicknav" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overhead Space-Tile Click (SpaceTileClickNav)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#space-menu-space-entry-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space Menu — Space / Entry Buttons
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-button-highlight-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Button Highlight State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#admin-mode-vs-user-mode-presentation-rendering-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Mode vs User Mode — Presentation Rendering Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Admin Mode vs User Mode — Presentation Rendering Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-mode-inputadminenabled-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Mode (input.admin.enabled = false)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin-mode-inputadminenabled-true" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Mode (input.admin.enabled = true)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authoring-interaction-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring Interaction Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="capture-replay">Capture &amp; Replay<a class="headerlink" href="#capture-replay" title="Permanent link">&para;</a></h1>
+<p><strong>Primary reader:</strong> App or Viewer engineer<br />
+<strong>Job-to-be-done:</strong> Deep-dive on the capture lifecycle (sections, views, options, materials, presentation modes)<br />
+<strong>Next doc:</strong> <a href="../viewer_contract_v1_7/">Viewer Contract v1.7</a></p>
+<hr />
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>This document describes the complete capture/replay lifecycle for <strong>section captures</strong>, <strong>view captures</strong>, and <strong>presentation mode captures</strong>, including how they interact with the Views Panel, the Space Menu, the overhead space-tile click (<code>SpaceTileClickNav</code>), and Admin vs User rendering modes.</p>
+<hr />
+<h2 id="the-core-principle">The Core Principle<a class="headerlink" href="#the-core-principle" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>The App stores presentation intent. The Viewer executes it.</strong></p>
+</blockquote>
+<p>The Viewer never persists state on behalf of the App. Every capture produces a serialisable payload that the Viewer fires back through a <code>ViewerOutput</code> callback. The App stores the payload, then replays it later by passing the stored values back into <code>viewerInput</code>. The Viewer reacts to changed input — no sync, no dual state.</p>
+<hr />
+<h2 id="capture-types-at-a-glance">Capture Types at a Glance<a class="headerlink" href="#capture-types-at-a-glance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capture type</th>
+<th>What it owns</th>
+<th>Viewer callback</th>
+<th>Replay path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Section</strong></td>
+<td>pose + cameraMode + presentationMode + visibility + ui flags</td>
+<td><code>onSectionCaptured</code></td>
+<td>App resolves <code>presentationModeCaptures[capture.presentationMode]</code> → <code>input.presentation</code>; writes <code>input.camera</code> + <code>input.scene.visibilityAssignments</code>; <code>capture.ui</code> takes precedence over the mode snapshot's ui flags</td>
+</tr>
+<tr>
+<td><strong>View</strong></td>
+<td>pose + cameraMode + presentationMode + visibility + ui flags (per view slot)</td>
+<td><code>onViewCaptured</code></td>
+<td>App resolves mode → presentation and writes same fields when <code>onViewSelected</code> fires; <code>capture.ui</code> takes precedence over the mode snapshot's ui flags</td>
+</tr>
+<tr>
+<td><strong>Presentation Mode</strong></td>
+<td>full presentation snapshot (per named mode)</td>
+<td><code>onPresentationModeCaptured</code></td>
+<td>App stores keyed by mode name; Viewer applies at mode switch; App resolves at section/view replay time</td>
+</tr>
+<tr>
+<td><strong>Option</strong></td>
+<td>geometryIds + materialAssignments (per option)</td>
+<td><code>onOptionCaptured</code></td>
+<td>App writes <code>input.scene.materialAssignments</code> when that option is active</td>
+</tr>
+<tr>
+<td><strong>Material Defaults</strong></td>
+<td>model-level baseline materialAssignments</td>
+<td><code>onMaterialDefaultsCaptured</code></td>
+<td>App writes <code>input.scene.defaultMaterialAssignments</code> on every model load</td>
+</tr>
+</tbody>
+</table>
+<p>Section and View captures have identical payload shapes. The only difference is what triggers replay.</p>
+<hr />
+<h2 id="last-one-wins">Last-One-Wins<a class="headerlink" href="#last-one-wins" title="Permanent link">&para;</a></h2>
+<p>Presentation replay follows a <strong>last-one-wins</strong> rule:</p>
+<ul>
+<li>Activating a section tab → the section capture drives camera + presentation + visibility</li>
+<li>Pressing a View button → the view capture drives camera + presentation + visibility</li>
+<li>Whichever happened most recently is what the Viewer renders</li>
+</ul>
+<p>There is no overlay or merge between the two. The App simply builds <code>viewerInput</code> from whichever capture is currently active.</p>
+<hr />
+<h2 id="section-captures">Section Captures<a class="headerlink" href="#section-captures" title="Permanent link">&para;</a></h2>
+<h3 id="what-a-section-capture-owns">What a section capture owns<a class="headerlink" href="#what-a-section-capture-owns" title="Permanent link">&para;</a></h3>
+<p>A section capture is a stored package for one section:</p>
+<ul>
+<li>camera pose (<code>position</code>, <code>target</code>, <code>fov</code>)</li>
+<li>camera mode (<code>'exterior'</code> | <code>'interior'</code> | <code>'overhead'</code>)</li>
+<li>presentation mode reference (a name like <code>'day'</code> — not the inline presentation values; the App resolves the full snapshot at replay time via <code>presentationModeCaptures[capture.presentationMode]</code>)</li>
+<li>visibility assignments (<code>hiddenGeometryIds</code>, <code>isolatedGeometryIds</code>)</li>
+<li>UI visibility flags (<code>showSolarSitePanel</code>, <code>showNorthArrow</code>, <code>showPresetViews</code>, <code>showPresentationPresets</code>, <code>showWinterPresets</code>, <code>showSpaceMenu</code>) — captured at the time of the section capture so each section can independently control which panels users see</li>
+</ul>
+<h3 id="capturing">Capturing<a class="headerlink" href="#capturing" title="Permanent link">&para;</a></h3>
+<p>In Admin Mode, the admin:</p>
+<ol>
+<li>Activates the section</li>
+<li>Moves the camera, adjusts presentation, hides geometry as needed</li>
+<li>Sets the <strong>Camera Mode</strong> (Ext / Int / Ovh) in the authoring panel to label the mode — this does not move the camera, it tags which mode will be written into the payload</li>
+<li>Clicks <strong>Section Capture</strong></li>
+</ol>
+<p>The Viewer fires:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nx">onSectionCaptured</span><span class="p">(</span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerSectionCapturePayload</span><span class="p">)</span>
+</code></pre></div>
+<p>Payload shape:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">position</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="p">,</span><span class="w"> </span><span class="nx">fov</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;overhead&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">presentationMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;day&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;roof-1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;roof-2&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="app-storage">App storage<a class="headerlink" href="#app-storage" title="Permanent link">&para;</a></h3>
+<p>The App stores the payload keyed by section ID:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nx">sectionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span>
+</code></pre></div>
+<h3 id="replay">Replay<a class="headerlink" href="#replay" title="Permanent link">&para;</a></h3>
+<p>When the user activates a section, the App builds <code>viewerInput</code> from the stored payload:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sectionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentationModeCaptures</span><span class="p">[</span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">defaultPresentation</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nx">viewerInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="kt">capture?.cameraMode</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;exterior&#39;</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="kt">capture?.pose</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">capture</span><span class="p">.</span><span class="nx">pose</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nx">presentation</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="kt">capture?.visibilityAssignments</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">...</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+</code></pre></div>
+<p>The App resolves the presentation mode reference to a full snapshot before building <code>viewerInput</code>. The Viewer sees updated <code>input.camera.pose</code> and <code>input.presentation</code> references and replays them.</p>
+<h3 id="clearing">Clearing<a class="headerlink" href="#clearing" title="Permanent link">&para;</a></h3>
+<p>Clicking <strong>Clear Section Capture</strong> fires <code>onSectionCaptureCleared()</code>. The App removes the stored capture for that section.</p>
+<hr />
+<h2 id="view-captures">View Captures<a class="headerlink" href="#view-captures" title="Permanent link">&para;</a></h2>
+<h3 id="what-a-view-capture-owns">What a view capture owns<a class="headerlink" href="#what-a-view-capture-owns" title="Permanent link">&para;</a></h3>
+<p>A view capture has the same shape as a section capture, stored in one of three named slots (<code>'exterior'</code>, <code>'interior'</code>, <code>'overhead'</code>):</p>
+<ul>
+<li>camera pose</li>
+<li>camera mode</li>
+<li>presentation mode reference (resolved at replay time, same as section captures)</li>
+<li>visibility assignments</li>
+<li>UI visibility flags (same six flags as section captures)</li>
+</ul>
+<p>This lets the user press a View button and consistently arrive at the right camera position, lighting, and visibility — regardless of which section is active.</p>
+<h3 id="view-captures-are-treated-like-section-captures">View captures are treated like section captures<a class="headerlink" href="#view-captures-are-treated-like-section-captures" title="Permanent link">&para;</a></h3>
+<p>The payload shape is identical to a section capture. The only difference is the trigger: view captures are replayed when the user presses a View button, not when a section tab is activated.</p>
+<h3 id="capturing_1">Capturing<a class="headerlink" href="#capturing_1" title="Permanent link">&para;</a></h3>
+<p>In Admin Mode, the admin:</p>
+<ol>
+<li>Navigates to the desired view using the View buttons in the Views Panel</li>
+<li>Sets the <strong>Camera Mode</strong> selector (Ext / Int / Ovh) in the authoring panel to label which mode this pose represents — this does not move the camera, it only tags the mode that will be stored in the payload</li>
+<li>Adjusts lighting and visibility to the correct state for that view</li>
+<li>Clicks <strong>View Capture</strong> in the authoring panel (top of the panel when <code>view</code> focus is active)</li>
+</ol>
+<p>The Viewer fires:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">onViewCaptured</span><span class="p">(</span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerViewCapturePayload</span><span class="p">)</span>
+</code></pre></div>
+<p>Payload shape:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;interior&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">position</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="p">,</span><span class="w"> </span><span class="nx">fov</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">presentationMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nightInt&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="app-storage_1">App storage<a class="headerlink" href="#app-storage_1" title="Permanent link">&para;</a></h3>
+<p>The App stores the payload keyed by the view slot:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">viewCaptures</span><span class="p">[</span><span class="nx">payload</span><span class="p">.</span><span class="nx">cameraMode</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span>
+</code></pre></div>
+<h3 id="replay-onviewselected">Replay — onViewSelected<a class="headerlink" href="#replay-onviewselected" title="Permanent link">&para;</a></h3>
+<p>When the user presses a View button, the Viewer fires:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">onViewSelected</span><span class="p">(</span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerCameraMode</span><span class="p">)</span>
+</code></pre></div>
+<p>The App looks up its stored view capture for that slot and rebuilds <code>viewerInput</code> exactly as it would for a section capture — full pose + cameraMode + presentation + visibility. There is no separate passback mechanism; the App drives the replay directly through <code>viewerInput</code>.</p>
+<p>If no capture exists for the pressed slot, the App does not update <code>viewerInput</code> — nothing changes.</p>
+<p>In <strong>Admin Mode</strong>, pressing a View button navigates the Viewer's camera internally (using the stored capture pose if available, or a default quick view as a fallback). The <code>onViewSelected</code> callback IS fired in Admin Mode (to allow the App to clear section tab highlighting), but the App should NOT trigger camera or presentation replay in response when admin is active — the Viewer handles navigation internally.</p>
+<h3 id="clearing_1">Clearing<a class="headerlink" href="#clearing_1" title="Permanent link">&para;</a></h3>
+<p>Clicking <strong>Clear View Capture</strong> fires <code>onViewCaptureCleared(cameraMode)</code>. The App removes that entry from its stored captures.</p>
+<hr />
+<h2 id="option-captures">Option Captures<a class="headerlink" href="#option-captures" title="Permanent link">&para;</a></h2>
+<h3 id="what-an-option-capture-owns">What an option capture owns<a class="headerlink" href="#what-an-option-capture-owns" title="Permanent link">&para;</a></h3>
+<p>An option capture defines what a chosen product option should look like:</p>
+<ul>
+<li><code>geometryIds</code> — which geometry nodes belong to this option (used to hide non-active options)</li>
+<li><code>materialAssignments</code> — material/texture overrides applied when this option is selected</li>
+</ul>
+<h3 id="intentionally-context-free-payloads">Intentionally context-free payloads<a class="headerlink" href="#intentionally-context-free-payloads" title="Permanent link">&para;</a></h3>
+<p>The Viewer fires <code>onOptionCaptured</code> with a payload that contains <strong>no section or option identity</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nx">onOptionCaptured</span><span class="p">(</span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerOptionCapturePayload</span><span class="p">)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">// payload = { geometryIds, materialAssignments }</span>
+</code></pre></div>
+<p>Section and option identity are App-level concepts. The Viewer has no knowledge of them. The App routes the payload to the correct storage location using its own current selection state — whatever section and option the admin has active at the moment the capture button is pressed.</p>
+<p>The Viewer offers two capture buttons that produce different payload shapes:</p>
+<ul>
+<li><strong>Option Capture</strong> — fires <code>onOptionCaptured</code> with both <code>geometryIds</code> (from current selection) and <code>materialAssignments</code> (from recent material changes). The standard "this option owns this geometry, possibly with this material" capture.</li>
+<li><strong>Capture Material Only</strong> — fires <code>onOptionCaptured</code> with <code>materialAssignments</code> only — <code>geometryIds</code> is omitted. Used when the option's intent is to color geometry already owned for show/hide by another section, so Rule 1 (show/hide ownership) is not triggered for the selected geometry.</li>
+</ul>
+<p>This is by design: the contract stays clean, and the App retains full ownership of its data model. The author's responsibility is to have the correct section and option selected before clicking Capture. The App is also expected to enforce two independent cross-section ownership rules — show/hide list ownership and material assignment ownership — each exclusive across sections. DemoApp's <code>onOptionCaptured</code> handler scans the existing captures and rejects any capture whose geometry IDs or material assignments would violate either rule, with a banner notification. See <a href="../integration_guide/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> in the integration guide.</p>
+<h3 id="app-storage_2">App storage<a class="headerlink" href="#app-storage_2" title="Permanent link">&para;</a></h3>
+<p>Option capture is <strong>additive</strong>: each capture merges into the existing stored payload for that option rather than replacing it entirely.</p>
+<ul>
+<li><strong>Geometry IDs</strong> — unioned (deduplicated). New IDs are added; existing IDs are preserved.</li>
+<li><strong>Material assignments</strong> — merged per <code>geometryId</code>. The incoming assignment wins for any geometry it targets; assignments for geometry not touched by the new capture are preserved unchanged.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nx">onOptionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="c1">// App reads its own current selection to route the payload,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="c1">// then merges the incoming payload into the existing stored capture.</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">existing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">activeOptionId</span><span class="p">]</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">][</span><span class="nx">activeOptionId</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">mergeOptionCapture</span><span class="p">(</span><span class="nx">existing</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="c1">// mergeOptionCapture: union geometryIds; incoming wins per geometryId for materialAssignments</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>This means capturing twice for the same option accumulates geometry and material assignments across both captures. To replace the full stored payload from scratch, use <strong>Clear Option Capture</strong> first, then capture again.</p>
+<h3 id="replay_1">Replay<a class="headerlink" href="#replay_1" title="Permanent link">&para;</a></h3>
+<p>When the user selects an option, the App builds <code>input.scene.materialAssignments</code> from all active option captures:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">materialAssignments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">activeSections</span><span class="p">.</span><span class="nx">flatMap</span><span class="p">((</span><span class="nx">section</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">section</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">selectedOptions</span><span class="p">[</span><span class="nx">section</span><span class="p">.</span><span class="nx">id</span><span class="p">]]</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">})</span>
+</code></pre></div>
+<p>Geometry visibility for non-active options is driven by <code>input.scene.visibilityAssignments.hiddenGeometryIds</code> — the App hides any <code>geometryIds</code> belonging to options that are not currently selected.</p>
+<h3 id="clearing_2">Clearing<a class="headerlink" href="#clearing_2" title="Permanent link">&para;</a></h3>
+<p><code>onOptionCaptureCleared()</code> fires when the admin clears the active option's capture. The App removes or zeroes the stored entry for that section/option pair.</p>
+<hr />
+<h2 id="material-default-captures">Material Default Captures<a class="headerlink" href="#material-default-captures" title="Permanent link">&para;</a></h2>
+<h3 id="what-a-material-default-capture-owns">What a material default capture owns<a class="headerlink" href="#what-a-material-default-capture-owns" title="Permanent link">&para;</a></h3>
+<p>A single model-level set of <code>defaultMaterialAssignments</code> — the baseline material state applied to the model on every load, before any option assignments. Option assignments always override defaults for the same geometry.</p>
+<h3 id="app-storage-and-replay">App storage and replay<a class="headerlink" href="#app-storage-and-replay" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">onMaterialDefaultsCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">materialDefaultCapture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p">}</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">// replayed via:</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nx">input</span><span class="p">.</span><span class="nx">scene</span><span class="p">.</span><span class="nx">defaultMaterialAssignments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">materialDefaultCapture</span><span class="o">?</span><span class="p">.</span><span class="nx">defaultMaterialAssignments</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">[]</span>
+</code></pre></div>
+<p>The App passes <code>defaultMaterialAssignments</code> on every <code>viewerInput</code> build regardless of which section or option is active.</p>
+<hr />
+<h2 id="presentation-mode-captures">Presentation Mode Captures<a class="headerlink" href="#presentation-mode-captures" title="Permanent link">&para;</a></h2>
+<h3 id="what-a-presentation-mode-capture-owns">What a presentation mode capture owns<a class="headerlink" href="#what-a-presentation-mode-capture-owns" title="Permanent link">&para;</a></h3>
+<p>A presentation mode capture is a <strong>full <code>ViewerPresentationInput</code> snapshot</strong> for one of six named modes. It owns everything — environment, terrain, HDR settings, exposure, lighting, point light, solar configuration, and UI flags.</p>
+<p>This is intentionally broader than "just lighting." Different modes can use completely different HDR environments, terrain presets, north offsets, and solar times.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Key</th>
+<th>Intended use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Summer Day</td>
+<td><code>'day'</code></td>
+<td>Daytime exterior — bright sky, natural sun</td>
+</tr>
+<tr>
+<td>Summer Night</td>
+<td><code>'nightExt'</code></td>
+<td>Night exterior — city/ambient night environment</td>
+</tr>
+<tr>
+<td>Summer Night Interior</td>
+<td><code>'nightInt'</code></td>
+<td>Night interior — point lights, low ambient</td>
+</tr>
+<tr>
+<td>Winter Day</td>
+<td><code>'winterDay'</code></td>
+<td>Winter daytime exterior — cooler sky, low winter sun</td>
+</tr>
+<tr>
+<td>Winter Night</td>
+<td><code>'winterNight'</code></td>
+<td>Winter night exterior</td>
+</tr>
+<tr>
+<td>Winter Night Interior</td>
+<td><code>'winterNightInt'</code></td>
+<td>Winter night interior</td>
+</tr>
+</tbody>
+</table>
+<p>Sections and view captures reference modes by name, so adding or removing modes does not require re-capturing those payloads. The Summer and Winter rows are each controlled by a separate User Visibility flag (<code>showPresentationPresets</code> and <code>showWinterPresets</code>).</p>
+<h3 id="viewer-defaults-before-first-capture">Viewer defaults before first capture<a class="headerlink" href="#viewer-defaults-before-first-capture" title="Permanent link">&para;</a></h3>
+<p>All six presentation modes have built-in defaults in the Viewer. The App does <strong>not</strong> need to pass a <code>presentation</code> payload on initial model load — if <code>input.presentation</code> is omitted, the Viewer renders using its built-in defaults for the active mode. Providing presentation input is only necessary once the App has stored captures to replay.</p>
+<p>Winter modes have specific defaults that apply automatically when first selected without a stored capture:</p>
+<ul>
+<li><strong>HDRI:</strong> Horn Koppe Snow</li>
+<li><strong>Terrain:</strong> Snow</li>
+</ul>
+<p>Switching to a winter mode with no capture sets only those two fields — all other presentation settings (lighting, exposure, solar, etc.) remain at their current values. Summer modes have no equivalent override; switching to an uncaptured summer mode leaves all settings unchanged.</p>
+<h3 id="capturing_2">Capturing<a class="headerlink" href="#capturing_2" title="Permanent link">&para;</a></h3>
+<p>In Admin Mode, the admin:</p>
+<ol>
+<li>Selects the desired mode using the presentation mode buttons in the Views Panel (Summer Day / Summer Night / Summer Night Interior in the first row, Winter Day / Winter Night / Winter Night Interior in the second row)</li>
+<li>Adjusts all presentation settings to the correct state for that mode</li>
+<li>Clicks <strong>Mode Capture</strong> in the authoring panel (top of the panel when <code>presentationMode</code> focus is active)</li>
+</ol>
+<p>The Viewer fires:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nx">onPresentationModeCaptured</span><span class="p">(</span><span class="nx">payload</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerPresentationModeCapturePayload</span><span class="p">)</span>
+</code></pre></div>
+<p>Payload shape:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nx">mode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nightExt&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nx">presentation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">environmentId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/hdri/city-night.exr&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">exposure</span><span class="o">:</span><span class="w"> </span><span class="kt">0.3</span><span class="p">,</span><span class="w"> </span><span class="nx">ambientIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">0.2</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="app-storage_3">App storage<a class="headerlink" href="#app-storage_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nx">presentationModeCaptures</span><span class="p">[</span><span class="nx">payload</span><span class="p">.</span><span class="nx">mode</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span><span class="p">.</span><span class="nx">presentation</span>
+</code></pre></div>
+<p>The App stores the full <code>ViewerPresentationInput</code> snapshot keyed by mode name.</p>
+<h3 id="replay-two-roles">Replay — two roles<a class="headerlink" href="#replay-two-roles" title="Permanent link">&para;</a></h3>
+<p>Presentation mode captures serve two distinct roles:</p>
+<p><strong>Role 1 — Mode switching.</strong> When the user switches modes, the Viewer fires <code>onActivePresentationModeChanged(mode)</code>. The App can apply the stored snapshot for that mode to <code>input.presentation</code>. In Admin Mode the Viewer applies captures directly to <code>presentationState</code> when the mode changes, without going through the App.</p>
+<p><strong>Role 2 — Section and view replay.</strong> Section and view captures carry only a <code>presentationMode</code> name, not a full snapshot. At replay time the App resolves:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentationModeCaptures</span><span class="p">[</span><span class="nx">capture</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">defaultPresentation</span>
+</code></pre></div>
+<p>This keeps section and view payloads small and ensures all captures that share a mode always render with the same environment and lighting.</p>
+<h3 id="clearing-presentation-mode-captures">Clearing presentation mode captures<a class="headerlink" href="#clearing-presentation-mode-captures" title="Permanent link">&para;</a></h3>
+<p>Individual presentation mode captures can be cleared using the <strong>Mode Clear</strong> button in the authoring panel (visible when <code>presentationMode</code> focus is active). This fires:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nx">onPresentationModeCaptureCleared</span><span class="p">(</span><span class="nx">mode</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerPresentationMode</span><span class="p">)</span>
+</code></pre></div>
+<p>The App removes the stored entry for that mode:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nx">onPresentationModeCaptureCleared</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">mode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nx">setPresentationModeCaptures</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span><span class="ow">delete</span><span class="w"> </span><span class="nx">n</span><span class="p">[</span><span class="nx">mode</span><span class="p">]</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">n</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>Like all clear buttons, this fires even when the Viewer has no locally-cached capture for the current session — the App may hold a stored capture from a previous session that needs clearing.</p>
+<p><strong>Bulk clear:</strong> DemoApp's <strong>Reset Model</strong> button clears all captured payloads at once — section captures, view captures, material defaults, and all six presentation mode captures. It resets the App's full in-memory and persisted state for the current model.</p>
+<p>Presentation mode captures can also be replaced in-place: capturing a mode again overwrites the previous snapshot without needing to clear first.</p>
+<hr />
+<h2 id="overhead-space-tile-click-spacetileclicknav">Overhead Space-Tile Click (<code>SpaceTileClickNav</code>)<a class="headerlink" href="#overhead-space-tile-click-spacetileclicknav" title="Permanent link">&para;</a></h2>
+<p>When the user is in <strong>overhead view</strong> and clicks a space tile:</p>
+<ol>
+<li>The camera navigates into that interior space via pathNav (same routing logic as pressing a Space Menu button).</li>
+<li>The Viewer fires:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nx">onSpaceTileWalkActivated</span><span class="p">(</span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;interior&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>The App responds by applying <strong>only the presentation and visibility</strong> from the stored interior view capture — it does <strong>not</strong> set a new camera pose, since the Viewer is already navigating via pathNav.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nx">onSpaceTileWalkActivated</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="c1">// update presentation + visibility from viewCaptures[cameraMode]</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="c1">// do NOT change requestedCameraPose</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="p">}</span>
+</code></pre></div>
+<p>This is distinct from <code>onViewSelected</code>: view button presses update camera + presentation + visibility; the space-tile click updates presentation + visibility only.</p>
+<p><strong>The Interior view capture is the shared source of truth</strong> for both the Interior button press and overhead space-tile clicks. Authoring once covers both.</p>
+<p>If no Interior view capture has been authored, the click still navigates the camera but leaves presentation state unchanged.</p>
+<p>In <strong>Admin Mode</strong>, the Viewer applies the Interior view capture directly to its internal presentation and visibility state without firing the callback.</p>
+<hr />
+<h2 id="space-menu-space-entry-buttons">Space Menu — Space / Entry Buttons<a class="headerlink" href="#space-menu-space-entry-buttons" title="Permanent link">&para;</a></h2>
+<p>Clicking a <strong>Space</strong> or <strong>Entry</strong> button in the Space Menu navigates the camera to that location only. It does <strong>not</strong> change lighting, environment, exposure, material assignments, or geometry visibility.</p>
+<p>This is intentional: the admin has explicit control over when presentation state should change (via view captures and section captures). Space Menu buttons are camera navigation only.</p>
+<p>The exception is the overhead space-tile click (see above), which navigates and also fires <code>onSpaceTileWalkActivated</code>.</p>
+<hr />
+<h2 id="view-button-highlight-state">View Button Highlight State<a class="headerlink" href="#view-button-highlight-state" title="Permanent link">&para;</a></h2>
+<p>View button highlights in the Views Panel track which button was <strong>last pressed</strong>, not which camera mode the camera is currently in.</p>
+<ul>
+<li>Pressing a View button → that button highlights</li>
+<li>Activating a section → all View button highlights clear</li>
+</ul>
+<p>This means: replaying a section capture that happens to use <code>cameraMode: 'exterior'</code> does not highlight the Exterior view button. The camera mode is an orbit behavior setting; the view button state is a user interaction state. They are independent.</p>
+<hr />
+<h2 id="admin-mode-vs-user-mode-presentation-rendering-path">Admin Mode vs User Mode — Presentation Rendering Path<a class="headerlink" href="#admin-mode-vs-user-mode-presentation-rendering-path" title="Permanent link">&para;</a></h2>
+<h3 id="user-mode-inputadminenabled-false">User Mode (<code>input.admin.enabled = false</code>)<a class="headerlink" href="#user-mode-inputadminenabled-false" title="Permanent link">&para;</a></h3>
+<p><code>ViewerRoot</code> renders from <code>input.presentation</code> directly. The App fully controls presentation by writing into <code>viewerInput</code>.</p>
+<p><strong>Section replay</strong> works by the App resolving <code>presentationModeCaptures[capture.presentationMode]</code> to a full snapshot, then writing it to <code>input.presentation</code>.</p>
+<p><strong>View button replay</strong> works by the Viewer firing <code>onViewSelected</code>, the App resolving the view capture's <code>presentationMode</code> reference to a full snapshot via <code>presentationModeCaptures</code>, updating <code>viewerInput.presentation</code>, and the Viewer rendering the new value.</p>
+<p>There is no overlay or merge: the last capture the App applied is what renders.</p>
+<h3 id="admin-mode-inputadminenabled-true">Admin Mode (<code>input.admin.enabled = true</code>)<a class="headerlink" href="#admin-mode-inputadminenabled-true" title="Permanent link">&para;</a></h3>
+<p><code>ViewerRoot</code> renders from <code>presentationState.snapshot</code> — the Viewer's internal mutable presentation state, owned by <code>useViewerPresentationState</code>. The Admin authoring panel edits this state directly.</p>
+<p><code>presentationState</code> syncs from <code>input.presentation</code> when the reference changes and the field values actually differ (guarded by <code>presentationsEqual</code>). This prevents spurious resets when <code>viewerInput</code> rebuilds for unrelated reasons.</p>
+<p><strong>Section replay in Admin Mode</strong> works by the App resolving <code>presentationModeCaptures[capture.presentationMode]</code> into a full snapshot, updating <code>input.presentation</code>, which triggers the sync effect in <code>useViewerPresentationState</code> and updates <code>presentationState.snapshot</code>. When this occurs, any active solar preview state is cleared and the Viewer reverts to the authoritative solar time from the replayed snapshot.</p>
+<p><strong>Solar preview clearing:</strong> Whenever a section or view change occurs (via <code>applyPresentation</code>), or when the App's <code>presentation</code> input reference changes with different values, the Viewer clears the <code>previewSolar</code> state and reverts to the authoritative solar time stored in the snapshot. This ensures the solar preview never persists across section/view transitions.</p>
+<p><strong>View button replay in Admin Mode</strong> works entirely inside the Viewer — <code>handleViewChange</code> resolves the capture's <code>presentationMode</code> reference via <code>viewerInput.presentationModeCaptures</code> (the App's persisted map, pushed each render), then applies the full snapshot directly to <code>presentationState</code>. <code>onViewSelected</code> <strong>is</strong> fired in Admin Mode, but its sole purpose is to signal the App to clear section tab highlighting. The App must not trigger camera or presentation replay in response — the Viewer handles all navigation and presentation updates internally.</p>
+<p><strong>Mode tile click in Admin Mode</strong> is a Viewer-internal flow — <code>handlePresentationModeSelect</code> reads <code>viewerInput.presentationModeCaptures[mode]</code> directly. If a capture exists, it's applied; otherwise the Viewer applies its built-in <code>DAY_LIGHTING_DEFAULTS</code> / <code>NIGHT_LIGHTING_DEFAULTS</code> (and seasonal HDRI/terrain for winter modes). The App is notified via <code>onActivePresentationModeChanged</code> for authoring-focus updates only — it does not need to push anything in response.</p>
+<hr />
+<h2 id="authoring-interaction-summary">Authoring Interaction Summary<a class="headerlink" href="#authoring-interaction-summary" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Section capture          → stores pose + cameraMode + presentationMode + visibility for that section
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>                           App resolves presentationModeCaptures[capture.presentationMode] at replay time
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>                           Replays via input.camera + input.presentation + input.scene
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>View capture             → stores pose + cameraMode + presentationMode + visibility for a named slot
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>                           App resolves mode → presentation and replays via same path when onViewSelected fires
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Presentation mode capture → stores full ViewerPresentationInput snapshot per named mode
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>                           App stores keyed by mode name; Viewer applies at mode switch;
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>                           App resolves at section/view replay time
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>onSpaceTileWalkActivated      → App applies presentation + visibility only (no camera pose)
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>                           Same interior view capture as the Interior button press
+</code></pre></div>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Section captures</strong> and <strong>View captures</strong> use identical payload shapes, carrying a <code>presentationMode</code> name rather than inline presentation values. Section replay is triggered by the App (section tab click). View replay is triggered by the Viewer firing <code>onViewSelected</code>.</li>
+<li><strong>Last-one-wins</strong>: whichever capture was activated most recently determines the current presentation. No overlay.</li>
+<li><strong>Presentation Mode captures</strong> own a full <code>ViewerPresentationInput</code> snapshot per named mode (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>). The App resolves the active mode's snapshot at section/view replay time. The Viewer also applies captures directly when the mode switches in Admin Mode.</li>
+<li><strong>Space Menu / Entry buttons</strong> navigate the camera only — no presentation change.</li>
+<li><strong>Overhead space-tile click</strong> (<code>SpaceTileClickNav</code>) fires <code>onSpaceTileWalkActivated</code> — App applies presentation + visibility from the interior view capture (resolving its <code>presentationMode</code> reference) but does not override the camera pose.</li>
+<li><strong>View button highlight</strong> tracks which button was last pressed, not the camera mode. Activating a section clears the highlight.</li>
+<li><strong>In User Mode</strong>, presentation renders from <code>input.presentation</code> — App-owned, last-one-wins.</li>
+<li><strong>In Admin Mode</strong>, presentation renders from <code>presentationState.snapshot</code>, which the admin edits live. View button presses and mode switches apply captures directly to this internal state.</li>
+</ul>
+<hr />
+<h2 id="glossary">Glossary<a class="headerlink" href="#glossary" title="Permanent link">&para;</a></h2>
+<p>See <a href="../overview/#glossary">Overview</a> for the canonical glossary.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
