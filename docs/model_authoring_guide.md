@@ -86,15 +86,17 @@ Marker meshes are removed from the scene at load — only the marker node's tran
 
 ### 4. Lighting markers
 
-Marker geometry under a top-level `Lights` group places point and spot lights at specific positions:
+A node whose name contains `_PL` (point) or `_SL[<degrees>]` (spot) — followed by `_` or end-of-name — spawns a light at its world position. The suffix can sit anywhere in the name; authors typically put it at the end.
 
 ```
-Lights
-├── PointLights   (each child becomes a Three.js point light)
-└── SpotLights    (each child becomes a spot light; optional Spotlight_<degrees> in name)
+EntranceUpBulbs_SL90        (spot, 90° beam)
+KitchenAccent_SL45          (spot, 45° beam)
+RoomLights_PL               (point light)
 ```
 
-The marker's world transform origin is the light position. Visible helper geometry inside the marker is for SketchUp authoring only. See [Lighting Marker Conventions](#lighting-marker-conventions).
+The marker's world transform origin is the light position; for spots, local −Z is the beam direction. Visible helper geometry inside the marker is for SketchUp authoring only.
+
+Wrapping a marker as a sibling of a fixture's geometry inside a dedicated parent component **binds** the spawned light to that fixture: the light hides automatically when the fixture's geometry is hidden by a section/option capture. Loose markers placed at structural top levels are unbound and stay on regardless. See [Lighting Marker Conventions](#lighting-marker-conventions).
 
 ### 5. Shadow behavior prefixes
 
@@ -122,7 +124,7 @@ For a model to behave well in the current stable viewer, try to satisfy these:
 - hierarchy is stable across exports
 - meaningful object names where possible
 - if using navigation markers: a `Spaces` root with `Rooms` and `Doorways` sub-groups
-- if using lighting markers: a `Lights` root with `PointLights` and/or `SpotLights` sub-groups
+- if using lighting markers: marker components named with `_PL` (point) or `_SL[<degrees>]` (spot) suffix; for fixture-bound lights, wrap the markers and the fixture geometry under a shared parent component
 - if using pivot markers: each marker group's axes set with origin at the hinge edge and the blue axis pointing up
 - room/doorway/entry/light marker names follow the conventions in this guide
 - helper markers roughly match the physical walkable/opening volumes they represent
@@ -241,51 +243,66 @@ Box geometry is often ideal. The **Floor Nav** debug toggle in Admin Mode visual
 
 ## Lighting Marker Conventions
 
-### Root marker container
+### Marker name suffix
 
-Use an object named exactly `Lights` at the top of the scene. Inside it, group markers by type:
+A node whose name contains `_PL` (point) or `_SL[<degrees>]` (spot) — followed by `_` or end-of-name — spawns a light at its world position. There is no `Lights` container. Markers can live anywhere in the scene tree.
+
+Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end.
+
+| Example name | Behavior |
+|---|---|
+| `RoomLights_PL` | point light |
+| `EntranceUpBulbs_SL90` | spot light, 90° full beam |
+| `KitchenAccent_SL45` | spot light, 45° full beam |
+| `EntranceUpBulbs_SL` | spot light, default 90° (degrees omitted) |
+| `EntranceUpBulbs_SL90_1` | SketchUp auto-suffixed duplicate of the above |
+| `modelskp_RoomLights_PL_1_6` | chained SketchUp duplicates; matches as point |
+
+The `<degrees>` value (when present) is the **full beam angle**; default is 90° when omitted. The cyan **SpotLightHelper** cone (visible when the "Spot Cones" toggle in the admin debug panel is on) reflects each marker's actual angle — useful for verifying the suffix was parsed correctly.
+
+The first matching ancestor wins — once a node is identified as a marker, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.
+
+Visible authoring helpers (a sphere or cone mesh inside the marker component) are for SketchUp orientation only. They're hidden at load (`visible = false`, tagged `userData.isHiddenMarker = true`) and never rendered.
+
+> **Authoring caution:** avoid `_SL` / `_PL` substrings (followed by `_` or end of name) on non-marker nodes — those would be picked up as markers. Per-mesh prefixes like `Fixture_*`, `Glass_*` are safe (no trailing `_SL` / `_PL`).
+
+### Bound vs. unbound lights
+
+A marker is **bound to a fixture** when its parent container also holds the fixture's geometry as siblings — i.e., the parent is a dedicated wrapper around the markers + that fixture's meshes. The spawned light is automatically hidden when every fixture mesh is in the active hide set (e.g. when a section/option capture hides the housing). This is what you want for sconces, lamps, chandeliers — anything visible.
+
+A marker is **unbound** (always-on) when its parent is a structural top-level container holding lots of unrelated geometry — the "all hidden" condition is never satisfied, so the light stays on. This is what you want for ambient room-fill point lights with no visible fixture.
+
+The rule is structural: the resolver collects the marker's parent's mesh descendants outside any sibling marker subtrees. If every one of those mesh ids is hidden, the light hides too. No special naming on the binding container is required.
+
+#### Pattern A — bound (sconce with two lights)
 
 ```
-Lights
-├── PointLights
-└── SpotLights
+Component#6_ExteriorRightLight                ← per-fixture wrapper
+├── Component#1_EntranceDownBulbs_SL90        ← marker (rotated to point down)
+├── Component#1_EntranceUpBulbs_SL90          ← marker (rotated to point up)
+└── ExteriorFixture                            ← visible housing
+    ├── Wall_Support
+    └── Lamp
 ```
 
-Same matching rules as `Spaces`: case-insensitive, with tolerance for SketchUp auto-disambiguation suffix on the type containers (`PointLights_1`, `SpotLights_2`).
+Hide `Wall_Support` + `Lamp` in a section/option → both spotlights hide.
 
-### PointLights and SpotLights
-
-Each child of `PointLights` or `SpotLights` is a single light marker. **Names below the type container are free-form** — the resolver classifies by the parent container name, not the leaf name.
+#### Pattern B — unbound (ambient room point lights)
 
 ```
-Lights
-├── PointLights
-│   ├── BedroomCeiling_01     (any name works)
-│   ├── BedroomCeiling_02
-│   └── …
-└── SpotLights
-    ├── EntryLamp_Spotlight_45
-    ├── KitchenAccent_Spotlight_30
-    └── …
+Assembly-277                                   ← top-level structural root
+├── modelskp_RoomLights_PL                     ← marker (no per-fixture wrapper)
+├── modelskp_RoomLights_PL_1
+└── … (whole rest of the model alongside)
 ```
 
-Visible authoring helpers (a sphere or cone mesh inside the marker component) are for SketchUp orientation only. They're removed from the scene at load and never rendered.
+The parent has hundreds of mesh descendants outside the markers; in practice they're never all hidden together, so the lights stay on.
 
-### Per-marker spot beam angle
+#### Authoring rule for binding
 
-Spot light beam angle is read from a `Spotlight_<degrees>` substring anywhere in the marker's component name *or* the name of any descendant Object3D. `<degrees>` is the **full beam angle** in degrees:
+> **Wrap markers and only that fixture's geometry under a dedicated parent component.**
 
-```
-test_Spotlight_30                     →  30° beam (narrow)
-test_Spotlight_45                     →  45° beam
-test_Spotlight_60                     →  60° beam
-test_Spotlight_90                     →  90° beam (wide / default)
-test#1_Spotlight_60 > Spotlight_60    →  60° beam (also matched on a child)
-```
-
-Default if no substring is found: **90°** full beam.
-
-The cyan **SpotLightHelper** cone (visible when the "Spot Cones" toggle in the admin debug panel is on) reflects each marker's actual angle — useful for verifying the substring was parsed correctly.
+If you put unrelated geometry under the same parent, hide-propagation won't fire because the unrelated meshes will still be visible.
 
 ### Light marker placement
 
@@ -297,7 +314,7 @@ Practical implications:
 - To move just the visible helper without changing the light: edit the geometry inside the component definition (changes mesh-local positions, doesn't affect the origin).
 - The visible sphere/cone helper inside the marker can be any shape or size — its only job is to make the marker locatable and orientable in SketchUp.
 
-For spot lights, the **aim direction** is the marker's local `+Z` transformed to world space. Orient the marker component so its local `+Z` points where you want the cone to shine. The visible cone helper inside the component should be authored to match this orientation as a sanity check, but only the marker node's transform actually drives the light.
+For spot lights, the **aim direction** is the marker's local `−Z` transformed to world space (Three.js "forward"). Orient the marker component so its local `−Z` points where you want the cone to shine. The visible cone helper inside the component should be authored to match this orientation as a sanity check, but only the marker node's transform actually drives the light.
 
 ### Spot housing occlusion authoring rule
 
@@ -313,7 +330,7 @@ When the bulb is inside a fixture housing AND the spot cone has meaningful later
 
 The viewer's authoring panel offers a three-way toggle for how to source interior lights:
 
-- **Import** — use the markers under `Lights > PointLights / SpotLights` (the convention this section describes).
+- **Import** — use the markers discovered by the `_PL` / `_SL` suffix convention (the rule this section describes).
 - **Auto** — auto-place a single point light at the centre of each `Spaces > Rooms` marker. Useful for models without authored light markers.
 - **None** — no interior lights at all.
 
@@ -393,7 +410,7 @@ Admin Mode exposes several debug tools in the bottom-right toolbar to verify you
 
 Click **Hierarchy** in the admin debug toolbar to inspect the loaded scene's tree. The popup shows an indented hierarchy with two filters:
 
-- **Markers only** (default ON) — narrows the view to subtrees rooted at recognized container markers (`Spaces`, `Lights`). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see *just* your marker structure for verification.
+- **Markers only** (default ON) — narrows the view to subtrees rooted at recognized container markers (currently `Spaces`). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see *just* your marker structure for verification. Substring-based markers (light, pivot) are scattered through the visual tree by definition and aren't filtered by this toggle.
 - **Show meshes** (default OFF) — when off, mesh leaves are collapsed to a `… (N meshes)` summary. When on, every mesh is shown by name.
 
 A **Refresh** button re-walks the live scene graph (handy if you load a different model with the popup open). A **Copy** button puts the formatted hierarchy on your clipboard — useful for sharing during authoring iteration.
@@ -402,7 +419,7 @@ A **Refresh** button re-walks the live scene graph (handy if you load a differen
 
 Toggle **Spot Cones** in the admin debug toolbar to visualize each marker-driven spot light:
 
-- A **cyan SpotLightHelper cone** shows the light's beam shape based on its position, aim direction, and angle (parsed from the marker's `Spotlight_<degrees>` substring or the 90° default).
+- A **cyan SpotLightHelper cone** shows the light's beam shape based on its position, aim direction, and angle (parsed from the marker name's `_SL<degrees>` suffix or the 90° default).
 - A **wireframe CameraHelper pyramid** shows the spot's shadow camera frustum, including the near and far clip planes.
 
 Use this to verify each spot is positioned and aimed correctly, that the beam angle matches what you intended, and that occluders (e.g., fixture housings) sit inside the frustum where you expect them. The Spot Cones toggle only takes effect when **Light Source Mode** is `Import`.
@@ -554,7 +571,8 @@ Try to avoid:
 - hiding important configurability inside huge merged meshes
 - inconsistent marker naming
 - missing `Spaces` root when using navigation markers, or missing the `Rooms` / `Doorways` sub-groups
-- missing `Lights` root when using authored lighting markers, or missing the `PointLights` / `SpotLights` sub-groups
+- light marker components named without the `_PL` / `_SL[<degrees>]` suffix, or with the suffix mid-name where it isn't followed by `_` or end-of-name
+- bound-light markers placed in a parent container that also holds unrelated geometry — hide-propagation won't fire because the unrelated meshes stay visible
 - room names containing underscores (`Front_Bedroom`) — they make `<RoomA>_<RoomB>` doorway parsing ambiguous; use PascalCase (`FrontBedroom`) instead
 - doorway markers that do not actually sit in openings
 - exterior entry (`Exterior_<RoomName>`) markers that sit well inside or well outside the building instead of at the opening
@@ -594,7 +612,7 @@ If you want the shortest version:
 - keep hierarchy stable
 - name things clearly
 - **navigation markers**: `Spaces > Rooms / Doorways > <name>`. Doorway leaves are `<RoomA>_<RoomB>` for interior or `Exterior_<RoomName>` for entries. Room names: PascalCase, no underscores.
-- **lighting markers**: `Lights > PointLights / SpotLights > <name>`. Spot beam angle via `Spotlight_<degrees>` substring anywhere in the marker subtree (default 90°).
+- **lighting markers**: include `_PL` (point) or `_SL[<degrees>]` (spot, default 90°) suffix anywhere in any node's name (e.g. `RoomLights_PL`, `EntranceUpBulbs_SL90`). For fixture-bound lights, wrap markers + only that fixture's geometry under a shared parent component — the spawned light hides automatically when every fixture mesh is in the active hide set. Loose markers under structural top-level containers stay always-on.
 - **pivot markers** (click-to-rotate): include `_<degrees><CW|CCW>` substring anywhere in any group's name (e.g. `BedroomDoor_90CCW`). Set the SketchUp group axes with the origin at the hinge edge and the blue axis pointing up.
 - **per-mesh shadow prefixes**: `Glass_*`, `Water_*`, `Fixture_*` (translucent fixture parts only) disable shadow casting for that mesh.
 - **emissive materials**: prefix the **material name** with `Emissive_` for bulbs / LED strips / glowing panels.
