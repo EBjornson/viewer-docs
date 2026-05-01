@@ -818,6 +818,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#7-slide-markers-click-to-slide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Slide markers (click-to-slide)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1114,6 +1125,78 @@
         
           <li class="md-nav__item">
   <a href="#whats-not-currently-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's not currently supported
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slide-marker-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slide Marker Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slide Marker Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#marker-name-suffix_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marker name suffix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#origin-and-direction-sketchup-group-axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Origin and direction: SketchUp group axes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance units
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-panel-slides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-panel slides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-not-currently-supported_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         What's not currently supported
@@ -1696,6 +1779,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#7-slide-markers-click-to-slide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Slide markers (click-to-slide)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1992,6 +2086,78 @@
         
           <li class="md-nav__item">
   <a href="#whats-not-currently-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's not currently supported
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slide-marker-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slide Marker Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slide Marker Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#marker-name-suffix_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marker name suffix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#origin-and-direction-sketchup-group-axes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Origin and direction: SketchUp group axes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-units" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance units
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-panel-slides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-panel slides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-not-currently-supported_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         What's not currently supported
@@ -2391,6 +2557,9 @@
 <h3 id="6-pivot-markers-click-to-rotate">6. Pivot markers (click-to-rotate)<a class="headerlink" href="#6-pivot-markers-click-to-rotate" title="Permanent link">&para;</a></h3>
 <p>Any group whose name contains a <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> substring becomes a click-to-rotate pivot — useful for doors, casement windows, lids, and similar hinged geometry. The marker's local axis origin is the hinge; rotation happens around the SketchUp blue (vertical) axis. State is session-only — pivots open or close in response to user clicks but the open/closed state is not captured or persisted across reloads.</p>
 <p>See <a href="#pivot-marker-conventions">Pivot Marker Conventions</a> for full details.</p>
+<h3 id="7-slide-markers-click-to-slide">7. Slide markers (click-to-slide)<a class="headerlink" href="#7-slide-markers-click-to-slide" title="Permanent link">&para;</a></h3>
+<p>Any group whose name contains a <code>_SD&lt;distance&gt;</code> substring becomes a click-to-slide group — useful for pocket doors, sliding sashes, drawers, sliding car/casement windows, and similar geometry that translates rather than rotates. The marker's local axis origin is the closed-state position; the local <strong>+X axis</strong> is the open direction; distance is in meters. State is session-only.</p>
+<p>See <a href="#slide-marker-conventions">Slide Marker Conventions</a> for full details.</p>
 <hr />
 <h2 id="minimum-good-model-checklist">Minimum Good Model Checklist<a class="headerlink" href="#minimum-good-model-checklist" title="Permanent link">&para;</a></h2>
 <p>For a model to behave well in the current stable viewer, try to satisfy these:</p>
@@ -2401,6 +2570,7 @@
 <li>if using navigation markers: each room named with <code>_RM</code> suffix; each connection named with <code>_DW</code> suffix (and the <code>&lt;RoomA&gt;_&lt;RoomB&gt;</code> or <code>Exterior_&lt;RoomName&gt;</code> form)</li>
 <li>if using lighting markers: marker components named with <code>_PL</code> (point) or <code>_SL[&lt;degrees&gt;]</code> (spot) suffix; for fixture-bound lights, wrap the markers and the fixture geometry under a shared parent component</li>
 <li>if using pivot markers: each marker group's axes set with origin at the hinge edge and the blue axis pointing up</li>
+<li>if using slide markers: each marker group's axes set with origin at the closed-state reference point and the <strong>red (+X) axis</strong> pointing in the open direction</li>
 <li>room/doorway/entry/light marker names follow the conventions in this guide</li>
 <li>helper markers roughly match the physical walkable/opening volumes they represent</li>
 </ul>
@@ -2690,12 +2860,76 @@
 <li>Sound effects, latch animations, queued click chains, and hover affordances are not implemented.</li>
 </ul>
 <hr />
+<h2 id="slide-marker-conventions">Slide Marker Conventions<a class="headerlink" href="#slide-marker-conventions" title="Permanent link">&para;</a></h2>
+<p>Adds click-to-slide behavior to any group in the model — pocket doors, sliding sashes, drawers, sliding car/casement windows, and anything else that translates rather than rotates. The end user clicks the marker geometry; it slides open. Click again; it slides closed. Animation is ~0.45 s with eased motion.</p>
+<p>State is <strong>session-only</strong>: slides return to closed on page reload, are not stored in any capture, and do not affect navigation (the camera passes through closed doors regardless).</p>
+<h3 id="marker-name-suffix_3">Marker name suffix<a class="headerlink" href="#marker-name-suffix_3" title="Permanent link">&para;</a></h3>
+<p>A node whose name contains <code>_SD&lt;distance&gt;</code> (e.g. <code>_SD0.8</code>, <code>_SD1.2</code>) — preceded by <code>_</code> and followed by <code>_</code> or end-of-name — is a click-to-slide group. Distance is in <strong>meters</strong>. Markers can live anywhere in the scene tree; there is no top-level container.</p>
+<table>
+<thead>
+<tr>
+<th>Example name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PocketDoor_Bedroom_SD0.8</code></td>
+<td>slides 0.8 m along the group's local +X</td>
+</tr>
+<tr>
+<td><code>KitchenWindow_Sash_SD0.45</code></td>
+<td>sash slides 0.45 m; +X authored as "up"</td>
+</tr>
+<tr>
+<td><code>CarDoor_Window_SD0.4</code></td>
+<td>sliding car window, 0.4 m of travel</td>
+</tr>
+<tr>
+<td><code>PocketDoor_SD0.8_1</code></td>
+<td>SketchUp auto-suffixed duplicate; same behavior</td>
+</tr>
+</tbody>
+</table>
+<p>Matching is case-insensitive and the suffix can appear anywhere in the name; authors typically place it at the end. The first matching ancestor wins — once a node is identified as a slide, its descendants are not re-considered. SketchUp's instance-of-definition wrapper nodes inside a marker component are silently absorbed.</p>
+<p>Like pivot markers, slide markers wrap <strong>visible geometry</strong> — the door panel, the sash, plus any handle/trim/hardware children — that translates as a unit when the position update applies to the marker group's transform.</p>
+<p><strong>The substring is required.</strong> A group without it is not a slide, regardless of name or hierarchy position. This is also how you opt OUT — leave the substring off and the group stays as static geometry.</p>
+<blockquote>
+<p><strong>Authoring caution:</strong> the <code>_SD&lt;digits&gt;</code> substring is specific enough that accidental collisions are unlikely, but be aware that any group name matching this pattern (e.g. <code>Brand_SD2024</code>) will be opted into slide behavior.</p>
+</blockquote>
+<h3 id="origin-and-direction-sketchup-group-axes">Origin and direction: SketchUp group axes<a class="headerlink" href="#origin-and-direction-sketchup-group-axes" title="Permanent link">&para;</a></h3>
+<p>The marker's <strong>local axis origin is the closed-state reference point</strong>, and motion happens along the SketchUp <strong>red (+X) axis</strong>. The author re-orients the group's axes so that +X points the way the panel slides open. SketchUp's glTF exporter preserves the group's local frame, so the +X direction at authoring time becomes the slide direction in the rendered scene.</p>
+<p>Authoring steps:</p>
+<ol>
+<li>In SketchUp, right-click the group/component → <strong>Change Axes</strong>.</li>
+<li>Place the axis origin somewhere on the panel that's natural to think of as "the closed position" — usually the leading edge of the panel in its closed state.</li>
+<li>Aim the <strong>red axis (+X) along the open direction</strong>. For a pocket door that slides left into the wall, the red axis points left. For a car window that drops down, the red axis points down. For an upward-sliding sash, the red axis points up.</li>
+<li>The green and blue axes can point in whatever directions are natural for the geometry — only the origin position and red-direction matter for sliding.</li>
+</ol>
+<p>Misplaced or misoriented axes are the most common authoring mistake: the panel slides into the wrong place or the wrong way. Visually inspecting the group axes in SketchUp before exporting is the surest way to catch this.</p>
+<h3 id="distance-units">Distance units<a class="headerlink" href="#distance-units" title="Permanent link">&para;</a></h3>
+<p><code>&lt;distance&gt;</code> is in <strong>meters</strong> (scene units) — <code>_SD0.8</code> slides 0.8 m, <code>_SD1.2</code> slides 1.2 m. Decimals are supported. Authors who think in inches/feet should convert when naming.</p>
+<h3 id="multi-panel-slides">Multi-panel slides<a class="headerlink" href="#multi-panel-slides" title="Permanent link">&para;</a></h3>
+<p>A single slide marker translates as one rigid unit. For double pocket doors, biparting sashes, or other geometry where panels move independently, <strong>promote each panel to its own marker</strong> with its own axis origin and own +X direction:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PocketDoor_LeftPanel_SD0.8
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>PocketDoor_RightPanel_SD0.8
+</code></pre></div>
+<p>Each panel needs the <strong>Change Axes</strong> step done individually so its own +X aims the right way.</p>
+<h3 id="whats-not-currently-supported_1">What's not currently supported<a class="headerlink" href="#whats-not-currently-supported_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Open/closed state is not captured or persisted; slides return to closed on every reload.</li>
+<li>Slide state does not affect path navigation — the camera passes through closed sliding doors regardless of pose.</li>
+<li>Reversing direction mid-slide is ignored (clicks during animation are dropped).</li>
+<li>Non-linear paths (e.g. a curved track) are not supported — motion is always a straight line along local +X.</li>
+<li>Non-unit parent scale would scale the slide distance accordingly. Standard SketchUp glTF exports have unit parent scale throughout, so this is rarely a concern in practice.</li>
+</ul>
+<hr />
 <h2 id="authoring-debug-tools">Authoring Debug Tools<a class="headerlink" href="#authoring-debug-tools" title="Permanent link">&para;</a></h2>
 <p>Admin Mode exposes several debug tools in the bottom-right toolbar to verify your model authoring against the conventions in this guide.</p>
 <h3 id="hierarchy-popup">Hierarchy popup<a class="headerlink" href="#hierarchy-popup" title="Permanent link">&para;</a></h3>
 <p>Click <strong>Hierarchy</strong> in the admin debug toolbar to inspect the loaded scene's tree. The popup shows an indented hierarchy with two filters:</p>
 <ul>
-<li><strong>Markers only</strong> (default ON) — narrows the view to ancestor paths leading to authored marker nodes (<code>_RM</code>, <code>_DW</code>, <code>_PL</code>, <code>_SL</code>, <code>_&lt;deg&gt;(CW|CCW)</code>). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see <em>just</em> your marker structure for verification. Inside each marker subtree the full hierarchy is shown verbatim so authors can sanity-check helper geometry and SketchUp wrapper structure.</li>
+<li><strong>Markers only</strong> (default ON) — narrows the view to ancestor paths leading to authored marker nodes (<code>_RM</code>, <code>_DW</code>, <code>_PL</code>, <code>_SL</code>, <code>_&lt;deg&gt;(CW|CCW)</code>, <code>_SD&lt;distance&gt;</code>). Visible product geometry, per-mesh shadow prefixes, and other authoring noise are hidden, so you see <em>just</em> your marker structure for verification. Inside each marker subtree the full hierarchy is shown verbatim so authors can sanity-check helper geometry and SketchUp wrapper structure.</li>
 <li><strong>Show meshes</strong> (default OFF) — when off, mesh leaves are collapsed to a <code>… (N meshes)</code> summary. When on, every mesh is shown by name.</li>
 </ul>
 <p>A <strong>Refresh</strong> button re-walks the live scene graph (handy if you load a different model with the popup open). A <strong>Copy</strong> button puts the formatted hierarchy on your clipboard — useful for sharing during authoring iteration.</p>
@@ -2748,13 +2982,13 @@
 <li>Anything after the prefix is free-form: <code>Glass_SlidingDoor</code>, <code>Water_Pool</code>, <code>Fixture_PorchLight</code> all work</li>
 </ul>
 <h3 id="example-names">Example names<a class="headerlink" href="#example-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Glass_Window_Front
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Glass_Window_Side_Left
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Glass_Skylight
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Water_Pool
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Water_Feature_Rear
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Fixture_PorchLight
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Fixture_RecessedCeiling_01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Glass_Window_Front
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Glass_Window_Side_Left
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Glass_Skylight
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>Water_Pool
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Water_Feature_Rear
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Fixture_PorchLight
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Fixture_RecessedCeiling_01
 </code></pre></div>
 <hr />
 <h2 id="geometry-grouping-guidance">Geometry Grouping Guidance<a class="headerlink" href="#geometry-grouping-guidance" title="Permanent link">&para;</a></h2>
@@ -2808,9 +3042,9 @@
 <p>If UV coordinates are missing, the Viewer auto-generates them using a world-space box projection (one texture tile per 4 world units, roughly one tile per 4 metres). This makes textures visible and gives a rough sense of the material, but the scale and alignment will rarely be correct for a finished look. Treat it as a preview aid, not an authoring target.</p>
 <h3 id="emissive-materials">Emissive materials<a class="headerlink" href="#emissive-materials" title="Permanent link">&para;</a></h3>
 <p>Meshes intended to glow (light bulbs, LED strips, illuminated panels) should have their material name prefixed with <code>Emissive_</code> in SketchUp:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Emissive_Bulb
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Emissive_LedStrip_01
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Emissive_CeilingLight
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Emissive_Bulb
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Emissive_LedStrip_01
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Emissive_CeilingLight
 </code></pre></div>
 <p>The Viewer detects this prefix at load time and enables emissive rendering for those materials. The <code>Emissive Intensity</code> slider in the authoring panel controls glow strength globally across all emissive materials. The emissive colour is derived from the material’s diffuse colour, so a warm-white bulb material produces a warm glow.</p>
 <p><strong>Note:</strong> the <code>Emissive_</code> prefix applies to the <strong>material name</strong> in SketchUp, not the object name.</p>
