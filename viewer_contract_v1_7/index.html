@@ -1995,13 +1995,13 @@
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">pose</span><span class="o">?:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="kt">number</span><span class="p">]</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="kt">number</span><span class="p">]</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nx">fov?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">}</span>
 </code></pre></div>
 <h4 id="camera-notes">Camera Notes<a class="headerlink" href="#camera-notes" title="Permanent link">&para;</a></h4>
 <ul>
 <li><code>camera.cameraMode</code> and <code>camera.pose</code> are App-owned presentation intent.</li>
+<li><code>pose</code> carries no FOV: each <code>cameraMode</code> has a canonical FOV the Viewer applies at replay. A captured FOV would be redundant with <code>cameraMode</code>, so it is intentionally omitted.</li>
 <li>The Viewer may keep transient runtime camera state while executing the requested pose.</li>
 <li>The current implementation supports:</li>
 <li>direct pose playback</li>
