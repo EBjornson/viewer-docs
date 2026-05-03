@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Viewer } from '../public/Viewer'
 import { SECTION_DEMO_ITEMS } from '../config/sectionDemoConfig'
 import { modelManifest } from '../config/modelManifest'
-import { decimalToTimeString12h, dayOfYearToDateString } from '../utils/solarUtils'
+import { decimalToTimeString12h, dayOfYearToDateString } from '../utils/solarFormatUtils'
 
 // ─── Capture image overlay ───────────────────────────────────────────────────
 
@@ -519,8 +518,12 @@ function CaptureTooltip({ payload, position = 'below', containerStyle, enabled =
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
+// `ViewerComponent` is supplied by the entry point so DemoApp itself doesn't
+// statically import any Viewer surface. main.jsx passes the source `Viewer` for
+// fast HMR; main-bundle.jsx passes ViewerElementReactBridge so the only Three.js
+// in scope is the one bundled inside the CDN-loaded viewer.js.
 export function DemoApp(props = {}) {
-  const ViewerComponent = props.ViewerComponent ?? Viewer
+  const ViewerComponent = props.ViewerComponent
   // Model selection
   const [selectedModelId, setSelectedModelId] = useState(DEFAULT_MODEL_ID)
   const [modelObjectUrl, setModelObjectUrl] = useState(null)
@@ -1084,6 +1087,7 @@ export function DemoApp(props = {}) {
             style={modelSelectStyle}
             value={selectedModelId ?? ''}
             onChange={(e) => { if (e.target.value) switchToManifestModel(e.target.value) }}
+            title="Manifest models from public/models. Each model has its own localStorage key (demoapp_v2_${modelId}) so captures persist per model. Switching loads that model's saved snapshot."
           >
             {!selectedModelId && <option value="">— uploaded file —</option>}
             {modelManifest.map((model) => (
@@ -1095,6 +1099,7 @@ export function DemoApp(props = {}) {
         <button
           style={adminEnabled ? activeAdminBtn : secondaryBtn}
           onClick={() => setAdminEnabled((prev) => !prev)}
+          title="Toggle input.admin.enabled. When on, the Viewer renders its built-in Authoring Panel with capture/clear controls."
         >
           Admin Mode
         </button>
@@ -1108,10 +1113,11 @@ export function DemoApp(props = {}) {
               <button
                 style={{ ...btnBase, background: 'rgba(180,40,40,0.7)', border: '1px solid rgba(255,100,100,0.45)', padding: '4px 10px', fontSize: 12 }}
                 onClick={handleResetConfirm}
+                title="Confirm: clear every stored capture for this model from localStorage."
               >
                 Yes
               </button>
-              <button style={{ ...secondaryBtn, padding: '4px 10px', fontSize: 12 }} onClick={handleResetCancel}>
+              <button style={{ ...secondaryBtn, padding: '4px 10px', fontSize: 12 }} onClick={handleResetCancel} title="Cancel reset.">
                 No
               </button>
             </div>
@@ -1127,12 +1133,17 @@ export function DemoApp(props = {}) {
                 : secondaryBtn
             }
             onClick={handleResetRequest}
+            title="Clear all captures for this model from localStorage — section, view, presentation mode, option, and material defaults. Asks for confirmation."
           >
             Reset Model
           </button>
         )}
 
-        <button style={secondaryBtn} onClick={() => modelFileInputRef.current?.click()}>
+        <button
+          style={secondaryBtn}
+          onClick={() => modelFileInputRef.current?.click()}
+          title="Load an ad-hoc .glb file. Captures on uploaded files do NOT persist — refreshing clears them. Use the model dropdown for the manifest models that do persist."
+        >
           Upload .glb
         </button>
         <input
@@ -1147,22 +1158,26 @@ export function DemoApp(props = {}) {
           href="/downloads/00%20TestModel.skp"
           download="00 TestModel.skp"
           style={{ ...primaryBtn, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+          title="Download the SketchUp source for the demo model. Useful for studying the marker conventions (Spaces > Rooms / Doorways, _PL / _SL light markers, _RM room markers, pivot/slide markers)."
         >
           Download .skp
         </a>
 
         {modelUrl && (
           <CaptureTooltip payload={viewerReady} position="below" enabled={adminEnabled}>
-            <span style={{
-              fontSize: 11,
-              fontWeight: 600,
-              padding: '4px 8px',
-              borderRadius: 5,
-              border: '1px solid rgba(255,255,255,0.15)',
-              color: viewerReady ? 'rgba(100,220,130,0.9)' : 'rgba(255,255,255,0.35)',
-              background: viewerReady ? 'rgba(100,220,130,0.1)' : 'rgba(255,255,255,0.05)',
-              flexShrink: 0,
-            }}>
+            <span
+              title="Reflects onViewerReady. Hover ~3s in Admin Mode to inspect the full payload (modelUrl, productId, modelVersion, cameraMode, cameraInfo). Resets on every model switch."
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                padding: '4px 8px',
+                borderRadius: 5,
+                border: '1px solid rgba(255,255,255,0.15)',
+                color: viewerReady ? 'rgba(100,220,130,0.9)' : 'rgba(255,255,255,0.35)',
+                background: viewerReady ? 'rgba(100,220,130,0.1)' : 'rgba(255,255,255,0.05)',
+                flexShrink: 0,
+              }}
+            >
               {viewerReady ? 'Ready' : 'Loading…'}
             </span>
           </CaptureTooltip>
@@ -1172,6 +1187,7 @@ export function DemoApp(props = {}) {
 
         <CaptureTooltip payload={materialDefaultCapture} position="below-right" enabled={adminEnabled}>
           <span
+            title="Persistent indicator for materialDefaultCapture (model-level baseline materials, applied before any option assignments). Blue = a capture is stored. Hover ~3s in Admin Mode for the payload."
             style={{
               ...secondaryBtn,
               display: 'block',
@@ -1187,18 +1203,18 @@ export function DemoApp(props = {}) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {[
             [
-              { key: 'day', label: 'Summer' },
-              { key: 'nightExt', label: 'Night' },
-              { key: 'nightInt', label: 'Interior' },
+              { key: 'day', label: 'Summer', fullName: 'Summer Day' },
+              { key: 'nightExt', label: 'Night', fullName: 'Summer Night Exterior' },
+              { key: 'nightInt', label: 'Interior', fullName: 'Summer Night Interior' },
             ],
             [
-              { key: 'winterDay', label: 'Winter' },
-              { key: 'winterNight', label: 'Night' },
-              { key: 'winterNightInt', label: 'Interior' },
+              { key: 'winterDay', label: 'Winter', fullName: 'Winter Day' },
+              { key: 'winterNight', label: 'Night', fullName: 'Winter Night Exterior' },
+              { key: 'winterNightInt', label: 'Interior', fullName: 'Winter Night Interior' },
             ],
           ].map((row, rowIndex) => (
             <div key={rowIndex} style={{ display: 'flex', alignItems: 'stretch' }}>
-              {row.map(({ key, label }, i, arr) => (
+              {row.map(({ key, label, fullName }, i, arr) => (
                 <CaptureTooltip
                   key={key}
                   payload={presentationModeCaptures[key]}
@@ -1207,6 +1223,7 @@ export function DemoApp(props = {}) {
                   enabled={adminEnabled}
                 >
                   <span
+                    title={`${fullName} (mode key: ${key}). Persistent indicator: blue = presentationModeCaptures.${key} is stored. Hover ~3s in Admin Mode for the payload.`}
                     style={{
                       ...secondaryBtn,
                       display: 'flex',
@@ -1239,6 +1256,7 @@ export function DemoApp(props = {}) {
               enabled={adminEnabled}
             >
               <span
+                title={`${mode.charAt(0).toUpperCase()}${mode.slice(1)} view (cameraMode: ${mode}). Persistent indicator: blue = viewCaptures.${mode} is stored. Hover ~3s in Admin Mode for the payload. Press the matching button at the bottom to replay.`}
                 style={{
                   ...secondaryBtn,
                   display: 'block',
@@ -1255,7 +1273,12 @@ export function DemoApp(props = {}) {
           ))}
         </div>
 
-        <span style={{ opacity: 0.5, fontSize: 14 }}>$0</span>
+        <span
+          style={{ opacity: 0.5, fontSize: 14 }}
+          title="Pricing placeholder — DemoApp doesn't compute pricing. A future Build & Price CustomApp would replace this with a running total."
+        >
+          $0
+        </span>
         <button
           style={{
             ...(SECTION_DEMO_ITEMS.some((s) => sectionCaptures[s.id]?.pose) ? primaryBtn : secondaryBtn),
@@ -1263,6 +1286,7 @@ export function DemoApp(props = {}) {
           }}
           disabled={isBatchCapturing}
           onClick={handleCaptureSectionRenderings}
+          title="Trigger batch image capture: bumps admin.batchCapture.nonce. The Viewer renders one 4K JPEG per section that has a captured pose, fires onRenderCaptured per image, and onBatchCaptureComplete when done. DemoApp downloads each image as a .jpg with a footer overlay."
         >
           {isBatchCapturing ? 'Capturing…' : 'Complete Build'}
         </button>
@@ -1316,6 +1340,7 @@ export function DemoApp(props = {}) {
                     // input.presentation (skips when no capture is provided).
                     setActivationNonce((n) => n + 1)
                   }}
+                  title={`Activate this section. Sets activeAuthoringFocus='section', bumps presentationSyncKey. ${hasSectionCapture ? 'Blue dot = sectionCaptures has an entry for this id; replays on activation.' : 'No section capture stored — activating leaves the current camera/presentation alone.'} Hover ~3s in Admin Mode to inspect the payload.`}
                   style={{
                     width: '100%',
                     display: 'flex',
@@ -1347,6 +1372,7 @@ export function DemoApp(props = {}) {
               {adminEnabled && !isEditingThis && (
                 <button
                   onClick={(e) => startEditingSection(section, e)}
+                  title="Rename this section's display label. Stored in App state (sectionLabelOverrides) — does not affect any captured payload."
                   style={{
                     ...btnBase,
                     position: 'absolute',
@@ -1410,6 +1436,7 @@ export function DemoApp(props = {}) {
                       setSelectedOptions((prev) => ({ ...prev, [selectedSectionId]: option }))
                       setActiveAuthoringFocus('option')
                     }}
+                    title={`Select this option. Sets activeAuthoringFocus='option' so the Authoring Panel shows option-relevant controls. ${hasOptionCapture ? 'Blue dot = optionCaptures has geometry and/or material assignments stored for this option; selecting replays them.' : 'No capture stored for this option — selecting just changes the chosen option in App state.'}`}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -1449,6 +1476,7 @@ export function DemoApp(props = {}) {
                 {adminEnabled && !isEditingThis && (
                   <button
                     onClick={(e) => startEditingOption(selectedSectionId, option, e)}
+                    title="Rename this option's display label. Stored in App state (optionLabelOverrides) — does not affect any captured payload."
                     style={{
                       ...btnBase,
                       position: 'absolute',
@@ -1549,7 +1577,11 @@ export function DemoApp(props = {}) {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 16, opacity: 0.4 }}>
               <p style={{ margin: 0, fontSize: 14 }}>Select a model or upload a .glb file to get started</p>
-              <button style={secondaryBtn} onClick={() => modelFileInputRef.current?.click()}>
+              <button
+                style={secondaryBtn}
+                onClick={() => modelFileInputRef.current?.click()}
+                title="Load an ad-hoc .glb file. Captures on uploaded files do NOT persist — refreshing clears them."
+              >
                 Upload .glb
               </button>
             </div>

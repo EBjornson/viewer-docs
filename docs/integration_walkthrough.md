@@ -342,186 +342,33 @@ DemoApp persists to browser `localStorage` keyed by model ID (`demoapp_v2_${mode
 
 ---
 
-## A Full Simple Example
+## A Full End-to-End Example
 
-```tsx
-function ProductViewerContainer({ savedDesign }) {
-  const [appState, setAppState] = useState(() => restoreDesign(savedDesign))
+[DemoApp.jsx](../src/DemoApp/DemoApp.jsx) is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to `localStorage`, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp should mirror. Read it alongside this walkthrough — the structural shape is exactly what Steps 1–8 above describe.
 
-  const viewerInput = useMemo(() => {
-    const sectionCapture = appState.sectionCaptures[appState.activeSectionId]
-    // View captures take precedence when one is active (user pressed a View button)
-    const activeCapture = appState.activeViewCapture ?? sectionCapture
-    const optionCapture = appState.optionCaptures[`${appState.activeSectionId}_${getChosenOption(appState)}`]
+A few handlers in DemoApp show patterns that are easy to miss from the contract reference alone and are worth a closer look:
 
-    // Resolve presentation: mode snapshot is the base; capture.ui takes precedence over snapshot ui
-    const modeSnapshot = appState.presentationModeCaptures?.[activeCapture?.presentationMode] ?? defaultPresentation
-    const presentation = activeCapture?.ui
-      ? { ...modeSnapshot, ui: { ...modeSnapshot?.ui, ...activeCapture.ui } }
-      : modeSnapshot
+### Option capture — conflict gate + additive merge
 
-    return {
-      model: {
-        modelUrl: appState.modelUrl,
-        productId: appState.productId,
-        modelVersion: appState.modelVersion,
-      },
-      camera: {
-        cameraMode: activeCapture?.cameraMode ?? 'exterior',
-        pose: activeCapture?.pose,
-      },
-      scene: {
-        visibilityAssignments: {
-          hiddenGeometryIds: allOptionGeometryIds,
-          shownGeometryIds: activeOptionGeometryIds,
-          instantHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
-        },
-        defaultMaterialAssignments: appState.modelDefaultCapture?.defaultMaterialAssignments,
-        materialAssignments: optionCapture?.materialAssignments ?? [],
-      },
-      presentation,
-      admin: {
-        enabled: appState.isAdminMode,
-        activeAuthoringFocus: appState.activeAuthoringFocus,
-      },
-    }
-  }, [appState])
+The recommended `onOptionCaptured` flow lives at [DemoApp.jsx:753-778](../src/DemoApp/DemoApp.jsx#L753-L778):
 
-  const viewerOutput = useMemo(() => ({
-    onViewerReady: (event) => {
-      console.log('Viewer ready', event)
-    },
-    onSectionCaptured: (payload) => {
-      setAppState((prev) => ({
-        ...prev,
-        sectionCaptures: { ...prev.sectionCaptures, [prev.activeSectionId]: payload },
-      }))
-    },
-    onSectionCaptureCleared: () => {
-      setAppState((prev) => {
-        const n = { ...prev.sectionCaptures }
-        delete n[prev.activeSectionId]
-        return { ...prev, sectionCaptures: n }
-      })
-    },
-    onOptionCaptured: (payload) => {
-      // Enforce cross-section ownership with two independent rules:
-      //   1) show/hide list ownership (geometryIds) is exclusive across sections
-      //   2) material assignment ownership is exclusive across sections
-      // The same geometry MAY appear in section A's show/hide list and section
-      // B's material assignments — that's allowed.
-      // If either rule is violated, reject the capture and surface a banner.
-      const conflicts = findOptionCaptureConflicts(
-        appState.optionCaptures,
-        appState.activeSectionId,
-        payload,
-      )
-      if (conflicts.geometry.length || conflicts.material.length) {
-        setCaptureConflict({
-          sectionId: appState.activeSectionId,
-          optionId: getChosenOption(appState),
-          conflicts,
-        })
-        return
-      }
+1. Run `findOptionCaptureConflicts` ([DemoApp.jsx:113-132](../src/DemoApp/DemoApp.jsx#L113-L132), with the per-id helper at [DemoApp.jsx:91-111](../src/DemoApp/DemoApp.jsx#L91-L111)) to enforce the two cross-section ownership rules independently.
+2. If either rule fires, store the conflict for the banner and **do not store the payload**.
+3. Otherwise call `mergeOptionCapture(existing, payload)` ([DemoApp.jsx:310-327](../src/DemoApp/DemoApp.jsx#L310-L327)), which unions geometry IDs and lets incoming material assignments win per `geometryId`.
 
-      // Additive merge: union geometry IDs, incoming wins per geometryId for materials.
-      // To replace from scratch, clear first then capture again.
-      setAppState((prev) => {
-        const key = `${prev.activeSectionId}_${getChosenOption(prev)}`
-        const existing = prev.optionCaptures[key]
-        return {
-          ...prev,
-          optionCaptures: { ...prev.optionCaptures, [key]: mergeOptionCapture(existing, payload) },
-        }
-      })
-    },
-    onMaterialDefaultsCaptured: (payload) => {
-      setAppState((prev) => ({ ...prev, modelDefaultCapture: payload }))
-    },
-    onViewCaptured: (payload) => {
-      setAppState((prev) => ({
-        ...prev,
-        viewCaptures: { ...prev.viewCaptures, [payload.cameraMode]: payload },
-      }))
-    },
-    onViewCaptureCleared: (cameraMode) => {
-      setAppState((prev) => {
-        const n = { ...prev.viewCaptures }
-        delete n[cameraMode]
-        return { ...prev, viewCaptures: n }
-      })
-    },
-    onViewSelected: (cameraMode) => {
-      // In User Mode: store the view capture so viewerInput can replay pose + presentation + ui.
-      // Also set activeAuthoringFocus so the dynamic Authoring Panel adapts in admin mode.
-      // If no capture exists for this mode, still update focus.
-      setAppState((prev) => {
-        const capture = prev.viewCaptures[cameraMode]
-        const next = { ...prev, activeAuthoringFocus: 'view' }
-        return capture ? { ...next, activeViewCapture: capture } : next
-      })
-    },
-    onSpaceTileWalkActivated: (cameraMode) => {
-      // Apply presentation + visibility from the stored view capture, but do NOT
-      // set a camera pose — the Viewer is already navigating via pathNav.
-      // Resolve through presentationModeCaptures (view captures carry a mode key, not a full snapshot).
-      setAppState((prev) => {
-        const capture = prev.viewCaptures[cameraMode]
-        if (!capture) return prev
-        const modeSnapshot = prev.presentationModeCaptures?.[capture.presentationMode] ?? defaultPresentation
-        const presentation = capture.ui
-          ? { ...modeSnapshot, ui: { ...modeSnapshot?.ui, ...capture.ui } }
-          : modeSnapshot
-        return { ...prev, spaceTileWalkPresentation: presentation, spaceTileWalkVisibility: capture.visibilityAssignments }
-      })
-    },
-    onPresentationModeCaptured: (payload) => {
-      setAppState((prev) => ({
-        ...prev,
-        presentationModeCaptures: { ...prev.presentationModeCaptures, [payload.mode]: payload.presentation },
-      }))
-    },
-    onActivePresentationModeChanged: () => {
-      // Track focus so the dynamic Authoring Panel surfaces presentation-mode controls.
-      setAppState((prev) => ({ ...prev, activeAuthoringFocus: 'presentationMode' }))
-    },
-    onGeometryPicked: (event) => {
-      console.log('Geometry picked', event)
-    },
-    onRenderCaptured: (event) => {
-      if (event?.blob) {
-        batchBlobsRef.current.push({ metadata: event.metadata, blob: event.blob })
-      }
-    },
-    onBatchCaptureComplete: () => {
-      batchBlobsRef.current.forEach(({ metadata, blob }) => {
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `${metadata?.sectionLabel ?? 'section'}.jpg`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        setTimeout(() => URL.revokeObjectURL(url), 1000)
-      })
-      batchBlobsRef.current = []
-    },
-    onError: (event) => {
-      console.error('Viewer error', event)
-    },
-  }), [])
+Two captures into the same option therefore **accumulate** by design. To replace the payload from scratch, click *Option Clear* first and then capture again.
 
-  return (
-    <Viewer
-      input={viewerInput}
-      output={viewerOutput}
-    />
-  )
-}
-```
+### Space-tile walk activation
 
-This example is intentionally simple, but it shows the right flow.
+`onSpaceTileWalkActivated` ([DemoApp.jsx:810-812](../src/DemoApp/DemoApp.jsx#L810-L812)) just records the captured `cameraMode` in App state. The `viewerInput` builder reads it and applies the matching `viewCaptures[mode]` payload's presentation and visibility — but does **not** override `camera.pose`, since the Viewer is already navigating via pathNav. See the derivation block at [DemoApp.jsx:886-916](../src/DemoApp/DemoApp.jsx#L886-L916).
+
+### Active presentation mode — argument intentionally ignored
+
+`onActivePresentationModeChanged` ([DemoApp.jsx:824-832](../src/DemoApp/DemoApp.jsx#L824-L832)) intentionally drops the `mode` argument it receives. The active presentation mode lives entirely in the Viewer (it owns mode selection); the App listens to this callback only to update `activeAuthoringFocus = 'presentationMode'` so the dynamic Authoring Panel filters to mode-relevant controls. If a future App needs to persist the active mode itself, that's the place to read the arg.
+
+### Batch render flow
+
+`onRenderCaptured` ([DemoApp.jsx:833-837](../src/DemoApp/DemoApp.jsx#L833-L837)) accumulates JPEG blobs in a `useRef` array as each item completes. `onBatchCaptureComplete` ([DemoApp.jsx:838-855](../src/DemoApp/DemoApp.jsx#L838-L855)) then composites a footer overlay (`compositeInfoOverlay` at [DemoApp.jsx:22-76](../src/DemoApp/DemoApp.jsx#L22-L76)) onto each blob and triggers downloads. The trigger is the `admin.batchCapture.nonce` increment in `handleCaptureSectionRenderings` ([DemoApp.jsx:920-956](../src/DemoApp/DemoApp.jsx#L920-L956)) — the Viewer detects the bump and processes the items in sequence.
 
 ---
 
