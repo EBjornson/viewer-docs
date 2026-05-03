@@ -2235,6 +2235,9 @@
 <p>When in Overhead view, clicking a space tile navigates the camera into that interior space and <strong>also applies the Interior view capture</strong> — including its presentation and geometry visibility. This means the user lands inside with the correct interior lighting already applied, instead of arriving with overhead lighting still active.</p>
 <p>The Interior view capture is the shared source of truth for both the Interior button press and overhead space-tile clicks. Authoring once covers both.</p>
 <p>If no Interior view capture has been authored, the click still navigates the camera but leaves the lighting unchanged.</p>
+<blockquote>
+<p><em>Engineering details (callback wiring, Admin vs User behavior):</em> see <a href="../capture_and_replay/#overhead-space-tile-click-spacetileclicknav">Capture &amp; Replay → Overhead Space-Tile Click</a>.</p>
+</blockquote>
 <hr />
 <h2 id="section-workflow">Section Workflow<a class="headerlink" href="#section-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-activate-the-section">Step 1 — activate the section<a class="headerlink" href="#step-1-activate-the-section" title="Permanent link">&para;</a></h3>
