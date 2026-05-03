@@ -58,7 +58,6 @@ const appState = {
       pose: {
         position: [0, 18, 0],
         target: [0, 0, 0],
-        fov: 45,
       },
       cameraMode: 'overhead',
       presentationMode: 'day',
@@ -83,7 +82,7 @@ const appState = {
   viewCaptures: {
     interior: {
       cameraMode: 'interior',
-      pose: { position: [2, 1.6, 3], target: [0, 1.6, 0], fov: 60 },
+      pose: { position: [2, 1.6, 3], target: [0, 1.6, 0] },
       presentationMode: 'nightInt',
       visibilityAssignments: { hiddenGeometryIds: [] },
     },

@@ -34,10 +34,13 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  */
 
 /**
+ * FOV is intentionally omitted: it is fully determined by `cameraMode` (each
+ * mode has a canonical default), so storing it would be redundant. The Viewer
+ * resolves FOV from the active cameraMode at replay time.
+ *
  * @typedef {object} ViewerCameraPose
  * @property {ViewerVector3Tuple} position
  * @property {ViewerVector3Tuple} target
- * @property {number} [fov]
  */
 
 /**

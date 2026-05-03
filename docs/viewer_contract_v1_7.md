@@ -117,7 +117,6 @@ type ViewerCameraInput = {
   pose?: {
     position: [number, number, number]
     target: [number, number, number]
-    fov?: number
   }
 }
 ```
@@ -125,6 +124,7 @@ type ViewerCameraInput = {
 #### Camera Notes
 
 - `camera.cameraMode` and `camera.pose` are App-owned presentation intent.
+- `pose` carries no FOV: each `cameraMode` has a canonical FOV the Viewer applies at replay. A captured FOV would be redundant with `cameraMode`, so it is intentionally omitted.
 - The Viewer may keep transient runtime camera state while executing the requested pose.
 - The current implementation supports:
   - direct pose playback

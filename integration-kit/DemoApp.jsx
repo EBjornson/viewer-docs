@@ -410,6 +410,32 @@ function CaptureTooltip({ payload, position = 'below', containerStyle, enabled =
     clearTimeout(copyTimerRef.current)
   }, [])
 
+  // Suppress descendant `title` attributes while the payload flyout is up so
+  // the native browser tooltip does not sit on top of the JSON. Stash each
+  // value on `data-suppressed-title` and restore on hide.
+  useEffect(() => {
+    const root = wrapperRef.current
+    if (!root || !visible) return undefined
+    const stripTitle = (el) => {
+      const value = el.getAttribute('title')
+      if (value == null) return
+      el.setAttribute('data-suppressed-title', value)
+      el.removeAttribute('title')
+    }
+    if (root.hasAttribute('title')) stripTitle(root)
+    root.querySelectorAll('[title]').forEach(stripTitle)
+    return () => {
+      const restoreTitle = (el) => {
+        const value = el.getAttribute('data-suppressed-title')
+        if (value == null) return
+        el.setAttribute('title', value)
+        el.removeAttribute('data-suppressed-title')
+      }
+      if (root.hasAttribute('data-suppressed-title')) restoreTitle(root)
+      root.querySelectorAll('[data-suppressed-title]').forEach(restoreTitle)
+    }
+  }, [visible])
+
   const computeCoords = () => {
     if (!wrapperRef.current) return null
     const r = wrapperRef.current.getBoundingClientRect()

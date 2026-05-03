@@ -192,7 +192,6 @@ camera: {
   pose: {
     position: [12, 4, 18],
     target: [0, 1.5, 0],
-    fov: 45,
   },
 }
 ```

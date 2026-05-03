@@ -52,7 +52,7 @@ There is no overlay or merge between the two. The App simply builds `viewerInput
 
 A section capture is a stored package for one section:
 
-- camera pose (`position`, `target`, `fov`)
+- camera pose (`position`, `target`) — FOV is not stored; the Viewer derives it from `cameraMode` at replay
 - camera mode (`'exterior'` | `'interior'` | `'overhead'`)
 - presentation mode reference (a name like `'day'` — not the inline presentation values; the App resolves the full snapshot at replay time via `presentationModeCaptures[capture.presentationMode]`)
 - visibility assignments (`hiddenGeometryIds`, `isolatedGeometryIds`)
@@ -77,7 +77,7 @@ Payload shape:
 
 ```ts
 {
-  pose: { position, target, fov },
+  pose: { position, target },
   cameraMode: 'overhead',
   presentationMode: 'day',
   visibilityAssignments: { hiddenGeometryIds: ['roof-1', 'roof-2'] },
@@ -164,7 +164,7 @@ Payload shape:
 ```ts
 {
   cameraMode: 'interior',
-  pose: { position, target, fov },
+  pose: { position, target },
   presentationMode: 'nightInt',
   visibilityAssignments: { hiddenGeometryIds: [] },
 }
