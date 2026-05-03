@@ -661,12 +661,6 @@ Those decisions belong to The App.
 
 ---
 
-## Troubleshooting
-
-Common gotchas and their fixes will accumulate here as integration patterns emerge. (Placeholder — populate as real questions land from host-App integrators.)
-
----
-
 ## Summary
 
 - The App pushes instructions through `input` (`model`, `camera`, `scene`, `presentation`, `admin`); the Viewer pushes events back through `output` callbacks. The App does not "pull" — it receives.
