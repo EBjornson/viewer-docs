@@ -16,11 +16,123 @@ How a host App integrates `Viewer` — what to push in via `input`, what comes b
 
 ## Delivery
 
-**Today.** Clone this repo and import `Viewer` from `src/public/`. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.
+The Viewer ships as a self-contained ESM bundle on jsDelivr. Loading the bundle auto-registers a `<viewer-element>` custom element that any host framework can mount.
 
-**For non-React hosts (Vue, vanilla, etc.).** A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element that internally hosts the React component, exposes property setters for `input`, and emits custom events for `output`. The wrapper is not yet implemented — flag interest if you need it.
+### Bundle URL
 
-**Intended future delivery.** A self-contained JavaScript bundle hosted at a versioned CDN URL (`/v1/`, `/v2/`, etc.) so host App owners can opt into updates on a schedule. That distribution path is not yet in place; the versioning guidance applies once the Viewer is published as a standalone distributable.
+```
+https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js
+```
+
+The bundle includes React, Three.js, and `@react-three/fiber` internally — the host App does not need to install or supply them. A bundle on a v1 URL never breaks; major releases ship at new URLs (`@v2`, etc.).
+
+**Pinning policy.** `@v1.0.0` is forever-immutable. `@v1` floats to the latest `v1.x.y` tag — useful for opt-in auto-upgrade on patch/minor releases. Pick whichever matches your update appetite.
+
+### Default assets (HDRIs, terrain textures, material textures)
+
+```
+https://cdn.jsdelivr.net/gh/EBjornson/viewer-assets@v1
+```
+
+Bundled defaults reference this CDN directly. Your App only needs to host model `.glb` files itself; HDRIs and textures resolve cross-origin from this URL.
+
+### Vue 3
+
+```html
+<!-- index.html -->
+<script type="module" src="https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js"></script>
+```
+
+```vue
+<template>
+  <viewer-element ref="viewerRef" style="width: 100%; height: 100%" />
+</template>
+
+<script setup>
+import { ref, onMounted, watch } from 'vue'
+
+const viewerRef = ref(null)
+const viewerInput = ref({
+  model: { modelUrl: '/models/your-product.glb' },
+  // … see "How The App Pushes Information Into The Viewer" below
+})
+
+onMounted(() => {
+  viewerRef.value.input = viewerInput.value
+  viewerRef.value.addEventListener('viewerready', (e) => {
+    console.log('Viewer ready:', e.detail)
+  })
+})
+
+watch(viewerInput, (next) => {
+  viewerRef.value.input = next
+}, { deep: true })
+</script>
+```
+
+### Vanilla JS
+
+```html
+<!doctype html>
+<html>
+  <body>
+    <viewer-element id="viewer" style="display: block; width: 100%; height: 600px"></viewer-element>
+
+    <script type="module">
+      import 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js'
+
+      const el = document.getElementById('viewer')
+      el.input = { model: { modelUrl: '/models/your-product.glb' } }
+      el.addEventListener('viewerready', (e) => console.log('Ready:', e.detail))
+    </script>
+  </body>
+</html>
+```
+
+### React (alternative)
+
+For React hosts that prefer JSX, the bundle also exports `Viewer` as a React component:
+
+```jsx
+import { Viewer } from 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js'
+
+function App() {
+  return <Viewer input={viewerInput} output={viewerOutput} />
+}
+```
+
+The rest of this guide is written against the React `<Viewer>` surface (`input` prop, `output` prop). Custom-element hosts use the same payload shapes; only the wiring is different — DOM property in place of `input`, DOM events in place of each `output.on…` callback.
+
+### Custom element event names
+
+The Viewer's React `output` callbacks become DOM events on `<viewer-element>`. Naming convention: drop the `on` prefix, lowercase the rest. Exception: `onError` → `viewererror` (avoids the native DOM `error` event).
+
+| React callback | Custom element event |
+|---|---|
+| `onViewerReady` | `viewerready` |
+| `onError` | `viewererror` |
+| `onSectionCaptured` | `sectioncaptured` |
+| `onSectionCaptureCleared` | `sectioncapturecleared` |
+| `onOptionCaptured` | `optioncaptured` |
+| `onOptionCaptureCleared` | `optioncapturecleared` |
+| `onMaterialDefaultsCaptured` | `materialdefaultscaptured` |
+| `onMaterialDefaultsCleared` | `materialdefaultscleared` |
+| `onViewCaptured` | `viewcaptured` |
+| `onViewCaptureCleared` | `viewcapturecleared` |
+| `onViewSelected` | `viewselected` |
+| `onSpaceTileWalkActivated` | `spacetilewalkactivated` |
+| `onPresentationModeCaptured` | `presentationmodecaptured` |
+| `onPresentationModeCaptureCleared` | `presentationmodecapturecleared` |
+| `onActivePresentationModeChanged` | `activepresentationmodechanged` |
+| `onGeometryPicked` | `geometrypicked` |
+| `onRenderCaptured` | `rendercaptured` |
+| `onBatchCaptureComplete` | `batchcapturecomplete` |
+
+Each event's `.detail` carries the same payload the corresponding React callback would receive.
+
+### Source-import path (development only)
+
+This repo's own DemoApp imports `Viewer` from source for fast HMR during development. External integrators should always use the CDN URL — source imports require this repo's full toolchain.
 
 ---
 
