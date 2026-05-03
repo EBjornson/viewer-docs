@@ -407,24 +407,13 @@ These are the primary authoring output events. The Viewer fires them when the ad
 | `onViewCaptured(payload)` | cameraMode + pose + presentationMode + visibilityAssignments + ui | store as `viewCaptures[payload.cameraMode]` |
 | `onViewCaptureCleared(cameraMode)` | — | remove `viewCaptures[cameraMode]` |
 | `onViewSelected(cameraMode)` | cameraMode string | In User Mode: look up `viewCaptures[cameraMode]`, resolve `presentationModeCaptures[capture.presentationMode]`, and replay via `viewerInput`. In Admin Mode: callback IS fired (to allow the App to clear section tab highlighting), but the App should NOT trigger camera/presentation replay — the Viewer handles navigation internally. |
-| `onSpaceTileWalkActivated(cameraMode)` | cameraMode string | Fires in User Mode only when an overhead space-tile click (`SpaceTileClickNav`) initiates a walk into the interior. Admin Mode applies the corresponding presentation state directly to internal state without firing this callback. In User Mode: resolve presentation from `viewCaptures[cameraMode]` via `presentationModeCaptures`, apply with visibilityAssignments — do **not** set camera pose (Viewer is already navigating) |
+| `onSpaceTileWalkActivated(cameraMode)` | cameraMode string | Apply presentation + visibility from `viewCaptures[cameraMode]` (resolving its `presentationMode`); do **not** set camera pose — the Viewer is already navigating via pathNav. Fires in User Mode only. See [Capture & Replay → Overhead Space-Tile Click](capture_and_replay.md#overhead-space-tile-click-spacetileclicknav). |
 | `onPresentationModeCaptured(payload)` | `{ mode: string, presentation: ViewerPresentationInput }` | store as `presentationModeCaptures[payload.mode] = payload.presentation` |
 | `onActivePresentationModeChanged(mode)` | mode string | track active mode; apply `presentationModeCaptures[mode]` to `input.presentation` if desired |
 
 > **⚠️ `onViewSelected` in Admin Mode:** The Viewer fires `onViewSelected` in both User Mode and Admin Mode. In Admin Mode the Viewer handles view navigation internally and does **not** expect the App to drive a camera or presentation replay in response. Driving replay from the App in Admin Mode would cause a double-animation. Guard any replay logic with a check on `isAdminMode` before acting on this callback.
 
-Replay resolves the presentation mode reference before building `viewerInput`, then merges the capture's `ui` flags on top of the mode snapshot:
-
-```js
-const capture = sectionCaptures[activeSectionId]
-const modeSnapshot = presentationModeCaptures[capture?.presentationMode] ?? defaultPresentation
-const presentation = capture?.ui
-  ? { ...modeSnapshot, ui: { ...modeSnapshot?.ui, ...capture.ui } }
-  : modeSnapshot
-viewerInput.camera.pose = capture?.pose
-viewerInput.scene.visibilityAssignments = capture?.visibilityAssignments
-viewerInput.presentation = presentation
-```
+Replay resolves the captured `presentationMode` name to a full snapshot via `presentationModeCaptures`, spreads the capture's `ui` flags on top of `modeSnapshot.ui` (so per-capture flags override mode-level flags), then writes `pose`, `visibilityAssignments`, and the resolved `presentation` into `viewerInput`. See [Capture & Replay → presentation resolution](capture_and_replay.md#presentation-resolution) for the canonical code.
 
 ### `onGeometryPicked`
 

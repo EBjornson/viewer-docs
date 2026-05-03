@@ -122,7 +122,7 @@ For example:
 const activeCapture = appState.sectionCaptures[appState.activeSectionId]
 const activeOptionCapture = appState.optionCaptures[`${appState.activeSectionId}_${chosenOption}`]
 
-// Resolve presentation: mode snapshot is the base; capture.ui takes precedence over snapshot ui
+// Resolve presentation — see capture_and_replay.md#presentation-resolution for the why.
 const modeSnapshot = appState.presentationModeCaptures[activeCapture?.presentationMode] ?? defaultPresentation
 const presentation = activeCapture?.ui
   ? { ...modeSnapshot, ui: { ...modeSnapshot?.ui, ...activeCapture.ui } }
@@ -161,7 +161,7 @@ In plain language:
 - The App does the product thinking
 - then sends the Viewer a clean set of instructions
 - `defaultMaterialAssignments` is passed from the App's `modelDefaultCapture` record — the Viewer merges it with `materialAssignments` internally
-- The mode snapshot (`presentationModeCaptures[capture.presentationMode]`) is the base for `presentation`. The capture's own `ui` flags are spread on top so they take precedence — this ensures each section/view can independently control which panels are visible to users
+- The presentation field is resolved via the canonical two-layer pattern: mode snapshot first, capture's `ui` overrides on top. See [Capture & Replay → presentation resolution](capture_and_replay.md#presentation-resolution).
 
 ---
 

@@ -140,6 +140,8 @@ The Interior view capture is the shared source of truth for both the Interior bu
 
 If no Interior view capture has been authored, the click still navigates the camera but leaves the lighting unchanged.
 
+> *Engineering details (callback wiring, Admin vs User behavior):* see [Capture & Replay → Overhead Space-Tile Click](capture_and_replay.md#overhead-space-tile-click-spacetileclicknav).
+
 ---
 
 ## Section Workflow

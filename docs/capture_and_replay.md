@@ -92,13 +92,16 @@ The App stores the payload keyed by section ID:
 sectionCaptures[activeSectionId] = payload
 ```
 
-### Replay
+### Replay <a id="presentation-resolution"></a>
 
-When the user activates a section, the App builds `viewerInput` from the stored payload:
+When the user activates a section, the App builds `viewerInput` from the stored payload. The presentation field has two layers: the mode snapshot is the base, and the capture's own `ui` flags spread on top so they take precedence. This is the **canonical resolution path** — section captures, view captures, and `onSpaceTileWalkActivated` all use it:
 
 ```ts
 const capture = sectionCaptures[activeSectionId]
-const presentation = presentationModeCaptures[capture?.presentationMode] ?? defaultPresentation
+const modeSnapshot = presentationModeCaptures[capture?.presentationMode] ?? defaultPresentation
+const presentation = capture?.ui
+  ? { ...modeSnapshot, ui: { ...modeSnapshot?.ui, ...capture.ui } }
+  : modeSnapshot
 
 viewerInput = {
   camera: {
@@ -113,7 +116,9 @@ viewerInput = {
 }
 ```
 
-The App resolves the presentation mode reference to a full snapshot before building `viewerInput`. The Viewer sees updated `input.camera.pose` and `input.presentation` references and replays them.
+Why the two-layer ui spread: the mode snapshot stores the User Visibility flags that were active when the *mode* was captured, but each section / view can independently override them (e.g. hide the Solar panel for interior views, show it for exterior). The capture's `ui` field carries those per-capture overrides; spreading it on top of `modeSnapshot.ui` lets per-capture settings win without losing the mode-level baseline.
+
+The Viewer sees updated `input.camera.pose` and `input.presentation` references and replays them.
 
 ### Clearing
 
