@@ -424,6 +424,89 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Delivery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bundle-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bundle URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-assets-hdris-terrain-textures-material-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default assets (HDRIs, terrain textures, material textures)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vanilla-js" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanilla JS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#react-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        React (alternative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-element-event-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom element event names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-import-path-development-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source-import path (development only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1277,6 +1360,89 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Delivery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bundle-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bundle URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-assets-hdris-terrain-textures-material-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default assets (HDRIs, terrain textures, material textures)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vanilla-js" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanilla JS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#react-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        React (alternative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-element-event-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom element event names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-import-path-development-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source-import path (development only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1643,32 +1809,180 @@
 </blockquote>
 <hr />
 <h2 id="delivery">Delivery<a class="headerlink" href="#delivery" title="Permanent link">&para;</a></h2>
-<p><strong>Today.</strong> Clone this repo and import <code>Viewer</code> from <code>src/public/</code>. The Viewer assumes React 18+ is already present in the host page; it does not bundle its own copy. There is no published npm package or CDN bundle yet — integrating from outside this repo means vendoring the source or pulling it in via a path/git dependency.</p>
-<p><strong>For non-React hosts (Vue, vanilla, etc.).</strong> A framework-agnostic web-component wrapper around the existing React component is the natural integration path: the host imports a custom element that internally hosts the React component, exposes property setters for <code>input</code>, and emits custom events for <code>output</code>. The wrapper is not yet implemented — flag interest if you need it.</p>
-<p><strong>Intended future delivery.</strong> A self-contained JavaScript bundle hosted at a versioned CDN URL (<code>/v1/</code>, <code>/v2/</code>, etc.) so host App owners can opt into updates on a schedule. That distribution path is not yet in place; the versioning guidance applies once the Viewer is published as a standalone distributable.</p>
+<p>The Viewer ships as a self-contained ESM bundle on jsDelivr. Loading the bundle auto-registers a <code>&lt;viewer-element&gt;</code> custom element that any host framework can mount.</p>
+<h3 id="bundle-url">Bundle URL<a class="headerlink" href="#bundle-url" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js
+</code></pre></div>
+<p>The bundle includes React, Three.js, and <code>@react-three/fiber</code> internally — the host App does not need to install or supply them. A bundle on a v1 URL never breaks; major releases ship at new URLs (<code>@v2</code>, etc.).</p>
+<p><strong>Pinning policy.</strong> <code>@v1.0.0</code> is forever-immutable. <code>@v1</code> floats to the latest <code>v1.x.y</code> tag — useful for opt-in auto-upgrade on patch/minor releases. Pick whichever matches your update appetite.</p>
+<h3 id="default-assets-hdris-terrain-textures-material-textures">Default assets (HDRIs, terrain textures, material textures)<a class="headerlink" href="#default-assets-hdris-terrain-textures-material-textures" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>https://cdn.jsdelivr.net/gh/EBjornson/viewer-assets@v1
+</code></pre></div>
+<p>Bundled defaults reference this CDN directly. Your App only needs to host model <code>.glb</code> files itself; HDRIs and textures resolve cross-origin from this URL.</p>
+<h3 id="vue-3">Vue 3<a class="headerlink" href="#vue-3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">&lt;!-- index.html --&gt;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;module&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">&lt;</span><span class="nt">template</span><span class="p">&gt;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  <span class="p">&lt;</span><span class="nt">viewer-element</span> <span class="na">ref</span><span class="o">=</span><span class="s">&quot;viewerRef&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width: 100%; height: 100%&quot;</span> <span class="p">/&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">&lt;/</span><span class="nt">template</span><span class="p">&gt;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">&lt;</span><span class="nt">script</span> <span class="na">setup</span><span class="p">&gt;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ref</span><span class="p">,</span><span class="w"> </span><span class="nx">onMounted</span><span class="p">,</span><span class="w"> </span><span class="nx">watch</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vue&#39;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">viewerRef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="kd">const</span><span class="w"> </span><span class="nx">viewerInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ref</span><span class="p">({</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">modelUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/models/your-product.glb&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="c1">// … see &quot;How The App Pushes Information Into The Viewer&quot; below</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">})</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nx">onMounted</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="nx">viewerRef</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">value</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="nx">viewerRef</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;viewerready&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Viewer ready:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">detail</span><span class="p">)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">})</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nx">watch</span><span class="p">(</span><span class="nx">viewerInput</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="nx">viewerRef</span><span class="p">.</span><span class="nx">value</span><span class="p">.</span><span class="nx">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">next</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">deep</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<h3 id="vanilla-js">Vanilla JS<a class="headerlink" href="#vanilla-js" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">&lt;!doctype html&gt;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="p">&lt;</span><span class="nt">viewer-element</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;viewer&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;display: block; width: 100%; height: 600px&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">viewer-element</span><span class="p">&gt;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;module&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="k">import</span><span class="w"> </span><span class="s1">&#39;https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js&#39;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">el</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;viewer&#39;</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nx">el</span><span class="p">.</span><span class="nx">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">modelUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/models/your-product.glb&#39;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nx">el</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;viewerready&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Ready:&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">detail</span><span class="p">))</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div>
+<h3 id="react-alternative">React (alternative)<a class="headerlink" href="#react-alternative" title="Permanent link">&para;</a></h3>
+<p>For React hosts that prefer JSX, the bundle also exports <code>Viewer</code> as a React component:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Viewer</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js&#39;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">App</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>The rest of this guide is written against the React <code>&lt;Viewer&gt;</code> surface (<code>input</code> prop, <code>output</code> prop). Custom-element hosts use the same payload shapes; only the wiring is different — DOM property in place of <code>input</code>, DOM events in place of each <code>output.on…</code> callback.</p>
+<h3 id="custom-element-event-names">Custom element event names<a class="headerlink" href="#custom-element-event-names" title="Permanent link">&para;</a></h3>
+<p>The Viewer's React <code>output</code> callbacks become DOM events on <code>&lt;viewer-element&gt;</code>. Naming convention: drop the <code>on</code> prefix, lowercase the rest. Exception: <code>onError</code> → <code>viewererror</code> (avoids the native DOM <code>error</code> event).</p>
+<table>
+<thead>
+<tr>
+<th>React callback</th>
+<th>Custom element event</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onViewerReady</code></td>
+<td><code>viewerready</code></td>
+</tr>
+<tr>
+<td><code>onError</code></td>
+<td><code>viewererror</code></td>
+</tr>
+<tr>
+<td><code>onSectionCaptured</code></td>
+<td><code>sectioncaptured</code></td>
+</tr>
+<tr>
+<td><code>onSectionCaptureCleared</code></td>
+<td><code>sectioncapturecleared</code></td>
+</tr>
+<tr>
+<td><code>onOptionCaptured</code></td>
+<td><code>optioncaptured</code></td>
+</tr>
+<tr>
+<td><code>onOptionCaptureCleared</code></td>
+<td><code>optioncapturecleared</code></td>
+</tr>
+<tr>
+<td><code>onMaterialDefaultsCaptured</code></td>
+<td><code>materialdefaultscaptured</code></td>
+</tr>
+<tr>
+<td><code>onMaterialDefaultsCleared</code></td>
+<td><code>materialdefaultscleared</code></td>
+</tr>
+<tr>
+<td><code>onViewCaptured</code></td>
+<td><code>viewcaptured</code></td>
+</tr>
+<tr>
+<td><code>onViewCaptureCleared</code></td>
+<td><code>viewcapturecleared</code></td>
+</tr>
+<tr>
+<td><code>onViewSelected</code></td>
+<td><code>viewselected</code></td>
+</tr>
+<tr>
+<td><code>onSpaceTileWalkActivated</code></td>
+<td><code>spacetilewalkactivated</code></td>
+</tr>
+<tr>
+<td><code>onPresentationModeCaptured</code></td>
+<td><code>presentationmodecaptured</code></td>
+</tr>
+<tr>
+<td><code>onPresentationModeCaptureCleared</code></td>
+<td><code>presentationmodecapturecleared</code></td>
+</tr>
+<tr>
+<td><code>onActivePresentationModeChanged</code></td>
+<td><code>activepresentationmodechanged</code></td>
+</tr>
+<tr>
+<td><code>onGeometryPicked</code></td>
+<td><code>geometrypicked</code></td>
+</tr>
+<tr>
+<td><code>onRenderCaptured</code></td>
+<td><code>rendercaptured</code></td>
+</tr>
+<tr>
+<td><code>onBatchCaptureComplete</code></td>
+<td><code>batchcapturecomplete</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each event's <code>.detail</code> carries the same payload the corresponding React callback would receive.</p>
+<h3 id="source-import-path-development-only">Source-import path (development only)<a class="headerlink" href="#source-import-path-development-only" title="Permanent link">&para;</a></h3>
+<p>This repo's own DemoApp imports <code>Viewer</code> from source for fast HMR during development. External integrators should always use the CDN URL — source imports require this repo's full toolchain.</p>
 <hr />
 <h2 id="the-public-integration-surface">The Public Integration Surface<a class="headerlink" href="#the-public-integration-surface" title="Permanent link">&para;</a></h2>
 <p>The App and the Viewer communicate through a single component:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>The App builds <code>viewerInput</code> and provides callbacks in <code>viewerOutput</code>. The Viewer renders the input and fires callbacks when something useful happens. The App does not reach inside the Viewer; the Viewer does not persist state on the App's behalf.</p>
 <p>Public surface: <a href="../src/public/Viewer.jsx">Viewer.jsx</a>. Code-level contract types: <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a>.</p>
 <hr />
 <h2 id="how-the-app-pushes-information-into-the-viewer">How The App Pushes Information Into The Viewer<a class="headerlink" href="#how-the-app-pushes-information-into-the-viewer" title="Permanent link">&para;</a></h2>
 <p>The App pushes information in by building a <code>viewerInput</code> object and passing it to:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">...</span><span class="w"> </span><span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">...</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>That input is divided into a few buckets.</p>
 <h3 id="1-model">1. <code>model</code><a class="headerlink" href="#1-model" title="Permanent link">&para;</a></h3>
 <p>This tells the Viewer which 3D model to load.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">viewerInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nx">modelUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/models/test.glb&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nx">productId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;product-123&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nx">modelVersion</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;v1&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">viewerInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nx">modelUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/models/test.glb&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nx">productId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;product-123&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nx">modelVersion</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;v1&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">}</span>
 </code></pre></div>
 <p>Think of this as:</p>
 <ul>
@@ -1677,14 +1991,14 @@
 <h3 id="2-camera">2. <code>camera</code><a class="headerlink" href="#2-camera" title="Permanent link">&para;</a></h3>
 <p>This tells the Viewer how you want the camera presented.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;exterior&#39;</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">12</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">,</span><span class="w"> </span><span class="mf">18</span><span class="p">],</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">],</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nx">fov</span><span class="o">:</span><span class="w"> </span><span class="kt">45</span><span class="p">,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;exterior&#39;</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nx">position</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">12</span><span class="p">,</span><span class="w"> </span><span class="mf">4</span><span class="p">,</span><span class="w"> </span><span class="mf">18</span><span class="p">],</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nx">target</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">],</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nx">fov</span><span class="o">:</span><span class="w"> </span><span class="kt">45</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">}</span>
 </code></pre></div>
 <p>Think of this as:</p>
 <ul>
@@ -1701,32 +2015,32 @@
 <h3 id="3-scene">3. <code>scene</code><a class="headerlink" href="#3-scene" title="Permanent link">&para;</a></h3>
 <p>This tells the Viewer what geometry/material state to apply.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-101&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;geom-202&#39;</span><span class="p">],</span><span class="w">  </span><span class="c1">// hide these (fade)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-202&#39;</span><span class="p">],</span><span class="w">               </span><span class="c1">// show these even if in hiddenGeometryIds</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nx">isolatedGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nx">defaultMaterialAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-305&#39;</span><span class="p">],</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#d4c5a9&#39;</span><span class="p">,</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nx">roughness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.8</span><span class="p">,</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="nx">materialAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-305&#39;</span><span class="p">],</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#ffffff&#39;</span><span class="p">,</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">      </span><span class="nx">roughness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.7</span><span class="p">,</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">      </span><span class="nx">metalness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.1</span><span class="p">,</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-410&#39;</span><span class="p">],</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">      </span><span class="nx">restoreOriginalMaterial</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-101&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;geom-202&#39;</span><span class="p">],</span><span class="w">  </span><span class="c1">// hide these (fade)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-202&#39;</span><span class="p">],</span><span class="w">               </span><span class="c1">// show these even if in hiddenGeometryIds</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nx">isolatedGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">null</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nx">defaultMaterialAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-305&#39;</span><span class="p">],</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">      </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#d4c5a9&#39;</span><span class="p">,</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">      </span><span class="nx">roughness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.8</span><span class="p">,</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="nx">materialAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-305&#39;</span><span class="p">],</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">      </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;#ffffff&#39;</span><span class="p">,</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">      </span><span class="nx">roughness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.7</span><span class="p">,</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">      </span><span class="nx">metalness</span><span class="o">:</span><span class="w"> </span><span class="kt">0.1</span><span class="p">,</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">      </span><span class="nx">geometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;geom-410&#39;</span><span class="p">],</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">      </span><span class="nx">restoreOriginalMaterial</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="p">}</span>
 </code></pre></div>
 <p>Think of this as:</p>
 <ul>
@@ -1752,31 +2066,31 @@
 <h3 id="4-presentation">4. <code>presentation</code><a class="headerlink" href="#4-presentation" title="Permanent link">&para;</a></h3>
 <p>This tells the Viewer how the scene should feel visually.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">presentation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">environmentId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/hdri/meadow.exr&#39;</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">environmentRotation</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">hdrIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">backgroundIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="nx">terrainPresetId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ground&#39;</span><span class="p">,</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="nx">terrainIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nx">exposure</span><span class="o">:</span><span class="w"> </span><span class="kt">0.6</span><span class="p">,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nx">sunIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="nx">ambientIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">0.5</span><span class="p">,</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nx">solar</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nx">latitude</span><span class="o">:</span><span class="w"> </span><span class="kt">50.4983</span><span class="p">,</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nx">longitude</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">99.914</span><span class="p">,</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nx">northOffset</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nx">showSolarSitePanel</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nx">showNorthArrow</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="nx">showPresetViews</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="nx">showPresentationPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="nx">showWinterPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="nx">showSpaceMenu</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">presentation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">environmentId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;/hdri/meadow.exr&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nx">environmentRotation</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nx">hdrIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span><span class="nx">backgroundIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="nx">terrainPresetId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ground&#39;</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nx">terrainIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="nx">exposure</span><span class="o">:</span><span class="w"> </span><span class="kt">0.6</span><span class="p">,</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="nx">sunIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span><span class="nx">ambientIntensity</span><span class="o">:</span><span class="w"> </span><span class="kt">0.5</span><span class="p">,</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="nx">solar</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="nx">latitude</span><span class="o">:</span><span class="w"> </span><span class="kt">50.4983</span><span class="p">,</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="nx">longitude</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">99.914</span><span class="p">,</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="nx">northOffset</span><span class="o">:</span><span class="w"> </span><span class="kt">0</span><span class="p">,</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">    </span><span class="nx">showSolarSitePanel</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">    </span><span class="nx">showNorthArrow</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span><span class="nx">showPresetViews</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">    </span><span class="nx">showPresentationPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">    </span><span class="nx">showWinterPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">    </span><span class="nx">showSpaceMenu</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="p">}</span>
 </code></pre></div>
 <p>Think of this as:</p>
 <ul>
@@ -1796,20 +2110,20 @@
 <h3 id="5-admin">5. <code>admin</code><a class="headerlink" href="#5-admin" title="Permanent link">&para;</a></h3>
 <p>This tells the Viewer whether it should behave in an authoring/admin-friendly way, and can also trigger a programmatic batch render.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">batchCapture</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nx">nonce</span><span class="o">:</span><span class="w"> </span><span class="kt">batchNonce</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="p">{</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="nx">metadata</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">sectionId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;section1&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionLabel</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Roof&#39;</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCaptures.section1.pose</span><span class="p">,</span><span class="w"> </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCaptures.section1.cameraMode</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">        </span><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[...]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span><span class="nx">presentation</span><span class="o">:</span><span class="w"> </span><span class="kt">presentationModeCaptures</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="p">],</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nx">batchCapture</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nx">nonce</span><span class="o">:</span><span class="w"> </span><span class="kt">batchNonce</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="nx">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">        </span><span class="nx">metadata</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">sectionId</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;section1&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionLabel</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Roof&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">        </span><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCaptures.section1.pose</span><span class="p">,</span><span class="w"> </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCaptures.section1.cameraMode</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">        </span><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[...]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">        </span><span class="nx">presentation</span><span class="o">:</span><span class="w"> </span><span class="kt">presentationModeCaptures</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">],</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="p">}</span>
 </code></pre></div>
 <p>Think of this as:</p>
 <ul>
@@ -1823,7 +2137,7 @@
 <hr />
 <h2 id="how-the-app-gets-information-back-from-the-viewer">How The App Gets Information Back From The Viewer<a class="headerlink" href="#how-the-app-gets-information-back-from-the-viewer" title="Permanent link">&para;</a></h2>
 <p>The App provides callback functions in <code>viewerOutput</code>; the Viewer fires them when something useful happens. The App stores or reacts to the payload — the App does not "pull" data out of the Viewer.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>For a complete <code>viewerOutput</code> object wired up to App state and persistence, see <a href="../integration_walkthrough/">Integration Walkthrough</a>. The next section enumerates each callback's payload and intended App action.</p>
 <hr />
@@ -1926,14 +2240,14 @@
 <p><strong>⚠️ <code>onViewSelected</code> in Admin Mode:</strong> The Viewer fires <code>onViewSelected</code> in both User Mode and Admin Mode. In Admin Mode the Viewer handles view navigation internally and does <strong>not</strong> expect the App to drive a camera or presentation replay in response. Driving replay from the App in Admin Mode would cause a double-animation. Guard any replay logic with a check on <code>isAdminMode</code> before acting on this callback.</p>
 </blockquote>
 <p>Replay resolves the presentation mode reference before building <code>viewerInput</code>, then merges the capture's <code>ui</code> flags on top of the mode snapshot:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sectionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">modeSnapshot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentationModeCaptures</span><span class="p">[</span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">defaultPresentation</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="p">,</span><span class="w"> </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">capture</span><span class="p">.</span><span class="nx">ui</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="nx">modeSnapshot</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">camera</span><span class="p">.</span><span class="nx">pose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">pose</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">scene</span><span class="p">.</span><span class="nx">visibilityAssignments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">visibilityAssignments</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sectionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">modeSnapshot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentationModeCaptures</span><span class="p">[</span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">defaultPresentation</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="p">,</span><span class="w"> </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">capture</span><span class="p">.</span><span class="nx">ui</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="nx">modeSnapshot</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">camera</span><span class="p">.</span><span class="nx">pose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">pose</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">scene</span><span class="p">.</span><span class="nx">visibilityAssignments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">visibilityAssignments</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="nx">viewerInput</span><span class="p">.</span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentation</span>
 </code></pre></div>
 <h3 id="ongeometrypicked"><code>onGeometryPicked</code><a class="headerlink" href="#ongeometrypicked" title="Permanent link">&para;</a></h3>
 <p>This tells The App:</p>
@@ -1957,19 +2271,19 @@
 <h3 id="onbatchcapturecomplete"><code>onBatchCaptureComplete</code><a class="headerlink" href="#onbatchcapturecomplete" title="Permanent link">&para;</a></h3>
 <p>Fires after all items in a batch have been captured. The App should use this signal to trigger downloads, backend uploads, or any other post-batch processing of the accumulated blobs.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nx">onBatchCaptureComplete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span><span class="w"> </span><span class="nx">metadata</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">metadata</span><span class="o">?</span><span class="p">.</span><span class="nx">sectionLabel</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="si">}</span><span class="sb">.jpg`</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">),</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="p">},</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nx">onBatchCaptureComplete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span><span class="w"> </span><span class="nx">metadata</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">metadata</span><span class="o">?</span><span class="p">.</span><span class="nx">sectionLabel</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="si">}</span><span class="sb">.jpg`</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">),</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="p">},</span>
 </code></pre></div>
 <h3 id="onerror"><code>onError</code><a class="headerlink" href="#onerror" title="Permanent link">&para;</a></h3>
 <p>This gives The App a way to know:</p>
@@ -1987,13 +2301,13 @@
 <li><code>shownGeometryIds</code> — geometry IDs owned by the currently active option</li>
 </ul>
 <p>The Viewer's rule: <strong>show list wins over hide list</strong>. The App never computes a set difference — it collects and passes; the Viewer resolves.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">allOptionGeometryIds</span><span class="p">,</span><span class="w">   </span><span class="c1">// flatMap all options → all their IDs</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">activeOptionGeometryIds</span><span class="p">,</span><span class="w"> </span><span class="c1">// flatMap active option → its IDs</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nx">instantHiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCapture?.visibilityAssignments?.hiddenGeometryIds</span><span class="p">,</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">allOptionGeometryIds</span><span class="p">,</span><span class="w">   </span><span class="c1">// flatMap all options → all their IDs</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">activeOptionGeometryIds</span><span class="p">,</span><span class="w"> </span><span class="c1">// flatMap active option → its IDs</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="nx">instantHiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCapture?.visibilityAssignments?.hiddenGeometryIds</span><span class="p">,</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">}</span>
 </code></pre></div>
 <p><code>instantHiddenGeometryIds</code> is used for section-level geometry here rather than <code>hiddenGeometryIds</code> because section-level hides take effect during the camera animation triggered by a section change. There is no benefit from a fade animation in that context — the geometry should disappear immediately as the section loads. Using <code>instantHiddenGeometryIds</code> avoids a visible fade artifact during the transition.</p>
 <p>This pattern supports <strong>combinatorial ownership</strong> — where one option owns a superset of geometry that other options partially overlap (e.g. O4 owns both lights, O2 owns left only, O3 owns right only). The hide/show split handles all combinations without the App needing to understand the geometry relationships.</p>
@@ -2008,55 +2322,55 @@
 <p>Enforcement is at the App layer because section identity is App-owned; the Viewer fires <code>onOptionCaptured</code> with no section context. The Viewer is intentionally agnostic to which section/option the admin had selected when the capture button was pressed — that routing is the App's job, and so is validating the routing.</p>
 <h3 id="recommended-pattern">Recommended pattern<a class="headerlink" href="#recommended-pattern" title="Permanent link">&para;</a></h3>
 <p>In the <code>onOptionCaptured</code> handler, scan the existing <code>optionCaptures</code> map separately for each rule. Reject if either rule is violated.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">geometry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="c1">// Rule 1: incoming show/hide list vs other sections&#39; show/hide lists</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">          </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span><span class="c1">// Rule 2: incoming material targets vs other sections&#39; material targets</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">materialTargets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">()</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">  </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">owned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">          </span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">        </span><span class="p">)</span>
-<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">owned</span><span class="p">)</span><span class="w"> </span><span class="nx">material</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>
-<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">geometry</span><span class="p">,</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="p">}</span>
-<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>
-<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="nx">onOptionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span>
-<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">material</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="w">    </span><span class="nx">setCaptureConflict</span><span class="p">({</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">activeOptionId</span><span class="p">,</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a><span class="w">    </span><span class="k">return</span><span class="w">  </span><span class="c1">// do not merge</span>
-<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="w">  </span><span class="nx">setOptionCaptures</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
-<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="w">    </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
-<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a><span class="w">    </span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="w">      </span><span class="p">...</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">],</span>
-<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a><span class="w">      </span><span class="p">[</span><span class="nx">activeOptionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">mergeOptionCapture</span><span class="p">(</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">activeOptionId</span><span class="p">],</span><span class="w"> </span><span class="nx">payload</span><span class="p">),</span>
-<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a><span class="w">  </span><span class="p">}))</span>
-<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">geometry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="c1">// Rule 1: incoming show/hide list vs other sections&#39; show/hide lists</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">          </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">  </span><span class="c1">// Rule 2: incoming material targets vs other sections&#39; material targets</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">materialTargets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">()</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="w">  </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">owned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">          </span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">        </span><span class="p">)</span>
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">owned</span><span class="p">)</span><span class="w"> </span><span class="nx">material</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">geometry</span><span class="p">,</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a><span class="p">}</span>
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a><span class="nx">onOptionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span>
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">material</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a><span class="w">    </span><span class="nx">setCaptureConflict</span><span class="p">({</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">activeOptionId</span><span class="p">,</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a><span class="w">    </span><span class="k">return</span><span class="w">  </span><span class="c1">// do not merge</span>
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a><span class="w">  </span><span class="nx">setOptionCaptures</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a><span class="w">    </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a><span class="w">    </span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a><span class="w">      </span><span class="p">...</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">],</span>
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a><span class="w">      </span><span class="p">[</span><span class="nx">activeOptionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">mergeOptionCapture</span><span class="p">(</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">activeOptionId</span><span class="p">],</span><span class="w"> </span><span class="nx">payload</span><span class="p">),</span>
+<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a><span class="w">  </span><span class="p">}))</span>
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a><span class="p">}</span>
 </code></pre></div>
 <p>The two checks are intentionally separate. An incoming material-only payload (no <code>geometryIds</code>) only triggers the material rule. An incoming show/hide-only payload only triggers the show/hide rule. A payload that captures both kinds of intent at once is checked against both rules independently.</p>
 <p>The Viewer's authoring overlay exposes a <strong>Capture Material Only</strong> button alongside the standard <strong>Option Capture</strong> button. Capture Material Only fires <code>onOptionCaptured</code> with <code>materialAssignments</code> only — no <code>geometryIds</code> — letting the admin route material-only intent without inadvertently claiming show/hide ownership of the selected geometry. This makes the cross-section material assignment workflow (option in section B colors geometry already show/hide-owned by section A) a single-click operation that doesn't trip Rule 1.</p>
@@ -2073,7 +2387,7 @@
 <hr />
 <h2 id="dynamic-authoring-panel">Dynamic Authoring Panel<a class="headerlink" href="#dynamic-authoring-panel" title="Permanent link">&para;</a></h2>
 <p>The Authoring Panel (left-side overlay rendered when <code>input.admin.enabled = true</code>) filters its content based on <code>input.admin.activeAuthoringFocus</code>. The App should track the admin's "last clicked" authoring target and pass it through this field so the panel adapts as the admin works.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">ViewerAuthoringFocus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;option&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;view&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;presentationMode&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;all&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">ViewerAuthoringFocus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;option&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;view&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;presentationMode&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;all&#39;</span>
 </code></pre></div>
 <table>
 <thead>
@@ -2112,20 +2426,20 @@
 </tbody>
 </table>
 <p>For Section/Option clicks (which originate in the App), the App tracks state directly. For View/Presentation Mode clicks (which originate in the Viewer), the App listens to the corresponding output callback and updates focus there. DemoApp shows the full pattern:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">activeAuthoringFocus</span><span class="p">,</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1">// Section tab click handler:</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedSectionId</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1">// Option button click handler:</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedOption</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1">// Viewer callbacks:</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nx">onViewSelected</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;view&#39;</span><span class="p">);</span><span class="w"> </span><span class="cm">/* …existing logic… */</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="nx">onActivePresentationModeChanged</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">mode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;presentationMode&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1">// Threaded into viewerInput:</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="nx">adminEnabled</span><span class="p">,</span><span class="w"> </span><span class="nx">activeAuthoringFocus</span><span class="w"> </span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">activeAuthoringFocus</span><span class="p">,</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1">// Section tab click handler:</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedSectionId</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1">// Option button click handler:</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedOption</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c1">// Viewer callbacks:</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="nx">onViewSelected</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;view&#39;</span><span class="p">);</span><span class="w"> </span><span class="cm">/* …existing logic… */</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="nx">onActivePresentationModeChanged</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">mode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;presentationMode&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1">// Threaded into viewerInput:</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="nx">adminEnabled</span><span class="p">,</span><span class="w"> </span><span class="nx">activeAuthoringFocus</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <p><code>'all'</code> (or omitting the field entirely) puts the panel into a legacy two-tab fallback. The Viewer also exposes a debug toggle that overrides any value sent by the App and forces the legacy layout — used for testing only. Production-style apps should always pass a focus value.</p>
 <hr />
