@@ -543,13 +543,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#a-full-simple-example" class="md-nav__link">
+  <a href="#a-full-end-to-end-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A Full Simple Example
+        A Full End-to-End Example
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="A Full End-to-End Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-capture-conflict-gate-additive-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option capture — conflict gate + additive merge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#space-tile-walk-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space-tile walk activation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-presentation-mode-argument-intentionally-ignored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active presentation mode — argument intentionally ignored
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-render-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch render flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1207,13 +1257,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#a-full-simple-example" class="md-nav__link">
+  <a href="#a-full-end-to-end-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A Full Simple Example
+        A Full End-to-End Example
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="A Full End-to-End Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-capture-conflict-gate-additive-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option capture — conflict gate + additive merge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#space-tile-walk-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Space-tile walk activation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-presentation-mode-argument-intentionally-ignored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active presentation mode — argument intentionally ignored
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-render-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch render flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1595,183 +1695,23 @@
 <p>The App owns persistence — capture payloads belong wherever the App stores them (backend, browser, file). Replay is straightforward: when loading a saved design, the App reconstructs <code>viewerInput</code> from stored values and passes it to <code>Viewer</code>. The Viewer reacts to the changed input. There is no "ask the Viewer to remember" path — the App is always the source of truth.</p>
 <p>DemoApp persists to browser <code>localStorage</code> keyed by model ID (<code>demoapp_v2_${modelId}</code>); a production App would persist to its backend.</p>
 <hr />
-<h2 id="a-full-simple-example">A Full Simple Example<a class="headerlink" href="#a-full-simple-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">ProductViewerContainer</span><span class="p">({</span><span class="w"> </span><span class="nx">savedDesign</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">appState</span><span class="p">,</span><span class="w"> </span><span class="nx">setAppState</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">restoreDesign</span><span class="p">(</span><span class="nx">savedDesign</span><span class="p">))</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">viewerInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useMemo</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionCapture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">appState</span><span class="p">.</span><span class="nx">sectionCaptures</span><span class="p">[</span><span class="nx">appState</span><span class="p">.</span><span class="nx">activeSectionId</span><span class="p">]</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="c1">// View captures take precedence when one is active (user pressed a View button)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">activeCapture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">appState</span><span class="p">.</span><span class="nx">activeViewCapture</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">sectionCapture</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">optionCapture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">appState</span><span class="p">.</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="sb">`</span><span class="si">${</span><span class="nx">appState</span><span class="p">.</span><span class="nx">activeSectionId</span><span class="si">}</span><span class="sb">_</span><span class="si">${</span><span class="nx">getChosenOption</span><span class="p">(</span><span class="nx">appState</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">]</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="c1">// Resolve presentation: mode snapshot is the base; capture.ui takes precedence over snapshot ui</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">modeSnapshot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">appState</span><span class="p">.</span><span class="nx">presentationModeCaptures</span><span class="o">?</span><span class="p">.[</span><span class="nx">activeCapture</span><span class="o">?</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">defaultPresentation</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">activeCapture</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">      </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="p">,</span><span class="w"> </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">activeCapture</span><span class="p">.</span><span class="nx">ui</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="nx">modeSnapshot</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">      </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">        </span><span class="nx">modelUrl</span><span class="o">:</span><span class="w"> </span><span class="kt">appState.modelUrl</span><span class="p">,</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">        </span><span class="nx">productId</span><span class="o">:</span><span class="w"> </span><span class="kt">appState.productId</span><span class="p">,</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">        </span><span class="nx">modelVersion</span><span class="o">:</span><span class="w"> </span><span class="kt">appState.modelVersion</span><span class="p">,</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">      </span><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">        </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="kt">activeCapture?.cameraMode</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;exterior&#39;</span><span class="p">,</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">        </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="kt">activeCapture?.pose</span><span class="p">,</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">      </span><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">        </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">          </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">allOptionGeometryIds</span><span class="p">,</span>
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">          </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">activeOptionGeometryIds</span><span class="p">,</span>
-<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">          </span><span class="nx">instantHiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCapture?.visibilityAssignments?.hiddenGeometryIds</span><span class="p">,</span>
-<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="w">        </span><span class="nx">defaultMaterialAssignments</span><span class="o">:</span><span class="w"> </span><span class="kt">appState.modelDefaultCapture?.defaultMaterialAssignments</span><span class="p">,</span>
-<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="w">        </span><span class="nx">materialAssignments</span><span class="o">:</span><span class="w"> </span><span class="kt">optionCapture?.materialAssignments</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">[],</span>
-<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="w">      </span><span class="nx">presentation</span><span class="p">,</span>
-<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="w">      </span><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="w">        </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="kt">appState.isAdminMode</span><span class="p">,</span>
-<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="w">        </span><span class="nx">activeAuthoringFocus</span><span class="o">:</span><span class="w"> </span><span class="kt">appState.activeAuthoringFocus</span><span class="p">,</span>
-<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="w">      </span><span class="p">},</span>
-<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="w">  </span><span class="p">},</span><span class="w"> </span><span class="p">[</span><span class="nx">appState</span><span class="p">])</span>
-<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>
-<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">viewerOutput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useMemo</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
-<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a><span class="w">    </span><span class="nx">onViewerReady</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Viewer ready&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">event</span><span class="p">)</span>
-<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a><span class="w">    </span><span class="nx">onSectionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
-<a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a><span class="w">        </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
-<a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a><span class="w">        </span><span class="nx">sectionCaptures</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">sectionCaptures</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">prev</span><span class="p">.</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a><span class="w">      </span><span class="p">}))</span>
-<a id="__codelineno-7-52" name="__codelineno-7-52" href="#__codelineno-7-52"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-53" name="__codelineno-7-53" href="#__codelineno-7-53"></a><span class="w">    </span><span class="nx">onSectionCaptureCleared</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-54" name="__codelineno-7-54" href="#__codelineno-7-54"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-55" name="__codelineno-7-55" href="#__codelineno-7-55"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">sectionCaptures</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-56" name="__codelineno-7-56" href="#__codelineno-7-56"></a><span class="w">        </span><span class="ow">delete</span><span class="w"> </span><span class="nx">n</span><span class="p">[</span><span class="nx">prev</span><span class="p">.</span><span class="nx">activeSectionId</span><span class="p">]</span>
-<a id="__codelineno-7-57" name="__codelineno-7-57" href="#__codelineno-7-57"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionCaptures</span><span class="o">:</span><span class="w"> </span><span class="kt">n</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-58" name="__codelineno-7-58" href="#__codelineno-7-58"></a><span class="w">      </span><span class="p">})</span>
-<a id="__codelineno-7-59" name="__codelineno-7-59" href="#__codelineno-7-59"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-60" name="__codelineno-7-60" href="#__codelineno-7-60"></a><span class="w">    </span><span class="nx">onOptionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-61" name="__codelineno-7-61" href="#__codelineno-7-61"></a><span class="w">      </span><span class="c1">// Enforce cross-section ownership with two independent rules:</span>
-<a id="__codelineno-7-62" name="__codelineno-7-62" href="#__codelineno-7-62"></a><span class="w">      </span><span class="c1">//   1) show/hide list ownership (geometryIds) is exclusive across sections</span>
-<a id="__codelineno-7-63" name="__codelineno-7-63" href="#__codelineno-7-63"></a><span class="w">      </span><span class="c1">//   2) material assignment ownership is exclusive across sections</span>
-<a id="__codelineno-7-64" name="__codelineno-7-64" href="#__codelineno-7-64"></a><span class="w">      </span><span class="c1">// The same geometry MAY appear in section A&#39;s show/hide list and section</span>
-<a id="__codelineno-7-65" name="__codelineno-7-65" href="#__codelineno-7-65"></a><span class="w">      </span><span class="c1">// B&#39;s material assignments — that&#39;s allowed.</span>
-<a id="__codelineno-7-66" name="__codelineno-7-66" href="#__codelineno-7-66"></a><span class="w">      </span><span class="c1">// If either rule is violated, reject the capture and surface a banner.</span>
-<a id="__codelineno-7-67" name="__codelineno-7-67" href="#__codelineno-7-67"></a><span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span>
-<a id="__codelineno-7-68" name="__codelineno-7-68" href="#__codelineno-7-68"></a><span class="w">        </span><span class="nx">appState</span><span class="p">.</span><span class="nx">optionCaptures</span><span class="p">,</span>
-<a id="__codelineno-7-69" name="__codelineno-7-69" href="#__codelineno-7-69"></a><span class="w">        </span><span class="nx">appState</span><span class="p">.</span><span class="nx">activeSectionId</span><span class="p">,</span>
-<a id="__codelineno-7-70" name="__codelineno-7-70" href="#__codelineno-7-70"></a><span class="w">        </span><span class="nx">payload</span><span class="p">,</span>
-<a id="__codelineno-7-71" name="__codelineno-7-71" href="#__codelineno-7-71"></a><span class="w">      </span><span class="p">)</span>
-<a id="__codelineno-7-72" name="__codelineno-7-72" href="#__codelineno-7-72"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">material</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-73" name="__codelineno-7-73" href="#__codelineno-7-73"></a><span class="w">        </span><span class="nx">setCaptureConflict</span><span class="p">({</span>
-<a id="__codelineno-7-74" name="__codelineno-7-74" href="#__codelineno-7-74"></a><span class="w">          </span><span class="nx">sectionId</span><span class="o">:</span><span class="w"> </span><span class="kt">appState.activeSectionId</span><span class="p">,</span>
-<a id="__codelineno-7-75" name="__codelineno-7-75" href="#__codelineno-7-75"></a><span class="w">          </span><span class="nx">optionId</span><span class="o">:</span><span class="w"> </span><span class="kt">getChosenOption</span><span class="p">(</span><span class="nx">appState</span><span class="p">),</span>
-<a id="__codelineno-7-76" name="__codelineno-7-76" href="#__codelineno-7-76"></a><span class="w">          </span><span class="nx">conflicts</span><span class="p">,</span>
-<a id="__codelineno-7-77" name="__codelineno-7-77" href="#__codelineno-7-77"></a><span class="w">        </span><span class="p">})</span>
-<a id="__codelineno-7-78" name="__codelineno-7-78" href="#__codelineno-7-78"></a><span class="w">        </span><span class="k">return</span>
-<a id="__codelineno-7-79" name="__codelineno-7-79" href="#__codelineno-7-79"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-7-80" name="__codelineno-7-80" href="#__codelineno-7-80"></a>
-<a id="__codelineno-7-81" name="__codelineno-7-81" href="#__codelineno-7-81"></a><span class="w">      </span><span class="c1">// Additive merge: union geometry IDs, incoming wins per geometryId for materials.</span>
-<a id="__codelineno-7-82" name="__codelineno-7-82" href="#__codelineno-7-82"></a><span class="w">      </span><span class="c1">// To replace from scratch, clear first then capture again.</span>
-<a id="__codelineno-7-83" name="__codelineno-7-83" href="#__codelineno-7-83"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-84" name="__codelineno-7-84" href="#__codelineno-7-84"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">prev</span><span class="p">.</span><span class="nx">activeSectionId</span><span class="si">}</span><span class="sb">_</span><span class="si">${</span><span class="nx">getChosenOption</span><span class="p">(</span><span class="nx">prev</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span>
-<a id="__codelineno-7-85" name="__codelineno-7-85" href="#__codelineno-7-85"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">existing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prev</span><span class="p">.</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
-<a id="__codelineno-7-86" name="__codelineno-7-86" href="#__codelineno-7-86"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-87" name="__codelineno-7-87" href="#__codelineno-7-87"></a><span class="w">          </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
-<a id="__codelineno-7-88" name="__codelineno-7-88" href="#__codelineno-7-88"></a><span class="w">          </span><span class="nx">optionCaptures</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">mergeOptionCapture</span><span class="p">(</span><span class="nx">existing</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-7-89" name="__codelineno-7-89" href="#__codelineno-7-89"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-7-90" name="__codelineno-7-90" href="#__codelineno-7-90"></a><span class="w">      </span><span class="p">})</span>
-<a id="__codelineno-7-91" name="__codelineno-7-91" href="#__codelineno-7-91"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-92" name="__codelineno-7-92" href="#__codelineno-7-92"></a><span class="w">    </span><span class="nx">onMaterialDefaultsCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-93" name="__codelineno-7-93" href="#__codelineno-7-93"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">modelDefaultCapture</span><span class="o">:</span><span class="w"> </span><span class="kt">payload</span><span class="w"> </span><span class="p">}))</span>
-<a id="__codelineno-7-94" name="__codelineno-7-94" href="#__codelineno-7-94"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-95" name="__codelineno-7-95" href="#__codelineno-7-95"></a><span class="w">    </span><span class="nx">onViewCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-96" name="__codelineno-7-96" href="#__codelineno-7-96"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
-<a id="__codelineno-7-97" name="__codelineno-7-97" href="#__codelineno-7-97"></a><span class="w">        </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
-<a id="__codelineno-7-98" name="__codelineno-7-98" href="#__codelineno-7-98"></a><span class="w">        </span><span class="nx">viewCaptures</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">viewCaptures</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">payload</span><span class="p">.</span><span class="nx">cameraMode</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">payload</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-7-99" name="__codelineno-7-99" href="#__codelineno-7-99"></a><span class="w">      </span><span class="p">}))</span>
-<a id="__codelineno-7-100" name="__codelineno-7-100" href="#__codelineno-7-100"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-101" name="__codelineno-7-101" href="#__codelineno-7-101"></a><span class="w">    </span><span class="nx">onViewCaptureCleared</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-102" name="__codelineno-7-102" href="#__codelineno-7-102"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-103" name="__codelineno-7-103" href="#__codelineno-7-103"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">viewCaptures</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-104" name="__codelineno-7-104" href="#__codelineno-7-104"></a><span class="w">        </span><span class="ow">delete</span><span class="w"> </span><span class="nx">n</span><span class="p">[</span><span class="nx">cameraMode</span><span class="p">]</span>
-<a id="__codelineno-7-105" name="__codelineno-7-105" href="#__codelineno-7-105"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">viewCaptures</span><span class="o">:</span><span class="w"> </span><span class="kt">n</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-106" name="__codelineno-7-106" href="#__codelineno-7-106"></a><span class="w">      </span><span class="p">})</span>
-<a id="__codelineno-7-107" name="__codelineno-7-107" href="#__codelineno-7-107"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-108" name="__codelineno-7-108" href="#__codelineno-7-108"></a><span class="w">    </span><span class="nx">onViewSelected</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-109" name="__codelineno-7-109" href="#__codelineno-7-109"></a><span class="w">      </span><span class="c1">// In User Mode: store the view capture so viewerInput can replay pose + presentation + ui.</span>
-<a id="__codelineno-7-110" name="__codelineno-7-110" href="#__codelineno-7-110"></a><span class="w">      </span><span class="c1">// Also set activeAuthoringFocus so the dynamic Authoring Panel adapts in admin mode.</span>
-<a id="__codelineno-7-111" name="__codelineno-7-111" href="#__codelineno-7-111"></a><span class="w">      </span><span class="c1">// If no capture exists for this mode, still update focus.</span>
-<a id="__codelineno-7-112" name="__codelineno-7-112" href="#__codelineno-7-112"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-113" name="__codelineno-7-113" href="#__codelineno-7-113"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prev</span><span class="p">.</span><span class="nx">viewCaptures</span><span class="p">[</span><span class="nx">cameraMode</span><span class="p">]</span>
-<a id="__codelineno-7-114" name="__codelineno-7-114" href="#__codelineno-7-114"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">activeAuthoringFocus</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;view&#39;</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-115" name="__codelineno-7-115" href="#__codelineno-7-115"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">next</span><span class="p">,</span><span class="w"> </span><span class="nx">activeViewCapture</span><span class="o">:</span><span class="w"> </span><span class="kt">capture</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">next</span>
-<a id="__codelineno-7-116" name="__codelineno-7-116" href="#__codelineno-7-116"></a><span class="w">      </span><span class="p">})</span>
-<a id="__codelineno-7-117" name="__codelineno-7-117" href="#__codelineno-7-117"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-118" name="__codelineno-7-118" href="#__codelineno-7-118"></a><span class="w">    </span><span class="nx">onSpaceTileWalkActivated</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-119" name="__codelineno-7-119" href="#__codelineno-7-119"></a><span class="w">      </span><span class="c1">// Apply presentation + visibility from the stored view capture, but do NOT</span>
-<a id="__codelineno-7-120" name="__codelineno-7-120" href="#__codelineno-7-120"></a><span class="w">      </span><span class="c1">// set a camera pose — the Viewer is already navigating via pathNav.</span>
-<a id="__codelineno-7-121" name="__codelineno-7-121" href="#__codelineno-7-121"></a><span class="w">      </span><span class="c1">// Resolve through presentationModeCaptures (view captures carry a mode key, not a full snapshot).</span>
-<a id="__codelineno-7-122" name="__codelineno-7-122" href="#__codelineno-7-122"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-123" name="__codelineno-7-123" href="#__codelineno-7-123"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prev</span><span class="p">.</span><span class="nx">viewCaptures</span><span class="p">[</span><span class="nx">cameraMode</span><span class="p">]</span>
-<a id="__codelineno-7-124" name="__codelineno-7-124" href="#__codelineno-7-124"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">capture</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nx">prev</span>
-<a id="__codelineno-7-125" name="__codelineno-7-125" href="#__codelineno-7-125"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">modeSnapshot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">prev</span><span class="p">.</span><span class="nx">presentationModeCaptures</span><span class="o">?</span><span class="p">.[</span><span class="nx">capture</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">defaultPresentation</span>
-<a id="__codelineno-7-126" name="__codelineno-7-126" href="#__codelineno-7-126"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">capture</span><span class="p">.</span><span class="nx">ui</span>
-<a id="__codelineno-7-127" name="__codelineno-7-127" href="#__codelineno-7-127"></a><span class="w">          </span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="p">,</span><span class="w"> </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">modeSnapshot</span><span class="o">?</span><span class="p">.</span><span class="nx">ui</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">capture</span><span class="p">.</span><span class="nx">ui</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-128" name="__codelineno-7-128" href="#__codelineno-7-128"></a><span class="w">          </span><span class="o">:</span><span class="w"> </span><span class="nx">modeSnapshot</span>
-<a id="__codelineno-7-129" name="__codelineno-7-129" href="#__codelineno-7-129"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">spaceTileWalkPresentation</span><span class="o">:</span><span class="w"> </span><span class="kt">presentation</span><span class="p">,</span><span class="w"> </span><span class="nx">spaceTileWalkVisibility</span><span class="o">:</span><span class="w"> </span><span class="kt">capture.visibilityAssignments</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-7-130" name="__codelineno-7-130" href="#__codelineno-7-130"></a><span class="w">      </span><span class="p">})</span>
-<a id="__codelineno-7-131" name="__codelineno-7-131" href="#__codelineno-7-131"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-132" name="__codelineno-7-132" href="#__codelineno-7-132"></a><span class="w">    </span><span class="nx">onPresentationModeCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-133" name="__codelineno-7-133" href="#__codelineno-7-133"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
-<a id="__codelineno-7-134" name="__codelineno-7-134" href="#__codelineno-7-134"></a><span class="w">        </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
-<a id="__codelineno-7-135" name="__codelineno-7-135" href="#__codelineno-7-135"></a><span class="w">        </span><span class="nx">presentationModeCaptures</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">.</span><span class="nx">presentationModeCaptures</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">payload</span><span class="p">.</span><span class="nx">mode</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">payload</span><span class="p">.</span><span class="nx">presentation</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-7-136" name="__codelineno-7-136" href="#__codelineno-7-136"></a><span class="w">      </span><span class="p">}))</span>
-<a id="__codelineno-7-137" name="__codelineno-7-137" href="#__codelineno-7-137"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-138" name="__codelineno-7-138" href="#__codelineno-7-138"></a><span class="w">    </span><span class="nx">onActivePresentationModeChanged</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-139" name="__codelineno-7-139" href="#__codelineno-7-139"></a><span class="w">      </span><span class="c1">// Track focus so the dynamic Authoring Panel surfaces presentation-mode controls.</span>
-<a id="__codelineno-7-140" name="__codelineno-7-140" href="#__codelineno-7-140"></a><span class="w">      </span><span class="nx">setAppState</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span><span class="w"> </span><span class="nx">activeAuthoringFocus</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;presentationMode&#39;</span><span class="w"> </span><span class="p">}))</span>
-<a id="__codelineno-7-141" name="__codelineno-7-141" href="#__codelineno-7-141"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-142" name="__codelineno-7-142" href="#__codelineno-7-142"></a><span class="w">    </span><span class="nx">onGeometryPicked</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-143" name="__codelineno-7-143" href="#__codelineno-7-143"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Geometry picked&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">event</span><span class="p">)</span>
-<a id="__codelineno-7-144" name="__codelineno-7-144" href="#__codelineno-7-144"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-145" name="__codelineno-7-145" href="#__codelineno-7-145"></a><span class="w">    </span><span class="nx">onRenderCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-146" name="__codelineno-7-146" href="#__codelineno-7-146"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="o">?</span><span class="p">.</span><span class="nx">blob</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-147" name="__codelineno-7-147" href="#__codelineno-7-147"></a><span class="w">        </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">metadata</span><span class="o">:</span><span class="w"> </span><span class="kt">event.metadata</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="o">:</span><span class="w"> </span><span class="kt">event.blob</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-7-148" name="__codelineno-7-148" href="#__codelineno-7-148"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-7-149" name="__codelineno-7-149" href="#__codelineno-7-149"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-150" name="__codelineno-7-150" href="#__codelineno-7-150"></a><span class="w">    </span><span class="nx">onBatchCaptureComplete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-151" name="__codelineno-7-151" href="#__codelineno-7-151"></a><span class="w">      </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span><span class="w"> </span><span class="nx">metadata</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-152" name="__codelineno-7-152" href="#__codelineno-7-152"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
-<a id="__codelineno-7-153" name="__codelineno-7-153" href="#__codelineno-7-153"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<a id="__codelineno-7-154" name="__codelineno-7-154" href="#__codelineno-7-154"></a><span class="w">        </span><span class="nx">a</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span>
-<a id="__codelineno-7-155" name="__codelineno-7-155" href="#__codelineno-7-155"></a><span class="w">        </span><span class="nx">a</span><span class="p">.</span><span class="nx">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">metadata</span><span class="o">?</span><span class="p">.</span><span class="nx">sectionLabel</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="si">}</span><span class="sb">.jpg`</span>
-<a id="__codelineno-7-156" name="__codelineno-7-156" href="#__codelineno-7-156"></a><span class="w">        </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<a id="__codelineno-7-157" name="__codelineno-7-157" href="#__codelineno-7-157"></a><span class="w">        </span><span class="nx">a</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span>
-<a id="__codelineno-7-158" name="__codelineno-7-158" href="#__codelineno-7-158"></a><span class="w">        </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<a id="__codelineno-7-159" name="__codelineno-7-159" href="#__codelineno-7-159"></a><span class="w">        </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">),</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
-<a id="__codelineno-7-160" name="__codelineno-7-160" href="#__codelineno-7-160"></a><span class="w">      </span><span class="p">})</span>
-<a id="__codelineno-7-161" name="__codelineno-7-161" href="#__codelineno-7-161"></a><span class="w">      </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-7-162" name="__codelineno-7-162" href="#__codelineno-7-162"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-163" name="__codelineno-7-163" href="#__codelineno-7-163"></a><span class="w">    </span><span class="nx">onError</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-164" name="__codelineno-7-164" href="#__codelineno-7-164"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Viewer error&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">event</span><span class="p">)</span>
-<a id="__codelineno-7-165" name="__codelineno-7-165" href="#__codelineno-7-165"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-7-166" name="__codelineno-7-166" href="#__codelineno-7-166"></a><span class="w">  </span><span class="p">}),</span><span class="w"> </span><span class="p">[])</span>
-<a id="__codelineno-7-167" name="__codelineno-7-167" href="#__codelineno-7-167"></a>
-<a id="__codelineno-7-168" name="__codelineno-7-168" href="#__codelineno-7-168"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-<a id="__codelineno-7-169" name="__codelineno-7-169" href="#__codelineno-7-169"></a><span class="w">    </span><span class="p">&lt;</span><span class="nt">Viewer</span>
-<a id="__codelineno-7-170" name="__codelineno-7-170" href="#__codelineno-7-170"></a><span class="w">      </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span>
-<a id="__codelineno-7-171" name="__codelineno-7-171" href="#__codelineno-7-171"></a><span class="w">      </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span>
-<a id="__codelineno-7-172" name="__codelineno-7-172" href="#__codelineno-7-172"></a><span class="w">    </span><span class="p">/&gt;</span>
-<a id="__codelineno-7-173" name="__codelineno-7-173" href="#__codelineno-7-173"></a><span class="w">  </span><span class="p">)</span>
-<a id="__codelineno-7-174" name="__codelineno-7-174" href="#__codelineno-7-174"></a><span class="p">}</span>
-</code></pre></div>
-<p>This example is intentionally simple, but it shows the right flow.</p>
+<h2 id="a-full-end-to-end-example">A Full End-to-End Example<a class="headerlink" href="#a-full-end-to-end-example" title="Permanent link">&para;</a></h2>
+<p><a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to <code>localStorage</code>, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp should mirror. Read it alongside this walkthrough — the structural shape is exactly what Steps 1–8 above describe.</p>
+<p>A few handlers in DemoApp show patterns that are easy to miss from the contract reference alone and are worth a closer look:</p>
+<h3 id="option-capture-conflict-gate-additive-merge">Option capture — conflict gate + additive merge<a class="headerlink" href="#option-capture-conflict-gate-additive-merge" title="Permanent link">&para;</a></h3>
+<p>The recommended <code>onOptionCaptured</code> flow lives at <a href="../src/DemoApp/DemoApp.jsx#L753-L778">DemoApp.jsx:753-778</a>:</p>
+<ol>
+<li>Run <code>findOptionCaptureConflicts</code> (<a href="../src/DemoApp/DemoApp.jsx#L113-L132">DemoApp.jsx:113-132</a>, with the per-id helper at <a href="../src/DemoApp/DemoApp.jsx#L91-L111">DemoApp.jsx:91-111</a>) to enforce the two cross-section ownership rules independently.</li>
+<li>If either rule fires, store the conflict for the banner and <strong>do not store the payload</strong>.</li>
+<li>Otherwise call <code>mergeOptionCapture(existing, payload)</code> (<a href="../src/DemoApp/DemoApp.jsx#L310-L327">DemoApp.jsx:310-327</a>), which unions geometry IDs and lets incoming material assignments win per <code>geometryId</code>.</li>
+</ol>
+<p>Two captures into the same option therefore <strong>accumulate</strong> by design. To replace the payload from scratch, click <em>Option Clear</em> first and then capture again.</p>
+<h3 id="space-tile-walk-activation">Space-tile walk activation<a class="headerlink" href="#space-tile-walk-activation" title="Permanent link">&para;</a></h3>
+<p><code>onSpaceTileWalkActivated</code> (<a href="../src/DemoApp/DemoApp.jsx#L810-L812">DemoApp.jsx:810-812</a>) just records the captured <code>cameraMode</code> in App state. The <code>viewerInput</code> builder reads it and applies the matching <code>viewCaptures[mode]</code> payload's presentation and visibility — but does <strong>not</strong> override <code>camera.pose</code>, since the Viewer is already navigating via pathNav. See the derivation block at <a href="../src/DemoApp/DemoApp.jsx#L886-L916">DemoApp.jsx:886-916</a>.</p>
+<h3 id="active-presentation-mode-argument-intentionally-ignored">Active presentation mode — argument intentionally ignored<a class="headerlink" href="#active-presentation-mode-argument-intentionally-ignored" title="Permanent link">&para;</a></h3>
+<p><code>onActivePresentationModeChanged</code> (<a href="../src/DemoApp/DemoApp.jsx#L824-L832">DemoApp.jsx:824-832</a>) intentionally drops the <code>mode</code> argument it receives. The active presentation mode lives entirely in the Viewer (it owns mode selection); the App listens to this callback only to update <code>activeAuthoringFocus = 'presentationMode'</code> so the dynamic Authoring Panel filters to mode-relevant controls. If a future App needs to persist the active mode itself, that's the place to read the arg.</p>
+<h3 id="batch-render-flow">Batch render flow<a class="headerlink" href="#batch-render-flow" title="Permanent link">&para;</a></h3>
+<p><code>onRenderCaptured</code> (<a href="../src/DemoApp/DemoApp.jsx#L833-L837">DemoApp.jsx:833-837</a>) accumulates JPEG blobs in a <code>useRef</code> array as each item completes. <code>onBatchCaptureComplete</code> (<a href="../src/DemoApp/DemoApp.jsx#L838-L855">DemoApp.jsx:838-855</a>) then composites a footer overlay (<code>compositeInfoOverlay</code> at <a href="../src/DemoApp/DemoApp.jsx#L22-L76">DemoApp.jsx:22-76</a>) onto each blob and triggers downloads. The trigger is the <code>admin.batchCapture.nonce</code> increment in <code>handleCaptureSectionRenderings</code> (<a href="../src/DemoApp/DemoApp.jsx#L920-L956">DemoApp.jsx:920-956</a>) — the Viewer detects the bump and processes the items in sequence.</p>
 <hr />
 <h2 id="what-the-app-should-avoid">What The App Should Avoid<a class="headerlink" href="#what-the-app-should-avoid" title="Permanent link">&para;</a></h2>
 <h3 id="do-not-reach-into-viewerroot">Do not reach into <code>ViewerRoot</code><a class="headerlink" href="#do-not-reach-into-viewerroot" title="Permanent link">&para;</a></h3>
