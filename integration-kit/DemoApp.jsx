@@ -612,14 +612,6 @@ export function DemoApp(props = {}) {
   // (Section Capture + Geometry + User Visibility + Presentation settings).
   const [activeAuthoringFocus, setActiveAuthoringFocus] = useState('section')
 
-  // Mirrored copy of the Viewer's active presentation mode. Pushed back via
-  // `viewerInput.activePresentationMode` so the Viewer's mode-button highlight
-  // tracks user-mode replays (which switch presentation implicitly via
-  // section/view selection — the Viewer's own state has no other channel for
-  // App-driven mode changes). Direct mode-button clicks update the Viewer's
-  // state first and round-trip through `onActivePresentationModeChanged`.
-  const [appActivePresentationMode, setAppActivePresentationMode] = useState('day')
-
   useEffect(() => {
     if (loadViolations.length > 0) {
       console.warn('[DemoApp] Cross-section ownership violations in stored captures:', loadViolations)
@@ -835,11 +827,18 @@ export function DemoApp(props = {}) {
       setLastPressedViewMode(cameraMode)
       setSpaceTileWalkCaptureMode(null)
       setActiveAuthoringFocus('view')
-      // Bump syncKey unconditionally — this is the App's "selection changed" signal.
-      // Viewer uses it to clear the previously-active section/view highlight. In user
-      // mode, also activate the view's camera so its capture replays.
-      if (!adminEnabledRef.current) setActiveViewCameraMode(cameraMode)
-      setActivationNonce((n) => n + 1)
+      if (!adminEnabledRef.current) {
+        // User mode: activate the view's camera so its capture replays, and
+        // bump syncKey to signal "selection changed" — the Viewer re-syncs
+        // camera, presentation, and mode-highlight from input on every bump.
+        setActiveViewCameraMode(cameraMode)
+        setActivationNonce((n) => n + 1)
+      }
+      // Admin mode: skip the bump. View clicks in admin are Viewer-internal
+      // navigation (the Viewer's handleViewChange handles camera + presentation
+      // + mode-highlight directly via syncActivePresentationMode). Bumping
+      // syncKey would re-fire the Viewer's input-driven re-sync paths with
+      // stale section data and override the just-applied view state.
     },
     onSpaceTileWalkActivated: (cameraMode) => {
       setSpaceTileWalkCaptureMode(cameraMode)
@@ -855,14 +854,15 @@ export function DemoApp(props = {}) {
         return next
       })
     },
-    onActivePresentationModeChanged: (mode) => {
-      // Fired only on direct mode-button clicks (handlePresentationModeSelect).
-      // View/section replay paths update the Viewer's internal mode state
-      // without firing this callback, to avoid stomping the 'view' / 'section'
-      // authoring-focus that those clicks just set.
-      // Track the mode so we can mirror it back via input.activePresentationMode
-      // (keeps the highlight stable across renders) and switch focus.
-      if (mode) setAppActivePresentationMode(mode)
+    onActivePresentationModeChanged: () => {
+      // The `mode` argument is intentionally ignored: the active mode lives in
+      // the Viewer (which owns mode-button click state). The App derives the
+      // mode for `viewerInput.activePresentationMode` from the active capture
+      // (`presentationCapture?.presentationMode`); direct mode-button clicks
+      // don't bump `presentationSyncKey`, so the Viewer's optimistic mode state
+      // is preserved without round-tripping through the App. We react here
+      // only to switch authoring focus so the dynamic Authoring Panel filters
+      // to mode-relevant controls.
       setActiveAuthoringFocus('presentationMode')
     },
     onRenderCaptured: (event) => {
@@ -927,17 +927,6 @@ export function DemoApp(props = {}) {
   const presentationCapture = spaceTileWalkCaptureMode
     ? (viewCaptures[spaceTileWalkCaptureMode] ?? cameraCapture)
     : cameraCapture
-
-  // When the active section/view's captured presentationMode changes, follow
-  // it. This is the App-side mirror that keeps the Viewer's button-highlight
-  // synced during user-mode replays (the Viewer's internal activePresentationMode
-  // has no other channel for App-driven section/view replays). Direct mode-button
-  // clicks update appActivePresentationMode through the onActivePresentationModeChanged
-  // callback instead, and don't change presentationCapture, so they don't fight.
-  useEffect(() => {
-    const captureMode = presentationCapture?.presentationMode
-    if (captureMode) setAppActivePresentationMode(captureMode)
-  }, [presentationCapture])
 
   // Captured presentation for the active section/view's mode. Undefined when
   // no capture exists for that mode — the Viewer fills in its own defaults.
@@ -1037,7 +1026,7 @@ export function DemoApp(props = {}) {
       },
       presentation,
       presentationModeCaptures: presentationModeCaptures ?? undefined,
-      activePresentationMode: appActivePresentationMode,
+      activePresentationMode: presentationCapture?.presentationMode,
       admin: {
         enabled: adminEnabled,
         activeOptionCapture: activeOptionCapture ?? undefined,
@@ -1051,7 +1040,6 @@ export function DemoApp(props = {}) {
     activeAuthoringFocus,
     activeOptionCapture,
     adminEnabled,
-    appActivePresentationMode,
     batchCaptureRequest,
     cameraCapture,
     effectivePresentation,
