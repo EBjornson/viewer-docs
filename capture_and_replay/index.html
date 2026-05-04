@@ -1952,7 +1952,7 @@
 </tr>
 <tr>
 <td><strong>View</strong></td>
-<td>pose + cameraMode + presentationMode + visibility + ui flags (per view slot)</td>
+<td>pose + viewMode + presentationMode + visibility + ui flags (per view slot)</td>
 <td><code>onViewCaptured</code></td>
 <td>App resolves mode → presentation and writes same fields when <code>onViewSelected</code> fires; <code>capture.ui</code> takes precedence over the mode snapshot's ui flags</td>
 </tr>
@@ -2071,25 +2071,26 @@
 </code></pre></div>
 <p>Payload shape:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;interior&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nx">viewMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;interior&#39;</span><span class="p">,</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">position</span><span class="p">,</span><span class="w"> </span><span class="nx">target</span><span class="w"> </span><span class="p">},</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nx">presentationMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;nightInt&#39;</span><span class="p">,</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">}</span>
 </code></pre></div>
+<p><code>viewMode</code> identifies the view slot. Today the values coincide with the cameraMode enum (<code>'exterior' | 'interior' | 'overhead'</code>), so a view's viewMode doubles as its replay cameraMode. They're separate concepts though — viewMode is allowed to extend later (e.g. multiple <code>'exterior'</code>-camera views via slots like <code>'frontExterior'</code>) without changing the cameraMode enum or section captures.</p>
 <h3 id="app-storage_1">App storage<a class="headerlink" href="#app-storage_1" title="Permanent link">&para;</a></h3>
 <p>The App stores the payload keyed by the view slot:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">viewCaptures</span><span class="p">[</span><span class="nx">payload</span><span class="p">.</span><span class="nx">cameraMode</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">viewCaptures</span><span class="p">[</span><span class="nx">payload</span><span class="p">.</span><span class="nx">viewMode</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payload</span>
 </code></pre></div>
 <h3 id="replay-onviewselected">Replay — onViewSelected<a class="headerlink" href="#replay-onviewselected" title="Permanent link">&para;</a></h3>
 <p>When the user presses a View button, the Viewer fires:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">onViewSelected</span><span class="p">(</span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerCameraMode</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">onViewSelected</span><span class="p">(</span><span class="nx">viewMode</span><span class="o">:</span><span class="w"> </span><span class="kt">ViewerViewMode</span><span class="p">)</span>
 </code></pre></div>
-<p>The App looks up its stored view capture for that slot and rebuilds <code>viewerInput</code> exactly as it would for a section capture — full pose + cameraMode + presentation + visibility. There is no separate passback mechanism; the App drives the replay directly through <code>viewerInput</code>.</p>
+<p>The App looks up its stored view capture for that slot and rebuilds <code>viewerInput</code> exactly as it would for a section capture — full pose + presentation + visibility. The replay cameraMode is derived from <code>capture.viewMode</code> (1:1 with the cameraMode enum today). There is no separate passback mechanism; the App drives the replay directly through <code>viewerInput</code>.</p>
 <p>If no capture exists for the pressed slot, the App does not update <code>viewerInput</code> — nothing changes.</p>
 <p>In <strong>Admin Mode</strong>, pressing a View button navigates the Viewer's camera internally (using the stored capture pose if available, or a default quick view as a fallback). The <code>onViewSelected</code> callback IS fired in Admin Mode (to allow the App to clear section tab highlighting), but the App should NOT trigger camera or presentation replay in response when admin is active — the Viewer handles navigation internally.</p>
 <h3 id="clearing_1">Clearing<a class="headerlink" href="#clearing_1" title="Permanent link">&para;</a></h3>
-<p>Clicking <strong>Clear View Capture</strong> fires <code>onViewCaptureCleared(cameraMode)</code>. The App removes that entry from its stored captures.</p>
+<p>Clicking <strong>Clear View Capture</strong> fires <code>onViewCaptureCleared(viewMode)</code>. The App removes that entry from its stored captures.</p>
 <hr />
 <h2 id="option-captures">Option Captures<a class="headerlink" href="#option-captures" title="Permanent link">&para;</a></h2>
 <h3 id="what-an-option-capture-owns">What an option capture owns<a class="headerlink" href="#what-an-option-capture-owns" title="Permanent link">&para;</a></h3>
@@ -2252,11 +2253,11 @@
 <li>The camera navigates into that interior space via pathNav (same routing logic as pressing a Space Menu button).</li>
 <li>The Viewer fires:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nx">onSpaceTileWalkActivated</span><span class="p">(</span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;interior&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nx">onSpaceTileWalkActivated</span><span class="p">(</span><span class="nx">viewMode</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;interior&#39;</span><span class="p">)</span>
 </code></pre></div>
 <p>The App responds by applying <strong>only the presentation and visibility</strong> from the stored interior view capture — it does <strong>not</strong> set a new camera pose, since the Viewer is already navigating via pathNav.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nx">onSpaceTileWalkActivated</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="c1">// update presentation + visibility from viewCaptures[cameraMode]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nx">onSpaceTileWalkActivated</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">viewMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="c1">// update presentation + visibility from viewCaptures[viewMode]</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="c1">// do NOT change requestedCameraPose</span>
 <a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="p">}</span>
 </code></pre></div>
@@ -2276,7 +2277,7 @@
 <li>Pressing a View button → that button highlights</li>
 <li>Activating a section → all View button highlights clear</li>
 </ul>
-<p>This means: replaying a section capture that happens to use <code>cameraMode: 'exterior'</code> does not highlight the Exterior view button. The camera mode is an orbit behavior setting; the view button state is a user interaction state. They are independent.</p>
+<p>This means: replaying a section capture that happens to use <code>cameraMode: 'exterior'</code> does not highlight the Exterior view button. The cameraMode (on a section) is an orbit behavior setting; the viewMode (the view button slot) is a user interaction state. They are independent — and even if a section's cameraMode value matches a viewMode slot value, that's a string-match coincidence, not a relationship.</p>
 <hr />
 <h2 id="admin-mode-vs-user-mode-presentation-rendering-path">Admin Mode vs User Mode — Presentation Rendering Path<a class="headerlink" href="#admin-mode-vs-user-mode-presentation-rendering-path" title="Permanent link">&para;</a></h2>
 <h3 id="user-mode-inputadminenabled-false">User Mode (<code>input.admin.enabled = false</code>)<a class="headerlink" href="#user-mode-inputadminenabled-false" title="Permanent link">&para;</a></h3>
@@ -2297,15 +2298,16 @@
 <a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>                           App resolves presentationModeCaptures[capture.presentationMode] at replay time
 <a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>                           Replays via input.camera + input.presentation + input.scene
 <a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>View capture             → stores pose + cameraMode + presentationMode + visibility for a named slot
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>View capture             → stores pose + viewMode + presentationMode + visibility for a named slot
 <a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>                           App resolves mode → presentation and replays via same path when onViewSelected fires
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Presentation mode capture → stores full ViewerPresentationInput snapshot per named mode
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>                           App stores keyed by mode name; Viewer applies at mode switch;
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>                           App resolves at section/view replay time
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>onSpaceTileWalkActivated      → App applies presentation + visibility only (no camera pose)
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>                           Same interior view capture as the Interior button press
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>                           The replay cameraMode is derived from capture.viewMode (1:1 with the cameraMode enum today)
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Presentation mode capture → stores full ViewerPresentationInput snapshot per named mode
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>                           App stores keyed by mode name; Viewer applies at mode switch;
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>                           App resolves at section/view replay time
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>onSpaceTileWalkActivated      → App applies presentation + visibility only (no camera pose)
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>                           Same interior view capture as the Interior button press
 </code></pre></div>
 <hr />
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
