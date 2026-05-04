@@ -612,6 +612,14 @@ export function DemoApp(props = {}) {
   // (Section Capture + Geometry + User Visibility + Presentation settings).
   const [activeAuthoringFocus, setActiveAuthoringFocus] = useState('section')
 
+  // Mirrored copy of the Viewer's active presentation mode. Pushed back via
+  // `viewerInput.activePresentationMode` so the Viewer's mode-button highlight
+  // tracks user-mode replays (which switch presentation implicitly via
+  // section/view selection — the Viewer's own state has no other channel for
+  // App-driven mode changes). Direct mode-button clicks update the Viewer's
+  // state first and round-trip through `onActivePresentationModeChanged`.
+  const [appActivePresentationMode, setAppActivePresentationMode] = useState('day')
+
   useEffect(() => {
     if (loadViolations.length > 0) {
       console.warn('[DemoApp] Cross-section ownership violations in stored captures:', loadViolations)
@@ -847,13 +855,14 @@ export function DemoApp(props = {}) {
         return next
       })
     },
-    onActivePresentationModeChanged: () => {
-      // The `mode` argument is intentionally ignored: the active presentation
-      // mode lives entirely in the Viewer (it owns mode selection state).
-      // We only react to this callback to switch the App's authoring-focus
-      // indicator so the dynamic Authoring Panel filters to mode-relevant
-      // controls. If a future App needs to persist the active mode itself,
-      // that's the place to read the arg.
+    onActivePresentationModeChanged: (mode) => {
+      // Fired only on direct mode-button clicks (handlePresentationModeSelect).
+      // View/section replay paths update the Viewer's internal mode state
+      // without firing this callback, to avoid stomping the 'view' / 'section'
+      // authoring-focus that those clicks just set.
+      // Track the mode so we can mirror it back via input.activePresentationMode
+      // (keeps the highlight stable across renders) and switch focus.
+      if (mode) setAppActivePresentationMode(mode)
       setActiveAuthoringFocus('presentationMode')
     },
     onRenderCaptured: (event) => {
@@ -919,16 +928,34 @@ export function DemoApp(props = {}) {
     ? (viewCaptures[spaceTileWalkCaptureMode] ?? cameraCapture)
     : cameraCapture
 
+  // When the active section/view's captured presentationMode changes, follow
+  // it. This is the App-side mirror that keeps the Viewer's button-highlight
+  // synced during user-mode replays (the Viewer's internal activePresentationMode
+  // has no other channel for App-driven section/view replays). Direct mode-button
+  // clicks update appActivePresentationMode through the onActivePresentationModeChanged
+  // callback instead, and don't change presentationCapture, so they don't fight.
+  useEffect(() => {
+    const captureMode = presentationCapture?.presentationMode
+    if (captureMode) setAppActivePresentationMode(captureMode)
+  }, [presentationCapture])
+
   // Captured presentation for the active section/view's mode. Undefined when
   // no capture exists for that mode — the Viewer fills in its own defaults.
   const effectivePresentation = presentationModeCaptures[presentationCapture?.presentationMode]
 
   // Spread into a new object so every nonce increment produces a new reference,
   // which triggers camera re-animation in the viewer.
+  // activationNonce is gated on !adminEnabled: in admin mode the Viewer
+  // handles view-button navigation internally (handleViewChange → directNavTo /
+  // walkToCapturedPose), so a nonce-driven pose-ref change would re-fire the
+  // Viewer's pose effect with the still-active SECTION's pose, undoing the
+  // view's pose + cameraMode FOV. In user mode the nonce is still needed so
+  // re-clicking the same section/view retriggers the animation (cameraCapture
+  // ref hasn't changed in that case).
   const requestedCameraPose = useMemo(
     () => cameraCapture?.pose ? { ...cameraCapture.pose } : undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cameraCapture?.pose, activationNonce]
+    [cameraCapture?.pose, adminEnabled ? null : activationNonce]
   )
 
   const visibilityAssignments = useMemo(() => {
@@ -1010,6 +1037,7 @@ export function DemoApp(props = {}) {
       },
       presentation,
       presentationModeCaptures: presentationModeCaptures ?? undefined,
+      activePresentationMode: appActivePresentationMode,
       admin: {
         enabled: adminEnabled,
         activeOptionCapture: activeOptionCapture ?? undefined,
@@ -1023,6 +1051,7 @@ export function DemoApp(props = {}) {
     activeAuthoringFocus,
     activeOptionCapture,
     adminEnabled,
+    appActivePresentationMode,
     batchCaptureRequest,
     cameraCapture,
     effectivePresentation,

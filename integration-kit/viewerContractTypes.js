@@ -177,6 +177,7 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * @property {ViewerSceneInput} [scene]
  * @property {ViewerPresentationInput} [presentation]
  * @property {Record<string, ViewerPresentationInput>} [presentationModeCaptures] - App's persisted per-mode capture map (key = presentation mode id). Consulted by the Viewer's mode-switch resolver to apply the captured snapshot for the selected mode; absent entries fall through to Viewer-side lighting defaults. App owns this map; Viewer only reads it.
+ * @property {ViewerPresentationMode} [activePresentationMode] - The presentation mode the App considers active. The Viewer mirrors this into its internal mode-button highlight so user-mode replays — where the App switches presentation modes implicitly via section/view selection — keep the highlighted button in sync. Direct mode-button clicks update the Viewer's state optimistically and round-trip through `onActivePresentationModeChanged`; the App should reflect that callback back onto this field for the next render. Optional: if omitted, the Viewer manages its mode highlight internally (legacy behavior).
  * @property {number} [presentationSyncKey] - Bump-style force-resync signal. Increment when there's a stored capture to replay so the Viewer re-syncs its presentation state from `input.presentation`. Do NOT increment when `input.presentation` reflects only defaults — that would overwrite admin-edited values. Typical use: bump on section/view tile clicks during user-mode replay.
  * @property {ViewerAdminInput} [admin]
  */

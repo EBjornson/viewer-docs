@@ -86,6 +86,7 @@ type ViewerInput = {
   scene?: ViewerSceneInput
   presentation?: ViewerPresentationInput
   presentationModeCaptures?: Record<ViewerPresentationMode, ViewerPresentationInput>
+  activePresentationMode?: ViewerPresentationMode
   admin?: ViewerAdminInput
   presentationSyncKey?: number
 }
@@ -264,6 +265,8 @@ All six presentation modes have built-in hardcoded defaults in the Viewer. `inpu
 `presentationSyncKey` was previously documented as "force re-sync of input.presentation" and the App was advised to gate the bump on capture availability. That semantics has been replaced by the two-layer model above as of v1.7.
 
 **`presentationModeCaptures`:** An optional map of all presentation-mode captures the App has persisted, keyed by mode id (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`). The Viewer reads this map when the user clicks a presentation mode tile — if a capture exists for the clicked mode, the Viewer applies it; otherwise it falls back to its built-in lighting defaults (and seasonal HDRI/terrain for winter modes). The App owns this map; the Viewer only reads it. Pass the App's full persisted map every render — the Viewer compares by reference, so a stable identity (e.g. a memoized `useState` value) is fine.
+
+**`activePresentationMode`:** The presentation mode the App considers active. The Viewer mirrors this into its internal mode-button highlight so user-mode replays — where the App switches presentation modes implicitly via section/view selection — keep the highlighted button in sync. Without this field, the Viewer's button highlight has no channel for App-driven mode changes (presentation snapshots flow through `input.presentation`, but they don't carry a mode key). Direct mode-button clicks update the Viewer's state optimistically and round-trip through `onActivePresentationModeChanged`; the App should reflect that callback back onto this field for the next render. Optional and backwards-compatible: if omitted, the Viewer manages its mode highlight internally and the user-mode replay sync just won't happen. Recommended pattern: track an App state variable, sync it from the active section/view's `capture.presentationMode` (e.g. via a `useEffect` on the resolved capture), and also update it from the `onActivePresentationModeChanged` callback.
 
 ### Admin
 
