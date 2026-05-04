@@ -560,9 +560,9 @@ export function DemoApp(props = {}) {
   const [adminEnabled, setAdminEnabled] = useState(false)
   const [activationNonce, setActivationNonce] = useState(0)
   const [selectedSectionId, setSelectedSectionId] = useState(SECTION_DEMO_ITEMS[0]?.id)
-  const [activeViewCameraMode, setActiveViewCameraMode] = useState(null)
+  const [activeViewMode, setActiveViewMode] = useState(null)
   const [lastPressedViewMode, setLastPressedViewMode] = useState(null)
-  const [spaceTileWalkCaptureMode, setSpaceTileWalkCaptureMode] = useState(null)
+  const [spaceTileWalkViewMode, setSpaceTileWalkViewMode] = useState(null)
   const [selectedOptions, setSelectedOptions] = useState(
     () => INITIAL_SAVED?.selectedOptions ?? { ...DEFAULT_SELECTED_OPTIONS }
   )
@@ -692,7 +692,7 @@ export function DemoApp(props = {}) {
     const wasAdmin = prevAdminEnabledRef.current
     prevAdminEnabledRef.current = adminEnabled
     if (wasAdmin && !adminEnabled && lastPressedViewMode) {
-      setActiveViewCameraMode(lastPressedViewMode)
+      setActiveViewMode(lastPressedViewMode)
       setActivationNonce((n) => n + 1)
     }
   }, [adminEnabled, lastPressedViewMode])
@@ -817,21 +817,21 @@ export function DemoApp(props = {}) {
     },
     onMaterialDefaultsCleared: () => setMaterialDefaultCapture(null),
     onViewCaptured: (payload) => {
-      setViewCaptures((prev) => ({ ...prev, [payload.cameraMode]: payload }))
+      setViewCaptures((prev) => ({ ...prev, [payload.viewMode]: payload }))
       triggerCaptureFlash()
     },
-    onViewCaptureCleared: (cameraMode) => {
-      setViewCaptures((prev) => ({ ...prev, [cameraMode]: null }))
+    onViewCaptureCleared: (viewMode) => {
+      setViewCaptures((prev) => ({ ...prev, [viewMode]: null }))
     },
-    onViewSelected: (cameraMode) => {
-      setLastPressedViewMode(cameraMode)
-      setSpaceTileWalkCaptureMode(null)
+    onViewSelected: (viewMode) => {
+      setLastPressedViewMode(viewMode)
+      setSpaceTileWalkViewMode(null)
       setActiveAuthoringFocus('view')
       if (!adminEnabledRef.current) {
-        // User mode: activate the view's camera so its capture replays, and
-        // bump syncKey to signal "selection changed" — the Viewer re-syncs
-        // camera, presentation, and mode-highlight from input on every bump.
-        setActiveViewCameraMode(cameraMode)
+        // User mode: activate the view so its capture replays, and bump
+        // syncKey to signal "selection changed" — the Viewer re-syncs camera,
+        // presentation, and mode-highlight from input on every bump.
+        setActiveViewMode(viewMode)
         setActivationNonce((n) => n + 1)
       }
       // Admin mode: skip the bump. View clicks in admin are Viewer-internal
@@ -840,8 +840,8 @@ export function DemoApp(props = {}) {
       // syncKey would re-fire the Viewer's input-driven re-sync paths with
       // stale section data and override the just-applied view state.
     },
-    onSpaceTileWalkActivated: (cameraMode) => {
-      setSpaceTileWalkCaptureMode(cameraMode)
+    onSpaceTileWalkActivated: (viewMode) => {
+      setSpaceTileWalkViewMode(viewMode)
     },
     onPresentationModeCaptured: (payload) => {
       setPresentationModeCaptures((prev) => ({ ...prev, [payload.mode]: payload.presentation }))
@@ -920,12 +920,12 @@ export function DemoApp(props = {}) {
 
   // Last-one-wins: view button press or section click determines what drives camera + presentation.
   // Floor nav activates presentation/visibility from a view capture without changing camera pose.
-  const cameraCapture = activeViewCameraMode
-    ? (viewCaptures[activeViewCameraMode] ?? null)
+  const cameraCapture = activeViewMode
+    ? (viewCaptures[activeViewMode] ?? null)
     : (sectionCaptures[selectedSectionId] ?? null)
 
-  const presentationCapture = spaceTileWalkCaptureMode
-    ? (viewCaptures[spaceTileWalkCaptureMode] ?? cameraCapture)
+  const presentationCapture = spaceTileWalkViewMode
+    ? (viewCaptures[spaceTileWalkViewMode] ?? cameraCapture)
     : cameraCapture
 
   // Captured presentation for the active section/view's mode. Undefined when
@@ -1016,7 +1016,12 @@ export function DemoApp(props = {}) {
     return {
       model: { modelUrl },
       camera: {
-        cameraMode: cameraCapture?.cameraMode,
+        // cameraCapture may be a section (has `cameraMode`) or a view (has
+        // `viewMode`). View `viewMode` values currently coincide 1:1 with
+        // cameraMode strings, so falling back resolves correctly. If viewMode
+        // ever extends beyond the cameraMode enum, view captures would gain
+        // an explicit cameraMode field and this fallback would update.
+        cameraMode: cameraCapture?.cameraMode ?? cameraCapture?.viewMode,
         pose: requestedCameraPose,
       },
       scene: {
@@ -1290,27 +1295,27 @@ export function DemoApp(props = {}) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {['exterior', 'interior', 'overhead'].map((mode, i, arr) => (
+          {['exterior', 'interior', 'overhead'].map((viewMode, i, arr) => (
             <CaptureTooltip
-              key={mode}
-              payload={viewCaptures[mode]}
+              key={viewMode}
+              payload={viewCaptures[viewMode]}
               position="below-right"
-              containerStyle={{ marginLeft: i > 0 ? -1 : 0, position: 'relative', zIndex: viewCaptures[mode] ? 1 : 0 }}
+              containerStyle={{ marginLeft: i > 0 ? -1 : 0, position: 'relative', zIndex: viewCaptures[viewMode] ? 1 : 0 }}
               enabled={adminEnabled}
             >
               <span
-                title={`${mode.charAt(0).toUpperCase()}${mode.slice(1)} view (cameraMode: ${mode}). Persistent indicator: blue = viewCaptures.${mode} is stored. Hover ~3s in Admin Mode for the payload. Press the matching button at the bottom to replay.`}
+                title={`${viewMode.charAt(0).toUpperCase()}${viewMode.slice(1)} view (viewMode: ${viewMode}). Persistent indicator: blue = viewCaptures.${viewMode} is stored. Hover ~3s in Admin Mode for the payload. Press the matching button at the bottom to replay.`}
                 style={{
                   ...secondaryBtn,
                   display: 'block',
-                  background: viewCaptures[mode] ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
+                  background: viewCaptures[viewMode] ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
                   borderRadius: i === 0 ? '7px 0 0 7px' : i === arr.length - 1 ? '0 7px 7px 0' : '0',
                   cursor: 'default',
                   userSelect: 'none',
                   textTransform: 'capitalize',
                 }}
               >
-                {mode}
+                {viewMode}
               </span>
             </CaptureTooltip>
           ))}
@@ -1373,9 +1378,9 @@ export function DemoApp(props = {}) {
                 <button
                   onClick={() => {
                     setSelectedSectionId(section.id)
-                    setActiveViewCameraMode(null)
+                    setActiveViewMode(null)
                     setLastPressedViewMode(null)
-                    setSpaceTileWalkCaptureMode(null)
+                    setSpaceTileWalkViewMode(null)
                     setActiveAuthoringFocus('section')
                     // Always bump — this is the App's "selection changed" signal so the
                     // Viewer clears any active view button highlight. The Viewer's

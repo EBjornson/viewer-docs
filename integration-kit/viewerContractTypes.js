@@ -15,10 +15,25 @@ export const VIEWER_PRESENTATION_MODES = Object.freeze([
   'winterNightInt',
 ])
 
+// Identifies a view-button slot. View captures are keyed by viewMode (not by
+// cameraMode — those are separate concepts). Today the values coincide with
+// the cameraMode enum, but viewMode is allowed to extend later (e.g. multiple
+// 'exterior' views via slots like 'frontExterior') without changing the
+// cameraMode enum or section captures.
+export const VIEWER_VIEW_MODES = Object.freeze([
+  'exterior',
+  'interior',
+  'overhead',
+])
+
 export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'])
 
 /**
  * @typedef {'exterior' | 'interior' | 'overhead'} ViewerCameraMode
+ */
+
+/**
+ * @typedef {'exterior' | 'interior' | 'overhead'} ViewerViewMode
  */
 
 /**
@@ -246,7 +261,7 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
 
 /**
  * @typedef {object} ViewerViewCapturePayload
- * @property {ViewerCameraMode} cameraMode
+ * @property {ViewerViewMode} viewMode
  * @property {ViewerCameraPose} pose
  * @property {ViewerPresentationMode} presentationMode
  * @property {ViewerSceneVisibilityAssignments} [visibilityAssignments]
@@ -273,9 +288,9 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * @property {(payload: ViewerMaterialDefaultsPayload) => void} [onMaterialDefaultsCaptured]
  * @property {() => void} [onMaterialDefaultsCleared]
  * @property {(payload: ViewerViewCapturePayload) => void} [onViewCaptured]
- * @property {(cameraMode: ViewerCameraMode) => void} [onViewCaptureCleared]
- * @property {(cameraMode: ViewerCameraMode) => void} [onViewSelected]
- * @property {(cameraMode: ViewerCameraMode) => void} [onSpaceTileWalkActivated]
+ * @property {(viewMode: ViewerViewMode) => void} [onViewCaptureCleared]
+ * @property {(viewMode: ViewerViewMode) => void} [onViewSelected]
+ * @property {(viewMode: ViewerViewMode) => void} [onSpaceTileWalkActivated]
  * @property {(payload: ViewerPresentationModeCapturePayload) => void} [onPresentationModeCaptured]
  * @property {(mode: ViewerPresentationMode) => void} [onPresentationModeCaptureCleared]
  * @property {(mode: ViewerPresentationMode) => void} [onActivePresentationModeChanged]

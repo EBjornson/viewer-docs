@@ -323,9 +323,9 @@ type ViewerOutput = {
   onMaterialDefaultsCaptured?: (payload: ViewerMaterialDefaultsPayload) => void
   onMaterialDefaultsCleared?: () => void
   onViewCaptured?: (payload: ViewerViewCapturePayload) => void
-  onViewCaptureCleared?: (cameraMode: ViewerCameraMode) => void
-  onViewSelected?: (cameraMode: ViewerCameraMode) => void
-  onSpaceTileWalkActivated?: (cameraMode: ViewerCameraMode) => void
+  onViewCaptureCleared?: (viewMode: ViewerViewMode) => void
+  onViewSelected?: (viewMode: ViewerViewMode) => void
+  onSpaceTileWalkActivated?: (viewMode: ViewerViewMode) => void
   onPresentationModeCaptured?: (payload: ViewerPresentationModeCapturePayload) => void
   onPresentationModeCaptureCleared?: (mode: ViewerPresentationMode) => void
   onActivePresentationModeChanged?: (mode: ViewerPresentationMode) => void
@@ -353,7 +353,7 @@ type ViewerSectionCapturePayload = {
 }
 
 type ViewerViewCapturePayload = {
-  cameraMode: ViewerCameraMode
+  viewMode: ViewerViewMode
   pose: ViewerCameraPose
   presentationMode: ViewerPresentationMode
   visibilityAssignments?: ViewerSceneVisibilityAssignments
@@ -419,14 +419,15 @@ Section and view capture payloads carry a `presentationMode` name rather than in
 
 Field-by-field replay mapping for section/view activation:
 - `pose` → `input.camera.pose`
-- `cameraMode` → `input.camera.cameraMode`
+- Section's `cameraMode` → `input.camera.cameraMode`
+- View's `viewMode` → `input.camera.cameraMode` (viewMode values currently coincide 1:1 with the cameraMode enum; if viewMode ever extends beyond the cameraMode enum, view captures would gain an explicit `cameraMode` field then)
 - `presentationMode` → resolved via `presentationModeCaptures[capture.presentationMode]` → `input.presentation`
 - `visibilityAssignments` → `input.scene.visibilityAssignments`
 - `materialAssignments` → `input.scene.materialAssignments`
 - `defaultMaterialAssignments` → `input.scene.defaultMaterialAssignments`
 - `ui` → `input.presentation.ui` (UI visibility flags from the capture take precedence over the stored presentation mode snapshot's flags; the App should prefer `capture.ui` over `presentationModeCaptures[mode].ui`)
 
-Section captures and view captures use identical payload shapes. The App replays both through the same `viewerInput` fields — the only difference is what triggers the replay (section tab click vs. `onViewSelected` callback).
+Section captures and view captures share the same payload shape except for the identity field — sections store `cameraMode`, views store `viewMode`. The App replays both through the same `viewerInput` fields; the only differences are what triggers the replay (section tab click vs. `onViewSelected` callback) and which payload field carries the cameraMode-equivalent.
 
 ### ViewerGeometryPickedEvent
 
@@ -499,14 +500,14 @@ The Viewer fires a `ViewerOutput` callback for each authoring action. The App st
 4. `Clear Option Capture` → `onOptionCaptureCleared()` — App clears the option capture.
 5. `Capture Material Defaults` → `onMaterialDefaultsCaptured(payload)` — model-level material baseline. Passed to Viewer via `scene.defaultMaterialAssignments` on every load.
 6. `Clear Material Defaults` → `onMaterialDefaultsCleared()` — App clears the baseline.
-7. `View Capture` → `onViewCaptured(payload)` — cameraMode + pose + presentationMode + visibilityAssignments. App stores keyed by camera mode. When `onViewSelected` fires **in User Mode**, App resolves the capture's `presentationMode` via `presentationModeCaptures` and replays through `viewerInput` (same path as section replay). **In Admin Mode**, `onViewSelected` is also fired but the App must not trigger camera or presentation replay — the Viewer handles navigation internally. The callback's only purpose in Admin Mode is to allow the App to clear section tab highlighting.
-8. `Clear View Capture` → `onViewCaptureCleared(cameraMode: ViewerCameraMode)` — App removes the entry for that camera mode from its stored set.
+7. `View Capture` → `onViewCaptured(payload)` — viewMode + pose + presentationMode + visibilityAssignments. App stores keyed by viewMode. When `onViewSelected` fires **in User Mode**, App resolves the capture's `presentationMode` via `presentationModeCaptures` and replays through `viewerInput` (same path as section replay). **In Admin Mode**, `onViewSelected` is also fired but the App must not trigger camera or presentation replay — the Viewer handles navigation internally. The callback's only purpose in Admin Mode is to allow the App to clear section tab highlighting.
+8. `Clear View Capture` → `onViewCaptureCleared(viewMode: ViewerViewMode)` — App removes the entry for that view from its stored set.
 9. `Presentation Mode Capture` → `onPresentationModeCaptured(payload)` — mode + full `ViewerPresentationInput` snapshot. App stores keyed by mode. Referenced by section/view captures at replay time.
 10. `Clear Presentation Mode Capture` → `onPresentationModeCaptureCleared(mode)` — App removes the stored entry for that mode from its `presentationModeCaptures`.
 
 `Clear Recent Material Changes` is a viewer-local authoring reset tool, not an App-facing command.
 
-**Clear buttons always fire.** `Clear Material Defaults` (fires `onMaterialDefaultsCleared`), `Clear View Capture` (fires `onViewCaptureCleared(cameraMode)`), and `Clear Presentation Mode Capture` (fires `onPresentationModeCaptureCleared(mode)`) always fire their callbacks even when the Viewer has no locally-cached capture value for the current session. This is intentional: the App may hold a stored capture from a previous session that the Viewer has no knowledge of. Firing the clear callback unconditionally lets the App remove that persisted value.
+**Clear buttons always fire.** `Clear Material Defaults` (fires `onMaterialDefaultsCleared`), `Clear View Capture` (fires `onViewCaptureCleared(viewMode)`), and `Clear Presentation Mode Capture` (fires `onPresentationModeCaptureCleared(mode)`) always fire their callbacks even when the Viewer has no locally-cached capture value for the current session. This is intentional: the App may hold a stored capture from a previous session that the Viewer has no knowledge of. Firing the clear callback unconditionally lets the App remove that persisted value.
 
 ### Batch Image Capture
 

@@ -25,7 +25,7 @@ The Viewer never persists state on behalf of the App. Every capture produces a s
 | Capture type | What it owns | Viewer callback | Replay path |
 |---|---|---|---|
 | **Section** | pose + cameraMode + presentationMode + visibility + ui flags | `onSectionCaptured` | App resolves `presentationModeCaptures[capture.presentationMode]` → `input.presentation`; writes `input.camera` + `input.scene.visibilityAssignments`; `capture.ui` takes precedence over the mode snapshot's ui flags |
-| **View** | pose + cameraMode + presentationMode + visibility + ui flags (per view slot) | `onViewCaptured` | App resolves mode → presentation and writes same fields when `onViewSelected` fires; `capture.ui` takes precedence over the mode snapshot's ui flags |
+| **View** | pose + viewMode + presentationMode + visibility + ui flags (per view slot) | `onViewCaptured` | App resolves mode → presentation and writes same fields when `onViewSelected` fires; `capture.ui` takes precedence over the mode snapshot's ui flags |
 | **Presentation Mode** | full presentation snapshot (per named mode) | `onPresentationModeCaptured` | App stores keyed by mode name; Viewer applies at mode switch; App resolves at section/view replay time |
 | **Option** | geometryIds + materialAssignments (per option) | `onOptionCaptured` | App writes `input.scene.materialAssignments` when that option is active |
 | **Material Defaults** | model-level baseline materialAssignments | `onMaterialDefaultsCaptured` | App writes `input.scene.defaultMaterialAssignments` on every model load |
@@ -163,19 +163,21 @@ Payload shape:
 
 ```ts
 {
-  cameraMode: 'interior',
+  viewMode: 'interior',
   pose: { position, target },
   presentationMode: 'nightInt',
   visibilityAssignments: { hiddenGeometryIds: [] },
 }
 ```
 
+`viewMode` identifies the view slot. Today the values coincide with the cameraMode enum (`'exterior' | 'interior' | 'overhead'`), so a view's viewMode doubles as its replay cameraMode. They're separate concepts though — viewMode is allowed to extend later (e.g. multiple `'exterior'`-camera views via slots like `'frontExterior'`) without changing the cameraMode enum or section captures.
+
 ### App storage
 
 The App stores the payload keyed by the view slot:
 
 ```ts
-viewCaptures[payload.cameraMode] = payload
+viewCaptures[payload.viewMode] = payload
 ```
 
 ### Replay — onViewSelected
@@ -183,10 +185,10 @@ viewCaptures[payload.cameraMode] = payload
 When the user presses a View button, the Viewer fires:
 
 ```ts
-onViewSelected(cameraMode: ViewerCameraMode)
+onViewSelected(viewMode: ViewerViewMode)
 ```
 
-The App looks up its stored view capture for that slot and rebuilds `viewerInput` exactly as it would for a section capture — full pose + cameraMode + presentation + visibility. There is no separate passback mechanism; the App drives the replay directly through `viewerInput`.
+The App looks up its stored view capture for that slot and rebuilds `viewerInput` exactly as it would for a section capture — full pose + presentation + visibility. The replay cameraMode is derived from `capture.viewMode` (1:1 with the cameraMode enum today). There is no separate passback mechanism; the App drives the replay directly through `viewerInput`.
 
 If no capture exists for the pressed slot, the App does not update `viewerInput` — nothing changes.
 
@@ -194,7 +196,7 @@ In **Admin Mode**, pressing a View button navigates the Viewer's camera internal
 
 ### Clearing
 
-Clicking **Clear View Capture** fires `onViewCaptureCleared(cameraMode)`. The App removes that entry from its stored captures.
+Clicking **Clear View Capture** fires `onViewCaptureCleared(viewMode)`. The App removes that entry from its stored captures.
 
 ---
 
@@ -394,14 +396,14 @@ When the user is in **overhead view** and clicks a space tile:
 2. The Viewer fires:
 
 ```ts
-onSpaceTileWalkActivated(cameraMode: 'interior')
+onSpaceTileWalkActivated(viewMode: 'interior')
 ```
 
 The App responds by applying **only the presentation and visibility** from the stored interior view capture — it does **not** set a new camera pose, since the Viewer is already navigating via pathNav.
 
 ```ts
-onSpaceTileWalkActivated: (cameraMode) => {
-  // update presentation + visibility from viewCaptures[cameraMode]
+onSpaceTileWalkActivated: (viewMode) => {
+  // update presentation + visibility from viewCaptures[viewMode]
   // do NOT change requestedCameraPose
 }
 ```
@@ -433,7 +435,7 @@ View button highlights in the Views Panel track which button was **last pressed*
 - Pressing a View button → that button highlights
 - Activating a section → all View button highlights clear
 
-This means: replaying a section capture that happens to use `cameraMode: 'exterior'` does not highlight the Exterior view button. The camera mode is an orbit behavior setting; the view button state is a user interaction state. They are independent.
+This means: replaying a section capture that happens to use `cameraMode: 'exterior'` does not highlight the Exterior view button. The cameraMode (on a section) is an orbit behavior setting; the viewMode (the view button slot) is a user interaction state. They are independent — and even if a section's cameraMode value matches a viewMode slot value, that's a string-match coincidence, not a relationship.
 
 ---
 
@@ -472,8 +474,9 @@ Section capture          → stores pose + cameraMode + presentationMode + visib
                            App resolves presentationModeCaptures[capture.presentationMode] at replay time
                            Replays via input.camera + input.presentation + input.scene
 
-View capture             → stores pose + cameraMode + presentationMode + visibility for a named slot
+View capture             → stores pose + viewMode + presentationMode + visibility for a named slot
                            App resolves mode → presentation and replays via same path when onViewSelected fires
+                           The replay cameraMode is derived from capture.viewMode (1:1 with the cameraMode enum today)
 
 Presentation mode capture → stores full ViewerPresentationInput snapshot per named mode
                            App stores keyed by mode name; Viewer applies at mode switch;
