@@ -399,7 +399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
         
   
   
@@ -714,10 +714,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-authoring-panel-is-context-aware" class="md-nav__link">
+  <a href="#the-authoring-panel-uses-internal-tabs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Authoring Panel is context-aware
+        The Authoring Panel uses internal tabs
       
     </span>
   </a>
@@ -764,10 +764,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-views" class="md-nav__link">
+  <a href="#2-view-navigation-admin-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Views
+        2. View navigation (admin-only)
       
     </span>
   </a>
@@ -835,30 +835,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#view-workflow" class="md-nav__link">
+  <a href="#overhead-floor-tile-click-navigation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        View Workflow
+        Overhead floor-tile click navigation
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="View Workflow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#overhead-space-tile-click-spacetileclicknav" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overhead space-tile click (SpaceTileClickNav)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1525,10 +1508,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-authoring-panel-is-context-aware" class="md-nav__link">
+  <a href="#the-authoring-panel-uses-internal-tabs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Authoring Panel is context-aware
+        The Authoring Panel uses internal tabs
       
     </span>
   </a>
@@ -1575,10 +1558,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-views" class="md-nav__link">
+  <a href="#2-view-navigation-admin-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Views
+        2. View navigation (admin-only)
       
     </span>
   </a>
@@ -1646,30 +1629,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#view-workflow" class="md-nav__link">
+  <a href="#overhead-floor-tile-click-navigation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        View Workflow
+        Overhead floor-tile click navigation
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="View Workflow">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#overhead-space-tile-click-spacetileclicknav" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overhead space-tile click (SpaceTileClickNav)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2130,45 +2096,41 @@
 <hr />
 <h2 id="admin-mode">Admin Mode<a class="headerlink" href="#admin-mode" title="Permanent link">&para;</a></h2>
 <p>Click <strong>Admin Mode</strong> in the header to enter authoring. The button highlights when active. The <strong>Authoring Panel</strong> appears as a left-side overlay containing all capture and clear actions. Click it again to leave authoring and return to the clean customer-facing view.</p>
-<p>The bottom <strong>Navigation Panel</strong> (View buttons + Summer / Winter presentation mode buttons) renders the same in admin and user modes — it is for navigation only.</p>
-<h3 id="the-authoring-panel-is-context-aware">The Authoring Panel is context-aware<a class="headerlink" href="#the-authoring-panel-is-context-aware" title="Permanent link">&para;</a></h3>
-<p>The panel adapts to whatever you most recently clicked. You don't need to switch tabs.</p>
+<p>The bottom <strong>Navigation Panel</strong> (View buttons + Summer / Winter pMode buttons) is <strong>admin-only</strong> — it disappears in user mode. Both rows are pure authoring conveniences: View buttons navigate the camera to default Exterior / Interior / Overhead poses; pMode buttons apply the Viewer's built-in lighting defaults. Neither row affects App-stored state.</p>
+<h3 id="the-authoring-panel-uses-internal-tabs">The Authoring Panel uses internal tabs<a class="headerlink" href="#the-authoring-panel-uses-internal-tabs" title="Permanent link">&para;</a></h3>
+<p>The panel has three context tabs at the top — <strong>Section / Option / pMode</strong> — that you click to choose what you're authoring. Each tab shows exactly the controls relevant to its capture family.</p>
 <table>
 <thead>
 <tr>
-<th>Last click</th>
+<th>Tab</th>
 <th>Panel surfaces</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Section tab</strong></td>
+<td><strong>Section</strong></td>
 <td>Section Capture/Clear, geometry tools, User Visibility toggles, Camera Mode selector</td>
 </tr>
 <tr>
-<td><strong>Option button</strong></td>
+<td><strong>Option</strong></td>
 <td>Option Capture / Capture Material Only / Clear, Material Defaults, geometry tools, Assembly Inspector, Materials picker</td>
 </tr>
 <tr>
-<td><strong>View button</strong> (Exterior / Interior / Overhead)</td>
-<td>View Capture/Clear, geometry tools, User Visibility toggles, Camera Mode selector</td>
-</tr>
-<tr>
-<td><strong>Presentation Mode button</strong> (Summer Day, Winter Night, etc.)</td>
-<td>Mode Capture/Clear, User Visibility toggles, Presentation sliders, HDR Environment, Terrain Preset</td>
+<td><strong>pMode</strong></td>
+<td>Mode Capture/Clear, Presentation sliders, HDR Environment, Terrain Preset, Light Source mode</td>
 </tr>
 </tbody>
 </table>
-<p>Each focus shows exactly the controls that belong to its capture. For example, a presentation mode capture stores the full visual environment (HDR, terrain, lighting, solar) so its panel exposes those sliders. A section capture stores a <em>reference</em> to a presentation mode rather than the raw values, so its panel exposes camera and visibility controls but not the lighting sliders.</p>
+<p>A section capture stores the <strong>full presentation snapshot embedded</strong> in v1.8 (no longer a reference-by-name), but the section tab still exposes camera/visibility controls only — adjust lighting via the pMode tab and capture it there separately, or by using the App-rendered pMode pills in the DemoApp header (admin-mode only) to load App-stored snapshots as starting points.</p>
 <h3 id="capture-clear-pattern">Capture / clear pattern<a class="headerlink" href="#capture-clear-pattern" title="Permanent link">&para;</a></h3>
-<p>All five capture families share the same shape — a Capture / Clear button pair at the top of the focus context, styled consistently:</p>
+<p>The capture families share a Capture / Clear button pair at the top of each tab:</p>
 <ul>
-<li><strong>Section focus</strong> → Section Capture / Section Clear</li>
-<li><strong>View focus</strong> → View Capture / View Clear</li>
-<li><strong>Presentation Mode focus</strong> → Mode Capture / Mode Clear</li>
-<li><strong>Option focus</strong> → Option Capture / Option Clear (plus the Capture Material Only variant)</li>
-<li><strong>Model defaults</strong> (always available in option focus) → Capture Material Defaults / Clear Material Defaults</li>
+<li><strong>Section tab</strong> → Section Capture / Section Clear</li>
+<li><strong>pMode tab</strong> → Mode Capture / Mode Clear</li>
+<li><strong>Option tab</strong> → Option Capture / Option Clear (plus the Capture Material Only variant)</li>
+<li><strong>Material Defaults</strong> (always available in option tab) → Capture Material Defaults / Clear Material Defaults</li>
 </ul>
+<p>Note: there is <strong>no separate View capture family</strong> in v1.8. A "view-like" stored moment is an optionless Section — the App may have Sections with associated options or with no options. Authoring a "view" is the same workflow as authoring any other Section.</p>
 <hr />
 <h2 id="what-you-are-authoring">What You Are Authoring<a class="headerlink" href="#what-you-are-authoring" title="Permanent link">&para;</a></h2>
 <p>There are five kinds of authored state. The <strong>recommended order</strong> (next section) walks through them in the sequence that flows most smoothly — but they are largely independent and can be revisited in any order.</p>
@@ -2180,11 +2142,11 @@
 </ul>
 <p>Sections and views <em>reference</em> a presentation mode by name. Capturing a mode once means every section that uses Summer Day always renders with the same sky and lighting.</p>
 <p>The Summer and Winter rows can each be hidden from users via the User Visibility toggles. Use this when a product does not need a winter presentation.</p>
-<h3 id="2-views">2. Views<a class="headerlink" href="#2-views" title="Permanent link">&para;</a></h3>
-<p>A view capture stores a camera pose, a presentation mode reference, geometry visibility, and User Visibility flags under one of three named slots: <strong>Exterior</strong>, <strong>Interior</strong>, <strong>Overhead</strong>. Pressing a View button replays the capture.</p>
-<p>Views give you reusable basepoints. They are especially useful as starting positions when authoring sections — you can return to a known good Exterior pose and then frame each section's hero shot from there.</p>
+<h3 id="2-view-navigation-admin-only">2. View navigation (admin-only)<a class="headerlink" href="#2-view-navigation-admin-only" title="Permanent link">&para;</a></h3>
+<p>The bottom Navigation Panel's View buttons (Exterior / Interior / Overhead) are admin-only authoring conveniences. They navigate the camera to the Viewer's default pose for each camera mode — useful as a starting point when framing a section's hero shot. They do not store any state and do not fire callbacks. Future enhancement: per-session capture/clear of view button defaults (deferred).</p>
+<p>A "view-like" persistent stored moment in v1.8 is just an optionless Section. Author it via the Section workflow below.</p>
 <h3 id="3-section-captures">3. Section captures<a class="headerlink" href="#3-section-captures" title="Permanent link">&para;</a></h3>
-<p>A section capture stores a camera pose, a presentation mode reference, geometry visibility, User Visibility flags, and the camera mode for one product section (Roof, Flooring, Solar Package, etc.).</p>
+<p>A section capture stores a camera pose, the camera mode, the <strong>embedded presentation snapshot</strong> (full lighting/HDR/terrain/solar/UI flags), and geometry visibility for one product section (Roof, Flooring, Solar Package, etc.). DemoApp also attaches the active pMode key as App-side metadata at receipt for optional re-skin support.</p>
 <p>Activating a section in user mode replays the capture: the camera animates to the pose, the presentation switches to the referenced mode, and the geometry visibility updates.</p>
 <h3 id="4-option-captures">4. Option captures<a class="headerlink" href="#4-option-captures" title="Permanent link">&para;</a></h3>
 <p>An option capture stores two kinds of intent for a chosen option within a section:</p>
@@ -2202,8 +2164,7 @@
 <p>Use this order when authoring a new model. Each step builds on the previous in a way that minimizes back-and-forth.</p>
 <ol>
 <li><strong>Capture at least one Presentation Mode.</strong> Start with Summer Day — adjust HDR, terrain, exposure, sun, and ambient light until the daytime exterior looks right, then click <strong>Mode Capture</strong> with Summer Day active. You can return to capture additional modes (Summer Night, Winter Day, etc.) later.</li>
-<li><strong>Capture the three Views</strong> (Exterior, Interior, Overhead). For each one: navigate to the position you want, set the matching Camera Mode in the panel, choose the Presentation Mode you want for that view, set the User Visibility toggles for that view, and click <strong>View Capture</strong>. Views give you reliable basepoints to return to before each section capture.</li>
-<li><strong>Capture Sections.</strong> For each section: click the section tab, navigate (often by pressing a View button first to land at a basepoint, then adjusting), confirm the Presentation Mode is what you want for the section, set User Visibility for the section, hide any presentation-context geometry (e.g. roof for an overhead view), and click <strong>Section Capture</strong>.</li>
+<li><strong>Capture Sections.</strong> Section captures are the primary "stored moments" in v1.8 — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View buttons in the Navigation Panel as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click <strong>Section Capture</strong>. Optionless sections (Sections without associated options) serve as what v1.7 called Views — author them the same way.</li>
 <li><strong>Capture Option geometry membership.</strong> Per section, per option: click the option, select the parts of the model that belong to that option, and click <strong>Option Capture</strong>.</li>
 <li><strong>Capture Option material assignments.</strong> Per option that needs custom materials: click the option, select the geometry, edit the material (color, roughness, metalness, or apply a library texture), and click <strong>Option Capture</strong>. If the geometry is already owned for show/hide by a different section, use <strong>Capture Material Only</strong> (see <a href="#cross-section-ownership">Cross-section ownership</a> below).</li>
 <li><strong>Capture Model Defaults — anytime, optionally.</strong> Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. Some authors prefer to do this immediately after Views; others leave it to the end. There is no wrong time.</li>
@@ -2221,30 +2182,16 @@
 <p>To remove a stored mode, click <strong>Mode Clear</strong>.</p>
 <p><strong>Winter mode defaults.</strong> When you switch to a winter mode that has no capture yet, the HDR environment is automatically set to <em>Horn Koppe Snow</em> and the terrain preset to <em>Snow</em>. All other settings stay where they are. This gives a sensible winter starting point. Summer modes have no equivalent default — switching to an uncaptured summer mode leaves all settings as-is.</p>
 <hr />
-<h2 id="view-workflow">View Workflow<a class="headerlink" href="#view-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Click the view button (Exterior, Interior, or Overhead). The panel switches to view-authoring controls.</li>
-<li>Position the camera. Orbit, pan, zoom freely.</li>
-<li>Set the <strong>Camera Mode</strong> in the panel (Ext / Int / Ovh) to match the view you are capturing. <strong>This is purely declarative</strong> — clicking Camera Mode does not move the camera. It only tags which mode the capture stores. Set it to label the pose correctly before capturing.</li>
-<li>Choose the Presentation Mode you want for this view (e.g. Summer Day for Exterior, Summer Night Interior for Interior).</li>
-<li>Set User Visibility toggles for what users should see when in this view (e.g. hide the Solar panel for interior views, hide the Rooms panel for exterior views).</li>
-<li>Click <strong>View Capture</strong>.</li>
-</ol>
-<p>To remove a stored view, click <strong>View Clear</strong>.</p>
-<h3 id="overhead-space-tile-click-spacetileclicknav">Overhead space-tile click (<code>SpaceTileClickNav</code>)<a class="headerlink" href="#overhead-space-tile-click-spacetileclicknav" title="Permanent link">&para;</a></h3>
-<p>When in Overhead view, clicking a space tile navigates the camera into that interior space and <strong>also applies the Interior view capture</strong> — including its presentation and geometry visibility. This means the user lands inside with the correct interior lighting already applied, instead of arriving with overhead lighting still active.</p>
-<p>The Interior view capture is the shared source of truth for both the Interior button press and overhead space-tile clicks. Authoring once covers both.</p>
-<p>If no Interior view capture has been authored, the click still navigates the camera but leaves the lighting unchanged.</p>
-<blockquote>
-<p><em>Engineering details (callback wiring, Admin vs User behavior):</em> see <a href="../capture_and_replay/#overhead-space-tile-click-spacetileclicknav">Capture &amp; Replay → Overhead Space-Tile Click</a>.</p>
-</blockquote>
+<h2 id="overhead-floor-tile-click-navigation">Overhead floor-tile click navigation<a class="headerlink" href="#overhead-floor-tile-click-navigation" title="Permanent link">&para;</a></h2>
+<p>When the user is in an Overhead-mode section and clicks a floor tile (a recognized <code>_RM</code> room marker face), the Viewer navigates the camera into that interior space via pathNav. <strong>No callback fires</strong> in v1.8 — the camera movement is purely Viewer-internal. The active section's presentation and visibility persist throughout the navigation.</p>
+<p>Authoring guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position. If you want lighting to change on floor-tile-click navigation, the App-side option is to designate a separate "interior" optionless Section and have the App switch to it on this gesture (see the <a href="../capture_and_replay/#overhead-floor-tile-click">Capture &amp; Replay</a> doc for the App-side pattern).</p>
 <hr />
 <h2 id="section-workflow">Section Workflow<a class="headerlink" href="#section-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-activate-the-section">Step 1 — activate the section<a class="headerlink" href="#step-1-activate-the-section" title="Permanent link">&para;</a></h3>
 <p>Click the section tab to make it active.</p>
 <p>If the section already has a captured preset, activating it replays that preset. If it does not, activating it leaves the current presentation alone.</p>
 <h3 id="step-2-adjust-the-view">Step 2 — adjust the view<a class="headerlink" href="#step-2-adjust-the-view" title="Permanent link">&para;</a></h3>
-<p>A common starting move is to press a View button (often Exterior or Overhead) to land at a known basepoint, then orbit / pan / zoom to the section's hero angle.</p>
+<p>A common starting move is to press a View button in the admin-only Navigation Panel (often Exterior or Overhead) to land at a default pose, then orbit / pan / zoom to the section's hero angle. Optionally click a pMode pill in the DemoApp header to load the App-stored pMode snapshot as the lighting starting point.</p>
 <p>Adjust as needed:</p>
 <ul>
 <li>camera pose</li>
@@ -2344,28 +2291,25 @@
 <p>If an older saved model has cross-section conflicts from before the rules were enforced, an amber banner surfaces them on load. The banner lists show/hide and material conflicts in separate groups so each kind can be addressed independently.</p>
 <hr />
 <h2 id="user-visibility-toggles">User Visibility toggles<a class="headerlink" href="#user-visibility-toggles" title="Permanent link">&para;</a></h2>
-<p>The User Visibility section in the Authoring Panel controls which UI panels users see in non-admin mode. There are six toggles:</p>
+<p>The User Visibility section in the Section tab of the Authoring Panel controls which user-facing UI panels are visible in non-admin mode. <strong>Three toggles</strong> in v1.8 (down from six in v1.7 — the View row and Summer/Winter pMode rows are admin-only in v1.8 and don't need user-visibility controls):</p>
 <ul>
 <li><strong>Solar</strong> — Solar / Site panel</li>
-<li><strong>Views</strong> — Views row (Exterior / Interior / Overhead buttons)</li>
-<li><strong>Summer</strong> — Summer presentation mode row</li>
-<li><strong>Winter</strong> — Winter presentation mode row</li>
 <li><strong>Rooms</strong> — SpaceMenu / Rooms panel (scrollable list of navigable rooms)</li>
 <li><strong>North</strong> — North Arrow overlay</li>
 </ul>
-<p>In Admin Mode, all six panels are always visible regardless of toggle state — so you can always author them. When a panel is toggled off (hidden from users), it shows a <strong>dashed orange outline</strong> in admin so you can tell it is hidden without losing readability. The North Arrow has no orange outline indicator; it shows or hides as-is in both modes.</p>
-<p>User Visibility toggles are part of the section / view / presentation mode capture payload. Each capture independently controls which panels are visible when it is active — you can hide the Solar panel for interior views and show it for exterior views.</p>
+<p>In Admin Mode, the Solar and Rooms panels are always visible regardless of toggle state — so you can always author them. When a panel is toggled off (hidden from users), it shows a <strong>dashed orange outline</strong> in admin so you can tell it is hidden without losing readability. The North Arrow has no orange outline indicator; it shows or hides as-is in both modes.</p>
+<p>User Visibility toggles are part of the section's embedded presentation snapshot. Each section capture independently controls which panels are visible when it is active — you can hide the Solar panel for interior sections and show it for exterior sections.</p>
 <hr />
 <h2 id="rooms-panel-spacemenu">Rooms panel (SpaceMenu)<a class="headerlink" href="#rooms-panel-spacemenu" title="Permanent link">&para;</a></h2>
 <p>The Rooms panel — implemented by the internal <code>SpaceMenu</code> component — is a scrollable list of navigable rooms displayed in the right column of the viewer, below the Solar panel. Each room is clickable to navigate to that location. In Admin Mode the panel is always visible; the <strong>Rooms</strong> User Visibility toggle controls whether users see it.</p>
 <p>Two things to know about Rooms panel navigation:</p>
 <ul>
 <li>Clicking a room in the Rooms panel <strong>only navigates the camera</strong>. It does not change lighting, environment, exposure, materials, or geometry visibility.</li>
-<li>The exception is the overhead space-tile click (<code>SpaceTileClickNav</code>). See <a href="#overhead-space-tile-click-spacetileclicknav">Overhead space-tile click</a> above.</li>
+<li>Clicking on a floor tile from an overhead-mode section also navigates the camera into that interior space (Viewer-internal pathNav, no callback). Active section's presentation/visibility persists. See <a href="#overhead-floor-tile-click-navigation">Overhead floor-tile click</a> above.</li>
 </ul>
 <hr />
 <h2 id="floor-nav-debug-tool">Floor Nav debug tool<a class="headerlink" href="#floor-nav-debug-tool" title="Permanent link">&para;</a></h2>
-<p>A <strong>Floor Nav</strong> button appears in the Views Panel in Admin Mode. Toggling it on overlays a debug visualization showing:</p>
+<p>A <strong>Floor Nav</strong> button appears in the Admin Debug Panel. Toggling it on overlays a debug visualization showing:</p>
 <ul>
 <li>green rectangles on each room's floor indicating the walkable landing zone (inset by the wall margin)</li>
 <li>a green disc and ring at the clamped landing point when hovering a floor zone</li>
@@ -2379,7 +2323,7 @@
 <ol>
 <li>Activate each section and confirm the camera, lighting, and visibility match what you captured.</li>
 <li>Click between options inside a section and confirm geometry and materials change correctly.</li>
-<li>Press each View button and confirm it replays the captured pose.</li>
+<li>Press each View button (admin Navigation Panel) and confirm it navigates to the default pose for that camera mode.</li>
 <li>Switch presentation modes and confirm each mode renders the captured environment.</li>
 <li>Reload the page and confirm everything still works (persistence is browser-local — see below).</li>
 </ol>
@@ -2389,7 +2333,7 @@
 <p>Authored work is saved automatically to your browser's local storage, keyed by model. Reload the page and your captures come back — for the built-in demo models.</p>
 <p>What persists:</p>
 <ul>
-<li>Section captures, view captures, presentation mode captures, option captures, model defaults.</li>
+<li>Section captures, presentation mode captures (App-side), option captures, model defaults.</li>
 <li>Section/option label renames.</li>
 </ul>
 <p>What does <strong>not</strong> persist:</p>
@@ -2397,7 +2341,7 @@
 <li>Work on uploaded ad-hoc <code>.glb</code> files. Reloading clears them.</li>
 </ul>
 <h3 id="reset-model">Reset Model<a class="headerlink" href="#reset-model" title="Permanent link">&para;</a></h3>
-<p>The <strong>Reset Model</strong> button in the header clears all captures for the current model in one action — section captures, view captures, presentation mode captures, option captures, and model defaults. It asks you to confirm before clearing.</p>
+<p>The <strong>Reset Model</strong> button in the header clears all captures for the current model in one action — section captures, presentation mode captures, option captures, and model defaults. It asks you to confirm before clearing.</p>
 <h3 id="capture-indicators-in-the-overlay-vs-the-header">Capture indicators in the overlay vs. the header<a class="headerlink" href="#capture-indicators-in-the-overlay-vs-the-header" title="Permanent link">&para;</a></h3>
 <p>Two sets of capture indicators exist:</p>
 <ul>
@@ -2405,7 +2349,7 @@
 <li><strong>Authoring overlay indicators</strong> (the highlighted state on individual capture buttons). These reflect the current session only. They reset on page reload because the system has no way to distinguish "this is a freshly captured value" from "this value was just loaded from storage." Use the header indicators for capture status.</li>
 </ul>
 <h3 id="clear-buttons-are-always-enabled">Clear buttons are always enabled<a class="headerlink" href="#clear-buttons-are-always-enabled" title="Permanent link">&para;</a></h3>
-<p><strong>Clear Material Defaults</strong>, <strong>Clear View Capture</strong>, and <strong>Clear Mode Capture</strong> are always clickable, even when the overlay shows no captured value for the current session. This is intentional — your saved state may hold a capture from a previous session that the overlay doesn't know about. Clicking the clear button always removes any persisted value.</p>
+<p><strong>Clear Material Defaults</strong>, <strong>Section Clear</strong>, and <strong>Mode Clear</strong> are always clickable, even when the overlay shows no captured value for the current session. This is intentional — your saved state may hold a capture from a previous session that the overlay doesn't know about. Clicking the clear button always removes any persisted value.</p>
 <hr />
 <h2 id="renaming-sections-and-options">Renaming sections and options<a class="headerlink" href="#renaming-sections-and-options" title="Permanent link">&para;</a></h2>
 <p>Section and option labels are renameable. Click <strong>Rename</strong> beside any section or option in Admin Mode to give it a meaningful name. Label changes are display-only — they do not affect any captured data.</p>
@@ -2420,8 +2364,7 @@
 <hr />
 <h2 id="short-summary">Short summary<a class="headerlink" href="#short-summary" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Sections own presentation</strong> — pose, presentation mode reference, visibility, User Visibility flags</li>
-<li><strong>Views own reusable basepoints</strong> — pose, presentation mode reference, visibility, User Visibility flags, per camera mode slot</li>
+<li><strong>Sections own presentation</strong> — pose, cameraMode, embedded presentation snapshot, visibility. Sections may have associated options or no options (an optionless Section serves as what v1.7 called a View).</li>
 <li><strong>Presentation modes own the full visual environment</strong> — HDR, terrain, lighting, solar, point lights, exposure</li>
 <li><strong>Options own configuration effects</strong> — geometry membership and material assignments per option</li>
 <li><strong>Model defaults own the baseline appearance</strong> — material assignments applied before any option assignments</li>

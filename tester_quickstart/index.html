@@ -399,7 +399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
         
   
   
@@ -1337,7 +1337,7 @@
 <ul>
 <li>Click a <strong>Section tab</strong> → the overlay shows section capture tools (camera, lighting, geometry visibility for that section)</li>
 <li>Click an <strong>Option button</strong> → the overlay shows option capture tools (material changes, geometry membership)</li>
-<li>Click a <strong>View button</strong> (Exterior / Interior / Overhead) → the overlay shows view capture tools</li>
+<li>Click a <strong>View button</strong> (Exterior / Interior / Overhead) → camera navigates to that default pose (admin authoring convenience)</li>
 <li>Click a <strong>Presentation Mode button</strong> (Summer Day, Winter Night, etc.) → the overlay shows the presentation settings for that mode</li>
 </ul>
 <p>You don't need to switch tabs — just click whatever you want to author and the overlay follows.</p>
@@ -1348,7 +1348,7 @@
 <hr />
 <h3 id="step-1-set-up-a-presentation-mode">Step 1 — Set Up a Presentation Mode<a class="headerlink" href="#step-1-set-up-a-presentation-mode" title="Permanent link">&para;</a></h3>
 <p>The Views Panel has two rows of presentation mode buttons: <strong>Summer Day / Summer Night / Summer Night Interior</strong> and <strong>Winter Day / Winter Night / Winter Night Interior</strong>. Each mode stores a complete visual environment — HDR sky, terrain, lighting levels, solar position, and more.</p>
-<p>Start with <strong>Summer Day</strong> — Section and View captures both <em>reference</em> a presentation mode by name, so capturing at least one mode before you start authoring sections or views means everything you capture afterward replays with the right environment.</p>
+<p>Start with <strong>Summer Day</strong> — capturing at least one pMode early means you can use it as a starting point when you author sections (in admin mode, click a pMode pill in the App header to load that pMode's stored snapshot before tweaking and capturing a section).</p>
 <ol>
 <li>Click <strong>Summer Day</strong> to make it active</li>
 <li>In the authoring overlay, adjust the lighting and environment settings to suit a daytime look</li>
@@ -1361,7 +1361,7 @@
 <p>The Views Panel on the right side of the viewer has three buttons: <strong>Exterior</strong>, <strong>Interior</strong>, and <strong>Overhead</strong>. These are the main navigation controls for customers — and they double as useful basepoints for you to return to while authoring sections.</p>
 <p>For each view:</p>
 <ol>
-<li>Click the view button (Exterior, Interior, or Overhead) to activate it</li>
+<li>Click the view button (Exterior, Interior, or Overhead) — admin authoring convenience that navigates to the default pose for that camera mode</li>
 <li>Position the camera to a good default angle for that view — orbit, zoom, and pan until it looks right</li>
 <li>In the authoring overlay, set the <strong>Presentation Mode</strong> you want for this view — <strong>Summer Day</strong> is a good default for all three to start with</li>
 <li>Use the <strong>User Visibility</strong> toggles in the authoring overlay to choose which panels appear when the customer is in this view. The six toggles are: <strong>Solar</strong> (Solar/Site panel), <strong>Views</strong> (Exterior/Interior/Overhead buttons), <strong>Summer</strong> (Summer mode buttons), <strong>Winter</strong> (Winter mode buttons), <strong>Rooms</strong> (Rooms panel), and <strong>North</strong> (North Arrow). For example, you might hide the Solar/Site panel for interior views, or hide the Rooms panel for exterior views</li>
@@ -1375,7 +1375,7 @@
 <p>For each section:</p>
 <ol>
 <li>Click the section tab (e.g. <strong>Section 1</strong>) to make it active</li>
-<li>Use the view buttons and camera controls to position the viewer for that section's hero angle (a common move is to press a View button as a starting point, then orbit/zoom from there)</li>
+<li>Use the View buttons (admin Navigation Panel at the bottom) and camera controls to position the viewer for that section's hero angle (a common move is to press a View button to land at a default pose, then orbit/zoom from there)</li>
 <li>Click <strong>Section Capture</strong> in the authoring overlay</li>
 </ol>
 <p><strong>Testing the replay:</strong> To see the camera animation working, capture <strong>at least two sections</strong>. Then click between them — each click should animate the camera to the position and environment captured for that section. Switching between a captured section and an uncaptured one will not produce a camera animation or change the presentation state — the Viewer preserves whatever presentation is currently active.</p>

@@ -397,7 +397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
         
   
   
@@ -1382,7 +1382,7 @@
 <hr />
 <p><strong>Status:</strong> Planning / not yet implemented<br />
 <strong>Date drafted:</strong> 2026-04-30<br />
-<strong>Related docs:</strong> <a href="../viewer_contract_v1_7/">Viewer Contract</a>, <a href="../architecture/">System Architecture</a>, <a href="../admin_authoring_guide/">Admin Authoring Guide</a>, <a href="../model_authoring_guide/">Model Authoring Guide</a></p>
+<strong>Related docs:</strong> <a href="../viewer_contract_v1_8/">Viewer Contract</a>, <a href="../architecture/">System Architecture</a>, <a href="../admin_authoring_guide/">Admin Authoring Guide</a>, <a href="../model_authoring_guide/">Model Authoring Guide</a></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This plan moves the project from its current single-source PBR material library to a <strong>curated platform catalog + subscriber private extension</strong> model (Path A — curated set stays in-repo, private set lives per-tenant). The PoC is implemented in DemoApp using browser-local storage; the data shapes and resolver are designed so that migrating to a real backend in a future CustomApp is a storage-adapter swap rather than an architectural rewrite.</p>
 <p>Reference systems using this dual-source model: Threekit, Roomle, Emersya, Combeenation. The single-picker-with-source-badge UX convention is borrowed from these and from non-3D analogues like Canva (stock + Brand Kit) and Figma (community + team libraries).</p>
@@ -1533,7 +1533,7 @@
 <h3 id="phase-5-merged-picker-in-the-viewer-admin-overlay">Phase 5 — Merged picker in the Viewer admin overlay<a class="headerlink" href="#phase-5-merged-picker-in-the-viewer-admin-overlay" title="Permanent link">&para;</a></h3>
 <p>Two changes:</p>
 <ol>
-<li><strong>Contract:</strong> add <code>viewerInput.materialCatalog</code> per the data shape above. Update <a href="../src/public/Viewer.jsx"><code>Viewer.jsx</code></a> and runtime in <a href="../src/viewer/ViewerRuntime.jsx"><code>ViewerRuntime.jsx</code></a> to thread the catalog through. Document in <a href="../viewer_contract_v1_7/">Viewer Contract</a>.</li>
+<li><strong>Contract:</strong> add <code>viewerInput.materialCatalog</code> per the data shape above. Update <a href="../src/public/Viewer.jsx"><code>Viewer.jsx</code></a> and runtime in <a href="../src/viewer/ViewerRuntime.jsx"><code>ViewerRuntime.jsx</code></a> to thread the catalog through. Document in <a href="../viewer_contract_v1_8/">Viewer Contract</a>.</li>
 <li><strong>Picker UI:</strong> update the material picker (currently in <a href="../src/viewer/components/ViewerAuthoringDemoPanel.jsx"><code>ViewerAuthoringDemoPanel.jsx</code></a>) to:</li>
 <li>Consume the catalog from input rather than static import.</li>
 <li>Render entries grouped or filterable by source: <code>All</code> / <code>Platform</code> / <code>Yours</code>.</li>
@@ -1612,7 +1612,7 @@
 <li><strong>Phase 2</strong> — <code>materialRef</code> schema + App-side resolver scaffolding (with platform-only resolution; workspace returns empty until Phase 3). New captures populate <code>materialRef</code>; old captures still replay via legacy URL fallback.</li>
 <li><strong>Phase 3</strong> — <code>WorkspaceMaterialStore</code> IndexedDB implementation. No UI yet; testable via console.</li>
 <li><strong>Phase 4</strong> — upload UI in DemoApp header.</li>
-<li><strong>Phase 5</strong> — merged picker + <code>viewerInput.materialCatalog</code> contract change. Update <a href="../viewer_contract_v1_7/">Viewer Contract</a> doc in the same PR.</li>
+<li><strong>Phase 5</strong> — merged picker + <code>viewerInput.materialCatalog</code> contract change. Update <a href="../viewer_contract_v1_8/">Viewer Contract</a> doc in the same PR.</li>
 <li><strong>Phase 6</strong> — lifecycle UX polish.</li>
 <li><strong>Phase 7</strong> (deferred) — resolution-variant selector.</li>
 </ol>

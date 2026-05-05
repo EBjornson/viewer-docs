@@ -638,17 +638,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ongeometrypicked" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        onGeometryPicked
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#onrendercaptured" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -748,10 +737,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dynamic-authoring-panel" class="md-nav__link">
+  <a href="#authoring-panel-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dynamic Authoring Panel
+        Authoring Panel Context
       
     </span>
   </a>
@@ -874,7 +863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
         
   
   
@@ -1563,17 +1552,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ongeometrypicked" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        onGeometryPicked
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#onrendercaptured" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1673,10 +1651,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dynamic-authoring-panel" class="md-nav__link">
+  <a href="#authoring-panel-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dynamic Authoring Panel
+        Authoring Panel Context
       
     </span>
   </a>
@@ -1894,36 +1872,12 @@
 <td><code>materialdefaultscleared</code></td>
 </tr>
 <tr>
-<td><code>onViewCaptured</code></td>
-<td><code>viewcaptured</code></td>
-</tr>
-<tr>
-<td><code>onViewCaptureCleared</code></td>
-<td><code>viewcapturecleared</code></td>
-</tr>
-<tr>
-<td><code>onViewSelected</code></td>
-<td><code>viewselected</code></td>
-</tr>
-<tr>
-<td><code>onSpaceTileWalkActivated</code></td>
-<td><code>spacetilewalkactivated</code></td>
-</tr>
-<tr>
 <td><code>onPresentationModeCaptured</code></td>
 <td><code>presentationmodecaptured</code></td>
 </tr>
 <tr>
 <td><code>onPresentationModeCaptureCleared</code></td>
 <td><code>presentationmodecapturecleared</code></td>
-</tr>
-<tr>
-<td><code>onActivePresentationModeChanged</code></td>
-<td><code>activepresentationmodechanged</code></td>
-</tr>
-<tr>
-<td><code>onGeometryPicked</code></td>
-<td><code>geometrypicked</code></td>
 </tr>
 <tr>
 <td><code>onRenderCaptured</code></td>
@@ -1986,8 +1940,8 @@
 <ul>
 <li>The App owns this <strong>intent</strong></li>
 <li>The Viewer owns the actual runtime execution of that motion</li>
-<li>When the user presses a View button in User Mode, the Viewer fires <code>onViewSelected(cameraMode)</code>. The App looks up its stored view capture for that slot and replays it by rebuilding <code>viewerInput</code> with the capture's <code>pose</code>, <code>cameraMode</code>, and <code>visibilityAssignments</code>, plus the resolved presentation snapshot (<code>presentationModeCaptures[capture.presentationMode]</code>) with <code>capture.ui</code> spread on top — the same path as section replay.</li>
-<li>When the admin captures a view, the Viewer fires <code>onViewCaptured(payload)</code>. The App stores the payload keyed by camera mode.</li>
+<li>When the user activates a section in User Mode, the App reads its stored section capture and rebuilds <code>viewerInput</code> with the capture's <code>pose</code>, <code>cameraMode</code>, embedded <code>presentation</code> snapshot (with optional re-resolution via App-side <code>presentationModeCaptures</code> lookup for re-skin support), and <code>visibilityAssignments</code>. Bumping <code>selectionKey</code> ensures the Viewer animates the camera even when the pose reference is identical to the previous render.</li>
+<li>View captures don't exist in v1.8 — a Section may have associated options or no options. An optionless Section serves as what v1.7 called a View. Same Section Capture / Replay path for both.</li>
 </ul>
 <h3 id="3-scene">3. <code>scene</code><a class="headerlink" href="#3-scene" title="Permanent link">&para;</a></h3>
 <p>This tells the Viewer what geometry/material state to apply.</p>
@@ -2062,12 +2016,9 @@
 <a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="nx">ui</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">    </span><span class="nx">showSolarSitePanel</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
 <a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">    </span><span class="nx">showNorthArrow</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span><span class="nx">showPresetViews</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">    </span><span class="nx">showPresentationPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">    </span><span class="nx">showWinterPresets</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">    </span><span class="nx">showSpaceMenu</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="p">}</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span><span class="nx">showSpaceMenu</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="p">}</span>
 </code></pre></div>
 <p>Think of this as:</p>
 <ul>
@@ -2076,14 +2027,14 @@
 <li>“Use this terrain”</li>
 <li>“Use these solar settings”</li>
 </ul>
-<p><strong>Initial load defaults:</strong> all six presentation modes (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>) have hardcoded defaults built into the Viewer. The <code>presentation</code> field is entirely optional on initial model load — if omitted, the Viewer renders using its built-in defaults. Providing a <code>presentation</code> payload is only necessary when the App needs to replay a stored capture.</p>
-<p><strong><code>presentationSyncKey</code>:</strong> A companion field to <code>presentation</code>. It is an optional monotonically-increasing counter the App bumps to signal <strong>"App selection changed"</strong> — captured or not. The Viewer interprets a changed value at two layers:</p>
+<p><strong>Initial load defaults:</strong> the Viewer has built-in defaults for every <code>presentation</code> field. The <code>presentation</code> field is entirely optional on initial model load — if omitted, the Viewer renders using its built-in defaults. Providing a <code>presentation</code> payload is only necessary when the App needs to replay a stored capture or apply a stored pMode snapshot.</p>
+<p><strong><code>selectionKey</code>:</strong> A companion field. It is an optional monotonically-increasing counter the App bumps to signal <strong>"selection changed — force fresh apply"</strong>. Two cases the App should bump on: section selection clicks and admin pMode pill clicks. The Viewer responds in two layers (each gated on the corresponding input being provided):</p>
 <ol>
-<li><strong>View-button highlight clearing</strong> — fires unconditionally. The Viewer clears any active view-button highlight so the App's section/view selection is the single "active" indicator across both layers.</li>
-<li><strong>Presentation re-sync</strong> — fires only when <code>input.presentation</code> is provided. When it is, the Viewer re-runs its initialization and resets local admin overrides to match. When <code>input.presentation</code> is <code>undefined</code> (the active section has no capture), the Viewer <strong>preserves its current state</strong> so authoring tweaks aren't stomped by a navigation that has nothing to replay.</li>
+<li><strong>Camera animation re-fires</strong> from <code>input.camera.pose</code> even when its reference identity is unchanged. Handles "user clicks the active section to return to its captured pose after free-navigating."</li>
+<li><strong>Presentation re-syncs</strong> from <code>input.presentation</code> even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the Viewer's NavigationDemoPanel pMode buttons that mutate Viewer state without updating App state, then re-clicked an App pill to reload).</li>
 </ol>
-<p><strong>Bump on every section/view selection change.</strong> The App does not need to gate the bump on capture availability; the Viewer's two-layer interpretation handles both cases correctly. (This is a v1.7 contract change — earlier versions advised gating the bump on capture availability, which has been replaced by the in-Viewer guard.)</p>
-<p><strong><code>presentationModeCaptures</code>:</strong> Map of all presentation-mode captures the App has persisted, keyed by mode id. The Viewer reads it when the user clicks a presentation mode tile inside the Viewer — if a capture exists for that mode, the Viewer applies it; otherwise it falls back to its built-in lighting defaults. The App owns this map; the Viewer only reads. Pass the App's full persisted map (e.g. a <code>useState</code>-stored object) every render.</p>
+<p>When <code>input.presentation</code> is <code>undefined</code> (uncaptured-section navigation), the Viewer preserves its current state regardless of <code>selectionKey</code> — admin tweaks aren't stomped. Option clicks should not bump <code>selectionKey</code> (they change material/visibility intent, not camera or presentation intent).</p>
+<p><strong>Presentation Mode is App-side in v1.8.</strong> There is no <code>viewerInput.presentationModeCaptures</code> field — pMode storage and routing live entirely on the App side. DemoApp uses a 6-mode taxonomy (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>) as a convention; CustomApps may use any taxonomy, fewer modes, or no pMode concept at all. When an admin clicks a pMode pill in DemoApp's header, DemoApp pushes the App-stored snapshot via <code>viewerInput.presentation</code> and bumps <code>selectionKey</code>.</p>
 <h3 id="5-admin">5. <code>admin</code><a class="headerlink" href="#5-admin" title="Permanent link">&para;</a></h3>
 <p>This tells the Viewer whether it should behave in an authoring/admin-friendly way, and can also trigger a programmatic batch render.</p>
 <p>Example:</p>
@@ -2107,8 +2058,8 @@
 <li>“We are authoring right now” (<code>enabled: true</code>)</li>
 <li>“Render these items as a batch” (<code>batchCapture</code>)</li>
 </ul>
-<p>When <code>input.admin.enabled = true</code>, the Viewer renders its built-in <strong>Authoring Panel</strong> (left-side overlay) containing all capture/clear actions and authoring tools. No extra setup required from the App beyond setting this flag. The Navigation Panel (View row + Summer/Winter presentation mode rows along the bottom) renders identically in admin and user modes and contains no capture controls.</p>
-<p>The Authoring Panel is <strong>dynamic by default</strong> — it filters its content based on <code>input.admin.activeAuthoringFocus</code>. The App should set this field on every authoring-relevant click so the panel adapts to the current context. See <em>Dynamic Authoring Panel</em> below for details.</p>
+<p>When <code>input.admin.enabled = true</code>, the Viewer renders its built-in <strong>Authoring Panel</strong> (left-side overlay) containing all capture/clear actions and authoring tools. The panel uses internal Section / Option / pMode tabs for context selection — the App is not involved in driving panel focus. No extra setup required from the App beyond setting <code>enabled: true</code>.</p>
+<p>The Viewer also renders an admin-only <strong>NavigationDemoPanel</strong> along the bottom (View row + Summer/Winter pMode rows). These are pure Viewer-internal authoring conveniences: View row navigates the camera to default Exterior/Interior/Overhead poses; pMode rows apply built-in lighting defaults to the Viewer's internal admin presentation state. Neither row fires public callbacks — no App involvement needed.</p>
 <p>To trigger a batch render, set <code>admin.batchCapture = { nonce, items }</code> and increment <code>nonce</code>. Each item supplies the camera pose, scene visibility, and presentation for one render. The Viewer processes the items in sequence and fires <code>onRenderCaptured</code> per item, then <code>onBatchCaptureComplete</code> when done. Admin overlays are hidden automatically during capture.</p>
 <p>The App only needs to implement the <code>ViewerOutput</code> capture callbacks to receive and store the payloads the Viewer fires.</p>
 <hr />
@@ -2141,7 +2092,7 @@
 </ul>
 <p><strong>DemoApp implementation:</strong> a Loading / Ready badge in the header reflects this event. It shows "Loading…" until <code>onViewerReady</code> fires, then turns green and shows "Ready". Hovering the badge displays the full payload (with a Copy button) so integrators can inspect the event data without opening DevTools. The badge resets on every model switch.</p>
 <h3 id="capture-callbacks">Capture callbacks<a class="headerlink" href="#capture-callbacks" title="Permanent link">&para;</a></h3>
-<p>These are the primary authoring output events. The Viewer fires them when the admin clicks a capture button:</p>
+<p>These are the primary authoring output events. The Viewer fires them when the admin clicks a capture button. <strong>All capture payloads are identity-free in v1.8</strong> — the App attaches identity (active section / option / pMode tag) from its own state at receipt.</p>
 <table>
 <thead>
 <tr>
@@ -2153,8 +2104,8 @@
 <tbody>
 <tr>
 <td><code>onSectionCaptured(payload)</code></td>
-<td>pose + cameraMode + presentationMode + visibilityAssignments + ui</td>
-<td>store as <code>sectionCaptures[activeSectionId]</code></td>
+<td>pose + cameraMode + <strong>embedded presentation snapshot</strong> + visibilityAssignments</td>
+<td>store as <code>sectionCaptures[activeSectionId]</code>. Optional: attach an App-side <code>presentationMode</code> tag from currently active pMode for re-skin support.</td>
 </tr>
 <tr>
 <td><code>onSectionCaptureCleared()</code></td>
@@ -2182,52 +2133,28 @@
 <td>clear <code>materialDefaultCapture</code></td>
 </tr>
 <tr>
-<td><code>onViewCaptured(payload)</code></td>
-<td>cameraMode + pose + presentationMode + visibilityAssignments + ui</td>
-<td>store as <code>viewCaptures[payload.cameraMode]</code></td>
+<td><code>onPresentationModeCaptured(snapshot)</code></td>
+<td>bare <code>ViewerPresentationInput</code> snapshot</td>
+<td>store as <code>presentationModeCaptures[currentPMode] = snapshot</code> (App attaches identity from its own active-pMode state)</td>
 </tr>
 <tr>
-<td><code>onViewCaptureCleared(cameraMode)</code></td>
+<td><code>onPresentationModeCaptureCleared()</code></td>
 <td>—</td>
-<td>remove <code>viewCaptures[cameraMode]</code></td>
-</tr>
-<tr>
-<td><code>onViewSelected(cameraMode)</code></td>
-<td>cameraMode string</td>
-<td>In User Mode: look up <code>viewCaptures[cameraMode]</code>, resolve <code>presentationModeCaptures[capture.presentationMode]</code>, and replay via <code>viewerInput</code>. In Admin Mode: callback IS fired (to allow the App to clear section tab highlighting), but the App should NOT trigger camera/presentation replay — the Viewer handles navigation internally.</td>
-</tr>
-<tr>
-<td><code>onSpaceTileWalkActivated(cameraMode)</code></td>
-<td>cameraMode string</td>
-<td>Apply presentation + visibility from <code>viewCaptures[cameraMode]</code> (resolving its <code>presentationMode</code>); do <strong>not</strong> set camera pose — the Viewer is already navigating via pathNav. Fires in User Mode only. See <a href="../capture_and_replay/#overhead-space-tile-click-spacetileclicknav">Capture &amp; Replay → Overhead Space-Tile Click</a>.</td>
-</tr>
-<tr>
-<td><code>onPresentationModeCaptured(payload)</code></td>
-<td><code>{ mode: string, presentation: ViewerPresentationInput }</code></td>
-<td>store as <code>presentationModeCaptures[payload.mode] = payload.presentation</code></td>
-</tr>
-<tr>
-<td><code>onActivePresentationModeChanged(mode)</code></td>
-<td>mode string</td>
-<td>track active mode; apply <code>presentationModeCaptures[mode]</code> to <code>input.presentation</code> if desired</td>
+<td>remove App's currently active pMode entry from <code>presentationModeCaptures</code></td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p><strong>⚠️ <code>onViewSelected</code> in Admin Mode:</strong> The Viewer fires <code>onViewSelected</code> in both User Mode and Admin Mode. In Admin Mode the Viewer handles view navigation internally and does <strong>not</strong> expect the App to drive a camera or presentation replay in response. Driving replay from the App in Admin Mode would cause a double-animation. Guard any replay logic with a check on <code>isAdminMode</code> before acting on this callback.</p>
-</blockquote>
-<p>Replay resolves the captured <code>presentationMode</code> name to a full snapshot via <code>presentationModeCaptures</code>, spreads the capture's <code>ui</code> flags on top of <code>modeSnapshot.ui</code> (so per-capture flags override mode-level flags), then writes <code>pose</code>, <code>visibilityAssignments</code>, and the resolved <code>presentation</code> into <code>viewerInput</code>. See <a href="../capture_and_replay/#presentation-resolution">Capture &amp; Replay → presentation resolution</a> for the canonical code.</p>
-<h3 id="ongeometrypicked"><code>onGeometryPicked</code><a class="headerlink" href="#ongeometrypicked" title="Permanent link">&para;</a></h3>
-<p>This tells The App:</p>
-<ul>
-<li>which piece of geometry was selected or picked</li>
-</ul>
-<p>Useful for:</p>
-<ul>
-<li>authoring mappings</li>
-<li>admin/debug workflows</li>
-<li>future richer configuration tooling</li>
-</ul>
+<p><strong>Section replay</strong> (when user activates a section in user mode):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sectionCaptures</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">presentation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">presentationModeCaptures</span><span class="o">?</span><span class="p">.[</span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">presentationMode</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">presentation</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nx">viewerInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="nx">camera</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">cameraMode</span><span class="o">:</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">cameraMode</span><span class="p">,</span><span class="w"> </span><span class="nx">pose</span><span class="o">:</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">pose</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="nx">presentation</span><span class="p">,</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="nx">capture</span><span class="o">?</span><span class="p">.</span><span class="nx">visibilityAssignments</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="nx">selectionKey</span><span class="o">:</span><span class="w"> </span><span class="nx">bumpedKey</span><span class="p">,</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>The pMode lookup wins when an App-side pMode store entry exists for the section's tag, enabling "re-skin" semantics. The embedded snapshot serves as the fallback. CustomApps without a pMode taxonomy can use <code>presentation: capture.presentation</code> directly. See <a href="../capture_and_replay/#section-captures">Capture &amp; Replay → Section Captures</a> for both replay strategies in detail.</p>
 <h3 id="onrendercaptured"><code>onRenderCaptured</code><a class="headerlink" href="#onrendercaptured" title="Permanent link">&para;</a></h3>
 <p>Fires once per item during a batch capture sequence. The payload is <code>{ imageUrl, blob, metadata }</code>:</p>
 <ul>
@@ -2239,19 +2166,19 @@
 <h3 id="onbatchcapturecomplete"><code>onBatchCaptureComplete</code><a class="headerlink" href="#onbatchcapturecomplete" title="Permanent link">&para;</a></h3>
 <p>Fires after all items in a batch have been captured. The App should use this signal to trigger downloads, backend uploads, or any other post-batch processing of the accumulated blobs.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nx">onBatchCaptureComplete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span><span class="w"> </span><span class="nx">metadata</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">metadata</span><span class="o">?</span><span class="p">.</span><span class="nx">sectionLabel</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="si">}</span><span class="sb">.jpg`</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">),</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="p">},</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nx">onBatchCaptureComplete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(({</span><span class="w"> </span><span class="nx">metadata</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">metadata</span><span class="o">?</span><span class="p">.</span><span class="nx">sectionLabel</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="si">}</span><span class="sb">.jpg`</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">),</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span><span class="nx">batchBlobsRef</span><span class="p">.</span><span class="nx">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="p">},</span>
 </code></pre></div>
 <h3 id="onerror"><code>onError</code><a class="headerlink" href="#onerror" title="Permanent link">&para;</a></h3>
 <p>This gives The App a way to know:</p>
@@ -2269,13 +2196,13 @@
 <li><code>shownGeometryIds</code> — geometry IDs owned by the currently active option</li>
 </ul>
 <p>The Viewer's rule: <strong>show list wins over hide list</strong>. The App never computes a set difference — it collects and passes; the Viewer resolves.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">allOptionGeometryIds</span><span class="p">,</span><span class="w">   </span><span class="c1">// flatMap all options → all their IDs</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">activeOptionGeometryIds</span><span class="p">,</span><span class="w"> </span><span class="c1">// flatMap active option → its IDs</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nx">instantHiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCapture?.visibilityAssignments?.hiddenGeometryIds</span><span class="p">,</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="p">},</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nx">scene</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nx">visibilityAssignments</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nx">hiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">allOptionGeometryIds</span><span class="p">,</span><span class="w">   </span><span class="c1">// flatMap all options → all their IDs</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nx">shownGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">activeOptionGeometryIds</span><span class="p">,</span><span class="w"> </span><span class="c1">// flatMap active option → its IDs</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="nx">instantHiddenGeometryIds</span><span class="o">:</span><span class="w"> </span><span class="kt">sectionCapture?.visibilityAssignments?.hiddenGeometryIds</span><span class="p">,</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">}</span>
 </code></pre></div>
 <p><code>instantHiddenGeometryIds</code> is used for section-level geometry here rather than <code>hiddenGeometryIds</code> because section-level hides take effect during the camera animation triggered by a section change. There is no benefit from a fade animation in that context — the geometry should disappear immediately as the section loads. Using <code>instantHiddenGeometryIds</code> avoids a visible fade artifact during the transition.</p>
 <p>This pattern supports <strong>combinatorial ownership</strong> — where one option owns a superset of geometry that other options partially overlap (e.g. O4 owns both lights, O2 owns left only, O3 owns right only). The hide/show split handles all combinations without the App needing to understand the geometry relationships.</p>
@@ -2290,55 +2217,55 @@
 <p>Enforcement is at the App layer because section identity is App-owned; the Viewer fires <code>onOptionCaptured</code> with no section context. The Viewer is intentionally agnostic to which section/option the admin had selected when the capture button was pressed — that routing is the App's job, and so is validating the routing.</p>
 <h3 id="recommended-pattern">Recommended pattern<a class="headerlink" href="#recommended-pattern" title="Permanent link">&para;</a></h3>
 <p>In the <code>onOptionCaptured</code> handler, scan the existing <code>optionCaptures</code> map separately for each rule. Reject if either rule is violated.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">geometry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="c1">// Rule 1: incoming show/hide list vs other sections&#39; show/hide lists</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">          </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="w">  </span><span class="c1">// Rule 2: incoming material targets vs other sections&#39; material targets</span>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">materialTargets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">()</span>
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="w">  </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">owned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="w">          </span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
-<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="w">        </span><span class="p">)</span>
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">owned</span><span class="p">)</span><span class="w"> </span><span class="nx">material</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a><span class="w">  </span><span class="p">})</span>
-<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>
-<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">geometry</span><span class="p">,</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="p">}</span>
-<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a>
-<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a><span class="nx">onOptionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span>
-<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">material</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a><span class="w">    </span><span class="nx">setCaptureConflict</span><span class="p">({</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">activeOptionId</span><span class="p">,</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="w">    </span><span class="k">return</span><span class="w">  </span><span class="c1">// do not merge</span>
-<a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-16-42" name="__codelineno-16-42" href="#__codelineno-16-42"></a><span class="w">  </span><span class="nx">setOptionCaptures</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
-<a id="__codelineno-16-43" name="__codelineno-16-43" href="#__codelineno-16-43"></a><span class="w">    </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
-<a id="__codelineno-16-44" name="__codelineno-16-44" href="#__codelineno-16-44"></a><span class="w">    </span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-45" name="__codelineno-16-45" href="#__codelineno-16-45"></a><span class="w">      </span><span class="p">...</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">],</span>
-<a id="__codelineno-16-46" name="__codelineno-16-46" href="#__codelineno-16-46"></a><span class="w">      </span><span class="p">[</span><span class="nx">activeOptionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">mergeOptionCapture</span><span class="p">(</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">activeOptionId</span><span class="p">],</span><span class="w"> </span><span class="nx">payload</span><span class="p">),</span>
-<a id="__codelineno-16-47" name="__codelineno-16-47" href="#__codelineno-16-47"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-16-48" name="__codelineno-16-48" href="#__codelineno-16-48"></a><span class="w">  </span><span class="p">}))</span>
-<a id="__codelineno-16-49" name="__codelineno-16-49" href="#__codelineno-16-49"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">geometry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="c1">// Rule 1: incoming show/hide list vs other sections&#39; show/hide lists</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">          </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">  </span><span class="c1">// Rule 2: incoming material targets vs other sections&#39; material targets</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">materialTargets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Set</span><span class="p">()</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">  </span><span class="nx">payload</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">    </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="w">  </span><span class="nx">materialTargets</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">sectionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">sectionId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">]</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="p">{}))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">owned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">optionCaptures</span><span class="p">[</span><span class="nx">sectionId</span><span class="p">][</span><span class="nx">optionId</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">materialAssignments</span><span class="o">?</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">          </span><span class="p">(</span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">geometryIds</span><span class="o">?</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="w">        </span><span class="p">)</span>
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">owned</span><span class="p">)</span><span class="w"> </span><span class="nx">material</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">id</span><span class="p">,</span><span class="w"> </span><span class="nx">sectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">optionId</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a><span class="w">  </span><span class="p">})</span>
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">geometry</span><span class="p">,</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a><span class="p">}</span>
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a><span class="nx">onOptionCaptured</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">findOptionCaptureConflicts</span><span class="p">(</span><span class="nx">optionCaptures</span><span class="p">,</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">payload</span><span class="p">)</span>
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">conflicts</span><span class="p">.</span><span class="nx">material</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a><span class="w">    </span><span class="nx">setCaptureConflict</span><span class="p">({</span><span class="w"> </span><span class="nx">activeSectionId</span><span class="p">,</span><span class="w"> </span><span class="nx">activeOptionId</span><span class="p">,</span><span class="w"> </span><span class="nx">conflicts</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a><span class="w">    </span><span class="k">return</span><span class="w">  </span><span class="c1">// do not merge</span>
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a><span class="w">  </span><span class="nx">setOptionCaptures</span><span class="p">((</span><span class="nx">prev</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a><span class="w">    </span><span class="p">...</span><span class="nx">prev</span><span class="p">,</span>
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a><span class="w">    </span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a><span class="w">      </span><span class="p">...</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">],</span>
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a><span class="w">      </span><span class="p">[</span><span class="nx">activeOptionId</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">mergeOptionCapture</span><span class="p">(</span><span class="nx">prev</span><span class="p">[</span><span class="nx">activeSectionId</span><span class="p">]</span><span class="o">?</span><span class="p">.[</span><span class="nx">activeOptionId</span><span class="p">],</span><span class="w"> </span><span class="nx">payload</span><span class="p">),</span>
+<a id="__codelineno-17-47" name="__codelineno-17-47" href="#__codelineno-17-47"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-17-48" name="__codelineno-17-48" href="#__codelineno-17-48"></a><span class="w">  </span><span class="p">}))</span>
+<a id="__codelineno-17-49" name="__codelineno-17-49" href="#__codelineno-17-49"></a><span class="p">}</span>
 </code></pre></div>
 <p>The two checks are intentionally separate. An incoming material-only payload (no <code>geometryIds</code>) only triggers the material rule. An incoming show/hide-only payload only triggers the show/hide rule. A payload that captures both kinds of intent at once is checked against both rules independently.</p>
 <p>The Viewer's authoring overlay exposes a <strong>Capture Material Only</strong> button alongside the standard <strong>Option Capture</strong> button. Capture Material Only fires <code>onOptionCaptured</code> with <code>materialAssignments</code> only — no <code>geometryIds</code> — letting the admin route material-only intent without inadvertently claiming show/hide ownership of the selected geometry. This makes the cross-section material assignment workflow (option in section B colors geometry already show/hide-owned by section A) a single-click operation that doesn't trip Rule 1.</p>
@@ -2353,63 +2280,9 @@
 <h3 id="no-contract-change-required">No contract change required<a class="headerlink" href="#no-contract-change-required" title="Permanent link">&para;</a></h3>
 <p>The Viewer continues to fire <code>onOptionCaptured</code> exactly as before — rejection is purely an App-layer policy decision. There is no <code>onOptionCaptureRejected</code> callback in the current contract; the Viewer's draft material assignments are cleared synchronously after firing the callback regardless of whether the App ultimately stores the capture. For a material-only conflict this means the user briefly sees painted-but-uncaptured material edits revert on the next render rebuild — a minor flicker. If the friction proves significant in practice, a small contract addition (an <code>onOptionCaptureRejected</code> callback so the Viewer can defer draft clearing) would be the natural follow-up.</p>
 <hr />
-<h2 id="dynamic-authoring-panel">Dynamic Authoring Panel<a class="headerlink" href="#dynamic-authoring-panel" title="Permanent link">&para;</a></h2>
-<p>The Authoring Panel (left-side overlay rendered when <code>input.admin.enabled = true</code>) filters its content based on <code>input.admin.activeAuthoringFocus</code>. The App should track the admin's "last clicked" authoring target and pass it through this field so the panel adapts as the admin works.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">ViewerAuthoringFocus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;section&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;option&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;view&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;presentationMode&#39;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;all&#39;</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Last admin click</th>
-<th>App should set</th>
-<th>Panel surfaces</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Section tab (App-side)</td>
-<td><code>'section'</code></td>
-<td>Section Capture/Clear, Geometry tools, User Visibility, Camera Mode</td>
-</tr>
-<tr>
-<td>Option button (App-side)</td>
-<td><code>'option'</code></td>
-<td>Option Capture / Material Only / Clear, Material Defaults, Geometry tools, Assembly Inspector, Materials picker</td>
-</tr>
-<tr>
-<td>View Preset button (Viewer-side, fires <code>onViewSelected</code>)</td>
-<td><code>'view'</code></td>
-<td>View Capture/Clear, Geometry tools, User Visibility, Camera Mode</td>
-</tr>
-<tr>
-<td>Presentation Mode button (Viewer-side, fires <code>onActivePresentationModeChanged</code>)</td>
-<td><code>'presentationMode'</code></td>
-<td>Mode Capture/Clear, User Visibility, Presentation sliders, HDR Environment, Terrain Preset</td>
-</tr>
-<tr>
-<td><code>'all'</code> or omitted</td>
-<td>—</td>
-<td>Legacy two-tab fallback, all controls visible</td>
-</tr>
-</tbody>
-</table>
-<p>For Section/Option clicks (which originate in the App), the App tracks state directly. For View/Presentation Mode clicks (which originate in the Viewer), the App listens to the corresponding output callback and updates focus there. DemoApp shows the full pattern:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">activeAuthoringFocus</span><span class="p">,</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1">// Section tab click handler:</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedSectionId</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;section&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c1">// Option button click handler:</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setSelectedOption</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}}</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1">// Viewer callbacks:</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="nx">onViewSelected</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">cameraMode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;view&#39;</span><span class="p">);</span><span class="w"> </span><span class="cm">/* …existing logic… */</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="nx">onActivePresentationModeChanged</span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="nx">mode</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">setActiveAuthoringFocus</span><span class="p">(</span><span class="s1">&#39;presentationMode&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1">// Threaded into viewerInput:</span>
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="nx">admin</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">enabled</span><span class="o">:</span><span class="w"> </span><span class="nx">adminEnabled</span><span class="p">,</span><span class="w"> </span><span class="nx">activeAuthoringFocus</span><span class="w"> </span><span class="p">}</span>
-</code></pre></div>
-<p><code>'all'</code> (or omitting the field entirely) puts the panel into a legacy two-tab fallback. The Viewer also exposes a debug toggle that overrides any value sent by the App and forces the legacy layout — used for testing only. Production-style apps should always pass a focus value.</p>
+<h2 id="authoring-panel-context">Authoring Panel Context<a class="headerlink" href="#authoring-panel-context" title="Permanent link">&para;</a></h2>
+<p>The Authoring Panel (left-side overlay rendered when <code>input.admin.enabled = true</code>) uses <strong>internal Section / Option / pMode tabs</strong> for context selection. The admin clicks the tab they're authoring against; the panel filters its content accordingly.</p>
+<p>The App is <strong>not involved</strong> in driving panel context — there is no <code>activeAuthoringFocus</code> field in the v1.8 contract. The admin's tab choice is purely a Viewer-internal UI state.</p>
 <hr />
 <h2 id="what-the-app-should-not-do">What The App Should Not Do<a class="headerlink" href="#what-the-app-should-not-do" title="Permanent link">&para;</a></h2>
 <h3 id="1-the-app-should-not-rely-on-viewerroot">1. The App should not rely on <code>ViewerRoot</code><a class="headerlink" href="#1-the-app-should-not-rely-on-viewerroot" title="Permanent link">&para;</a></h3>

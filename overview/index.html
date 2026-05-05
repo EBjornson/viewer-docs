@@ -406,10 +406,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#presentation-modes" class="md-nav__link">
+  <a href="#presentation-modes-app-side-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Presentation modes
+        Presentation modes (App-side convention)
       
     </span>
   </a>
@@ -588,7 +588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
         
   
   
@@ -1128,10 +1128,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#presentation-modes" class="md-nav__link">
+  <a href="#presentation-modes-app-side-convention" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Presentation modes
+        Presentation modes (App-side convention)
       
     </span>
   </a>
@@ -1210,7 +1210,7 @@
 <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
 <p><strong>Primary reader:</strong> Anyone arriving at the project (PM, engineer, author, evaluator)<br />
 <strong>Job-to-be-done:</strong> Understand the Viewer, the host-App pattern, and shared terminology<br />
-<strong>Next doc:</strong> Pick one — <a href="../viewer_contract_v1_7/">Viewer Contract</a> (developers) · <a href="../admin_authoring_guide/">Admin Authoring</a> (authors) · <a href="../tester_quickstart/">Tester Quickstart</a> (testers)</p>
+<strong>Next doc:</strong> Pick one — <a href="../viewer_contract_v1_8/">Viewer Contract</a> (developers) · <a href="../admin_authoring_guide/">Admin Authoring</a> (authors) · <a href="../tester_quickstart/">Tester Quickstart</a> (testers)</p>
 <hr />
 <h2 id="what-this-repository-is">What This Repository Is<a class="headerlink" href="#what-this-repository-is" title="Permanent link">&para;</a></h2>
 <p>This repository builds <strong>the Viewer</strong> — a React + Three.js runtime for configurable, geometric SaaS products such as homes, cabins, boats, and similar assemblies.</p>
@@ -1248,7 +1248,7 @@
 <h2 id="sections-options-captures">Sections, Options, Captures<a class="headerlink" href="#sections-options-captures" title="Permanent link">&para;</a></h2>
 <p>The host App's structure that the Viewer renders.</p>
 <h3 id="sections">Sections<a class="headerlink" href="#sections" title="Permanent link">&para;</a></h3>
-<p>Sections are major product decision areas — Roof, Flooring, Cabinetry, Solar Package. In the current model, one chosen option exists per section, and a section can own a <em>section capture</em> (camera pose + camera mode + presentation-mode reference + visibility + UI flags).</p>
+<p>Sections are major product decision areas — Roof, Flooring, Cabinetry, Solar Package. A section may have associated options (where exactly one is active at a time) or no options (in which case it serves as a "view-like" stored moment). A section can own a <em>section capture</em> (camera pose + camera mode + embedded presentation snapshot + visibility).</p>
 <h3 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h3>
 <p>Options are the selectable choices within a section — Shingle Roof / Metal Roof, White Siding / Black Siding, Two Exterior Lights / No Exterior Lights. An option can own:</p>
 <ul>
@@ -1256,9 +1256,9 @@
 <li>material assignments</li>
 </ul>
 <p>Option material assignments overlay onto the model-level default materials. If no defaults have been captured, options overlay onto the baked originals.</p>
-<h3 id="presentation-modes">Presentation modes<a class="headerlink" href="#presentation-modes" title="Permanent link">&para;</a></h3>
-<p>A presentation mode is a complete visual environment — HDR sky, terrain, lighting, solar settings — saved under one of six named slots: Summer Day, Summer Night, Summer Night Interior, Winter Day, Winter Night, Winter Night Interior. Section and view captures <em>reference</em> a presentation mode by name; the host App resolves the full snapshot at replay time.</p>
-<p>For the full capture lifecycle — payload shapes, replay paths, last-one-wins semantics — see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
+<h3 id="presentation-modes-app-side-convention">Presentation modes (App-side convention)<a class="headerlink" href="#presentation-modes-app-side-convention" title="Permanent link">&para;</a></h3>
+<p>A presentation mode is a complete visual environment — HDR sky, terrain, lighting, solar settings. The pMode taxonomy is <strong>App-side</strong> in v1.8 — the contract has no built-in pMode awareness. DemoApp uses six named slots (Summer Day, Summer Night, Summer Night Interior, Winter Day, Winter Night, Winter Night Interior) as a convention; other CustomApps may use any taxonomy, or none at all. Section captures <strong>embed the full presentation snapshot</strong> directly, so they replay self-contained even when the App doesn't maintain a pMode store. Apps that <em>do</em> maintain a pMode store can opt into "re-skin" semantics — tagging section captures with a pMode key, and re-resolving via <code>presentationModeCaptures[tag]</code> at replay time so updates to a pMode automatically propagate to all sections that share it.</p>
+<p>For the full capture lifecycle — payload shapes, replay paths, the embedded-snapshot fallback — see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
 <hr />
 <h2 id="authoring-at-a-glance">Authoring at a Glance<a class="headerlink" href="#authoring-at-a-glance" title="Permanent link">&para;</a></h2>
 <p>The host App enables admin authoring by setting <code>input.admin.enabled = true</code>. The Viewer renders its built-in <strong>Authoring Panel</strong> as a left-side overlay containing all capture/clear actions; no external panel hosting is needed.</p>
@@ -1295,23 +1295,21 @@
 <li><strong>Viewer</strong> — The rendering/runtime layer (this repository's primary product). Loads the model, animates the camera, applies scene/presentation instructions, exposes capture tooling.</li>
 <li><strong>Host App</strong> (also: <em>CustomApp</em>) — Any business/application layer that consumes the Viewer. Owns persisted intent, pricing, product logic, and saved configurations. <strong>DemoApp</strong> is the reference example shipped in this repo; <strong>Build &amp; Price</strong> is one planned future CustomApp.</li>
 <li><strong>DemoApp</strong> — The reference host App in this repo (<code>src/DemoApp/DemoApp.jsx</code>). Demonstrates the full capture/replay pattern; not a published API or production target. See <a href="../demoapp/">DemoApp</a>.</li>
-<li><strong>Viewer Input</strong> — The structured object the host App passes into the Viewer to control what it renders. Buckets: <code>model</code>, <code>camera</code>, <code>scene</code>, <code>presentation</code>, <code>presentationModeCaptures</code>, <code>admin</code>, plus <code>presentationSyncKey</code>.</li>
-<li><strong>Viewer Output</strong> — The set of callbacks the Viewer uses to send events back to the host App — readiness, capture payloads, geometry picks, render captures, errors.</li>
-<li><strong>Section</strong> — A major product decision area such as Roof, Flooring, or Solar Package. Host-App-owned identity.</li>
+<li><strong>Viewer Input</strong> — The structured object the host App passes into the Viewer to control what it renders. Buckets: <code>model</code>, <code>camera</code>, <code>scene</code>, <code>presentation</code>, <code>admin</code>, plus <code>selectionKey</code>.</li>
+<li><strong>Viewer Output</strong> — The set of callbacks the Viewer uses to send events back to the host App — readiness, capture payloads, render captures, errors.</li>
+<li><strong>Section</strong> — A major product decision area such as Roof, Flooring, or Solar Package. Host-App-owned identity. May have associated options (one active at a time) or no options (in which case it serves as a stored "view-like" moment).</li>
 <li><strong>Option</strong> — A selectable choice inside a section.</li>
-<li><strong>Section capture</strong> — Stored package of camera pose + camera mode + presentation-mode reference + visibility + UI flags for one section.</li>
-<li><strong>View capture</strong> — Stored package with the same shape as a section capture, keyed by camera mode (<code>'exterior'</code> | <code>'interior'</code> | <code>'overhead'</code>) instead of by section. Replayed when the user presses a View button.</li>
-<li><strong>Presentation Mode</strong> — A named visual preset (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>) that owns a full <code>ViewerPresentationInput</code> snapshot. Section and view captures reference a mode by name; the host App resolves the snapshot at replay time.</li>
-<li><strong>Presentation Mode capture</strong> — Stored full <code>ViewerPresentationInput</code> snapshot for one named mode.</li>
+<li><strong>Section capture</strong> — Stored package of camera pose + camera mode + <strong>embedded presentation snapshot</strong> + visibility for one section. Self-contained — no external lookup required for replay.</li>
+<li><strong>Presentation Mode (pMode)</strong> — App-side concept (v1.8 contract has no built-in pMode awareness). DemoApp uses a 6-mode taxonomy (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>) as a convention; other CustomApps may use any taxonomy or none.</li>
+<li><strong>Presentation Mode capture</strong> — App-stored full <code>ViewerPresentationInput</code> snapshot keyed by pMode id. Optional. Apps that maintain a pMode store can re-resolve <code>presentationModeCaptures[capture.presentationMode]</code> at section replay time for "re-skin" semantics; Apps without pMode storage fall back to the section capture's embedded snapshot.</li>
 <li><strong>Option capture</strong> — Stored package of geometry membership and / or material assignments for one option within one section. Captures are additive — repeated captures merge.</li>
 <li><strong>Material Assignment</strong> — An instruction telling the Viewer how specific geometry should look (color, roughness, metalness, maps, textureScale, etc.).</li>
 <li><strong>Model Default Materials</strong> — Material assignments stored at the host App layer and passed to the Viewer via <code>scene.defaultMaterialAssignments</code> on every load. Applied before option assignments; option assignments always win for the same geometry.</li>
-<li><strong>Capture Payload</strong> — The serialisable snapshot fired by a <code>ViewerOutput</code> callback when the admin clicks a capture action. The host App stores it and replays it later via <code>ViewerInput</code>.</li>
+<li><strong>Capture Payload</strong> — The serialisable snapshot fired by a <code>ViewerOutput</code> callback when the admin clicks a capture action. <strong>Identity-free in v1.8</strong> — the App attaches its own identity (active section / option / pMode tag) on receipt. The host App stores the payload and replays it later via <code>ViewerInput</code>.</li>
 <li><strong>Geometry ID</strong> — Stable identifier used to target a piece of geometry for visibility/material/configuration behavior. Derived from scene-graph path at load time.</li>
 <li><strong>Scene Path</strong> — The hierarchy-based path that determines a Geometry ID. Stable across reloads as long as the export hierarchy is stable.</li>
-<li><strong>Admin Mode</strong> — Enabled by setting <code>input.admin.enabled = true</code>. Causes the Viewer to render its built-in Authoring Panel as a left-side overlay. The panel is dynamic by default — filtered by <code>input.admin.activeAuthoringFocus</code> (<code>'section' | 'option' | 'view' | 'presentationMode' | 'all'</code>).</li>
-<li><strong><code>presentationSyncKey</code></strong> — Optional monotonically-increasing counter on <code>viewerInput</code>. Signals <strong>"App selection changed"</strong> — bump on every section/view selection change (captured or not). The Viewer interprets in two layers: (1) clears any active view-button highlight on every change, so only one section/view button stays "active" across both layers; (2) re-syncs presentation state from <code>input.presentation</code> only when a snapshot is provided. When <code>input.presentation</code> is <code>undefined</code> (uncaptured selection), the Viewer preserves its current state to maintain authoring continuity.</li>
-<li><strong><code>presentationModeCaptures</code></strong> — Host-App-owned input field on <code>viewerInput</code>: a map of mode id → <code>ViewerPresentationInput</code> snapshot. The Viewer reads it when the user clicks a mode tile (applies the captured snapshot, or falls back to built-in lighting defaults if absent). Pass the full persisted map every render — the Viewer only reads it.</li>
+<li><strong>Admin Mode</strong> — Enabled by setting <code>input.admin.enabled = true</code>. Causes the Viewer to render its built-in Authoring Panel as a left-side overlay. Panel uses internal Section / Option / pMode tabs for context selection (no App-driven focus field in v1.8). The bottom NavigationDemoPanel (View row + Summer/Winter pMode rows) is admin-only — Viewer-internal authoring conveniences for loading default poses and built-in lighting defaults; no public callbacks.</li>
+<li><strong><code>selectionKey</code></strong> — Optional monotonically-increasing counter on <code>viewerInput</code>. The App's "selection changed — force fresh apply" signal — bump on every section selection click and every admin pMode pill click. The Viewer responds in two layers (each gated on the corresponding input being provided): (1) camera animation re-fires from <code>input.camera.pose</code> even when its reference identity is unchanged; (2) presentation re-syncs from <code>input.presentation</code> even when values match current internal state. When <code>input.presentation</code> is <code>undefined</code>, the Viewer preserves its current state regardless of <code>selectionKey</code>.</li>
 <li><strong>Space</strong> — A navigable region in the scene graph, marked by a node whose name contains a recognized space-marker suffix. The system term that covers interior rooms and any other navigable regions added in future; intentionally general so additional kinds (zones, areas) can sit alongside Rooms.</li>
 <li><strong>Room</strong> — A walkable interior space — a node whose name contains <code>_RM</code> (e.g. <code>LivingDining_RM</code>). The most common kind of Space today; user-facing UI labels this panel "Rooms."</li>
 <li><strong>Doorway</strong> — A connection between two rooms, marked by a node whose name contains <code>_DW</code> with the form <code>&lt;RoomA&gt;_&lt;RoomB&gt;_DW</code> (e.g. <code>Hall_FrontBedroom_DW</code>).</li>

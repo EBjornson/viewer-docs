@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/demoapp/">
       
       
-        <link rel="prev" href="../viewer_contract_v1_7/">
+        <link rel="prev" href="../integration_walkthrough/">
       
       
         <link rel="next" href="../architecture/">
@@ -401,7 +401,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
         
   
   
@@ -1094,10 +1094,11 @@
 <ul>
 <li>demo model selection (manifest models + ad-hoc file upload)</li>
 <li>section and option state, label renames</li>
-<li>capture/replay orchestration for all five capture families</li>
+<li>capture/replay orchestration for all 3 contract capture families plus App-side pMode storage</li>
+<li>App-side pMode taxonomy (6-mode convention: <code>'day'</code> / <code>'nightExt'</code> / <code>'nightInt'</code> / <code>'winterDay'</code> / <code>'winterNight'</code> / <code>'winterNightInt'</code>) and <code>currentPModeRef</code> tracking for identity-free capture routing</li>
 <li>admin mode toggle</li>
 <li>cross-section ownership enforcement (<code>findOptionCaptureConflicts</code>)</li>
-<li>per-model persistence in <code>localStorage</code> keyed by model ID (<code>demoapp_v2_${modelId}</code>)</li>
+<li>per-model persistence in <code>localStorage</code> keyed by model ID (<code>demoapp_v3_${modelId}</code>)</li>
 </ul>
 <hr />
 <h2 id="header-ui">Header UI<a class="headerlink" href="#header-ui" title="Permanent link">&para;</a></h2>
@@ -1105,17 +1106,18 @@
 <ul>
 <li><strong>Model selector</strong> — dropdown listing manifest models plus an <strong>Upload .glb</strong> button for ad-hoc uploads (uploaded files do not persist).</li>
 <li><strong>Admin Mode toggle</strong> — flips <code>input.admin.enabled</code>. When on, the Viewer renders its built-in Authoring Panel.</li>
-<li><strong>Reset Model</strong> — clears the entire saved snapshot for the active model (with confirm). Removes section captures, view captures, presentation mode captures, option captures, and material defaults.</li>
+<li><strong>Reset Model</strong> — clears the entire saved snapshot for the active model (with confirm). Removes section captures, presentation mode captures (App-side), option captures, and material defaults.</li>
 <li><strong>Complete Build</strong> — triggers batch capture. Blue when at least one section has a captured pose, neutral otherwise. Shows "Capturing…" and is disabled while the batch is in progress. When <code>onBatchCaptureComplete</code> fires, DemoApp downloads one JPEG per captured section, named by the section label.</li>
 <li><strong>Loading / Ready indicator</strong> — status badge that shows "Loading…" until <code>onViewerReady</code> fires, then turns green and shows "Ready". Resets on every model switch.</li>
-<li><strong>Capture status pills</strong> — read-only indicators for Summer Day, Summer Night, Summer Night Interior, Winter Day, Winter Night, Winter Night Interior, Exterior, Interior, Overhead, and Mat. Defaults. Each turns blue when the corresponding capture payload exists in App state. These are the <strong>persistent source of truth</strong> for what has been captured — distinct from the session-only highlights inside the Viewer's authoring overlay.</li>
+<li><strong>pMode pills</strong> — 2 rows of 3 pills (Summer Day / Night / Interior + Winter Day / Night / Interior). Each turns blue when its <code>presentationModeCaptures[modeKey]</code> payload exists in App state. <strong>In admin mode, the pills are clickable buttons</strong> — clicking sets <code>currentPMode</code> and pushes the App-stored snapshot via <code>viewerInput.presentation</code>. The currently-active pMode shows a white border ring. <strong>In user mode, pills are pure read-only indicators</strong>. These are the <strong>persistent source of truth</strong> for what pMode is captured — distinct from the session-only highlights inside the Viewer's NavigationDemoPanel.</li>
+<li><strong>Mat. Defaults pill</strong> — read-only indicator (always); blue when <code>materialDefaultCapture</code> is stored.</li>
 </ul>
 <hr />
 <h2 id="developer-oriented-visual-aids">Developer-Oriented Visual Aids<a class="headerlink" href="#developer-oriented-visual-aids" title="Permanent link">&para;</a></h2>
 <p>DemoApp deliberately surfaces several aids to help developers integrating the Viewer inspect what the contract actually delivers:</p>
 <ul>
 <li><strong>Loading / Ready indicator</strong> <em>(also listed above)</em> — hovering the badge shows the full <code>onViewerReady</code> payload in a floating panel with a Copy button. Lets integrators inspect the readiness event data without opening DevTools.</li>
-<li><strong>Capture status pills</strong> <em>(also listed above)</em> — hovering any pill (after a 3-second delay) shows the stored JSON payload in a floating panel with a Copy button. Same pattern is applied to section tabs and option buttons — the payload tooltip surfaces the exact data that flowed back through the corresponding <code>viewerOutput</code> callback.</li>
+<li><strong>pMode + Mat. Defaults pills</strong> <em>(also listed above)</em> — hovering any pill (after a 3-second delay) shows the stored JSON payload in a floating panel with a Copy button. Same pattern is applied to section tabs and option buttons — the payload tooltip surfaces the exact data that flowed back through the corresponding <code>viewerOutput</code> callback.</li>
 <li><strong>Payload inspector tooltips</strong> — the unifying name for the hover-and-copy pattern above. Useful for verifying the shape of any capture payload during integration without instrumenting your own logging.</li>
 <li><strong>Error banner</strong> — a dismissable red banner overlaid on the viewer panel when <code>onError</code> fires, showing the error code and message. Clears on dismiss or model switch.</li>
 <li><strong>Capture conflict banners</strong> — a red banner when <code>onOptionCaptured</code> is rejected by cross-section ownership enforcement (names the conflicting geometry IDs and the owning section/option), and a separate amber banner for pre-existing conflicts surfaced from persisted state on load. See <a href="../integration_guide/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> for the rules and the rejection pattern.</li>
@@ -1125,7 +1127,7 @@
 <h2 id="persistence">Persistence<a class="headerlink" href="#persistence" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Storage:</strong> browser <code>localStorage</code>.</li>
-<li><strong>Key:</strong> <code>demoapp_v2_${modelId}</code> — one snapshot per model ID.</li>
+<li><strong>Key:</strong> <code>demoapp_v3_${modelId}</code> — one snapshot per model ID.</li>
 <li><strong>Models that persist:</strong> manifest models (stable model ID).</li>
 <li><strong>Models that do NOT persist:</strong> ad-hoc uploaded <code>.glb</code> files. Reload clears them.</li>
 </ul>
@@ -1135,7 +1137,7 @@
 <li>chosen options by section</li>
 <li>option captures (<code>geometryIds</code>, <code>materialAssignments</code>)</li>
 <li>model default material capture</li>
-<li>view captures (keyed by camera mode; same shape as section captures)</li>
+<li>(no separate view captures in v1.8 — optionless Sections serve as views)</li>
 <li>presentation mode captures (keyed by mode; full <code>ViewerPresentationInput</code> snapshot; six modes: day / nightExt / nightInt / winterDay / winterNight / winterNightInt)</li>
 <li>section/option label renames</li>
 </ul>

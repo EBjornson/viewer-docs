@@ -399,7 +399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7/" class="md-nav__link">
+      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
         
   
   
@@ -1649,7 +1649,7 @@
 <h3 id="admin-mode-toggle">Admin mode toggle<a class="headerlink" href="#admin-mode-toggle" title="Permanent link">&para;</a></h3>
 <p>The Viewer supports <code>input.admin.enabled</code>:</p>
 <ul>
-<li><code>true</code> — renders the built-in Authoring Panel (left-side overlay, dynamic by default — filtered by <code>input.admin.activeAuthoringFocus</code>)</li>
+<li><code>true</code> — renders the built-in Authoring Panel (left-side overlay) with internal Section / Option / pMode tabs for context selection, plus the admin-only NavigationDemoPanel (View row + Summer/Winter pMode rows) for navigation/lighting-default conveniences</li>
 <li><code>false</code> — renders purely from what the App passes through <code>viewerInput</code>; clean presentation mode for end-user browsing</li>
 </ul>
 <p>The bottom Navigation Panel (View row + Summer/Winter presentation mode rows) is identical in both modes — it has no admin-only controls.</p>
@@ -1669,7 +1669,7 @@
 <p>A dedicated <strong>Rooms panel</strong> (implemented by the internal <code>SpaceMenu</code> component) shows the list of navigable rooms in the right column of the viewer (shown or hidden by the <strong>Rooms</strong> User Visibility toggle). Each room is clickable to navigate to that location. This replaces the inline text footer that was previously in the navigation bar.</p>
 <p>There are two distinct navigation behaviors depending on how the user reaches a room:</p>
 <p><strong>Rooms panel button:</strong> Clicking a room in the Rooms panel <strong>only navigates the camera</strong> — it switches the view mode to interior and animates the camera to that location. It does not change lighting, environment, exposure, material assignments, or geometry visibility. All scene presentation state is left exactly as it was before the click.</p>
-<p><strong>Overhead space-tile click (<code>SpaceTileClickNav</code>):</strong> When in overhead view, clicking a space tile navigates the camera to that interior space via pathNav <strong>and also applies the Interior view capture</strong> — including its visibility assignments and presentation settings. This is the same state applied when pressing the Interior View button. See <a href="../capture_and_replay/#overhead-space-tile-click-spacetileclicknav">Capture &amp; Replay → Overhead Space-Tile Click</a> for the full callback wiring and Admin vs User behavior.</p>
+<p><strong>Overhead floor-tile click:</strong> When the user is in an overhead-mode section and clicks a floor tile (a recognized <code>_RM</code> room marker face), the Viewer navigates the camera into that interior space via pathNav. <strong>No callback fires</strong> in v1.8 — the camera movement is purely Viewer-internal. The active section's presentation/visibility persists. See <a href="../capture_and_replay/#overhead-floor-tile-click">Capture &amp; Replay → Overhead Floor-Tile Click</a>.</p>
 <p>Room navigation is <strong>viewer-side runtime behavior</strong> — used during authoring and by end users navigating the model. There is currently no plan to expose the list of available rooms to the App through the public contract. The Rooms panel (controlled by <code>ui.showSpaceMenu</code>) renders the list and handles navigation entirely within the Viewer.</p>
 <h3 id="runtime-debug-helpers">Runtime debug helpers<a class="headerlink" href="#runtime-debug-helpers" title="Permanent link">&para;</a></h3>
 <p>The repo currently includes helpful debug/admin tools such as:</p>
@@ -1753,7 +1753,7 @@
 <li>section presentation capture/replay (pose + camera mode + presentationMode reference + visibility + UI flags)</li>
 <li>option material capture/replay</li>
 <li>model default material capture/replay</li>
-<li>view capture and presentation mode capture/replay (Summer Day / Summer Night / Summer Night Interior / Winter Day / Winter Night / Winter Night Interior)</li>
+<li>presentation mode capture/replay (App-side pMode taxonomy; DemoApp uses 6 modes: Summer Day / Summer Night / Summer Night Interior / Winter Day / Winter Night / Winter Night Interior)</li>
 <li>deterministic ownership model</li>
 <li>admin mode toggle (viewer self-contained authoring overlay)</li>
 <li>per-model local persistence (DemoApp, localStorage)</li>
