@@ -8,7 +8,7 @@
 
 **Status:** Planning / not yet implemented
 **Date drafted:** 2026-04-30
-**Related docs:** [Viewer Contract](viewer_contract_v1_7.md), [System Architecture](architecture.md), [Admin Authoring Guide](admin_authoring_guide.md), [Model Authoring Guide](model_authoring_guide.md)
+**Related docs:** [Viewer Contract](viewer_contract_v1_8.md), [System Architecture](architecture.md), [Admin Authoring Guide](admin_authoring_guide.md), [Model Authoring Guide](model_authoring_guide.md)
 
 ## Overview
 
@@ -199,7 +199,7 @@ Add a small dedicated area in the DemoApp header — e.g. a "Materials" button t
 
 Two changes:
 
-1. **Contract:** add `viewerInput.materialCatalog` per the data shape above. Update [`Viewer.jsx`](../src/public/Viewer.jsx) and runtime in [`ViewerRuntime.jsx`](../src/viewer/ViewerRuntime.jsx) to thread the catalog through. Document in [Viewer Contract](viewer_contract_v1_7.md).
+1. **Contract:** add `viewerInput.materialCatalog` per the data shape above. Update [`Viewer.jsx`](../src/public/Viewer.jsx) and runtime in [`ViewerRuntime.jsx`](../src/viewer/ViewerRuntime.jsx) to thread the catalog through. Document in [Viewer Contract](viewer_contract_v1_8.md).
 2. **Picker UI:** update the material picker (currently in [`ViewerAuthoringDemoPanel.jsx`](../src/viewer/components/ViewerAuthoringDemoPanel.jsx)) to:
    - Consume the catalog from input rather than static import.
    - Render entries grouped or filterable by source: `All` / `Platform` / `Yours`.
@@ -246,7 +246,7 @@ This plan keeps the curated catalog in-repo (Path A). When the curated catalog g
 2. **Phase 2** — `materialRef` schema + App-side resolver scaffolding (with platform-only resolution; workspace returns empty until Phase 3). New captures populate `materialRef`; old captures still replay via legacy URL fallback.
 3. **Phase 3** — `WorkspaceMaterialStore` IndexedDB implementation. No UI yet; testable via console.
 4. **Phase 4** — upload UI in DemoApp header.
-5. **Phase 5** — merged picker + `viewerInput.materialCatalog` contract change. Update [Viewer Contract](viewer_contract_v1_7.md) doc in the same PR.
+5. **Phase 5** — merged picker + `viewerInput.materialCatalog` contract change. Update [Viewer Contract](viewer_contract_v1_8.md) doc in the same PR.
 6. **Phase 6** — lifecycle UX polish.
 7. **Phase 7** (deferred) — resolution-variant selector.
 

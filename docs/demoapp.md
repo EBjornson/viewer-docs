@@ -26,10 +26,11 @@ All capture payloads are received via `viewerOutput` callbacks. All replay inten
 
 - demo model selection (manifest models + ad-hoc file upload)
 - section and option state, label renames
-- capture/replay orchestration for all five capture families
+- capture/replay orchestration for all 3 contract capture families plus App-side pMode storage
+- App-side pMode taxonomy (6-mode convention: `'day'` / `'nightExt'` / `'nightInt'` / `'winterDay'` / `'winterNight'` / `'winterNightInt'`) and `currentPModeRef` tracking for identity-free capture routing
 - admin mode toggle
 - cross-section ownership enforcement (`findOptionCaptureConflicts`)
-- per-model persistence in `localStorage` keyed by model ID (`demoapp_v2_${modelId}`)
+- per-model persistence in `localStorage` keyed by model ID (`demoapp_v3_${modelId}`)
 
 ---
 
@@ -39,10 +40,11 @@ The DemoApp header surfaces a compact set of integrator-facing controls and indi
 
 - **Model selector** — dropdown listing manifest models plus an **Upload .glb** button for ad-hoc uploads (uploaded files do not persist).
 - **Admin Mode toggle** — flips `input.admin.enabled`. When on, the Viewer renders its built-in Authoring Panel.
-- **Reset Model** — clears the entire saved snapshot for the active model (with confirm). Removes section captures, view captures, presentation mode captures, option captures, and material defaults.
+- **Reset Model** — clears the entire saved snapshot for the active model (with confirm). Removes section captures, presentation mode captures (App-side), option captures, and material defaults.
 - **Complete Build** — triggers batch capture. Blue when at least one section has a captured pose, neutral otherwise. Shows "Capturing…" and is disabled while the batch is in progress. When `onBatchCaptureComplete` fires, DemoApp downloads one JPEG per captured section, named by the section label.
 - **Loading / Ready indicator** — status badge that shows "Loading…" until `onViewerReady` fires, then turns green and shows "Ready". Resets on every model switch.
-- **Capture status pills** — read-only indicators for Summer Day, Summer Night, Summer Night Interior, Winter Day, Winter Night, Winter Night Interior, Exterior, Interior, Overhead, and Mat. Defaults. Each turns blue when the corresponding capture payload exists in App state. These are the **persistent source of truth** for what has been captured — distinct from the session-only highlights inside the Viewer's authoring overlay.
+- **pMode pills** — 2 rows of 3 pills (Summer Day / Night / Interior + Winter Day / Night / Interior). Each turns blue when its `presentationModeCaptures[modeKey]` payload exists in App state. **In admin mode, the pills are clickable buttons** — clicking sets `currentPMode` and pushes the App-stored snapshot via `viewerInput.presentation`. The currently-active pMode shows a white border ring. **In user mode, pills are pure read-only indicators**. These are the **persistent source of truth** for what pMode is captured — distinct from the session-only highlights inside the Viewer's NavigationDemoPanel.
+- **Mat. Defaults pill** — read-only indicator (always); blue when `materialDefaultCapture` is stored.
 
 ---
 
@@ -51,7 +53,7 @@ The DemoApp header surfaces a compact set of integrator-facing controls and indi
 DemoApp deliberately surfaces several aids to help developers integrating the Viewer inspect what the contract actually delivers:
 
 - **Loading / Ready indicator** *(also listed above)* — hovering the badge shows the full `onViewerReady` payload in a floating panel with a Copy button. Lets integrators inspect the readiness event data without opening DevTools.
-- **Capture status pills** *(also listed above)* — hovering any pill (after a 3-second delay) shows the stored JSON payload in a floating panel with a Copy button. Same pattern is applied to section tabs and option buttons — the payload tooltip surfaces the exact data that flowed back through the corresponding `viewerOutput` callback.
+- **pMode + Mat. Defaults pills** *(also listed above)* — hovering any pill (after a 3-second delay) shows the stored JSON payload in a floating panel with a Copy button. Same pattern is applied to section tabs and option buttons — the payload tooltip surfaces the exact data that flowed back through the corresponding `viewerOutput` callback.
 - **Payload inspector tooltips** — the unifying name for the hover-and-copy pattern above. Useful for verifying the shape of any capture payload during integration without instrumenting your own logging.
 - **Error banner** — a dismissable red banner overlaid on the viewer panel when `onError` fires, showing the error code and message. Clears on dismiss or model switch.
 - **Capture conflict banners** — a red banner when `onOptionCaptured` is rejected by cross-section ownership enforcement (names the conflicting geometry IDs and the owning section/option), and a separate amber banner for pre-existing conflicts surfaced from persisted state on load. See [Cross-Section Ownership Enforcement](integration_guide.md#cross-section-ownership-enforcement) for the rules and the rejection pattern.
@@ -63,7 +65,7 @@ The Viewer's own capture indicators (highlighted state on individual capture but
 ## Persistence
 
 - **Storage:** browser `localStorage`.
-- **Key:** `demoapp_v2_${modelId}` — one snapshot per model ID.
+- **Key:** `demoapp_v3_${modelId}` — one snapshot per model ID.
 - **Models that persist:** manifest models (stable model ID).
 - **Models that do NOT persist:** ad-hoc uploaded `.glb` files. Reload clears them.
 
@@ -73,7 +75,7 @@ Persisted snapshot contents:
 - chosen options by section
 - option captures (`geometryIds`, `materialAssignments`)
 - model default material capture
-- view captures (keyed by camera mode; same shape as section captures)
+- (no separate view captures in v1.8 — optionless Sections serve as views)
 - presentation mode captures (keyed by mode; full `ViewerPresentationInput` snapshot; six modes: day / nightExt / nightInt / winterDay / winterNight / winterNightInt)
 - section/option label renames
 

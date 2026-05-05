@@ -117,14 +117,8 @@ The Viewer's React `output` callbacks become DOM events on `<viewer-element>`. N
 | `onOptionCaptureCleared` | `optioncapturecleared` |
 | `onMaterialDefaultsCaptured` | `materialdefaultscaptured` |
 | `onMaterialDefaultsCleared` | `materialdefaultscleared` |
-| `onViewCaptured` | `viewcaptured` |
-| `onViewCaptureCleared` | `viewcapturecleared` |
-| `onViewSelected` | `viewselected` |
-| `onSpaceTileWalkActivated` | `spacetilewalkactivated` |
 | `onPresentationModeCaptured` | `presentationmodecaptured` |
 | `onPresentationModeCaptureCleared` | `presentationmodecapturecleared` |
-| `onActivePresentationModeChanged` | `activepresentationmodechanged` |
-| `onGeometryPicked` | `geometrypicked` |
 | `onRenderCaptured` | `rendercaptured` |
 | `onBatchCaptureComplete` | `batchcapturecomplete` |
 
@@ -205,8 +199,8 @@ Important:
 
 - The App owns this **intent**
 - The Viewer owns the actual runtime execution of that motion
-- When the user presses a View button in User Mode, the Viewer fires `onViewSelected(cameraMode)`. The App looks up its stored view capture for that slot and replays it by rebuilding `viewerInput` with the capture's `pose`, `cameraMode`, and `visibilityAssignments`, plus the resolved presentation snapshot (`presentationModeCaptures[capture.presentationMode]`) with `capture.ui` spread on top — the same path as section replay.
-- When the admin captures a view, the Viewer fires `onViewCaptured(payload)`. The App stores the payload keyed by camera mode.
+- When the user activates a section in User Mode, the App reads its stored section capture and rebuilds `viewerInput` with the capture's `pose`, `cameraMode`, embedded `presentation` snapshot (with optional re-resolution via App-side `presentationModeCaptures` lookup for re-skin support), and `visibilityAssignments`. Bumping `selectionKey` ensures the Viewer animates the camera even when the pose reference is identical to the previous render.
+- View captures don't exist in v1.8 — a Section may have associated options or no options. An optionless Section serves as what v1.7 called a View. Same Section Capture / Replay path for both.
 
 ### 3. `scene`
 
@@ -290,9 +284,6 @@ presentation: {
   ui: {
     showSolarSitePanel: true,
     showNorthArrow: true,
-    showPresetViews: true,
-    showPresentationPresets: true,
-    showWinterPresets: false,
     showSpaceMenu: true,
   },
 }
@@ -305,16 +296,16 @@ Think of this as:
 - “Use this terrain”
 - “Use these solar settings”
 
-**Initial load defaults:** all six presentation modes (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) have hardcoded defaults built into the Viewer. The `presentation` field is entirely optional on initial model load — if omitted, the Viewer renders using its built-in defaults. Providing a `presentation` payload is only necessary when the App needs to replay a stored capture.
+**Initial load defaults:** the Viewer has built-in defaults for every `presentation` field. The `presentation` field is entirely optional on initial model load — if omitted, the Viewer renders using its built-in defaults. Providing a `presentation` payload is only necessary when the App needs to replay a stored capture or apply a stored pMode snapshot.
 
-**`presentationSyncKey`:** A companion field to `presentation`. It is an optional monotonically-increasing counter the App bumps to signal **"App selection changed"** — captured or not. The Viewer interprets a changed value at two layers:
+**`selectionKey`:** A companion field. It is an optional monotonically-increasing counter the App bumps to signal **"selection changed — force fresh apply"**. Two cases the App should bump on: section selection clicks and admin pMode pill clicks. The Viewer responds in two layers (each gated on the corresponding input being provided):
 
-1. **View-button highlight clearing** — fires unconditionally. The Viewer clears any active view-button highlight so the App's section/view selection is the single "active" indicator across both layers.
-2. **Presentation re-sync** — fires only when `input.presentation` is provided. When it is, the Viewer re-runs its initialization and resets local admin overrides to match. When `input.presentation` is `undefined` (the active section has no capture), the Viewer **preserves its current state** so authoring tweaks aren't stomped by a navigation that has nothing to replay.
+1. **Camera animation re-fires** from `input.camera.pose` even when its reference identity is unchanged. Handles "user clicks the active section to return to its captured pose after free-navigating."
+2. **Presentation re-syncs** from `input.presentation` even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the Viewer's NavigationDemoPanel pMode buttons that mutate Viewer state without updating App state, then re-clicked an App pill to reload).
 
-**Bump on every section/view selection change.** The App does not need to gate the bump on capture availability; the Viewer's two-layer interpretation handles both cases correctly. (This is a v1.7 contract change — earlier versions advised gating the bump on capture availability, which has been replaced by the in-Viewer guard.)
+When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer preserves its current state regardless of `selectionKey` — admin tweaks aren't stomped. Option clicks should not bump `selectionKey` (they change material/visibility intent, not camera or presentation intent).
 
-**`presentationModeCaptures`:** Map of all presentation-mode captures the App has persisted, keyed by mode id. The Viewer reads it when the user clicks a presentation mode tile inside the Viewer — if a capture exists for that mode, the Viewer applies it; otherwise it falls back to its built-in lighting defaults. The App owns this map; the Viewer only reads. Pass the App's full persisted map (e.g. a `useState`-stored object) every render.
+**Presentation Mode is App-side in v1.8.** There is no `viewerInput.presentationModeCaptures` field — pMode storage and routing live entirely on the App side. DemoApp uses a 6-mode taxonomy (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) as a convention; CustomApps may use any taxonomy, fewer modes, or no pMode concept at all. When an admin clicks a pMode pill in DemoApp's header, DemoApp pushes the App-stored snapshot via `viewerInput.presentation` and bumps `selectionKey`.
 
 ### 5. `admin`
 
@@ -344,9 +335,9 @@ Think of this as:
 - “We are authoring right now” (`enabled: true`)
 - “Render these items as a batch” (`batchCapture`)
 
-When `input.admin.enabled = true`, the Viewer renders its built-in **Authoring Panel** (left-side overlay) containing all capture/clear actions and authoring tools. No extra setup required from the App beyond setting this flag. The Navigation Panel (View row + Summer/Winter presentation mode rows along the bottom) renders identically in admin and user modes and contains no capture controls.
+When `input.admin.enabled = true`, the Viewer renders its built-in **Authoring Panel** (left-side overlay) containing all capture/clear actions and authoring tools. The panel uses internal Section / Option / pMode tabs for context selection — the App is not involved in driving panel focus. No extra setup required from the App beyond setting `enabled: true`.
 
-The Authoring Panel is **dynamic by default** — it filters its content based on `input.admin.activeAuthoringFocus`. The App should set this field on every authoring-relevant click so the panel adapts to the current context. See *Dynamic Authoring Panel* below for details.
+The Viewer also renders an admin-only **NavigationDemoPanel** along the bottom (View row + Summer/Winter pMode rows). These are pure Viewer-internal authoring conveniences: View row navigates the camera to default Exterior/Interior/Overhead poses; pMode rows apply built-in lighting defaults to the Viewer's internal admin presentation state. Neither row fires public callbacks — no App involvement needed.
 
 To trigger a batch render, set `admin.batchCapture = { nonce, items }` and increment `nonce`. Each item supplies the camera pose, scene visibility, and presentation for one render. The Viewer processes the items in sequence and fires `onRenderCaptured` per item, then `onBatchCaptureComplete` when done. Admin overlays are hidden automatically during capture.
 
@@ -393,38 +384,33 @@ This is useful for:
 
 ### Capture callbacks
 
-These are the primary authoring output events. The Viewer fires them when the admin clicks a capture button:
+These are the primary authoring output events. The Viewer fires them when the admin clicks a capture button. **All capture payloads are identity-free in v1.8** — the App attaches identity (active section / option / pMode tag) from its own state at receipt.
 
 | Callback | Payload | App action |
 |---|---|---|
-| `onSectionCaptured(payload)` | pose + cameraMode + presentationMode + visibilityAssignments + ui | store as `sectionCaptures[activeSectionId]` |
+| `onSectionCaptured(payload)` | pose + cameraMode + **embedded presentation snapshot** + visibilityAssignments | store as `sectionCaptures[activeSectionId]`. Optional: attach an App-side `presentationMode` tag from currently active pMode for re-skin support. |
 | `onSectionCaptureCleared()` | — | clear `sectionCaptures[activeSectionId]` |
 | `onOptionCaptured(payload)` | geometryIds + materialAssignments | Validate cross-section ownership (see *Cross-Section Ownership Enforcement* below). On no conflict, **merge additively** into `optionCaptures[sectionId][optionId]`: union geometry IDs, incoming wins per geometryId for materials. On conflict, reject the capture and notify the user. |
 | `onOptionCaptureCleared()` | — | clear `optionCaptures[sectionId][optionId]` |
 | `onMaterialDefaultsCaptured(payload)` | model-wide material defaults | store as `materialDefaultCapture` |
 | `onMaterialDefaultsCleared()` | — | clear `materialDefaultCapture` |
-| `onViewCaptured(payload)` | cameraMode + pose + presentationMode + visibilityAssignments + ui | store as `viewCaptures[payload.cameraMode]` |
-| `onViewCaptureCleared(cameraMode)` | — | remove `viewCaptures[cameraMode]` |
-| `onViewSelected(cameraMode)` | cameraMode string | In User Mode: look up `viewCaptures[cameraMode]`, resolve `presentationModeCaptures[capture.presentationMode]`, and replay via `viewerInput`. In Admin Mode: callback IS fired (to allow the App to clear section tab highlighting), but the App should NOT trigger camera/presentation replay — the Viewer handles navigation internally. |
-| `onSpaceTileWalkActivated(cameraMode)` | cameraMode string | Apply presentation + visibility from `viewCaptures[cameraMode]` (resolving its `presentationMode`); do **not** set camera pose — the Viewer is already navigating via pathNav. Fires in User Mode only. See [Capture & Replay → Overhead Space-Tile Click](capture_and_replay.md#overhead-space-tile-click-spacetileclicknav). |
-| `onPresentationModeCaptured(payload)` | `{ mode: string, presentation: ViewerPresentationInput }` | store as `presentationModeCaptures[payload.mode] = payload.presentation` |
-| `onActivePresentationModeChanged(mode)` | mode string | track active mode; apply `presentationModeCaptures[mode]` to `input.presentation` if desired |
+| `onPresentationModeCaptured(snapshot)` | bare `ViewerPresentationInput` snapshot | store as `presentationModeCaptures[currentPMode] = snapshot` (App attaches identity from its own active-pMode state) |
+| `onPresentationModeCaptureCleared()` | — | remove App's currently active pMode entry from `presentationModeCaptures` |
 
-> **⚠️ `onViewSelected` in Admin Mode:** The Viewer fires `onViewSelected` in both User Mode and Admin Mode. In Admin Mode the Viewer handles view navigation internally and does **not** expect the App to drive a camera or presentation replay in response. Driving replay from the App in Admin Mode would cause a double-animation. Guard any replay logic with a check on `isAdminMode` before acting on this callback.
+**Section replay** (when user activates a section in user mode):
 
-Replay resolves the captured `presentationMode` name to a full snapshot via `presentationModeCaptures`, spreads the capture's `ui` flags on top of `modeSnapshot.ui` (so per-capture flags override mode-level flags), then writes `pose`, `visibilityAssignments`, and the resolved `presentation` into `viewerInput`. See [Capture & Replay → presentation resolution](capture_and_replay.md#presentation-resolution) for the canonical code.
+```js
+const capture = sectionCaptures[activeSectionId]
+const presentation = presentationModeCaptures?.[capture?.presentationMode] ?? capture?.presentation
+viewerInput = {
+  camera: { cameraMode: capture?.cameraMode, pose: capture?.pose },
+  presentation,
+  scene: { visibilityAssignments: capture?.visibilityAssignments, ... },
+  selectionKey: bumpedKey,
+}
+```
 
-### `onGeometryPicked`
-
-This tells The App:
-
-- which piece of geometry was selected or picked
-
-Useful for:
-
-- authoring mappings
-- admin/debug workflows
-- future richer configuration tooling
+The pMode lookup wins when an App-side pMode store entry exists for the section's tag, enabling "re-skin" semantics. The embedded snapshot serves as the fallback. CustomApps without a pMode taxonomy can use `presentation: capture.presentation` directly. See [Capture & Replay → Section Captures](capture_and_replay.md#section-captures) for both replay strategies in detail.
 
 ### `onRenderCaptured`
 
@@ -583,42 +569,11 @@ The Viewer continues to fire `onOptionCaptured` exactly as before — rejection 
 
 ---
 
-## Dynamic Authoring Panel
+## Authoring Panel Context
 
-The Authoring Panel (left-side overlay rendered when `input.admin.enabled = true`) filters its content based on `input.admin.activeAuthoringFocus`. The App should track the admin's "last clicked" authoring target and pass it through this field so the panel adapts as the admin works.
+The Authoring Panel (left-side overlay rendered when `input.admin.enabled = true`) uses **internal Section / Option / pMode tabs** for context selection. The admin clicks the tab they're authoring against; the panel filters its content accordingly.
 
-```ts
-type ViewerAuthoringFocus = 'section' | 'option' | 'view' | 'presentationMode' | 'all'
-```
-
-| Last admin click | App should set | Panel surfaces |
-|---|---|---|
-| Section tab (App-side) | `'section'` | Section Capture/Clear, Geometry tools, User Visibility, Camera Mode |
-| Option button (App-side) | `'option'` | Option Capture / Material Only / Clear, Material Defaults, Geometry tools, Assembly Inspector, Materials picker |
-| View Preset button (Viewer-side, fires `onViewSelected`) | `'view'` | View Capture/Clear, Geometry tools, User Visibility, Camera Mode |
-| Presentation Mode button (Viewer-side, fires `onActivePresentationModeChanged`) | `'presentationMode'` | Mode Capture/Clear, User Visibility, Presentation sliders, HDR Environment, Terrain Preset |
-| `'all'` or omitted | — | Legacy two-tab fallback, all controls visible |
-
-For Section/Option clicks (which originate in the App), the App tracks state directly. For View/Presentation Mode clicks (which originate in the Viewer), the App listens to the corresponding output callback and updates focus there. DemoApp shows the full pattern:
-
-```js
-const [activeAuthoringFocus, setActiveAuthoringFocus] = useState('section')
-
-// Section tab click handler:
-onClick={() => { setSelectedSectionId(s.id); setActiveAuthoringFocus('section') }}
-
-// Option button click handler:
-onClick={() => { setSelectedOption(o); setActiveAuthoringFocus('option') }}
-
-// Viewer callbacks:
-onViewSelected: (cameraMode) => { setActiveAuthoringFocus('view'); /* …existing logic… */ }
-onActivePresentationModeChanged: (mode) => { setActiveAuthoringFocus('presentationMode') }
-
-// Threaded into viewerInput:
-admin: { enabled: adminEnabled, activeAuthoringFocus }
-```
-
-`'all'` (or omitting the field entirely) puts the panel into a legacy two-tab fallback. The Viewer also exposes a debug toggle that overrides any value sent by the App and forces the legacy layout — used for testing only. Production-style apps should always pass a focus value.
+The App is **not involved** in driving panel context — there is no `activeAuthoringFocus` field in the v1.8 contract. The admin's tab choice is purely a Viewer-internal UI state.
 
 ---
 

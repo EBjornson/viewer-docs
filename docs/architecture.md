@@ -8,7 +8,7 @@
 
 ## Purpose
 
-The current stable architecture of this repository — public Viewer boundary, internal Viewer runtime layers, and the DemoApp authoring/persistence model. This is the architectural map; for the contract surface see [Viewer Contract v1.7](viewer_contract_v1_7.md), and for the capture lifecycle see [Capture & Replay](capture_and_replay.md).
+The current stable architecture of this repository — public Viewer boundary, internal Viewer runtime layers, and the DemoApp authoring/persistence model. This is the architectural map; for the contract surface see [Viewer Contract v1.8](viewer_contract_v1_8.md), and for the capture lifecycle see [Capture & Replay](capture_and_replay.md).
 
 ---
 
@@ -116,8 +116,8 @@ This is the shared internal wrapper runtime. It currently owns:
 - authoring capture coordination (`useViewerAuthoringCapture`) — fires `ViewerOutput` capture callbacks when admin clicks a capture action
 - visibility state (`useVisibilityState`)
 - `ViewerAdminNavigationBridge` composition
-- when `input.admin.enabled = true`: renders the built-in `ViewerAuthoringDemoPanel` (the authoring overlay on the left) as a viewer-side overlay. The panel is dynamic by default — its content is filtered by `input.admin.activeAuthoringFocus` (`'section' | 'option' | 'view' | 'presentationMode' | 'all'`); a debug-panel toggle can force legacy two-tab mode for testing/revert
-- always renders `NavigationDemoPanel` (View row + Summer/Winter mode rows along the bottom) — identical in admin and user modes; it is for navigation only and contains no capture controls
+- when `input.admin.enabled = true`: renders the built-in `ViewerAuthoringDemoPanel` (the authoring overlay on the left) as a viewer-side overlay. The panel uses internal Section / Option / pMode tabs for context selection — no App-driven focus field
+- when `input.admin.enabled = true`: renders `NavigationDemoPanel` (View row + Summer/Winter pMode rows along the bottom) as admin-only Viewer-internal authoring conveniences — View row navigates to default poses; pMode rows apply built-in lighting defaults. Neither row fires public callbacks
 - `ViewerRoot` handoff
 
 ### ViewerAdminNavigationBridge
@@ -181,7 +181,7 @@ Current stable visibility model separates:
 
 Section presentation replay and authoring tools both affect visibility, but they are not the same kind of state.
 
-Visibility assignments are included in section and view capture payloads and replayed by the App via `viewerInput.scene.visibilityAssignments`. The full shape is `{ hiddenGeometryIds, shownGeometryIds, instantHiddenGeometryIds, isolatedGeometryIds }`. The Viewer resolves show/hide priority: `shownGeometryIds` wins over `hiddenGeometryIds`; `instantHiddenGeometryIds` hides without fade.
+Visibility assignments are included in section capture payloads and replayed by the App via `viewerInput.scene.visibilityAssignments`. The full shape is `{ hiddenGeometryIds, shownGeometryIds, instantHiddenGeometryIds, isolatedGeometryIds }`. The Viewer resolves show/hide priority: `shownGeometryIds` wins over `hiddenGeometryIds`; `instantHiddenGeometryIds` hides without fade.
 
 ### Materials
 
@@ -216,28 +216,28 @@ A `restoreOriginalMaterial: true` entry in `materialAssignments` restores to the
 
 ### Admin mode is self-contained in the Viewer
 
-When `input.admin.enabled = true`, `ViewerRuntime` renders the built-in `ViewerAuthoringDemoPanel` (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App. The `NavigationDemoPanel` (View row + presentation mode rows along the bottom) renders in both admin and user modes and is purely for navigation — capture/clear actions live in the Authoring Panel.
+When `input.admin.enabled = true`, `ViewerRuntime` renders the built-in `ViewerAuthoringDemoPanel` (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App. The `NavigationDemoPanel` (View row + Summer/Winter pMode rows along the bottom) is also admin-only — pure Viewer-internal authoring conveniences for loading default poses and built-in lighting defaults; no public callbacks.
 
-The Authoring Panel is **dynamic by default** — its content is filtered by `input.admin.activeAuthoringFocus`. See [Dynamic Authoring Panel](integration_guide.md#dynamic-authoring-panel) in the integration guide for the focus → controls table and the App-side state-threading pattern.
+The Authoring Panel uses **internal Section / Option / pMode tabs** for context selection. The App is not involved in driving panel focus — there is no `activeAuthoringFocus` contract field in v1.8.
 
 The Viewer internally manages:
 - presentation editing state (exposure, HDR, terrain, lighting, solar, point lights)
 - mesh selection and material editing state
 - authoring capture coordination
+- transient highlight state for the admin-only NavigationDemoPanel View / pMode buttons
 
-In Admin Mode, all UI panels (Views, Summer presets, Winter presets, Spaces, Solar, North Arrow) are always visible regardless of their User Visibility flag values. Panels hidden from users show a dashed orange outline so the admin can distinguish them without losing readability.
+In Admin Mode, the Spaces / Solar panels are always visible regardless of their User Visibility flag values (`ui.showSpaceMenu` / `ui.showSolarSitePanel`). Panels hidden from users show a dashed orange outline so the admin can distinguish them without losing readability. The North Arrow has no admin override — it shows or hides as-is.
 
-Capture results are communicated back to the App via `ViewerOutput` callbacks. Five capture families exist:
+Capture results are communicated back to the App via `ViewerOutput` callbacks. **3 contract capture families** exist (plus App-side pMode storage as an optional convention):
 
-- **Section captures** — pose + cameraMode + presentationMode reference + visibility + UI flags, per section
-- **View captures** — same shape as section captures, keyed by camera mode (Exterior / Interior / Overhead)
-- **Presentation mode captures** — full `ViewerPresentationInput` snapshot, per named mode (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`)
+- **Section captures** — pose + cameraMode + **embedded presentation snapshot** + visibility, per section. Self-contained — no external pMode lookup needed for replay.
 - **Option captures** — geometry membership + material assignments, per option
 - **Model default materials** — model-level baseline material assignments
+- **Presentation mode captures** *(App-side)* — full `ViewerPresentationInput` snapshot per App-defined pMode key. DemoApp uses 6 modes (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) as a convention; CustomApps may use any taxonomy or none.
 
-Section and view captures store a `presentationMode` *name* rather than inline presentation values. The App resolves the full snapshot via `presentationModeCaptures[capture.presentationMode]` at replay time; `capture.ui` flags take precedence over the mode snapshot's flags. The App also pushes its full presentation-mode capture map via `viewerInput.presentationModeCaptures` (added in Contract v1.7) so the Viewer can resolve in-Viewer mode-tile clicks without round-tripping through the App. View captures also drive `SpaceTileClickNav`: clicking a space tile from overhead view applies the Interior view capture automatically.
+Views collapsed into Sections in v1.8 — a Section may have associated options or no options (an optionless Section serves as what v1.7 called a View). Section captures embed the full presentation snapshot directly, so they replay self-contained even when the App doesn't maintain a pMode store. Apps that *do* maintain a pMode store can opt into "re-skin" semantics — tagging section captures with a pMode key (App metadata, not contract data), and re-resolving via `presentationModeCaptures[tag]` at replay time so updates to a pMode automatically propagate to all sections that share it. Embedded snapshot serves as the fallback.
 
-For payload shapes, replay paths, last-one-wins semantics, and Admin vs User Mode rendering paths, see [Capture & Replay](capture_and_replay.md).
+For payload shapes, replay paths, identity-free routing, and Admin vs User Mode rendering paths, see [Capture & Replay](capture_and_replay.md).
 
 ### Ownership rules (App-enforced)
 
@@ -260,18 +260,18 @@ Persisted snapshot contents include:
 - chosen options by section
 - option captures (`geometryIds`, `materialAssignments`)
 - model default material capture
-- view captures (keyed by camera mode; same shape as section captures) — replayed by the App via `viewerInput` when `onViewSelected` fires
+- presentation mode captures *(App-side, optional)* — full `ViewerPresentationInput` snapshot per App-defined pMode key
 - presentation mode captures (keyed by mode; full `ViewerPresentationInput` snapshot; six modes: day / nightExt / nightInt / winterDay / winterNight / winterNightInt)
 
 ---
 
 ## Camera / Presentation Runtime
 
-The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section and view-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead space-tile click (`SpaceTileClickNav`) that navigates to a clicked space via pathNav while applying the Interior view capture's presentation and visibility on arrival.
+The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead floor-tile click that navigates to a clicked space via pathNav (presentation/visibility persists from the active section's capture in v1.8 — no callback fired).
 
-The presentation runtime owns the visual state — HDR environment, terrain preset, exposure, lighting, solar, point/spot lights — plus User Visibility flags for the panel set (Solar / Site, North Arrow, Views row, Summer/Winter rows, Space Menu). Field-level details live in [`ViewerPresentationInput`](viewer_contract_v1_7.md#presentation).
+The presentation runtime owns the visual state — HDR environment, terrain preset, exposure, lighting, solar, point/spot lights — plus User Visibility flags for the panel set (Solar / Site, North Arrow, Space Menu). Field-level details live in [`ViewerPresentationInput`](viewer_contract_v1_8.md#presentation).
 
-Solar date/time is included in section and view capture snapshots as part of the `presentation.solar.time` field. When a capture is replayed, the sun angle is restored to exactly what it was at capture time. There is no standalone App-level solar time control — interactive solar adjustment lives in the Viewer's SolarPanel. The App acts as a transparent conduit: it stores `solar.time` as part of the capture payload and passes it back through `viewerInput.presentation.solar.time` during replay.
+Solar date/time is included in section capture snapshots as part of the `presentation.solar.time` field (inside the embedded presentation snapshot). When a capture is replayed, the sun angle is restored to exactly what it was at capture time. There is no standalone App-level solar time control — interactive solar adjustment lives in the Viewer's SolarPanel. The App acts as a transparent conduit: it stores `solar.time` as part of the capture payload and passes it back through `viewerInput.presentation.solar.time` during replay.
 
 ### Solar Time — Two Tracks
 

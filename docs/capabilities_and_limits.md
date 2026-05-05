@@ -76,7 +76,7 @@ The current repo supports:
 
 The Viewer supports `input.admin.enabled`:
 
-- `true` — renders the built-in Authoring Panel (left-side overlay, dynamic by default — filtered by `input.admin.activeAuthoringFocus`)
+- `true` — renders the built-in Authoring Panel (left-side overlay) with internal Section / Option / pMode tabs for context selection, plus the admin-only NavigationDemoPanel (View row + Summer/Winter pMode rows) for navigation/lighting-default conveniences
 - `false` — renders purely from what the App passes through `viewerInput`; clean presentation mode for end-user browsing
 
 The bottom Navigation Panel (View row + Summer/Winter presentation mode rows) is identical in both modes — it has no admin-only controls.
@@ -107,7 +107,7 @@ There are two distinct navigation behaviors depending on how the user reaches a 
 
 **Rooms panel button:** Clicking a room in the Rooms panel **only navigates the camera** — it switches the view mode to interior and animates the camera to that location. It does not change lighting, environment, exposure, material assignments, or geometry visibility. All scene presentation state is left exactly as it was before the click.
 
-**Overhead space-tile click (`SpaceTileClickNav`):** When in overhead view, clicking a space tile navigates the camera to that interior space via pathNav **and also applies the Interior view capture** — including its visibility assignments and presentation settings. This is the same state applied when pressing the Interior View button. See [Capture & Replay → Overhead Space-Tile Click](capture_and_replay.md#overhead-space-tile-click-spacetileclicknav) for the full callback wiring and Admin vs User behavior.
+**Overhead floor-tile click:** When the user is in an overhead-mode section and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** in v1.8 — the camera movement is purely Viewer-internal. The active section's presentation/visibility persists. See [Capture & Replay → Overhead Floor-Tile Click](capture_and_replay.md#overhead-floor-tile-click).
 
 Room navigation is **viewer-side runtime behavior** — used during authoring and by end users navigating the model. There is currently no plan to expose the list of available rooms to the App through the public contract. The Rooms panel (controlled by `ui.showSpaceMenu`) renders the list and handles navigation entirely within the Viewer.
 
@@ -224,7 +224,7 @@ If you need a concise external summary, something like this is accurate:
 - section presentation capture/replay (pose + camera mode + presentationMode reference + visibility + UI flags)
 - option material capture/replay
 - model default material capture/replay
-- view capture and presentation mode capture/replay (Summer Day / Summer Night / Summer Night Interior / Winter Day / Winter Night / Winter Night Interior)
+- presentation mode capture/replay (App-side pMode taxonomy; DemoApp uses 6 modes: Summer Day / Summer Night / Summer Night Interior / Winter Day / Winter Night / Winter Night Interior)
 - deterministic ownership model
 - admin mode toggle (viewer self-contained authoring overlay)
 - per-model local persistence (DemoApp, localStorage)

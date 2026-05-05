@@ -1,26 +1,6 @@
-export const VIEWER_CONTRACT_VERSION = '1.7'
+export const VIEWER_CONTRACT_VERSION = '1.8'
 
 export const VIEWER_CAMERA_MODES = Object.freeze([
-  'exterior',
-  'interior',
-  'overhead',
-])
-
-export const VIEWER_PRESENTATION_MODES = Object.freeze([
-  'day',
-  'nightExt',
-  'nightInt',
-  'winterDay',
-  'winterNight',
-  'winterNightInt',
-])
-
-// Identifies a view-button slot. View captures are keyed by viewMode (not by
-// cameraMode — those are separate concepts). Today the values coincide with
-// the cameraMode enum, but viewMode is allowed to extend later (e.g. multiple
-// 'exterior' views via slots like 'frontExterior') without changing the
-// cameraMode enum or section captures.
-export const VIEWER_VIEW_MODES = Object.freeze([
   'exterior',
   'interior',
   'overhead',
@@ -30,14 +10,6 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
 
 /**
  * @typedef {'exterior' | 'interior' | 'overhead'} ViewerCameraMode
- */
-
-/**
- * @typedef {'exterior' | 'interior' | 'overhead'} ViewerViewMode
- */
-
-/**
- * @typedef {'day' | 'nightExt' | 'nightInt' | 'winterDay' | 'winterNight' | 'winterNightInt'} ViewerPresentationMode
  */
 
 /**
@@ -125,9 +97,6 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * @typedef {object} ViewerPresentationUiInput
  * @property {boolean} [showSolarSitePanel]
  * @property {boolean} [showNorthArrow]
- * @property {boolean} [showPresetViews]
- * @property {boolean} [showPresentationPresets]
- * @property {boolean} [showWinterPresets]
  * @property {boolean} [showSpaceMenu]
  */
 
@@ -169,20 +138,9 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  */
 
 /**
- * Optional hint from the App about which authoring context the admin is
- * currently focused on. The Viewer uses this to filter the authoring panel
- * down to controls relevant to the current focus. Send `'all'` (or omit) to
- * preserve legacy non-dynamic behavior where the panel exposes everything
- * and the admin uses the Presentation/Option mode toggle manually.
- * @typedef {'section' | 'option' | 'view' | 'presentationMode' | 'all'} ViewerAuthoringFocus
- */
-
-/**
  * @typedef {object} ViewerAdminInput
  * @property {boolean} [enabled]
- * @property {ViewerOptionCapturePayload} [activeOptionCapture]
  * @property {ViewerAdminBatchCaptureInput} [batchCapture]
- * @property {ViewerAuthoringFocus} [activeAuthoringFocus]
  */
 
 /**
@@ -191,10 +149,8 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * @property {ViewerCameraInput} [camera]
  * @property {ViewerSceneInput} [scene]
  * @property {ViewerPresentationInput} [presentation]
- * @property {Record<string, ViewerPresentationInput>} [presentationModeCaptures] - App's persisted per-mode capture map (key = presentation mode id). Consulted by the Viewer's mode-switch resolver to apply the captured snapshot for the selected mode; absent entries fall through to Viewer-side lighting defaults. App owns this map; Viewer only reads it.
- * @property {ViewerPresentationMode} [activePresentationMode] - The presentation mode the App considers active. The Viewer mirrors this into its internal mode-button highlight so user-mode replays — where the App switches presentation modes implicitly via section/view selection — keep the highlighted button in sync. Direct mode-button clicks update the Viewer's state optimistically and round-trip through `onActivePresentationModeChanged`; the App should reflect that callback back onto this field for the next render. Optional: if omitted, the Viewer manages its mode highlight internally (legacy behavior).
- * @property {number} [presentationSyncKey] - Bump-style force-resync signal. Increment when there's a stored capture to replay so the Viewer re-syncs its presentation state from `input.presentation`. Do NOT increment when `input.presentation` reflects only defaults — that would overwrite admin-edited values. Typical use: bump on section/view tile clicks during user-mode replay.
  * @property {ViewerAdminInput} [admin]
+ * @property {number} [selectionKey] - Optional monotonically-increasing counter the App bumps on every section selection click that has a captured pose to replay. The Viewer's only response: force the camera animation effect to re-fire even when `camera.pose`'s reference identity is unchanged. Handles the "user clicks the active section to return to its captured pose after free-navigating" case. Bumping for uncaptured sections is harmless; option clicks should not bump.
  */
 
 /**
@@ -215,13 +171,6 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  */
 
 /**
- * @typedef {object} ViewerGeometryPickedEvent
- * @property {string} [geometryId]
- * @property {string} [meshName]
- * @property {string} [assemblyId]
- */
-
-/**
  * @typedef {object} ViewerRenderCapturedEvent
  * @property {string} [imageUrl]
  * @property {unknown} [blob]
@@ -236,12 +185,16 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  */
 
 /**
+ * Section capture is self-contained: the embedded `presentation` snapshot is
+ * everything the App needs to replay (no external pMode lookup). The App may
+ * attach its own `presentationMode` tag as App metadata for re-skin support;
+ * that tag is App-side and not part of this contract.
+ *
  * @typedef {object} ViewerSectionCapturePayload
  * @property {ViewerCameraPose} pose
- * @property {ViewerCameraMode} [cameraMode]
- * @property {ViewerPresentationMode} presentationMode
+ * @property {ViewerCameraMode} cameraMode
+ * @property {ViewerPresentationInput} presentation
  * @property {ViewerSceneVisibilityAssignments} [visibilityAssignments]
- * @property {ViewerPresentationUiInput} [ui]
  */
 
 /**
@@ -260,24 +213,8 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  */
 
 /**
- * @typedef {object} ViewerViewCapturePayload
- * @property {ViewerViewMode} viewMode
- * @property {ViewerCameraPose} pose
- * @property {ViewerPresentationMode} presentationMode
- * @property {ViewerSceneVisibilityAssignments} [visibilityAssignments]
- * @property {ViewerPresentationUiInput} [ui]
- */
-
-/**
- * @typedef {object} ViewerPresentationModeCapturePayload
- * @property {ViewerPresentationMode} mode
- * @property {ViewerPresentationInput} presentation
- */
-
-/**
  * @typedef {object} ViewerOutput
  * @property {(event: ViewerReadyEvent) => void} [onViewerReady]
- * @property {(event: ViewerGeometryPickedEvent) => void} [onGeometryPicked]
  * @property {(event: ViewerRenderCapturedEvent) => void} [onRenderCaptured]
  * @property {() => void} [onBatchCaptureComplete]
  * @property {(event: ViewerErrorEvent) => void} [onError]
@@ -287,11 +224,6 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * @property {() => void} [onOptionCaptureCleared]
  * @property {(payload: ViewerMaterialDefaultsPayload) => void} [onMaterialDefaultsCaptured]
  * @property {() => void} [onMaterialDefaultsCleared]
- * @property {(payload: ViewerViewCapturePayload) => void} [onViewCaptured]
- * @property {(viewMode: ViewerViewMode) => void} [onViewCaptureCleared]
- * @property {(viewMode: ViewerViewMode) => void} [onViewSelected]
- * @property {(viewMode: ViewerViewMode) => void} [onSpaceTileWalkActivated]
- * @property {(payload: ViewerPresentationModeCapturePayload) => void} [onPresentationModeCaptured]
- * @property {(mode: ViewerPresentationMode) => void} [onPresentationModeCaptureCleared]
- * @property {(mode: ViewerPresentationMode) => void} [onActivePresentationModeChanged]
+ * @property {(snapshot: ViewerPresentationInput) => void} [onPresentationModeCaptured]
+ * @property {() => void} [onPresentationModeCaptureCleared]
  */

@@ -48,10 +48,9 @@ function compositeInfoOverlay(blob, metadata) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.95)'
       ctx.fillText(`${metadata.sectionLabel}  —  ${metadata.optionLabel}`, padX, barY + 66)
 
-      // Solar info line — only rendered when the captured presentation mode
-      // supplies all four solar fields. Skipped if no presentation mode is
-      // captured for this section, since the overlay must not claim solar
-      // values the rendered image wasn't actually produced with.
+      // Solar info line — only rendered when the captured presentation supplies
+      // all four solar fields. Skipped if missing, since the overlay must not
+      // claim solar values the rendered image wasn't actually produced with.
       const hasSolarMetadata =
         typeof metadata.solarDayOfYear === 'number' &&
         typeof metadata.solarHour === 'number' &&
@@ -328,7 +327,11 @@ function mergeOptionCapture(existing, incoming) {
 
 // ─── Persistence ────────────────────────────────────────────────────────────
 
-const STORAGE_KEY = 'demoapp_v2'
+// Storage key bumped v2 → v3 for the v1.8 contract. v1.7 captures (under
+// `demoapp_v2_*`) are orphaned cleanly — the App ignores them, but they
+// remain in localStorage until the user manually clears via DevTools or
+// switches browsers. No automatic migration path.
+const STORAGE_KEY = 'demoapp_v3'
 
 function loadCaptures(modelId) {
   if (!modelId) return null
@@ -558,11 +561,16 @@ export function DemoApp(props = {}) {
 
   // UI state
   const [adminEnabled, setAdminEnabled] = useState(false)
-  const [activationNonce, setActivationNonce] = useState(0)
+  // selectionKey — bumped on every section selection click and on every admin
+  // pMode pill click. Doubles as a useMemo dep on requestedCameraPose so
+  // re-clicking the same section produces a new pose ref to retrigger
+  // animation. Maps 1:1 to viewerInput.selectionKey.
+  const [selectionKey, setSelectionKey] = useState(0)
   const [selectedSectionId, setSelectedSectionId] = useState(SECTION_DEMO_ITEMS[0]?.id)
-  const [activeViewMode, setActiveViewMode] = useState(null)
-  const [lastPressedViewMode, setLastPressedViewMode] = useState(null)
-  const [spaceTileWalkViewMode, setSpaceTileWalkViewMode] = useState(null)
+  // activePMode — non-null only when admin clicked a pMode pill (transient
+  // override). When null, the active section's resolved presentation drives
+  // viewerInput.presentation. Cleared on section selection.
+  const [activePMode, setActivePMode] = useState(null)
   const [selectedOptions, setSelectedOptions] = useState(
     () => INITIAL_SAVED?.selectedOptions ?? { ...DEFAULT_SELECTED_OPTIONS }
   )
@@ -590,9 +598,6 @@ export function DemoApp(props = {}) {
   const [materialDefaultCapture, setMaterialDefaultCapture] = useState(
     () => INITIAL_SAVED?.materialDefaultCapture ?? null
   )
-  const [viewCaptures, setViewCaptures] = useState(
-    () => INITIAL_SAVED?.viewCaptures ?? {}
-  )
   const [presentationModeCaptures, setPresentationModeCaptures] = useState(
     () => INITIAL_SAVED?.presentationModeCaptures ?? {}
   )
@@ -606,11 +611,6 @@ export function DemoApp(props = {}) {
   const [loadViolations, setLoadViolations] = useState(
     () => findExistingCrossSectionViolations(INITIAL_SAVED?.optionCaptures ?? {})
   )
-
-  // Active authoring focus — drives the Viewer's dynamic Authoring Panel.
-  // Default 'section' so the admin lands on the broadest authoring surface
-  // (Section Capture + Geometry + User Visibility + Presentation settings).
-  const [activeAuthoringFocus, setActiveAuthoringFocus] = useState('section')
 
   useEffect(() => {
     if (loadViolations.length > 0) {
@@ -657,7 +657,6 @@ export function DemoApp(props = {}) {
     setSectionCaptures({})
     setOptionCaptures({})
     setMaterialDefaultCapture(null)
-    setViewCaptures({})
     setPresentationModeCaptures({})
     setSelectedOptions({ ...DEFAULT_SELECTED_OPTIONS })
     setSectionLabelOverrides({})
@@ -675,27 +674,21 @@ export function DemoApp(props = {}) {
 
   const modelFileInputRef = useRef(null)
 
-  // Stable refs so viewerOutput callbacks don't stale-close over section/option state
+  // Stable refs so viewerOutput callbacks don't stale-close over selection state
   const selectedSectionIdRef = useRef(selectedSectionId)
   const selectedOptionsRef = useRef(selectedOptions)
-  const adminEnabledRef = useRef(adminEnabled)
   const optionCapturesRef = useRef(optionCaptures)
+  // currentPModeRef — sticky across section/pMode clicks. Updated by:
+  //   1) admin pMode pill click → set to clicked mode
+  //   2) section selection → set from sectionCaptures[id].presentationMode
+  //      tag if present (so re-captures inherit the section's prior pMode tag)
+  // Used to attach the pMode tag (App-side metadata, not contract data) on
+  // section captures and to route identity-free pMode capture/clear callbacks
+  // to the correct presentationModeCaptures entry.
+  const currentPModeRef = useRef('day')
   selectedSectionIdRef.current = selectedSectionId
   selectedOptionsRef.current = selectedOptions
-  adminEnabledRef.current = adminEnabled
   optionCapturesRef.current = optionCaptures
-
-  // When admin mode is turned off, activate the last-selected view so its
-  // capture (UI flags, visibility, presentation) applies immediately in user mode.
-  const prevAdminEnabledRef = useRef(adminEnabled)
-  useEffect(() => {
-    const wasAdmin = prevAdminEnabledRef.current
-    prevAdminEnabledRef.current = adminEnabled
-    if (wasAdmin && !adminEnabled && lastPressedViewMode) {
-      setActiveViewMode(lastPressedViewMode)
-      setActivationNonce((n) => n + 1)
-    }
-  }, [adminEnabled, lastPressedViewMode])
 
   // ─── Persistence: save on every capture change (manifest models only) ─────
 
@@ -705,14 +698,13 @@ export function DemoApp(props = {}) {
       sectionCaptures,
       optionCaptures,
       materialDefaultCapture,
-      viewCaptures,
       presentationModeCaptures,
       selectedOptions,
       sectionLabelOverrides,
       optionLabelOverrides,
     })
   }, [presentationModeCaptures, materialDefaultCapture, modelObjectUrl, optionCaptures,
-    sectionCaptures, selectedModelId, selectedOptions, viewCaptures,
+    sectionCaptures, selectedModelId, selectedOptions,
     sectionLabelOverrides, optionLabelOverrides])
 
   // ─── Model switching ──────────────────────────────────────────────────────
@@ -727,11 +719,11 @@ export function DemoApp(props = {}) {
     setSectionCaptures(saved?.sectionCaptures ?? {})
     setOptionCaptures(saved?.optionCaptures ?? {})
     setMaterialDefaultCapture(saved?.materialDefaultCapture ?? null)
-    setViewCaptures(saved?.viewCaptures ?? {})
     setPresentationModeCaptures(saved?.presentationModeCaptures ?? {})
     setSelectedOptions(saved?.selectedOptions ?? { ...DEFAULT_SELECTED_OPTIONS })
     setSectionLabelOverrides(saved?.sectionLabelOverrides ?? {})
     setOptionLabelOverrides(saved?.optionLabelOverrides ?? {})
+    setActivePMode(null)
     setViewerReady(null)
     setViewerError(null)
     setCaptureConflict(null)
@@ -745,11 +737,11 @@ export function DemoApp(props = {}) {
     setSectionCaptures({})
     setOptionCaptures({})
     setMaterialDefaultCapture(null)
-    setViewCaptures({})
     setPresentationModeCaptures({})
     setSelectedOptions({ ...DEFAULT_SELECTED_OPTIONS })
     setSectionLabelOverrides({})
     setOptionLabelOverrides({})
+    setActivePMode(null)
     setViewerReady(null)
     setViewerError(null)
     setModelObjectUrl((prev) => {
@@ -765,7 +757,13 @@ export function DemoApp(props = {}) {
     onError: (event) => setViewerError(event),
     onSectionCaptured: (payload) => {
       const sectionId = selectedSectionIdRef.current
-      setSectionCaptures((prev) => ({ ...prev, [sectionId]: payload }))
+      // Attach App-side `presentationMode` tag from the currently active pMode
+      // for re-skin support. The tag is App metadata layered on top of the
+      // contract payload — the Viewer never reads it back.
+      setSectionCaptures((prev) => ({
+        ...prev,
+        [sectionId]: { ...payload, presentationMode: currentPModeRef.current },
+      }))
       triggerCaptureFlash()
     },
     onSectionCaptureCleared: () => {
@@ -816,54 +814,20 @@ export function DemoApp(props = {}) {
       triggerCaptureFlash()
     },
     onMaterialDefaultsCleared: () => setMaterialDefaultCapture(null),
-    onViewCaptured: (payload) => {
-      setViewCaptures((prev) => ({ ...prev, [payload.viewMode]: payload }))
+    onPresentationModeCaptured: (snapshot) => {
+      // Identity-free payload: route to the App's currently active pMode.
+      const mode = currentPModeRef.current
+      setPresentationModeCaptures((prev) => ({ ...prev, [mode]: snapshot }))
       triggerCaptureFlash()
     },
-    onViewCaptureCleared: (viewMode) => {
-      setViewCaptures((prev) => ({ ...prev, [viewMode]: null }))
-    },
-    onViewSelected: (viewMode) => {
-      setLastPressedViewMode(viewMode)
-      setSpaceTileWalkViewMode(null)
-      setActiveAuthoringFocus('view')
-      if (!adminEnabledRef.current) {
-        // User mode: activate the view so its capture replays, and bump
-        // syncKey to signal "selection changed" — the Viewer re-syncs camera,
-        // presentation, and mode-highlight from input on every bump.
-        setActiveViewMode(viewMode)
-        setActivationNonce((n) => n + 1)
-      }
-      // Admin mode: skip the bump. View clicks in admin are Viewer-internal
-      // navigation (the Viewer's handleViewChange handles camera + presentation
-      // + mode-highlight directly via syncActivePresentationMode). Bumping
-      // syncKey would re-fire the Viewer's input-driven re-sync paths with
-      // stale section data and override the just-applied view state.
-    },
-    onSpaceTileWalkActivated: (viewMode) => {
-      setSpaceTileWalkViewMode(viewMode)
-    },
-    onPresentationModeCaptured: (payload) => {
-      setPresentationModeCaptures((prev) => ({ ...prev, [payload.mode]: payload.presentation }))
-      triggerCaptureFlash()
-    },
-    onPresentationModeCaptureCleared: (mode) => {
+    onPresentationModeCaptureCleared: () => {
+      // Identity-free callback: route to the App's currently active pMode.
+      const mode = currentPModeRef.current
       setPresentationModeCaptures((prev) => {
         const next = { ...prev }
         delete next[mode]
         return next
       })
-    },
-    onActivePresentationModeChanged: () => {
-      // The `mode` argument is intentionally ignored: the active mode lives in
-      // the Viewer (which owns mode-button click state). The App derives the
-      // mode for `viewerInput.activePresentationMode` from the active capture
-      // (`presentationCapture?.presentationMode`); direct mode-button clicks
-      // don't bump `presentationSyncKey`, so the Viewer's optimistic mode state
-      // is preserved without round-tripping through the App. We react here
-      // only to switch authoring focus so the dynamic Authoring Panel filters
-      // to mode-relevant controls.
-      setActiveAuthoringFocus('presentationMode')
     },
     onRenderCaptured: (event) => {
       if (event?.blob) {
@@ -918,46 +882,46 @@ export function DemoApp(props = {}) {
     [selectedOptions, optionCaptures]
   )
 
-  // Last-one-wins: view button press or section click determines what drives camera + presentation.
-  // Floor nav activates presentation/visibility from a view capture without changing camera pose.
-  const cameraCapture = activeViewMode
-    ? (viewCaptures[activeViewMode] ?? null)
-    : (sectionCaptures[selectedSectionId] ?? null)
+  const sectionCapture = sectionCaptures[selectedSectionId] ?? null
 
-  const presentationCapture = spaceTileWalkViewMode
-    ? (viewCaptures[spaceTileWalkViewMode] ?? cameraCapture)
-    : cameraCapture
-
-  // Captured presentation for the active section/view's mode. Undefined when
-  // no capture exists for that mode — the Viewer fills in its own defaults.
-  const effectivePresentation = presentationModeCaptures[presentationCapture?.presentationMode]
-
-  // Spread into a new object so every nonce increment produces a new reference,
-  // which triggers camera re-animation in the viewer.
-  // activationNonce is gated on !adminEnabled: in admin mode the Viewer
-  // handles view-button navigation internally (handleViewChange → directNavTo /
-  // walkToCapturedPose), so a nonce-driven pose-ref change would re-fire the
-  // Viewer's pose effect with the still-active SECTION's pose, undoing the
-  // view's pose + cameraMode FOV. In user mode the nonce is still needed so
-  // re-clicking the same section/view retriggers the animation (cameraCapture
-  // ref hasn't changed in that case).
+  // Camera pose — fresh ref on every selectionKey bump so re-clicks retrigger
+  // animation even when the underlying pose object is identical.
   const requestedCameraPose = useMemo(
-    () => cameraCapture?.pose ? { ...cameraCapture.pose } : undefined,
+    () => sectionCapture?.pose ? { ...sectionCapture.pose } : undefined,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cameraCapture?.pose, adminEnabled ? null : activationNonce]
+    [sectionCapture?.pose, selectionKey]
   )
 
+  // Presentation resolution — re-skin with fallback, per v1.8 design Q2.
+  // - When admin clicked a pMode pill, push that pMode's stored snapshot
+  //   (transient override; cleared on next section click).
+  // - Otherwise: re-resolve via presentationModeCaptures[capture.tag] for
+  //   re-skin support. Falls back to the section's embedded snapshot if the
+  //   App has no pMode storage for that tag — this means Apps without pMode
+  //   storage still get section replay (frozen-at-author-time).
+  // - Spread to a fresh object every render so the Viewer's presentation hook
+  //   sees a new reference and re-syncs cleanly.
+  const resolvedPresentation = useMemo(() => {
+    if (activePMode) {
+      const fromStore = presentationModeCaptures[activePMode]
+      return fromStore ? { ...fromStore } : undefined
+    }
+    if (!sectionCapture) return undefined
+    const fromStore = presentationModeCaptures?.[sectionCapture.presentationMode]
+    return { ...(fromStore ?? sectionCapture.presentation) }
+    // selectionKey included so re-clicks force a fresh reference (admin-edit reset).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePMode, sectionCapture, presentationModeCaptures, selectionKey])
+
   const visibilityAssignments = useMemo(() => {
-    const captureHidden = presentationCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
+    const captureHidden = sectionCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
     if (!captureHidden.length && !allOptionGeometryIds.length) return undefined
     return {
       hiddenGeometryIds: allOptionGeometryIds,
       shownGeometryIds: activeOptionGeometryIds,
       instantHiddenGeometryIds: captureHidden,
     }
-  }, [presentationCapture?.visibilityAssignments?.hiddenGeometryIds, allOptionGeometryIds, activeOptionGeometryIds])
-
-  const activeOptionCapture = optionCaptures[selectedSectionId]?.[selectedOptions[selectedSectionId]] ?? null
+  }, [sectionCapture?.visibilityAssignments?.hiddenGeometryIds, allOptionGeometryIds, activeOptionGeometryIds])
 
   const handleCaptureSectionRenderings = useCallback(() => {
     const items = SECTION_DEMO_ITEMS
@@ -974,7 +938,8 @@ export function DemoApp(props = {}) {
         const sectionLabel = sectionLabelOverrides[section.id] ?? section.label
         const selectedOption = selectedOptions[section.id]
         const optionLabel = optionLabelOverrides[section.id]?.[selectedOption] ?? selectedOption
-        const pres = presentationModeCaptures[capture.presentationMode]
+        // Resolve presentation per v1.8: pMode lookup with embedded fallback.
+        const pres = presentationModeCaptures?.[capture.presentationMode] ?? capture.presentation
         return {
           metadata: {
             sectionId: section.id,
@@ -987,7 +952,7 @@ export function DemoApp(props = {}) {
           },
           camera: { pose: capture.pose, cameraMode: capture.cameraMode },
           scene: hasVisibility ? { visibilityAssignments: mergedVisibility } : undefined,
-          presentation: presentationModeCaptures[capture.presentationMode] ?? undefined,
+          presentation: pres ?? undefined,
         }
       })
       .filter(Boolean)
@@ -998,30 +963,11 @@ export function DemoApp(props = {}) {
   }, [allOptionGeometryIds, activeOptionGeometryIds, presentationModeCaptures, sectionCaptures, sectionLabelOverrides, selectedOptions, optionLabelOverrides])
 
   const viewerInput = useMemo(() => {
-    // Presentation snapshot is already a ViewerPresentationInput. Section/view
-    // captures override only the UI flags; everything else flows through. When
-    // there's no captured presentation for the active mode, presentation stays
-    // undefined and the Viewer preserves whatever state it currently has.
-    const presentation = effectivePresentation
-      ? {
-          ...effectivePresentation,
-          ui: {
-            ...effectivePresentation.ui,
-            ...presentationCapture?.ui,
-          },
-        }
-      : undefined
-
     const defaults = materialDefaultCapture?.defaultMaterialAssignments
     return {
       model: { modelUrl },
       camera: {
-        // cameraCapture may be a section (has `cameraMode`) or a view (has
-        // `viewMode`). View `viewMode` values currently coincide 1:1 with
-        // cameraMode strings, so falling back resolves correctly. If viewMode
-        // ever extends beyond the cameraMode enum, view captures would gain
-        // an explicit cameraMode field and this fallback would update.
-        cameraMode: cameraCapture?.cameraMode ?? cameraCapture?.viewMode,
+        cameraMode: sectionCapture?.cameraMode,
         pose: requestedCameraPose,
       },
       scene: {
@@ -1029,33 +975,54 @@ export function DemoApp(props = {}) {
         defaultMaterialAssignments: defaults?.length ? defaults : undefined,
         materialAssignments: materialAssignments.length ? materialAssignments : undefined,
       },
-      presentation,
-      presentationModeCaptures: presentationModeCaptures ?? undefined,
-      activePresentationMode: presentationCapture?.presentationMode,
+      presentation: resolvedPresentation,
       admin: {
         enabled: adminEnabled,
-        activeOptionCapture: activeOptionCapture ?? undefined,
         ...(batchCaptureRequest.nonce > 0 ? { batchCapture: batchCaptureRequest } : {}),
-        ...(adminEnabled ? { activeAuthoringFocus } : {}),
       },
-      presentationSyncKey: activationNonce,
+      selectionKey,
     }
   }, [
-    activationNonce,
-    activeAuthoringFocus,
-    activeOptionCapture,
+    selectionKey,
     adminEnabled,
     batchCaptureRequest,
-    cameraCapture,
-    effectivePresentation,
+    sectionCapture,
     materialAssignments,
     materialDefaultCapture,
     modelUrl,
-    presentationCapture,
-    presentationModeCaptures,
     requestedCameraPose,
+    resolvedPresentation,
     visibilityAssignments,
   ])
+
+  // ─── Click handlers ───────────────────────────────────────────────────────
+
+  const handleSectionClick = useCallback((sectionId) => {
+    setSelectedSectionId(sectionId)
+    // Clear pMode override so the section's resolved presentation drives.
+    setActivePMode(null)
+    // Update sticky currentPMode from this section's tag (if any) so future
+    // captures and admin pMode actions route to the section's "home" pMode.
+    const cap = sectionCaptures[sectionId]
+    if (cap?.presentationMode) currentPModeRef.current = cap.presentationMode
+    // Bump selectionKey so requestedCameraPose / resolvedPresentation memos
+    // produce fresh refs, triggering camera animation re-fire and presentation
+    // re-sync even if values are identical.
+    setSelectionKey((n) => n + 1)
+  }, [sectionCaptures])
+
+  const handleOptionClick = useCallback((sectionId, option) => {
+    setSelectedOptions((prev) => ({ ...prev, [sectionId]: option }))
+    // No selectionKey bump: option clicks change material/visibility assignments
+    // (App pushes via different state), not camera or presentation intent.
+  }, [])
+
+  const handlePModePillClick = useCallback((mode) => {
+    if (!adminEnabled) return  // user mode: pills are read-only indicators
+    setActivePMode(mode)
+    currentPModeRef.current = mode
+    setSelectionKey((n) => n + 1)
+  }, [adminEnabled])
 
   // ─── Label helpers ────────────────────────────────────────────────────────
 
@@ -1122,6 +1089,29 @@ export function DemoApp(props = {}) {
 
   const activeSection = SECTION_DEMO_ITEMS.find((s) => s.id === selectedSectionId)
 
+  // Shared style for pMode pill cells. In admin mode the pills become
+  // clickable buttons that load App-stored snapshots via viewerInput.presentation
+  // (or do nothing if no snapshot yet captured). In user mode they remain
+  // read-only blue/gray status indicators.
+  const buildPModePillStyle = (key, isFirst, isLast) => {
+    const captured = !!presentationModeCaptures[key]
+    const isActive = activePMode === key
+    return {
+      ...secondaryBtn,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      padding: '3px 0',
+      width: 68,
+      background: captured ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
+      borderColor: isActive ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.2)',
+      borderRadius: isFirst ? '7px 0 0 7px' : isLast ? '0 7px 7px 0' : '0',
+      cursor: adminEnabled ? 'pointer' : 'default',
+      userSelect: 'none',
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#1a1a1a', color: 'white' }}>
 
@@ -1135,7 +1125,7 @@ export function DemoApp(props = {}) {
             style={modelSelectStyle}
             value={selectedModelId ?? ''}
             onChange={(e) => { if (e.target.value) switchToManifestModel(e.target.value) }}
-            title="Manifest models from public/models. Each model has its own localStorage key (demoapp_v2_${modelId}) so captures persist per model. Switching loads that model's saved snapshot."
+            title="Manifest models from public/models. Each model has its own localStorage key (demoapp_v3_${modelId}) so captures persist per model. Switching loads that model's saved snapshot."
           >
             {!selectedModelId && <option value="">— uploaded file —</option>}
             {modelManifest.map((model) => (
@@ -1174,14 +1164,13 @@ export function DemoApp(props = {}) {
           <button
             style={
               (Object.keys(sectionCaptures).length ||
-               Object.keys(viewCaptures).length ||
                materialDefaultCapture ||
                Object.keys(presentationModeCaptures).length)
                 ? activeAdminBtn
                 : secondaryBtn
             }
             onClick={handleResetRequest}
-            title="Clear all captures for this model from localStorage — section, view, presentation mode, option, and material defaults. Asks for confirmation."
+            title="Clear all captures for this model from localStorage — section, presentation mode, option, and material defaults. Asks for confirmation."
           >
             Reset Model
           </button>
@@ -1248,6 +1237,10 @@ export function DemoApp(props = {}) {
           </span>
         </CaptureTooltip>
 
+        {/* pMode pills — Summer + Winter rows. In admin mode these are
+            CLICKABLE buttons that load App-stored snapshots into
+            viewerInput.presentation. In user mode they remain pure
+            read-only "blue when captured" status indicators. */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {[
             [
@@ -1270,54 +1263,20 @@ export function DemoApp(props = {}) {
                   containerStyle={{ marginLeft: i > 0 ? -1 : 0, position: 'relative', zIndex: presentationModeCaptures[key] ? 1 : 0, display: 'flex' }}
                   enabled={adminEnabled}
                 >
-                  <span
-                    title={`${fullName} (mode key: ${key}). Persistent indicator: blue = presentationModeCaptures.${key} is stored. Hover ~3s in Admin Mode for the payload.`}
-                    style={{
-                      ...secondaryBtn,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      textAlign: 'center',
-                      padding: '3px 0',
-                      width: 68,
-                      background: presentationModeCaptures[key] ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
-                      borderRadius: i === 0 ? '7px 0 0 7px' : i === arr.length - 1 ? '0 7px 7px 0' : '0',
-                      cursor: 'default',
-                      userSelect: 'none',
-                    }}
+                  <button
+                    type="button"
+                    onClick={() => handlePModePillClick(key)}
+                    disabled={!adminEnabled}
+                    title={adminEnabled
+                      ? `${fullName} (mode key: ${key}). Click to set currentPMode='${key}' and load presentationModeCaptures.${key} as viewerInput.presentation. The Viewer's Mode Capture / Mode Clear buttons will then route to this pMode. Blue = a capture is stored; hover ~3s for the payload. White border = currently active pMode.`
+                      : `${fullName} (mode key: ${key}). Persistent indicator: blue = presentationModeCaptures.${key} is stored. Read-only in user mode.`}
+                    style={buildPModePillStyle(key, i === 0, i === arr.length - 1)}
                   >
                     {label}
-                  </span>
+                  </button>
                 </CaptureTooltip>
               ))}
             </div>
-          ))}
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {['exterior', 'interior', 'overhead'].map((viewMode, i, arr) => (
-            <CaptureTooltip
-              key={viewMode}
-              payload={viewCaptures[viewMode]}
-              position="below-right"
-              containerStyle={{ marginLeft: i > 0 ? -1 : 0, position: 'relative', zIndex: viewCaptures[viewMode] ? 1 : 0 }}
-              enabled={adminEnabled}
-            >
-              <span
-                title={`${viewMode.charAt(0).toUpperCase()}${viewMode.slice(1)} view (viewMode: ${viewMode}). Persistent indicator: blue = viewCaptures.${viewMode} is stored. Hover ~3s in Admin Mode for the payload. Press the matching button at the bottom to replay.`}
-                style={{
-                  ...secondaryBtn,
-                  display: 'block',
-                  background: viewCaptures[viewMode] ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
-                  borderRadius: i === 0 ? '7px 0 0 7px' : i === arr.length - 1 ? '0 7px 7px 0' : '0',
-                  cursor: 'default',
-                  userSelect: 'none',
-                  textTransform: 'capitalize',
-                }}
-              >
-                {viewMode}
-              </span>
-            </CaptureTooltip>
           ))}
         </div>
 
@@ -1342,7 +1301,7 @@ export function DemoApp(props = {}) {
 
       <div style={{ display: 'flex', flexShrink: 0, gap: 6, padding: '8px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', background: '#111' }}>
         {SECTION_DEMO_ITEMS.map((section) => {
-          const isActiveDriver = section.id === selectedSectionId && !lastPressedViewMode
+          const isActiveDriver = section.id === selectedSectionId && !activePMode
           const isSelectedSection = section.id === selectedSectionId
           const hasSectionCapture = !!sectionCaptures[section.id]
           const isEditingThis = editingLabel?.type === 'section' && editingLabel.id === section.id
@@ -1376,19 +1335,8 @@ export function DemoApp(props = {}) {
                 />
               ) : (
                 <button
-                  onClick={() => {
-                    setSelectedSectionId(section.id)
-                    setActiveViewMode(null)
-                    setLastPressedViewMode(null)
-                    setSpaceTileWalkViewMode(null)
-                    setActiveAuthoringFocus('section')
-                    // Always bump — this is the App's "selection changed" signal so the
-                    // Viewer clears any active view button highlight. The Viewer's
-                    // presentation re-sync logic itself decides whether to apply
-                    // input.presentation (skips when no capture is provided).
-                    setActivationNonce((n) => n + 1)
-                  }}
-                  title={`Activate this section. Sets activeAuthoringFocus='section', bumps presentationSyncKey. ${hasSectionCapture ? 'Blue dot = sectionCaptures has an entry for this id; replays on activation.' : 'No section capture stored — activating leaves the current camera/presentation alone.'} Hover ~3s in Admin Mode to inspect the payload.`}
+                  onClick={() => handleSectionClick(section.id)}
+                  title={`Activate this section. Bumps selectionKey, clears any active pMode pill override. ${hasSectionCapture ? 'Blue dot = sectionCaptures has an entry for this id; replays on activation (re-resolved via presentationModeCaptures or fallback to embedded snapshot).' : 'No section capture stored — activating leaves the current camera/presentation alone.'} Hover ~3s in Admin Mode to inspect the payload.`}
                   style={{
                     width: '100%',
                     display: 'flex',
@@ -1480,11 +1428,8 @@ export function DemoApp(props = {}) {
                   />
                 ) : (
                   <button
-                    onClick={() => {
-                      setSelectedOptions((prev) => ({ ...prev, [selectedSectionId]: option }))
-                      setActiveAuthoringFocus('option')
-                    }}
-                    title={`Select this option. Sets activeAuthoringFocus='option' so the Authoring Panel shows option-relevant controls. ${hasOptionCapture ? 'Blue dot = optionCaptures has geometry and/or material assignments stored for this option; selecting replays them.' : 'No capture stored for this option — selecting just changes the chosen option in App state.'}`}
+                    onClick={() => handleOptionClick(selectedSectionId, option)}
+                    title={`Select this option. ${hasOptionCapture ? 'Blue dot = optionCaptures has geometry and/or material assignments stored for this option; selecting replays them.' : 'No capture stored for this option — selecting just changes the chosen option in App state.'}`}
                     style={{
                       display: 'flex',
                       alignItems: 'center',

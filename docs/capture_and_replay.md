@@ -1,48 +1,52 @@
 # Capture & Replay
 
 **Primary reader:** App or Viewer engineer
-**Job-to-be-done:** Deep-dive on the capture lifecycle (sections, views, options, materials, presentation modes)
-**Next doc:** [Viewer Contract v1.7](viewer_contract_v1_7.md)
+**Job-to-be-done:** Deep-dive on the v1.8 capture lifecycle (sections, options, material defaults, presentation modes)
+**Next doc:** [Viewer Contract v1.8](viewer_contract_v1_8.md)
 
 ---
 
 ## Purpose
 
-This document describes the complete capture/replay lifecycle for **section captures**, **view captures**, and **presentation mode captures**, including how they interact with the Views Panel, the Space Menu, the overhead space-tile click (`SpaceTileClickNav`), and Admin vs User rendering modes.
+This document describes the complete capture/replay lifecycle for v1.8: **section captures**, **option captures**, **material default captures**, and **presentation mode captures** — including how they interact with the Space Menu, the overhead floor-tile-click navigation, and Admin vs User rendering modes.
 
 ---
 
 ## The Core Principle
 
-> **The App stores presentation intent. The Viewer executes it.**
+> **The App stores intent. The Viewer executes it.**
 
 The Viewer never persists state on behalf of the App. Every capture produces a serialisable payload that the Viewer fires back through a `ViewerOutput` callback. The App stores the payload, then replays it later by passing the stored values back into `viewerInput`. The Viewer reacts to changed input — no sync, no dual state.
+
+In v1.8 this principle goes further: **the Viewer doesn't even know identity**. Capture callbacks fire identity-free payloads — the Viewer never knows which section, option, or pMode is "active." The App attaches identity from its own state at the moment of capture and routes the payload accordingly.
 
 ---
 
 ## Capture Types at a Glance
 
+The contract has **3 capture families**. Presentation Mode captures exist as an App-side concept — DemoApp uses a 6-mode taxonomy, but other CustomApps may use any taxonomy or none.
+
 | Capture type | What it owns | Viewer callback | Replay path |
 |---|---|---|---|
-| **Section** | pose + cameraMode + presentationMode + visibility + ui flags | `onSectionCaptured` | App resolves `presentationModeCaptures[capture.presentationMode]` → `input.presentation`; writes `input.camera` + `input.scene.visibilityAssignments`; `capture.ui` takes precedence over the mode snapshot's ui flags |
-| **View** | pose + viewMode + presentationMode + visibility + ui flags (per view slot) | `onViewCaptured` | App resolves mode → presentation and writes same fields when `onViewSelected` fires; `capture.ui` takes precedence over the mode snapshot's ui flags |
-| **Presentation Mode** | full presentation snapshot (per named mode) | `onPresentationModeCaptured` | App stores keyed by mode name; Viewer applies at mode switch; App resolves at section/view replay time |
+| **Section** | pose + cameraMode + **embedded presentation snapshot** + visibility | `onSectionCaptured` | App spreads `capture.presentation` into `viewerInput.presentation`, plus `capture.pose` / `capture.cameraMode` / `capture.visibilityAssignments`. Self-contained — no external lookup. |
 | **Option** | geometryIds + materialAssignments (per option) | `onOptionCaptured` | App writes `input.scene.materialAssignments` when that option is active |
 | **Material Defaults** | model-level baseline materialAssignments | `onMaterialDefaultsCaptured` | App writes `input.scene.defaultMaterialAssignments` on every model load |
+| **Presentation Mode** *(App-side)* | full presentation snapshot keyed by App's pMode taxonomy | `onPresentationModeCaptured` | When App tags section captures with a pMode key, replay can re-resolve via `presentationModeCaptures[capture.presentationMode]` for "re-skin" semantics — falls back to embedded snapshot when no pMode store exists. |
 
-Section and View captures have identical payload shapes. The only difference is what triggers replay.
+Views collapsed into Sections in v1.8 — a Section may have associated options or no options; an optionless Section serves as what v1.7 called a View. Single capture family, single replay path.
 
 ---
 
-## Last-One-Wins
+## Identity-Free Payloads
 
-Presentation replay follows a **last-one-wins** rule:
+All capture callbacks fire payloads with **no section / option / pMode identifier**. The App routes the payload to the correct storage location using its own current selection state at capture time:
 
-- Activating a section tab → the section capture drives camera + presentation + visibility
-- Pressing a View button → the view capture drives camera + presentation + visibility
-- Whichever happened most recently is what the Viewer renders
+- `onSectionCaptured(payload)` → App routes to its currently active section
+- `onOptionCaptured(payload)` → App routes to its currently active section + currently active option
+- `onMaterialDefaultsCaptured(payload)` → global, no identity needed
+- `onPresentationModeCaptured(snapshot)` → App routes to its currently active pMode (if maintaining a pMode taxonomy)
 
-There is no overlay or merge between the two. The App simply builds `viewerInput` from whichever capture is currently active.
+The Viewer never knows which section/option/pMode is currently active. The App is the sole authority for routing. This eliminates an entire category of v1.7 contract surface (`activePresentationMode`, `activeAuthoringFocus`, `presentationModeCaptures` input field, mode-arg in capture callbacks) and removes the need for App↔Viewer state sync on identity.
 
 ---
 
@@ -54,18 +58,18 @@ A section capture is a stored package for one section:
 
 - camera pose (`position`, `target`) — FOV is not stored; the Viewer derives it from `cameraMode` at replay
 - camera mode (`'exterior'` | `'interior'` | `'overhead'`)
-- presentation mode reference (a name like `'day'` — not the inline presentation values; the App resolves the full snapshot at replay time via `presentationModeCaptures[capture.presentationMode]`)
+- **embedded presentation snapshot** — full `ViewerPresentationInput` (HDR, terrain, lighting, exposure, solar, light source mode, ui flags) inlined into the payload
 - visibility assignments (`hiddenGeometryIds`, `isolatedGeometryIds`)
-- UI visibility flags (`showSolarSitePanel`, `showNorthArrow`, `showPresetViews`, `showPresentationPresets`, `showWinterPresets`, `showSpaceMenu`) — captured at the time of the section capture so each section can independently control which panels users see
 
 ### Capturing
 
 In Admin Mode, the admin:
 
-1. Activates the section
-2. Moves the camera, adjusts presentation, hides geometry as needed
-3. Sets the **Camera Mode** (Ext / Int / Ovh) in the authoring panel to label the mode — this does not move the camera, it tags which mode will be written into the payload
-4. Clicks **Section Capture**
+1. Activates the section (App-rendered tab)
+2. Loads a starting state — either by clicking a pMode pill in the App header (loads App-stored snapshot if present) or by clicking a pMode button in the Viewer's NavigationDemoPanel (applies built-in lighting defaults)
+3. Moves the camera, adjusts presentation, hides geometry as needed
+4. Sets the **Camera Mode** (Ext / Int / Ovh) in the authoring panel to label the mode — this does not move the camera, it tags which mode will be written into the payload
+5. Clicks **Section Capture**
 
 The Viewer fires:
 
@@ -73,130 +77,74 @@ The Viewer fires:
 onSectionCaptured(payload: ViewerSectionCapturePayload)
 ```
 
-Payload shape:
+Identity-free payload shape:
 
 ```ts
 {
   pose: { position, target },
   cameraMode: 'overhead',
-  presentationMode: 'day',
+  presentation: {
+    environmentId: '/hdri/meadow.exr',
+    exposure: 0.6,
+    sunIntensity: 1.0,
+    // ...full ViewerPresentationInput snapshot
+    ui: { showSolarSitePanel: true, showNorthArrow: true, showSpaceMenu: true },
+  },
   visibilityAssignments: { hiddenGeometryIds: ['roof-1', 'roof-2'] },
 }
 ```
 
-### App storage
+### App-side metadata (optional)
 
-The App stores the payload keyed by section ID:
+DemoApp attaches a `presentationMode` tag from its own currently-active pMode state at capture time, **as App metadata layered on top of the contract payload**:
 
-```ts
-sectionCaptures[activeSectionId] = payload
+```js
+onSectionCaptured: (payload) => {
+  setSectionCaptures((prev) => ({
+    ...prev,
+    [activeSectionId]: { ...payload, presentationMode: currentPModeRef.current },
+  }))
+}
 ```
+
+The tag enables the optional re-skin replay path (see below). It is **App metadata**, not contract data — the Viewer never reads it back. CustomApps that don't maintain a pMode taxonomy can skip this entirely.
 
 ### Replay <a id="presentation-resolution"></a>
 
-When the user activates a section, the App builds `viewerInput` from the stored payload. The presentation field has two layers: the mode snapshot is the base, and the capture's own `ui` flags spread on top so they take precedence. This is the **canonical resolution path** — section captures, view captures, and `onSpaceTileWalkActivated` all use it:
+When the user activates a section, the App reads its stored capture and spreads it into `viewerInput`. Two replay strategies:
 
-```ts
+**Strategy A — Frozen-at-author-time (no pMode storage):**
+
+```js
 const capture = sectionCaptures[activeSectionId]
-const modeSnapshot = presentationModeCaptures[capture?.presentationMode] ?? defaultPresentation
-const presentation = capture?.ui
-  ? { ...modeSnapshot, ui: { ...modeSnapshot?.ui, ...capture.ui } }
-  : modeSnapshot
-
 viewerInput = {
-  camera: {
-    cameraMode: capture?.cameraMode ?? 'exterior',
-    pose: capture?.pose ? { ...capture.pose } : undefined,
-  },
+  camera: { cameraMode: capture?.cameraMode, pose: capture?.pose },
+  presentation: capture?.presentation,
+  scene: { visibilityAssignments: capture?.visibilityAssignments, ... },
+}
+```
+
+The embedded snapshot is replayed verbatim. No external lookup. CustomApps without a pMode taxonomy use this path automatically — there's nothing else to resolve against.
+
+**Strategy B — Re-skin via pMode lookup (DemoApp default):**
+
+```js
+const capture = sectionCaptures[activeSectionId]
+const presentation = presentationModeCaptures?.[capture?.presentationMode] ?? capture?.presentation
+viewerInput = {
+  camera: { cameraMode: capture?.cameraMode, pose: capture?.pose },
   presentation,
-  scene: {
-    visibilityAssignments: capture?.visibilityAssignments,
-    ...
-  },
+  scene: { visibilityAssignments: capture?.visibilityAssignments, ... },
 }
 ```
 
-Why the two-layer ui spread: the mode snapshot stores the User Visibility flags that were active when the *mode* was captured, but each section / view can independently override them (e.g. hide the Solar panel for interior views, show it for exterior). The capture's `ui` field carries those per-capture overrides; spreading it on top of `modeSnapshot.ui` lets per-capture settings win without losing the mode-level baseline.
+The App-side `presentationModeCaptures` lookup wins when a pMode store entry exists for the section's tag — so updating one pMode automatically propagates to all sections that share it ("re-skin" semantics). The embedded snapshot serves as the fallback when the lookup misses.
 
-The Viewer sees updated `input.camera.pose` and `input.presentation` references and replays them.
-
-### Clearing
-
-Clicking **Clear Section Capture** fires `onSectionCaptureCleared()`. The App removes the stored capture for that section.
-
----
-
-## View Captures
-
-### What a view capture owns
-
-A view capture has the same shape as a section capture, stored in one of three named slots (`'exterior'`, `'interior'`, `'overhead'`):
-
-- camera pose
-- camera mode
-- presentation mode reference (resolved at replay time, same as section captures)
-- visibility assignments
-- UI visibility flags (same six flags as section captures)
-
-This lets the user press a View button and consistently arrive at the right camera position, lighting, and visibility — regardless of which section is active.
-
-### View captures are treated like section captures
-
-The payload shape is identical to a section capture. The only difference is the trigger: view captures are replayed when the user presses a View button, not when a section tab is activated.
-
-### Capturing
-
-In Admin Mode, the admin:
-
-1. Navigates to the desired view using the View buttons in the Views Panel
-2. Sets the **Camera Mode** selector (Ext / Int / Ovh) in the authoring panel to label which mode this pose represents — this does not move the camera, it only tags the mode that will be stored in the payload
-3. Adjusts lighting and visibility to the correct state for that view
-4. Clicks **View Capture** in the authoring panel (top of the panel when `view` focus is active)
-
-The Viewer fires:
-
-```ts
-onViewCaptured(payload: ViewerViewCapturePayload)
-```
-
-Payload shape:
-
-```ts
-{
-  viewMode: 'interior',
-  pose: { position, target },
-  presentationMode: 'nightInt',
-  visibilityAssignments: { hiddenGeometryIds: [] },
-}
-```
-
-`viewMode` identifies the view slot. Today the values coincide with the cameraMode enum (`'exterior' | 'interior' | 'overhead'`), so a view's viewMode doubles as its replay cameraMode. They're separate concepts though — viewMode is allowed to extend later (e.g. multiple `'exterior'`-camera views via slots like `'frontExterior'`) without changing the cameraMode enum or section captures.
-
-### App storage
-
-The App stores the payload keyed by the view slot:
-
-```ts
-viewCaptures[payload.viewMode] = payload
-```
-
-### Replay — onViewSelected
-
-When the user presses a View button, the Viewer fires:
-
-```ts
-onViewSelected(viewMode: ViewerViewMode)
-```
-
-The App looks up its stored view capture for that slot and rebuilds `viewerInput` exactly as it would for a section capture — full pose + presentation + visibility. The replay cameraMode is derived from `capture.viewMode` (1:1 with the cameraMode enum today). There is no separate passback mechanism; the App drives the replay directly through `viewerInput`.
-
-If no capture exists for the pressed slot, the App does not update `viewerInput` — nothing changes.
-
-In **Admin Mode**, pressing a View button navigates the Viewer's camera internally (using the stored capture pose if available, or a default quick view as a fallback). The `onViewSelected` callback IS fired in Admin Mode (to allow the App to clear section tab highlighting), but the App should NOT trigger camera or presentation replay in response when admin is active — the Viewer handles navigation internally.
+DemoApp uses Strategy B by default. Sections needing per-section variation should be tagged with their own dedicated pMode rather than diverging from a shared one — this keeps the App's structure consistent and avoids accidental drift.
 
 ### Clearing
 
-Clicking **Clear View Capture** fires `onViewCaptureCleared(viewMode)`. The App removes that entry from its stored captures.
+Clicking **Section Clear** fires `onSectionCaptureCleared()`. The App removes the stored capture for the currently active section.
 
 ---
 
@@ -285,13 +233,15 @@ The App passes `defaultMaterialAssignments` on every `viewerInput` build regardl
 
 ---
 
-## Presentation Mode Captures
+## Presentation Mode Captures (App-side)
+
+Presentation Mode is **not a contract concept** in v1.8 — it's a useful App-side convention for organizing presentation snapshots and enabling re-skin semantics. DemoApp uses a 6-mode taxonomy as the reference example; other CustomApps may use any taxonomy or none.
 
 ### What a presentation mode capture owns
 
-A presentation mode capture is a **full `ViewerPresentationInput` snapshot** for one of six named modes. It owns everything — environment, terrain, HDR settings, exposure, lighting, point light, solar configuration, and UI flags.
+A presentation mode capture is a **full `ViewerPresentationInput` snapshot** stored by the App under one of its pMode keys. It owns everything — environment, terrain, HDR settings, exposure, lighting, point light, solar configuration, light source mode, and UI flags.
 
-This is intentionally broader than "just lighting." Different modes can use completely different HDR environments, terrain presets, north offsets, and solar times.
+### DemoApp's 6-mode taxonomy
 
 | Mode | Key | Intended use |
 |---|---|---|
@@ -302,140 +252,78 @@ This is intentionally broader than "just lighting." Different modes can use comp
 | Winter Night | `'winterNight'` | Winter night exterior |
 | Winter Night Interior | `'winterNightInt'` | Winter night interior |
 
-Sections and view captures reference modes by name, so adding or removing modes does not require re-capturing those payloads. The Summer and Winter rows are each controlled by a separate User Visibility flag (`showPresentationPresets` and `showWinterPresets`).
-
-### Viewer defaults before first capture
-
-All six presentation modes have built-in defaults in the Viewer. The App does **not** need to pass a `presentation` payload on initial model load — if `input.presentation` is omitted, the Viewer renders using its built-in defaults for the active mode. Providing presentation input is only necessary once the App has stored captures to replay.
-
-Winter modes have specific defaults that apply automatically when first selected without a stored capture:
-
-- **HDRI:** Horn Koppe Snow
-- **Terrain:** Snow
-
-Switching to a winter mode with no capture sets only those two fields — all other presentation settings (lighting, exposure, solar, etc.) remain at their current values. Summer modes have no equivalent override; switching to an uncaptured summer mode leaves all settings unchanged.
+DemoApp renders these as 2 rows of 3 clickable pills in the App header. In admin mode, clicking a pill loads the App-stored snapshot for that pMode via `viewerInput.presentation` (or shows nothing if not yet captured). In user mode, the pills are pure read-only "blue when captured" status indicators.
 
 ### Capturing
 
 In Admin Mode, the admin:
 
-1. Selects the desired mode using the presentation mode buttons in the Views Panel (Summer Day / Summer Night / Summer Night Interior in the first row, Winter Day / Winter Night / Winter Night Interior in the second row)
-2. Adjusts all presentation settings to the correct state for that mode
-3. Clicks **Mode Capture** in the authoring panel (top of the panel when `presentationMode` focus is active)
+1. Selects the desired pMode by clicking a pill in DemoApp's header (loads any App-stored snapshot for that mode)
+2. Optionally clicks a pMode button in the Viewer's NavigationDemoPanel (applies Viewer's built-in lighting defaults — useful starting point if no stored snapshot)
+3. Adjusts all presentation settings to the desired state
+4. Clicks **Mode Capture** in the Viewer's Authoring Panel
 
 The Viewer fires:
 
 ```ts
-onPresentationModeCaptured(payload: ViewerPresentationModeCapturePayload)
+onPresentationModeCaptured(snapshot: ViewerPresentationInput)
 ```
 
-Payload shape:
+The payload is the **bare snapshot** — no `mode` argument. The App routes by attaching its own currently-active pMode key:
 
-```ts
-{
-  mode: 'nightExt',
-  presentation: { environmentId: '/hdri/city-night.exr', exposure: 0.3, ambientIntensity: 0.2, ... },
+```js
+onPresentationModeCaptured: (snapshot) => {
+  const mode = currentPModeRef.current
+  setPresentationModeCaptures((prev) => ({ ...prev, [mode]: snapshot }))
 }
 ```
 
-### App storage
+### Two roles
+
+Presentation mode captures serve two distinct App-side roles:
+
+**Role 1 — Admin authoring starting point.** Admin clicks a pill → App pushes the stored snapshot via `viewerInput.presentation`. The Viewer renders. Admin can then tweak and re-capture.
+
+**Role 2 — Re-skin at section replay time.** When section captures are tagged with a pMode key (DemoApp's optional pattern), App replay re-resolves `presentationModeCaptures[capture.presentationMode]`. Updating a pMode automatically propagates to all sections that share it.
+
+### Clearing
+
+Clicking **Mode Clear** in the Viewer's Authoring Panel fires:
 
 ```ts
-presentationModeCaptures[payload.mode] = payload.presentation
+onPresentationModeCaptureCleared()
 ```
 
-The App stores the full `ViewerPresentationInput` snapshot keyed by mode name.
+The payload is empty — no `mode` argument. The App removes the entry under its currently-active pMode key:
 
-### Replay — two roles
-
-Presentation mode captures serve two distinct roles:
-
-**Role 1 — Mode switching.** When the user switches modes, the Viewer fires `onActivePresentationModeChanged(mode)`. The App can apply the stored snapshot for that mode to `input.presentation`. In Admin Mode the Viewer applies captures directly to `presentationState` when the mode changes, without going through the App.
-
-**Role 2 — Section and view replay.** Section and view captures carry only a `presentationMode` name, not a full snapshot. At replay time the App resolves:
-
-```ts
-const presentation = presentationModeCaptures[capture.presentationMode] ?? defaultPresentation
-```
-
-This keeps section and view payloads small and ensures all captures that share a mode always render with the same environment and lighting.
-
-### Clearing presentation mode captures
-
-Individual presentation mode captures can be cleared using the **Mode Clear** button in the authoring panel (visible when `presentationMode` focus is active). This fires:
-
-```ts
-onPresentationModeCaptureCleared(mode: ViewerPresentationMode)
-```
-
-The App removes the stored entry for that mode:
-
-```ts
-onPresentationModeCaptureCleared: (mode) => {
+```js
+onPresentationModeCaptureCleared: () => {
+  const mode = currentPModeRef.current
   setPresentationModeCaptures((prev) => {
-    const n = { ...prev }
-    delete n[mode]
-    return n
+    const next = { ...prev }
+    delete next[mode]
+    return next
   })
 }
 ```
 
 Like all clear buttons, this fires even when the Viewer has no locally-cached capture for the current session — the App may hold a stored capture from a previous session that needs clearing.
 
-**Bulk clear:** DemoApp's **Reset Model** button clears all captured payloads at once — section captures, view captures, material defaults, and all six presentation mode captures. It resets the App's full in-memory and persisted state for the current model.
-
-Presentation mode captures can also be replaced in-place: capturing a mode again overwrites the previous snapshot without needing to clear first.
+**Bulk clear:** DemoApp's **Reset Model** button clears all captured payloads at once — section captures, material defaults, and all presentation mode captures. It resets the App's full in-memory and persisted state for the current model.
 
 ---
 
-## Overhead Space-Tile Click (`SpaceTileClickNav`)
+## Overhead Floor-Tile Click
 
-When the user is in **overhead view** and clicks a space tile:
+When the user is in **overhead view** (a section captured with `cameraMode: 'overhead'`) and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** in v1.8 — the camera movement is purely Viewer-internal navigation.
 
-1. The camera navigates into that interior space via pathNav (same routing logic as pressing a Space Menu button).
-2. The Viewer fires:
-
-```ts
-onSpaceTileWalkActivated(viewMode: 'interior')
-```
-
-The App responds by applying **only the presentation and visibility** from the stored interior view capture — it does **not** set a new camera pose, since the Viewer is already navigating via pathNav.
-
-```ts
-onSpaceTileWalkActivated: (viewMode) => {
-  // update presentation + visibility from viewCaptures[viewMode]
-  // do NOT change requestedCameraPose
-}
-```
-
-This is distinct from `onViewSelected`: view button presses update camera + presentation + visibility; the space-tile click updates presentation + visibility only.
-
-**The Interior view capture is the shared source of truth** for both the Interior button press and overhead space-tile clicks. Authoring once covers both.
-
-If no Interior view capture has been authored, the click still navigates the camera but leaves presentation state unchanged.
-
-In **Admin Mode**, the Viewer applies the Interior view capture directly to its internal presentation and visibility state without firing the callback.
+The active section's presentation/visibility persists during and after the navigation. Author guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position (or implement App-side logic to switch sections on this gesture by tagging the overhead section's presentation as "dual-purpose").
 
 ---
 
 ## Space Menu — Space / Entry Buttons
 
-Clicking a **Space** or **Entry** button in the Space Menu navigates the camera to that location only. It does **not** change lighting, environment, exposure, material assignments, or geometry visibility.
-
-This is intentional: the admin has explicit control over when presentation state should change (via view captures and section captures). Space Menu buttons are camera navigation only.
-
-The exception is the overhead space-tile click (see above), which navigates and also fires `onSpaceTileWalkActivated`.
-
----
-
-## View Button Highlight State
-
-View button highlights in the Views Panel track which button was **last pressed**, not which camera mode the camera is currently in.
-
-- Pressing a View button → that button highlights
-- Activating a section → all View button highlights clear
-
-This means: replaying a section capture that happens to use `cameraMode: 'exterior'` does not highlight the Exterior view button. The cameraMode (on a section) is an orbit behavior setting; the viewMode (the view button slot) is a user interaction state. They are independent — and even if a section's cameraMode value matches a viewMode slot value, that's a string-match coincidence, not a relationship.
+Clicking a **Space** or **Entry** button in the Space Menu (right column, controlled by `ui.showSpaceMenu`) navigates the camera to that location only. It does **not** change lighting, environment, exposure, material assignments, or geometry visibility. Pure camera navigation.
 
 ---
 
@@ -445,59 +333,71 @@ This means: replaying a section capture that happens to use `cameraMode: 'exteri
 
 `ViewerRoot` renders from `input.presentation` directly. The App fully controls presentation by writing into `viewerInput`.
 
-**Section replay** works by the App resolving `presentationModeCaptures[capture.presentationMode]` to a full snapshot, then writing it to `input.presentation`.
+**Section replay** works by the App reading its stored section capture and pushing the resolved presentation snapshot (per the strategy chosen — frozen embedded vs. re-resolved via pMode lookup) into `input.presentation`.
 
-**View button replay** works by the Viewer firing `onViewSelected`, the App resolving the view capture's `presentationMode` reference to a full snapshot via `presentationModeCaptures`, updating `viewerInput.presentation`, and the Viewer rendering the new value.
-
-There is no overlay or merge: the last capture the App applied is what renders.
+**No user-mode pMode toggle in DemoApp.** Per the v1.8 design choice, DemoApp omits user-facing pMode buttons. Users navigate by section tabs only. CustomApps can opt in to a user-mode pMode toggle by rendering their own buttons that swap `viewerInput.presentation` while leaving camera/visibility alone — this is App-side wiring with no contract change.
 
 ### Admin Mode (`input.admin.enabled = true`)
 
 `ViewerRoot` renders from `presentationState.snapshot` — the Viewer's internal mutable presentation state, owned by `useViewerPresentationState`. The Admin authoring panel edits this state directly.
 
-`presentationState` syncs from `input.presentation` when the reference changes and the field values actually differ (guarded by `presentationsEqual`). This prevents spurious resets when `viewerInput` rebuilds for unrelated reasons.
+`presentationState` syncs from `input.presentation` when:
+- the reference changes AND values differ (typical section-click path), or
+- `selectionKey` bumps (force re-sync — for the "Viewer's internal admin state diverged from App's pushed state" case), or
+- `hasLightMarkers` flips (smart default re-evaluation on model load)
 
-**Section replay in Admin Mode** works by the App resolving `presentationModeCaptures[capture.presentationMode]` into a full snapshot, updating `input.presentation`, which triggers the sync effect in `useViewerPresentationState` and updates `presentationState.snapshot`. When this occurs, any active solar preview state is cleared and the Viewer reverts to the authoritative solar time from the replayed snapshot.
+When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** regardless of `selectionKey` — admin tweaks aren't stomped.
 
-**Solar preview clearing:** Whenever a section or view change occurs (via `applyPresentation`), or when the App's `presentation` input reference changes with different values, the Viewer clears the `previewSolar` state and reverts to the authoritative solar time stored in the snapshot. This ensures the solar preview never persists across section/view transitions.
+**Section replay in Admin Mode** triggers the sync effect by either changing the presentation reference or bumping `selectionKey`. Any active solar preview state is cleared and the Viewer reverts to the authoritative solar time from the replayed snapshot.
 
-**View button replay in Admin Mode** works entirely inside the Viewer — `handleViewChange` resolves the capture's `presentationMode` reference via `viewerInput.presentationModeCaptures` (the App's persisted map, pushed each render), then applies the full snapshot directly to `presentationState`. `onViewSelected` **is** fired in Admin Mode, but its sole purpose is to signal the App to clear section tab highlighting. The App must not trigger camera or presentation replay in response — the Viewer handles all navigation and presentation updates internally.
+**Solar preview clearing:** Whenever a section change occurs (via `applyPresentation`), or when the App's `presentation` input reference changes with different values, the Viewer clears the `previewSolar` state and reverts to the authoritative solar time stored in the snapshot.
 
-**Mode tile click in Admin Mode** is a Viewer-internal flow — `handlePresentationModeSelect` reads `viewerInput.presentationModeCaptures[mode]` directly. If a capture exists, it's applied; otherwise the Viewer applies its built-in `DAY_LIGHTING_DEFAULTS` / `NIGHT_LIGHTING_DEFAULTS` (and seasonal HDRI/terrain for winter modes). The App is notified via `onActivePresentationModeChanged` for authoring-focus updates only — it does not need to push anything in response.
+**App-rendered pMode pill click in Admin Mode** loads the App-stored pMode snapshot via `viewerInput.presentation` and bumps `selectionKey`. The Viewer's presentation hook re-syncs (force-resync layer triggers because of the bump even when values match prior state).
+
+**Viewer-rendered pMode button click in Admin Mode** (NavigationDemoPanel pMode rows) applies the Viewer's built-in lighting defaults (`DAY_LIGHTING_DEFAULTS` / `NIGHT_LIGHTING_DEFAULTS`, plus seasonal HDRI/terrain for winter modes) directly to `presentationState`. No callback to App — pure Viewer-internal authoring convenience for "start fresh from defaults."
 
 ---
 
 ## Authoring Interaction Summary
 
 ```
-Section capture          → stores pose + cameraMode + presentationMode + visibility for that section
-                           App resolves presentationModeCaptures[capture.presentationMode] at replay time
-                           Replays via input.camera + input.presentation + input.scene
+Section Capture         → Identity-free payload: pose + cameraMode + embedded
+                          presentation snapshot + visibility. App routes to its
+                          currently active section. Optional App-side metadata:
+                          attach presentationMode tag for re-skin support.
+                          Replay: spread into viewerInput.camera + .presentation
+                          + .scene.visibilityAssignments. Use Strategy A or B.
 
-View capture             → stores pose + viewMode + presentationMode + visibility for a named slot
-                           App resolves mode → presentation and replays via same path when onViewSelected fires
-                           The replay cameraMode is derived from capture.viewMode (1:1 with the cameraMode enum today)
+Option Capture          → Identity-free payload: geometryIds + materialAssignments.
+                          App routes to its current section + current option.
+                          Additive merge (union geometry, incoming wins per
+                          geometryId for materials).
 
-Presentation mode capture → stores full ViewerPresentationInput snapshot per named mode
-                           App stores keyed by mode name; Viewer applies at mode switch;
-                           App resolves at section/view replay time
+Material Defaults       → Identity-free payload: defaultMaterialAssignments.
+                          Global; App stores once per model, replays via
+                          input.scene.defaultMaterialAssignments on every load.
 
-onSpaceTileWalkActivated      → App applies presentation + visibility only (no camera pose)
-                           Same interior view capture as the Interior button press
+Presentation Mode       → Identity-free payload: bare presentation snapshot.
+Capture (App-side)        App routes to its currently active pMode key.
+                          Optional — Apps without pMode taxonomy skip entirely
+                          and rely on section captures' embedded snapshots.
+
+Overhead floor click    → Viewer-internal camera navigation only. No callback.
+                          Author designs overhead-section presentation to work
+                          from both viewing angles, or App switches sections.
 ```
 
 ---
 
 ## Summary
 
-- **Section captures** and **View captures** use identical payload shapes, carrying a `presentationMode` name rather than inline presentation values. Section replay is triggered by the App (section tab click). View replay is triggered by the Viewer firing `onViewSelected`.
-- **Last-one-wins**: whichever capture was activated most recently determines the current presentation. No overlay.
-- **Presentation Mode captures** own a full `ViewerPresentationInput` snapshot per named mode (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`). The App resolves the active mode's snapshot at section/view replay time. The Viewer also applies captures directly when the mode switches in Admin Mode.
-- **Space Menu / Entry buttons** navigate the camera only — no presentation change.
-- **Overhead space-tile click** (`SpaceTileClickNav`) fires `onSpaceTileWalkActivated` — App applies presentation + visibility from the interior view capture (resolving its `presentationMode` reference) but does not override the camera pose.
-- **View button highlight** tracks which button was last pressed, not the camera mode. Activating a section clears the highlight.
-- **In User Mode**, presentation renders from `input.presentation` — App-owned, last-one-wins.
-- **In Admin Mode**, presentation renders from `presentationState.snapshot`, which the admin edits live. View button presses and mode switches apply captures directly to this internal state.
+- **3 contract capture families**: Section, Option, Material Defaults — plus App-side **Presentation Mode** as an optional convention.
+- **All capture payloads are identity-free** — App attaches identity (active section / option / pMode tag) from its own state on receipt.
+- **Section captures embed the full presentation snapshot** — self-contained replay; no external lookup required. Optional App-attached `presentationMode` tag enables re-skin via `presentationModeCaptures[tag] ?? capture.presentation`.
+- **Views collapsed into Sections** — a Section may have associated options or no options (an optionless Section serves as what v1.7 called a View).
+- **Presentation Mode taxonomy is App-side** — DemoApp uses 6 modes, other CustomApps may use any taxonomy or none. The Viewer has no built-in pMode awareness.
+- **Two admin-mode pMode UI surfaces serve different purposes**: DemoApp header pills load App-stored snapshots; Viewer's NavigationDemoPanel pMode buttons apply Viewer's built-in lighting defaults.
+- **`selectionKey`** is the App's "selection changed" signal — bump on section / pill clicks. Two Viewer responses: camera animation re-fire AND presentation re-sync (each gated on the corresponding input being provided).
 
 ---
 

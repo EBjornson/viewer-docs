@@ -75,7 +75,7 @@ An authoring overlay will appear on the left side of the viewer. This is where a
 
 - Click a **Section tab** → the overlay shows section capture tools (camera, lighting, geometry visibility for that section)
 - Click an **Option button** → the overlay shows option capture tools (material changes, geometry membership)
-- Click a **View button** (Exterior / Interior / Overhead) → the overlay shows view capture tools
+- Click a **View button** (Exterior / Interior / Overhead) → camera navigates to that default pose (admin authoring convenience)
 - Click a **Presentation Mode button** (Summer Day, Winter Night, etc.) → the overlay shows the presentation settings for that mode
 
 You don't need to switch tabs — just click whatever you want to author and the overlay follows.
@@ -94,7 +94,7 @@ Work through these five steps in roughly this order. Each one builds on the prev
 
 The Views Panel has two rows of presentation mode buttons: **Summer Day / Summer Night / Summer Night Interior** and **Winter Day / Winter Night / Winter Night Interior**. Each mode stores a complete visual environment — HDR sky, terrain, lighting levels, solar position, and more.
 
-Start with **Summer Day** — Section and View captures both *reference* a presentation mode by name, so capturing at least one mode before you start authoring sections or views means everything you capture afterward replays with the right environment.
+Start with **Summer Day** — capturing at least one pMode early means you can use it as a starting point when you author sections (in admin mode, click a pMode pill in the App header to load that pMode's stored snapshot before tweaking and capturing a section).
 
 1. Click **Summer Day** to make it active
 2. In the authoring overlay, adjust the lighting and environment settings to suit a daytime look
@@ -112,7 +112,7 @@ The Views Panel on the right side of the viewer has three buttons: **Exterior**,
 
 For each view:
 
-1. Click the view button (Exterior, Interior, or Overhead) to activate it
+1. Click the view button (Exterior, Interior, or Overhead) — admin authoring convenience that navigates to the default pose for that camera mode
 2. Position the camera to a good default angle for that view — orbit, zoom, and pan until it looks right
 3. In the authoring overlay, set the **Presentation Mode** you want for this view — **Summer Day** is a good default for all three to start with
 4. Use the **User Visibility** toggles in the authoring overlay to choose which panels appear when the customer is in this view. The six toggles are: **Solar** (Solar/Site panel), **Views** (Exterior/Interior/Overhead buttons), **Summer** (Summer mode buttons), **Winter** (Winter mode buttons), **Rooms** (Rooms panel), and **North** (North Arrow). For example, you might hide the Solar/Site panel for interior views, or hide the Rooms panel for exterior views
@@ -131,7 +131,7 @@ Section captures include the active Presentation Mode reference, so confirm your
 For each section:
 
 1. Click the section tab (e.g. **Section 1**) to make it active
-2. Use the view buttons and camera controls to position the viewer for that section's hero angle (a common move is to press a View button as a starting point, then orbit/zoom from there)
+2. Use the View buttons (admin Navigation Panel at the bottom) and camera controls to position the viewer for that section's hero angle (a common move is to press a View button to land at a default pose, then orbit/zoom from there)
 3. Click **Section Capture** in the authoring overlay
 
 **Testing the replay:** To see the camera animation working, capture **at least two sections**. Then click between them — each click should animate the camera to the position and environment captured for that section. Switching between a captured section and an uncaptured one will not produce a camera animation or change the presentation state — the Viewer preserves whatever presentation is currently active.

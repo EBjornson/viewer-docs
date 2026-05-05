@@ -2,7 +2,7 @@
 
 **Primary reader:** Anyone arriving at the project (PM, engineer, author, evaluator)
 **Job-to-be-done:** Understand the Viewer, the host-App pattern, and shared terminology
-**Next doc:** Pick one — [Viewer Contract](viewer_contract_v1_7.md) (developers) · [Admin Authoring](admin_authoring_guide.md) (authors) · [Tester Quickstart](tester_quickstart.md) (testers)
+**Next doc:** Pick one — [Viewer Contract](viewer_contract_v1_8.md) (developers) · [Admin Authoring](admin_authoring_guide.md) (authors) · [Tester Quickstart](tester_quickstart.md) (testers)
 
 ---
 
@@ -60,7 +60,7 @@ The host App's structure that the Viewer renders.
 
 ### Sections
 
-Sections are major product decision areas — Roof, Flooring, Cabinetry, Solar Package. In the current model, one chosen option exists per section, and a section can own a *section capture* (camera pose + camera mode + presentation-mode reference + visibility + UI flags).
+Sections are major product decision areas — Roof, Flooring, Cabinetry, Solar Package. A section may have associated options (where exactly one is active at a time) or no options (in which case it serves as a "view-like" stored moment). A section can own a *section capture* (camera pose + camera mode + embedded presentation snapshot + visibility).
 
 ### Options
 
@@ -71,11 +71,11 @@ Options are the selectable choices within a section — Shingle Roof / Metal Roo
 
 Option material assignments overlay onto the model-level default materials. If no defaults have been captured, options overlay onto the baked originals.
 
-### Presentation modes
+### Presentation modes (App-side convention)
 
-A presentation mode is a complete visual environment — HDR sky, terrain, lighting, solar settings — saved under one of six named slots: Summer Day, Summer Night, Summer Night Interior, Winter Day, Winter Night, Winter Night Interior. Section and view captures *reference* a presentation mode by name; the host App resolves the full snapshot at replay time.
+A presentation mode is a complete visual environment — HDR sky, terrain, lighting, solar settings. The pMode taxonomy is **App-side** in v1.8 — the contract has no built-in pMode awareness. DemoApp uses six named slots (Summer Day, Summer Night, Summer Night Interior, Winter Day, Winter Night, Winter Night Interior) as a convention; other CustomApps may use any taxonomy, or none at all. Section captures **embed the full presentation snapshot** directly, so they replay self-contained even when the App doesn't maintain a pMode store. Apps that *do* maintain a pMode store can opt into "re-skin" semantics — tagging section captures with a pMode key, and re-resolving via `presentationModeCaptures[tag]` at replay time so updates to a pMode automatically propagate to all sections that share it.
 
-For the full capture lifecycle — payload shapes, replay paths, last-one-wins semantics — see [Capture & Replay](capture_and_replay.md).
+For the full capture lifecycle — payload shapes, replay paths, the embedded-snapshot fallback — see [Capture & Replay](capture_and_replay.md).
 
 ---
 
@@ -125,23 +125,21 @@ This is the canonical glossary for the documentation set. Other docs link here r
 - **Viewer** — The rendering/runtime layer (this repository's primary product). Loads the model, animates the camera, applies scene/presentation instructions, exposes capture tooling.
 - **Host App** (also: *CustomApp*) — Any business/application layer that consumes the Viewer. Owns persisted intent, pricing, product logic, and saved configurations. **DemoApp** is the reference example shipped in this repo; **Build & Price** is one planned future CustomApp.
 - **DemoApp** — The reference host App in this repo (`src/DemoApp/DemoApp.jsx`). Demonstrates the full capture/replay pattern; not a published API or production target. See [DemoApp](demoapp.md).
-- **Viewer Input** — The structured object the host App passes into the Viewer to control what it renders. Buckets: `model`, `camera`, `scene`, `presentation`, `presentationModeCaptures`, `admin`, plus `presentationSyncKey`.
-- **Viewer Output** — The set of callbacks the Viewer uses to send events back to the host App — readiness, capture payloads, geometry picks, render captures, errors.
-- **Section** — A major product decision area such as Roof, Flooring, or Solar Package. Host-App-owned identity.
+- **Viewer Input** — The structured object the host App passes into the Viewer to control what it renders. Buckets: `model`, `camera`, `scene`, `presentation`, `admin`, plus `selectionKey`.
+- **Viewer Output** — The set of callbacks the Viewer uses to send events back to the host App — readiness, capture payloads, render captures, errors.
+- **Section** — A major product decision area such as Roof, Flooring, or Solar Package. Host-App-owned identity. May have associated options (one active at a time) or no options (in which case it serves as a stored "view-like" moment).
 - **Option** — A selectable choice inside a section.
-- **Section capture** — Stored package of camera pose + camera mode + presentation-mode reference + visibility + UI flags for one section.
-- **View capture** — Stored package with the same shape as a section capture, keyed by camera mode (`'exterior'` | `'interior'` | `'overhead'`) instead of by section. Replayed when the user presses a View button.
-- **Presentation Mode** — A named visual preset (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) that owns a full `ViewerPresentationInput` snapshot. Section and view captures reference a mode by name; the host App resolves the snapshot at replay time.
-- **Presentation Mode capture** — Stored full `ViewerPresentationInput` snapshot for one named mode.
+- **Section capture** — Stored package of camera pose + camera mode + **embedded presentation snapshot** + visibility for one section. Self-contained — no external lookup required for replay.
+- **Presentation Mode (pMode)** — App-side concept (v1.8 contract has no built-in pMode awareness). DemoApp uses a 6-mode taxonomy (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) as a convention; other CustomApps may use any taxonomy or none.
+- **Presentation Mode capture** — App-stored full `ViewerPresentationInput` snapshot keyed by pMode id. Optional. Apps that maintain a pMode store can re-resolve `presentationModeCaptures[capture.presentationMode]` at section replay time for "re-skin" semantics; Apps without pMode storage fall back to the section capture's embedded snapshot.
 - **Option capture** — Stored package of geometry membership and / or material assignments for one option within one section. Captures are additive — repeated captures merge.
 - **Material Assignment** — An instruction telling the Viewer how specific geometry should look (color, roughness, metalness, maps, textureScale, etc.).
 - **Model Default Materials** — Material assignments stored at the host App layer and passed to the Viewer via `scene.defaultMaterialAssignments` on every load. Applied before option assignments; option assignments always win for the same geometry.
-- **Capture Payload** — The serialisable snapshot fired by a `ViewerOutput` callback when the admin clicks a capture action. The host App stores it and replays it later via `ViewerInput`.
+- **Capture Payload** — The serialisable snapshot fired by a `ViewerOutput` callback when the admin clicks a capture action. **Identity-free in v1.8** — the App attaches its own identity (active section / option / pMode tag) on receipt. The host App stores the payload and replays it later via `ViewerInput`.
 - **Geometry ID** — Stable identifier used to target a piece of geometry for visibility/material/configuration behavior. Derived from scene-graph path at load time.
 - **Scene Path** — The hierarchy-based path that determines a Geometry ID. Stable across reloads as long as the export hierarchy is stable.
-- **Admin Mode** — Enabled by setting `input.admin.enabled = true`. Causes the Viewer to render its built-in Authoring Panel as a left-side overlay. The panel is dynamic by default — filtered by `input.admin.activeAuthoringFocus` (`'section' | 'option' | 'view' | 'presentationMode' | 'all'`).
-- **`presentationSyncKey`** — Optional monotonically-increasing counter on `viewerInput`. Signals **"App selection changed"** — bump on every section/view selection change (captured or not). The Viewer interprets in two layers: (1) clears any active view-button highlight on every change, so only one section/view button stays "active" across both layers; (2) re-syncs presentation state from `input.presentation` only when a snapshot is provided. When `input.presentation` is `undefined` (uncaptured selection), the Viewer preserves its current state to maintain authoring continuity.
-- **`presentationModeCaptures`** — Host-App-owned input field on `viewerInput`: a map of mode id → `ViewerPresentationInput` snapshot. The Viewer reads it when the user clicks a mode tile (applies the captured snapshot, or falls back to built-in lighting defaults if absent). Pass the full persisted map every render — the Viewer only reads it.
+- **Admin Mode** — Enabled by setting `input.admin.enabled = true`. Causes the Viewer to render its built-in Authoring Panel as a left-side overlay. Panel uses internal Section / Option / pMode tabs for context selection (no App-driven focus field in v1.8). The bottom NavigationDemoPanel (View row + Summer/Winter pMode rows) is admin-only — Viewer-internal authoring conveniences for loading default poses and built-in lighting defaults; no public callbacks.
+- **`selectionKey`** — Optional monotonically-increasing counter on `viewerInput`. The App's "selection changed — force fresh apply" signal — bump on every section selection click and every admin pMode pill click. The Viewer responds in two layers (each gated on the corresponding input being provided): (1) camera animation re-fires from `input.camera.pose` even when its reference identity is unchanged; (2) presentation re-syncs from `input.presentation` even when values match current internal state. When `input.presentation` is `undefined`, the Viewer preserves its current state regardless of `selectionKey`.
 - **Space** — A navigable region in the scene graph, marked by a node whose name contains a recognized space-marker suffix. The system term that covers interior rooms and any other navigable regions added in future; intentionally general so additional kinds (zones, areas) can sit alongside Rooms.
 - **Room** — A walkable interior space — a node whose name contains `_RM` (e.g. `LivingDining_RM`). The most common kind of Space today; user-facing UI labels this panel "Rooms."
 - **Doorway** — A connection between two rooms, marked by a node whose name contains `_DW` with the form `<RoomA>_<RoomB>_DW` (e.g. `Hall_FrontBedroom_DW`).

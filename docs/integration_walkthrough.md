@@ -79,14 +79,8 @@ const appState = {
       ],
     },
   },
-  viewCaptures: {
-    interior: {
-      cameraMode: 'interior',
-      pose: { position: [2, 1.6, 3], target: [0, 1.6, 0] },
-      presentationMode: 'nightInt',
-      visibilityAssignments: { hiddenGeometryIds: [] },
-    },
-  },
+  // pMode storage is App-side in v1.8 — DemoApp uses a 6-mode taxonomy as a
+  // convention. Other CustomApps may use any taxonomy, fewer modes, or none.
   presentationModeCaptures: {
     day: { environmentId: '/hdri/meadow.exr', exposure: 0.6 },
     nightExt: { environmentId: '/hdri/city-night.exr', exposure: 0.3 },
@@ -121,11 +115,11 @@ For example:
 const activeCapture = appState.sectionCaptures[appState.activeSectionId]
 const activeOptionCapture = appState.optionCaptures[`${appState.activeSectionId}_${chosenOption}`]
 
-// Resolve presentation — see capture_and_replay.md#presentation-resolution for the why.
-const modeSnapshot = appState.presentationModeCaptures[activeCapture?.presentationMode] ?? defaultPresentation
-const presentation = activeCapture?.ui
-  ? { ...modeSnapshot, ui: { ...modeSnapshot?.ui, ...activeCapture.ui } }
-  : modeSnapshot
+// v1.8 presentation resolution — re-skin via pMode lookup with embedded
+// snapshot fallback. Apps without pMode storage use just `activeCapture.presentation`.
+const presentation =
+  appState.presentationModeCaptures?.[activeCapture?.presentationMode]
+  ?? activeCapture?.presentation
 
 const viewerInput = {
   model: {
@@ -147,11 +141,8 @@ const viewerInput = {
     materialAssignments: activeOptionCapture?.materialAssignments ?? [],
   },
   presentation,
-  presentationModeCaptures: appState.presentationModeCaptures, // App's full per-mode capture map; the Viewer reads it for mode-switch resolution
-  admin: {
-    enabled: isAdminMode,
-    activeAuthoringFocus,   // drives the dynamic Authoring Panel
-  },
+  admin: { enabled: isAdminMode },
+  selectionKey,  // bumped on every section / pMode-pill click
 }
 ```
 
@@ -160,7 +151,7 @@ In plain language:
 - The App does the product thinking
 - then sends the Viewer a clean set of instructions
 - `defaultMaterialAssignments` is passed from the App's `modelDefaultCapture` record — the Viewer merges it with `materialAssignments` internally
-- The presentation field is resolved via the canonical two-layer pattern: mode snapshot first, capture's `ui` overrides on top. See [Capture & Replay → presentation resolution](capture_and_replay.md#presentation-resolution).
+- Section captures **embed the full presentation snapshot** in v1.8, so a CustomApp without pMode storage can replay using `activeCapture.presentation` directly. Apps that maintain pMode storage opt into "re-skin" semantics via the pMode lookup with embedded snapshot fallback. See [Capture & Replay → Section Captures](capture_and_replay.md#section-captures) for both replay strategies.
 
 ---
 
@@ -183,9 +174,8 @@ function ProductPage() {
     onOptionCaptureCleared: handleOptionCaptureCleared,
     onMaterialDefaultsCaptured: handleMaterialDefaultsCaptured,
     onMaterialDefaultsCleared: handleMaterialDefaultsCleared,
-    onViewCaptured: handleViewCaptured,
     onPresentationModeCaptured: handlePresentationModeCaptured,
-    onGeometryPicked: handleGeometryPicked,
+    onPresentationModeCaptureCleared: handlePresentationModeCaptureCleared,
     onRenderCaptured: (event) => {
       if (event?.blob) {
         batchBlobsRef.current.push({ metadata: event.metadata, blob: event.blob })
@@ -222,7 +212,7 @@ That is the main integration pattern.
 
 ## Step 4: User Interactions
 
-When the user clicks a section tab or changes an option, the App updates its own state, sets `activeAuthoringFocus` to `'section'` or `'option'` so the Authoring Panel adapts, rebuilds `viewerInput`, and re-renders. The Viewer reacts to the changed input.
+When the user clicks a section tab or changes an option, the App updates its own state, rebuilds `viewerInput`, and re-renders. Section tab clicks should also bump `selectionKey` (so the Viewer's camera animation re-fires even when the pose reference is identical and the presentation re-syncs even when values match the previous push). Option clicks don't bump `selectionKey` — they change material/visibility intent, not camera or presentation. The Viewer reacts to the changed input.
 
 Option changes specifically pass two flat lists to `scene.visibilityAssignments`:
 
@@ -276,7 +266,7 @@ function handleSectionCaptured(payload) {
 }
 ```
 
-The payload includes `pose`, `cameraMode`, `presentationMode`, `visibilityAssignments`, and `ui`. These are replayed by passing them back into `viewerInput` when the section is activated — the App resolves `presentationModeCaptures[payload.presentationMode]` to a full presentation snapshot, then spreads `payload.ui` on top so the capture's UI visibility flags take precedence over the mode snapshot's flags.
+The payload includes `pose`, `cameraMode`, the **embedded** `presentation` snapshot, and `visibilityAssignments`. These are replayed by passing them back into `viewerInput` when the section is activated. Apps that maintain pMode storage typically attach a `presentationMode` tag from the App's currently-active pMode at receipt for re-skin support — that tag is App metadata, not contract data.
 
 In plain language:
 
@@ -285,13 +275,7 @@ In plain language:
 
 ---
 
-## Step 6: Admin Picks Geometry
-
-When geometry is picked, the Viewer fires `onGeometryPicked(event)`. The App can use that for authoring mappings, debugging, or admin UI feedback. The full event shape is in [viewer_contract_v1_7.md](viewer_contract_v1_7.md#viewergeometrypickedevent).
-
----
-
-## Step 7: The App Triggers Batch Image Capture
+## Step 6: The App Triggers Batch Image Capture
 
 When the user clicks "Complete Build", the App builds one item per section that has a captured pose and increments `batchCapture.nonce` to start the render sequence.
 
@@ -309,7 +293,8 @@ const items = sections
         instantHiddenGeometryIds: [],
       },
     },
-    presentation: presentationModeCaptures[sectionCaptures[s.id].presentationMode],
+    presentation: presentationModeCaptures?.[sectionCaptures[s.id].presentationMode]
+      ?? sectionCaptures[s.id].presentation,
   }))
 
 // Increment nonce in viewerInput to start the batch:
@@ -333,41 +318,45 @@ When all items are done, the Viewer fires `onBatchCaptureComplete`. At that poin
 
 ---
 
-## Step 8: Persistence and Replay
+## Step 7: Persistence and Replay
 
 The App owns persistence — capture payloads belong wherever the App stores them (backend, browser, file). Replay is straightforward: when loading a saved design, the App reconstructs `viewerInput` from stored values and passes it to `Viewer`. The Viewer reacts to the changed input. There is no "ask the Viewer to remember" path — the App is always the source of truth.
 
-DemoApp persists to browser `localStorage` keyed by model ID (`demoapp_v2_${modelId}`); a production App would persist to its backend.
+DemoApp persists to browser `localStorage` keyed by model ID (`demoapp_v3_${modelId}`); a production App would persist to its backend.
 
 ---
 
 ## A Full End-to-End Example
 
-[DemoApp.jsx](../src/DemoApp/DemoApp.jsx) is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to `localStorage`, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp should mirror. Read it alongside this walkthrough — the structural shape is exactly what Steps 1–8 above describe.
+[DemoApp.jsx](../src/DemoApp/DemoApp.jsx) is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to `localStorage`, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp should mirror. Read it alongside this walkthrough — the structural shape is exactly what Steps 1–7 above describe.
 
-A few handlers in DemoApp show patterns that are easy to miss from the contract reference alone and are worth a closer look:
+A few patterns in DemoApp are easy to miss from the contract reference alone and worth a closer look:
+
+### Identity-free capture routing
+
+All capture callbacks in v1.8 fire identity-free payloads. DemoApp routes by reading its own current selection state in the handlers — `selectedSectionIdRef`, `selectedOptionsRef`, and `currentPModeRef` (the App's sticky "currently active pMode" tracker, updated on pMode pill clicks and section selection from the section's pMode tag). The handlers attach the App-side identity (section ID, section+option, pMode key) on receipt and store accordingly.
+
+### Section capture — App-side pMode tagging
+
+`onSectionCaptured` payload includes the **embedded** presentation snapshot but no pMode reference. DemoApp attaches `presentationMode: currentPModeRef.current` as App metadata when storing — enabling the optional re-skin replay path later. CustomApps that don't care about re-skin can skip the tag entirely; the embedded snapshot replays cleanly on its own.
 
 ### Option capture — conflict gate + additive merge
 
-The recommended `onOptionCaptured` flow lives at [DemoApp.jsx:753-778](../src/DemoApp/DemoApp.jsx#L753-L778):
+The recommended `onOptionCaptured` flow:
 
-1. Run `findOptionCaptureConflicts` ([DemoApp.jsx:113-132](../src/DemoApp/DemoApp.jsx#L113-L132), with the per-id helper at [DemoApp.jsx:91-111](../src/DemoApp/DemoApp.jsx#L91-L111)) to enforce the two cross-section ownership rules independently.
+1. Run `findOptionCaptureConflicts` to enforce the two cross-section ownership rules independently.
 2. If either rule fires, store the conflict for the banner and **do not store the payload**.
-3. Otherwise call `mergeOptionCapture(existing, payload)` ([DemoApp.jsx:310-327](../src/DemoApp/DemoApp.jsx#L310-L327)), which unions geometry IDs and lets incoming material assignments win per `geometryId`.
+3. Otherwise call `mergeOptionCapture(existing, payload)` — unions geometry IDs and lets incoming material assignments win per `geometryId`.
 
 Two captures into the same option therefore **accumulate** by design. To replace the payload from scratch, click *Option Clear* first and then capture again.
 
-### Space-tile walk activation
+### Presentation Mode pill click — App-side state update
 
-`onSpaceTileWalkActivated` ([DemoApp.jsx:810-812](../src/DemoApp/DemoApp.jsx#L810-L812)) just records the captured `cameraMode` in App state. The `viewerInput` builder reads it and applies the matching `viewCaptures[mode]` payload's presentation and visibility — but does **not** override `camera.pose`, since the Viewer is already navigating via pathNav. See the derivation block at [DemoApp.jsx:886-916](../src/DemoApp/DemoApp.jsx#L886-L916).
-
-### Active presentation mode — argument intentionally ignored
-
-`onActivePresentationModeChanged` ([DemoApp.jsx:824-832](../src/DemoApp/DemoApp.jsx#L824-L832)) intentionally drops the `mode` argument it receives. The active presentation mode lives entirely in the Viewer (it owns mode selection); the App listens to this callback only to update `activeAuthoringFocus = 'presentationMode'` so the dynamic Authoring Panel filters to mode-relevant controls. If a future App needs to persist the active mode itself, that's the place to read the arg.
+When admin clicks a pMode pill in DemoApp's header, `handlePModePillClick` sets `activePMode` (transient — cleared on next section click), updates `currentPModeRef.current` (sticky), and bumps `selectionKey`. The next render's viewerInput pushes `presentationModeCaptures[activePMode]` as `presentation`. The selectionKey bump ensures the Viewer's presentation hook re-syncs even when values match the previous push (handles the "Viewer's internal admin state diverged" case after a NavigationDemoPanel pMode button click).
 
 ### Batch render flow
 
-`onRenderCaptured` ([DemoApp.jsx:833-837](../src/DemoApp/DemoApp.jsx#L833-L837)) accumulates JPEG blobs in a `useRef` array as each item completes. `onBatchCaptureComplete` ([DemoApp.jsx:838-855](../src/DemoApp/DemoApp.jsx#L838-L855)) then composites a footer overlay (`compositeInfoOverlay` at [DemoApp.jsx:22-76](../src/DemoApp/DemoApp.jsx#L22-L76)) onto each blob and triggers downloads. The trigger is the `admin.batchCapture.nonce` increment in `handleCaptureSectionRenderings` ([DemoApp.jsx:920-956](../src/DemoApp/DemoApp.jsx#L920-L956)) — the Viewer detects the bump and processes the items in sequence.
+`onRenderCaptured` accumulates JPEG blobs in a `useRef` array as each item completes. `onBatchCaptureComplete` composites a footer overlay onto each blob and triggers downloads. The trigger is the `admin.batchCapture.nonce` increment in `handleCaptureSectionRenderings` — the Viewer detects the bump and processes the items in sequence.
 
 ---
 
