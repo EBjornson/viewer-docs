@@ -2095,8 +2095,13 @@
 <p>If you are working through this for the first time, the <a href="../tester_quickstart/">Tester Quickstart</a> gets you to your first working configuration in about 15 minutes. This guide is the deeper reference once you are comfortable with the basics.</p>
 <hr />
 <h2 id="admin-mode">Admin Mode<a class="headerlink" href="#admin-mode" title="Permanent link">&para;</a></h2>
-<p>Click <strong>Admin Mode</strong> in the header to enter authoring. The button highlights when active. The <strong>Authoring Panel</strong> appears as a left-side overlay containing all capture and clear actions. Click it again to leave authoring and return to the clean customer-facing view.</p>
-<p>The bottom <strong>Navigation Panel</strong> (View buttons + Summer / Winter pMode buttons) is <strong>admin-only</strong> — it disappears in user mode. Both rows are pure authoring conveniences: View buttons navigate the camera to default Exterior / Interior / Overhead poses; pMode buttons apply the Viewer's built-in lighting defaults. Neither row affects App-stored state.</p>
+<p>Click <strong>Admin Mode</strong> in the header to enter authoring. The button highlights when active. The <strong>Authoring Panel</strong> appears as a left-side overlay containing all capture and clear actions plus admin-only navigation/lighting helpers. Click it again to leave authoring and return to the clean customer-facing view.</p>
+<p>Inside the Authoring Panel, two admin-only <strong>helper rows</strong> sit above the capture controls in their respective tabs:</p>
+<ul>
+<li><strong>Section tab — View row</strong> (Exterior / Interior / Overhead): navigates the camera to the Viewer's built-in default pose for that camera mode.</li>
+<li><strong>pMode tab — pMode helper buttons</strong> (Summer Day / Summer Night / Winter Day / Winter Night, four buttons in a 2×2 layout): loads the Viewer's built-in lighting defaults (and winter HDRI/terrain pair for the Winter row).</li>
+</ul>
+<p>Both are pure Viewer-internal authoring conveniences — no public callbacks, no effect on App-stored state. The pMode helper count and labels are <strong>independent</strong> from any host App's pMode store: DemoApp's header pills are an App-side capture-slot taxonomy (currently 6 pills: Summer Day/Night/Interior + Winter Day/Night/Interior); the Viewer's helpers seed lighting starting points (currently 4: Summer/Winter × Day/Night). Helpers feed the admin → admin tweaks sliders → admin clicks Mode Capture → App routes to whichever pMode pill it currently has selected.</p>
 <h3 id="the-authoring-panel-uses-internal-tabs">The Authoring Panel uses internal tabs<a class="headerlink" href="#the-authoring-panel-uses-internal-tabs" title="Permanent link">&para;</a></h3>
 <p>The panel has three context tabs at the top — <strong>Section / Option / pMode</strong> — that you click to choose what you're authoring. Each tab shows exactly the controls relevant to its capture family.</p>
 <table>
@@ -2143,7 +2148,7 @@
 <p>Sections and views <em>reference</em> a presentation mode by name. Capturing a mode once means every section that uses Summer Day always renders with the same sky and lighting.</p>
 <p>The Summer and Winter rows can each be hidden from users via the User Visibility toggles. Use this when a product does not need a winter presentation.</p>
 <h3 id="2-view-navigation-admin-only">2. View navigation (admin-only)<a class="headerlink" href="#2-view-navigation-admin-only" title="Permanent link">&para;</a></h3>
-<p>The bottom Navigation Panel's View buttons (Exterior / Interior / Overhead) are admin-only authoring conveniences. They navigate the camera to the Viewer's default pose for each camera mode — useful as a starting point when framing a section's hero shot. They do not store any state and do not fire callbacks. Future enhancement: per-session capture/clear of view button defaults (deferred).</p>
+<p>The AuthoringPanel's Section-tab <strong>View row</strong> (Exterior / Interior / Overhead, top of the Section tab) holds admin-only authoring conveniences. They navigate the camera to the Viewer's default pose for each camera mode — useful as a starting point when framing a section's hero shot. They do not store any state and do not fire callbacks. Future enhancement: per-session capture/clear of view button defaults (deferred).</p>
 <p>A "view-like" persistent stored moment in v1.8 is just an optionless Section. Author it via the Section workflow below.</p>
 <h3 id="3-section-captures">3. Section captures<a class="headerlink" href="#3-section-captures" title="Permanent link">&para;</a></h3>
 <p>A section capture stores a camera pose, the camera mode, the <strong>embedded presentation snapshot</strong> (full lighting/HDR/terrain/solar/UI flags), and geometry visibility for one product section (Roof, Flooring, Solar Package, etc.). DemoApp also attaches the active pMode key as App-side metadata at receipt for optional re-skin support.</p>
@@ -2164,7 +2169,7 @@
 <p>Use this order when authoring a new model. Each step builds on the previous in a way that minimizes back-and-forth.</p>
 <ol>
 <li><strong>Capture at least one Presentation Mode.</strong> Start with Summer Day — adjust HDR, terrain, exposure, sun, and ambient light until the daytime exterior looks right, then click <strong>Mode Capture</strong> with Summer Day active. You can return to capture additional modes (Summer Night, Winter Day, etc.) later.</li>
-<li><strong>Capture Sections.</strong> Section captures are the primary "stored moments" in v1.8 — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View buttons in the Navigation Panel as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click <strong>Section Capture</strong>. Optionless sections (Sections without associated options) serve as what v1.7 called Views — author them the same way.</li>
+<li><strong>Capture Sections.</strong> Section captures are the primary "stored moments" in v1.8 — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View row at the top of the AuthoringPanel's Section tab as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click <strong>Section Capture</strong>. Optionless sections (Sections without associated options) serve as what v1.7 called Views — author them the same way.</li>
 <li><strong>Capture Option geometry membership.</strong> Per section, per option: click the option, select the parts of the model that belong to that option, and click <strong>Option Capture</strong>.</li>
 <li><strong>Capture Option material assignments.</strong> Per option that needs custom materials: click the option, select the geometry, edit the material (color, roughness, metalness, or apply a library texture), and click <strong>Option Capture</strong>. If the geometry is already owned for show/hide by a different section, use <strong>Capture Material Only</strong> (see <a href="#cross-section-ownership">Cross-section ownership</a> below).</li>
 <li><strong>Capture Model Defaults — anytime, optionally.</strong> Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. Some authors prefer to do this immediately after Views; others leave it to the end. There is no wrong time.</li>
@@ -2191,7 +2196,7 @@
 <p>Click the section tab to make it active.</p>
 <p>If the section already has a captured preset, activating it replays that preset. If it does not, activating it leaves the current presentation alone.</p>
 <h3 id="step-2-adjust-the-view">Step 2 — adjust the view<a class="headerlink" href="#step-2-adjust-the-view" title="Permanent link">&para;</a></h3>
-<p>A common starting move is to press a View button in the admin-only Navigation Panel (often Exterior or Overhead) to land at a default pose, then orbit / pan / zoom to the section's hero angle. Optionally click a pMode pill in the DemoApp header to load the App-stored pMode snapshot as the lighting starting point.</p>
+<p>A common starting move is to press a View button in the AuthoringPanel's Section tab (often Exterior or Overhead) to land at a default pose, then orbit / pan / zoom to the section's hero angle. Optionally click a pMode pill in the DemoApp header to load the App-stored pMode snapshot as the lighting starting point.</p>
 <p>Adjust as needed:</p>
 <ul>
 <li>camera pose</li>
@@ -2323,7 +2328,7 @@
 <ol>
 <li>Activate each section and confirm the camera, lighting, and visibility match what you captured.</li>
 <li>Click between options inside a section and confirm geometry and materials change correctly.</li>
-<li>Press each View button (admin Navigation Panel) and confirm it navigates to the default pose for that camera mode.</li>
+<li>Press each View button (admin AuthoringPanel's Section-tab View row) and confirm it navigates to the default pose for that camera mode.</li>
 <li>Switch presentation modes and confirm each mode renders the captured environment.</li>
 <li>Reload the page and confirm everything still works (persistence is browser-local — see below).</li>
 </ol>

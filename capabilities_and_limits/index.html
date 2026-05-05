@@ -1649,10 +1649,9 @@
 <h3 id="admin-mode-toggle">Admin mode toggle<a class="headerlink" href="#admin-mode-toggle" title="Permanent link">&para;</a></h3>
 <p>The Viewer supports <code>input.admin.enabled</code>:</p>
 <ul>
-<li><code>true</code> — renders the built-in Authoring Panel (left-side overlay) with internal Section / Option / pMode tabs for context selection, plus the admin-only NavigationDemoPanel (View row + Summer/Winter pMode rows) for navigation/lighting-default conveniences</li>
+<li><code>true</code> — renders the built-in Authoring Panel (left-side overlay) with internal Section / Option / pMode tabs for context selection. Top of the Section tab includes a <strong>View row</strong> (Exterior / Interior / Overhead) for navigating to built-in default poses; top of the pMode tab includes four <strong>pMode helper buttons</strong> (Summer/Winter × Day/Night) for loading built-in lighting defaults. Both are pure Viewer-internal admin conveniences — no public callbacks.</li>
 <li><code>false</code> — renders purely from what the App passes through <code>viewerInput</code>; clean presentation mode for end-user browsing</li>
 </ul>
-<p>The bottom Navigation Panel (View row + Summer/Winter presentation mode rows) is identical in both modes — it has no admin-only controls.</p>
 <p>This is helpful for both authoring and demonstrating capability.</p>
 <h3 id="section-image-capture-batch-render">Section image capture (batch render)<a class="headerlink" href="#section-image-capture-batch-render" title="Permanent link">&para;</a></h3>
 <p>The system can generate one JPEG render per section programmatically. The App triggers a batch by setting <code>admin.batchCapture = { nonce, items }</code> in <code>viewerInput</code> (incrementing the nonce is the trigger). The Viewer processes each item in sequence — snapping the camera, settling 1500ms for materials and shadows, then capturing a 3840×2160 JPEG off-screen. The Viewer fires <code>onRenderCaptured({ imageUrl, blob, metadata })</code> after each item and <code>onBatchCaptureComplete</code> when all items are done.</p>

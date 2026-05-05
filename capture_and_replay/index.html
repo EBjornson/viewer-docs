@@ -1787,7 +1787,7 @@
 <p>In Admin Mode, the admin:</p>
 <ol>
 <li>Activates the section (App-rendered tab)</li>
-<li>Loads a starting state — either by clicking a pMode pill in the App header (loads App-stored snapshot if present) or by clicking a pMode button in the Viewer's NavigationDemoPanel (applies built-in lighting defaults)</li>
+<li>Loads a starting state — either by clicking a pMode pill in the App header (loads App-stored snapshot if present) or by clicking a pMode helper button at the top of the AuthoringPanel's pMode tab (applies built-in lighting defaults)</li>
 <li>Moves the camera, adjusts presentation, hides geometry as needed</li>
 <li>Sets the <strong>Camera Mode</strong> (Ext / Int / Ovh) in the authoring panel to label the mode — this does not move the camera, it tags which mode will be written into the payload</li>
 <li>Clicks <strong>Section Capture</strong></li>
@@ -1952,7 +1952,7 @@
 <p>In Admin Mode, the admin:</p>
 <ol>
 <li>Selects the desired pMode by clicking a pill in DemoApp's header (loads any App-stored snapshot for that mode)</li>
-<li>Optionally clicks a pMode button in the Viewer's NavigationDemoPanel (applies Viewer's built-in lighting defaults — useful starting point if no stored snapshot)</li>
+<li>Optionally clicks a pMode helper button at the top of the AuthoringPanel's pMode tab (applies Viewer's built-in lighting defaults — useful starting point if no stored snapshot). The helper set (Summer/Winter × Day/Night, four buttons) is <strong>independent</strong> from DemoApp's 6-pill taxonomy; helpers seed defaults, the App's pill state determines where the next Mode Capture is routed.</li>
 <li>Adjusts all presentation settings to the desired state</li>
 <li>Clicks <strong>Mode Capture</strong> in the Viewer's Authoring Panel</li>
 </ol>
@@ -2008,7 +2008,7 @@
 <p><strong>Section replay in Admin Mode</strong> triggers the sync effect by either changing the presentation reference or bumping <code>selectionKey</code>. Any active solar preview state is cleared and the Viewer reverts to the authoritative solar time from the replayed snapshot.</p>
 <p><strong>Solar preview clearing:</strong> Whenever a section change occurs (via <code>applyPresentation</code>), or when the App's <code>presentation</code> input reference changes with different values, the Viewer clears the <code>previewSolar</code> state and reverts to the authoritative solar time stored in the snapshot.</p>
 <p><strong>App-rendered pMode pill click in Admin Mode</strong> loads the App-stored pMode snapshot via <code>viewerInput.presentation</code> and bumps <code>selectionKey</code>. The Viewer's presentation hook re-syncs (force-resync layer triggers because of the bump even when values match prior state).</p>
-<p><strong>Viewer-rendered pMode button click in Admin Mode</strong> (NavigationDemoPanel pMode rows) applies the Viewer's built-in lighting defaults (<code>DAY_LIGHTING_DEFAULTS</code> / <code>NIGHT_LIGHTING_DEFAULTS</code>, plus seasonal HDRI/terrain for winter modes) directly to <code>presentationState</code>. No callback to App — pure Viewer-internal authoring convenience for "start fresh from defaults."</p>
+<p><strong>Viewer-rendered pMode helper button click in Admin Mode</strong> (top of the AuthoringPanel's pMode tab — Summer/Winter × Day/Night) applies the Viewer's built-in lighting defaults (<code>DAY_LIGHTING_DEFAULTS</code> / <code>NIGHT_LIGHTING_DEFAULTS</code>, plus seasonal HDRI/terrain for winter buttons) directly to <code>presentationState</code>. No callback to App — pure Viewer-internal authoring convenience for "start fresh from defaults." Helper set is independent from any host App's pMode taxonomy.</p>
 <hr />
 <h2 id="authoring-interaction-summary">Authoring Interaction Summary<a class="headerlink" href="#authoring-interaction-summary" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Section Capture         → Identity-free payload: pose + cameraMode + embedded
@@ -2044,7 +2044,7 @@
 <li><strong>Section captures embed the full presentation snapshot</strong> — self-contained replay; no external lookup required. Optional App-attached <code>presentationMode</code> tag enables re-skin via <code>presentationModeCaptures[tag] ?? capture.presentation</code>.</li>
 <li><strong>Views collapsed into Sections</strong> — a Section may have associated options or no options (an optionless Section serves as what v1.7 called a View).</li>
 <li><strong>Presentation Mode taxonomy is App-side</strong> — DemoApp uses 6 modes, other CustomApps may use any taxonomy or none. The Viewer has no built-in pMode awareness.</li>
-<li><strong>Two admin-mode pMode UI surfaces serve different purposes</strong>: DemoApp header pills load App-stored snapshots; Viewer's NavigationDemoPanel pMode buttons apply Viewer's built-in lighting defaults.</li>
+<li><strong>Two admin-mode pMode UI surfaces serve different purposes</strong> and are <strong>independent</strong>: DemoApp header pills (App-side capture-slot taxonomy, currently 6) load App-stored snapshots; the AuthoringPanel's pMode-tab helper buttons (Viewer-internal lighting-defaults seeders, 4) apply Viewer's built-in lighting defaults. Counts and labels are not required to match.</li>
 <li><strong><code>selectionKey</code></strong> is the App's "selection changed" signal — bump on section / pill clicks. Two Viewer responses: camera animation re-fire AND presentation re-sync (each gated on the corresponding input being provided).</li>
 </ul>
 <hr />
