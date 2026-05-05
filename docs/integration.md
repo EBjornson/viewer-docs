@@ -21,12 +21,12 @@ The Viewer ships as a self-contained ESM bundle on jsDelivr. Loading the bundle 
 ### Bundle URL
 
 ```
-https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js
+https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.1.0/viewer.js
 ```
 
 The bundle includes React, Three.js, and `@react-three/fiber` internally — the host App does not need to install or supply them. A bundle on a `v1` URL never breaks; major releases ship at new URLs (`@v2`, etc.).
 
-**Pinning policy.** `@v1.0.0` is forever-immutable. `@v1` floats to the latest `v1.x.y` tag — useful for opt-in auto-upgrade on patch/minor releases. Pick whichever matches your update appetite.
+**Pinning policy.** `@v1.1.0` is forever-immutable. `@v1` floats to the latest `v1.x.y` tag — useful for opt-in auto-upgrade on patch/minor releases. Pick whichever matches your update appetite.
 
 ### Default assets (HDRIs, terrain textures, material textures)
 
@@ -40,7 +40,7 @@ Bundled defaults reference this CDN directly. Your App only needs to host model 
 
 ```html
 <!-- index.html -->
-<script type="module" src="https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.1.0/viewer.js"></script>
 ```
 
 ```vue
@@ -79,7 +79,7 @@ watch(viewerInput, (next) => {
     <viewer-element id="viewer" style="display: block; width: 100%; height: 600px"></viewer-element>
 
     <script type="module">
-      import 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js'
+      import 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.1.0/viewer.js'
 
       const el = document.getElementById('viewer')
       el.input = { model: { modelUrl: '/models/your-product.glb' } }
@@ -94,7 +94,7 @@ watch(viewerInput, (next) => {
 For React hosts that prefer JSX, the bundle also exports `Viewer` as a React component:
 
 ```jsx
-import { Viewer } from 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.0.0/viewer.js'
+import { Viewer } from 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.1.0/viewer.js'
 
 function App() {
   return <Viewer input={viewerInput} output={viewerOutput} />
