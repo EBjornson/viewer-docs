@@ -2,7 +2,7 @@
 
 **Primary reader:** App-side developer
 **Job-to-be-done:** See what a reference host App looks like and how it surfaces Viewer events
-**Next doc:** [Integration Guide](integration_guide.md)
+**Next doc:** [Integration Guide](integration.md)
 
 ---
 
@@ -56,7 +56,7 @@ DemoApp deliberately surfaces several aids to help developers integrating the Vi
 - **pMode + Mat. Defaults pills** *(also listed above)* — hovering any pill (after a 3-second delay) shows the stored JSON payload in a floating panel with a Copy button. Same pattern is applied to section tabs and option buttons — the payload tooltip surfaces the exact data that flowed back through the corresponding `viewerOutput` callback.
 - **Payload inspector tooltips** — the unifying name for the hover-and-copy pattern above. Useful for verifying the shape of any capture payload during integration without instrumenting your own logging.
 - **Error banner** — a dismissable red banner overlaid on the viewer panel when `onError` fires, showing the error code and message. Clears on dismiss or model switch.
-- **Capture conflict banners** — a red banner when `onOptionCaptured` is rejected by cross-section ownership enforcement (names the conflicting geometry IDs and the owning section/option), and a separate amber banner for pre-existing conflicts surfaced from persisted state on load. See [Cross-Section Ownership Enforcement](integration_guide.md#cross-section-ownership-enforcement) for the rules and the rejection pattern.
+- **Capture conflict banners** — a red banner when `onOptionCaptured` is rejected by cross-section ownership enforcement (names the conflicting geometry IDs and the owning section/option), and a separate amber banner for pre-existing conflicts surfaced from persisted state on load. See [Cross-Section Ownership Enforcement](integration.md#cross-section-ownership-enforcement) for the rules and the rejection pattern.
 
 The Viewer's own capture indicators (highlighted state on individual capture buttons inside the admin overlay) are session-only and reset on reload — they reflect the current authoring session, not stored state. Use the DemoApp header pills for stored-capture status.
 

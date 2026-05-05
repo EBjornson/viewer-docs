@@ -242,7 +242,7 @@ For payload shapes, replay paths, identity-free routing, and Admin vs User Mode 
 
 Two **independent** cross-section ownership rules apply at the App's `onOptionCaptured` handler — show/hide ownership and material assignment ownership, each exclusive across sections. Enforcement lives at the App layer because section identity is App-owned (the Viewer fires `onOptionCaptured` with no section context). DemoApp implements the enforcement; any production App integrating the Viewer is expected to apply equivalent rules.
 
-See [Cross-Section Ownership Enforcement](integration_guide.md#cross-section-ownership-enforcement) in the integration guide for the canonical rules, the conflict-detection code, and the rejection-banner pattern.
+See [Cross-Section Ownership Enforcement](integration.md#cross-section-ownership-enforcement) in the integration guide for the canonical rules, the conflict-detection code, and the rejection-banner pattern.
 
 ---
 

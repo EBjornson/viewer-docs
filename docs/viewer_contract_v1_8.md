@@ -2,7 +2,7 @@
 
 **Primary reader:** App-side developer
 **Job-to-be-done:** Reference for the Viewer's input/output types
-**Next doc:** [Integration Guide](integration_guide.md)
+**Next doc:** [Integration Guide](integration.md)
 
 ---
 
