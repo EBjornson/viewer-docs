@@ -59,9 +59,8 @@ markdown_extensions:
 nav:
   - Overview: overview.md
   - Integration:
-      - Integration Guide: integration_guide.md
-      - Walkthrough: integration_walkthrough.md
-      - Viewer Contract v1.8: viewer_contract_v1_8.md
+      - Integration Guide: integration.md
+      - Viewer Contract: viewer_contract_v1_8.md
       - DemoApp Reference: demoapp.md
   - Internals:
       - Architecture: architecture.md
@@ -69,7 +68,7 @@ nav:
   - Authoring:
       - Admin Authoring Guide: admin_authoring_guide.md
       - Model Authoring Guide: model_authoring_guide.md
+      - Marker Pipeline: marker_pipeline.md
       - Tester Quickstart: tester_quickstart.md
   - Reference:
-      - Capabilities & Limits: capabilities_and_limits.md
       - Subscriber Materials Plan: subscriber_materials_plan.md
