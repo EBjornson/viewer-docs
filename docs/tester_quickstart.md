@@ -92,7 +92,7 @@ Work through these five steps in roughly this order. Each one builds on the prev
 
 ### Step 1 — Set Up a Presentation Mode
 
-The Views Panel has two rows of presentation mode buttons: **Summer Day / Summer Night / Summer Night Interior** and **Winter Day / Winter Night / Winter Night Interior**. Each mode stores a complete visual environment — HDR sky, terrain, lighting levels, solar position, and more.
+DemoApp's header has two rows of presentation mode pills: **Summer Day / Summer Night / Summer Night Interior** and **Winter Day / Winter Night / Winter Night Interior**. Each pill is an App-side capture slot — clicking one in admin mode loads its stored snapshot (or seeds nothing if uncaptured). Each mode stores a complete visual environment — HDR sky, terrain, lighting levels, solar position, and more.
 
 Start with **Summer Day** — capturing at least one pMode early means you can use it as a starting point when you author sections (in admin mode, click a pMode pill in the App header to load that pMode's stored snapshot before tweaking and capturing a section).
 
@@ -131,7 +131,7 @@ Section captures include the active Presentation Mode reference, so confirm your
 For each section:
 
 1. Click the section tab (e.g. **Section 1**) to make it active
-2. Use the View buttons (admin Navigation Panel at the bottom) and camera controls to position the viewer for that section's hero angle (a common move is to press a View button to land at a default pose, then orbit/zoom from there)
+2. Use the View buttons (top of the AuthoringPanel's Section tab) and camera controls to position the viewer for that section's hero angle (a common move is to press a View button to land at a default pose, then orbit/zoom from there)
 3. Click **Section Capture** in the authoring overlay
 
 **Testing the replay:** To see the camera animation working, capture **at least two sections**. Then click between them — each click should animate the camera to the position and environment captured for that section. Switching between a captured section and an uncaptured one will not produce a camera animation or change the presentation state — the Viewer preserves whatever presentation is currently active.

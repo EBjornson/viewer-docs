@@ -275,7 +275,7 @@ Optional monotonically-increasing counter. The App bumps it on every user-initia
 The Viewer responds in two layers (each gated on the corresponding input being provided):
 
 1. **Camera animation re-fires** from `input.camera.pose` even when its reference identity is unchanged. Handles the "user clicks the active section to return to its captured pose after free-navigating" case.
-2. **Presentation re-syncs** from `input.presentation` even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the Viewer's NavigationDemoPanel pMode buttons that mutate Viewer state without updating App state, then re-clicked an App pMode pill to reload the App-stored snapshot).
+2. **Presentation re-syncs** from `input.presentation` even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the AuthoringPanel's pMode-tab helper buttons that mutate Viewer state without updating App state, then re-clicked an App pMode pill to reload the App-stored snapshot).
 
 When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** regardless of `selectionKey` — admin tweaks aren't stomped by a navigation that has nothing to push.
 
@@ -516,6 +516,8 @@ If a Section has options, exactly one option must be active. The App's option li
 The 6-mode taxonomy used in DemoApp (`day`, `nightExt`, `nightInt`, `winterDay`, `winterNight`, `winterNightInt`) is an App-side convention, **not a contract surface**. Other Apps may use any taxonomy — fewer modes, more modes, different names, or no modes at all.
 
 The App renders pMode selection buttons (admin-mode for authoring; optionally user-mode for runtime presentation switching). The Viewer's only role is rendering whatever `viewerInput.presentation` snapshot the App pushes.
+
+The AuthoringPanel's **pMode helper buttons** (Summer/Winter × Day/Night → built-in lighting defaults) are a Viewer-internal authoring convenience, separate from the App's pMode store. Helper count and labels are independent from the App's pill set — same parallel-but-independent relationship as the View row to App-side Section pills. Helpers seed presentation state; the admin then routes via Mode Capture to whichever App pMode slot is currently active.
 
 The Viewer's Authoring Panel keeps **Mode Capture** and **Mode Clear** buttons (admin-only) for the admin to persist the currently-edited presentation snapshot. These callbacks fire identity-free; the App attaches the pMode tag from its own active-pMode state.
 

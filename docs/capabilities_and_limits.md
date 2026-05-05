@@ -76,10 +76,8 @@ The current repo supports:
 
 The Viewer supports `input.admin.enabled`:
 
-- `true` — renders the built-in Authoring Panel (left-side overlay) with internal Section / Option / pMode tabs for context selection, plus the admin-only NavigationDemoPanel (View row + Summer/Winter pMode rows) for navigation/lighting-default conveniences
+- `true` — renders the built-in Authoring Panel (left-side overlay) with internal Section / Option / pMode tabs for context selection. Top of the Section tab includes a **View row** (Exterior / Interior / Overhead) for navigating to built-in default poses; top of the pMode tab includes four **pMode helper buttons** (Summer/Winter × Day/Night) for loading built-in lighting defaults. Both are pure Viewer-internal admin conveniences — no public callbacks.
 - `false` — renders purely from what the App passes through `viewerInput`; clean presentation mode for end-user browsing
-
-The bottom Navigation Panel (View row + Summer/Winter presentation mode rows) is identical in both modes — it has no admin-only controls.
 
 This is helpful for both authoring and demonstrating capability.
 

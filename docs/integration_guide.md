@@ -301,7 +301,7 @@ Think of this as:
 **`selectionKey`:** A companion field. It is an optional monotonically-increasing counter the App bumps to signal **"selection changed — force fresh apply"**. Two cases the App should bump on: section selection clicks and admin pMode pill clicks. The Viewer responds in two layers (each gated on the corresponding input being provided):
 
 1. **Camera animation re-fires** from `input.camera.pose` even when its reference identity is unchanged. Handles "user clicks the active section to return to its captured pose after free-navigating."
-2. **Presentation re-syncs** from `input.presentation` even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the Viewer's NavigationDemoPanel pMode buttons that mutate Viewer state without updating App state, then re-clicked an App pill to reload).
+2. **Presentation re-syncs** from `input.presentation` even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the AuthoringPanel's pMode-tab helper buttons that mutate Viewer state without updating App state, then re-clicked an App pill to reload).
 
 When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer preserves its current state regardless of `selectionKey` — admin tweaks aren't stomped. Option clicks should not bump `selectionKey` (they change material/visibility intent, not camera or presentation intent).
 
@@ -337,7 +337,7 @@ Think of this as:
 
 When `input.admin.enabled = true`, the Viewer renders its built-in **Authoring Panel** (left-side overlay) containing all capture/clear actions and authoring tools. The panel uses internal Section / Option / pMode tabs for context selection — the App is not involved in driving panel focus. No extra setup required from the App beyond setting `enabled: true`.
 
-The Viewer also renders an admin-only **NavigationDemoPanel** along the bottom (View row + Summer/Winter pMode rows). These are pure Viewer-internal authoring conveniences: View row navigates the camera to default Exterior/Interior/Overhead poses; pMode rows apply built-in lighting defaults to the Viewer's internal admin presentation state. Neither row fires public callbacks — no App involvement needed.
+Inside the AuthoringPanel, two admin-only helper rows sit above the capture controls in their respective tabs. The Section tab's **View row** (Exterior / Interior / Overhead) navigates the camera to the Viewer's default poses; the pMode tab's **pMode helper buttons** (Summer/Winter × Day/Night, four buttons) load the Viewer's built-in lighting defaults. Both are pure Viewer-internal authoring conveniences — no public callbacks. The pMode helper count and labels are **independent** from any App's pMode taxonomy: helpers seed presentation state, App-side pMode pills route stored captures.
 
 To trigger a batch render, set `admin.batchCapture = { nonce, items }` and increment `nonce`. Each item supplies the camera pose, scene visibility, and presentation for one render. The Viewer processes the items in sequence and fires `onRenderCaptured` per item, then `onBatchCaptureComplete` when done. Admin overlays are hidden automatically during capture.
 

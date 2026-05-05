@@ -352,7 +352,7 @@ Two captures into the same option therefore **accumulate** by design. To replace
 
 ### Presentation Mode pill click — App-side state update
 
-When admin clicks a pMode pill in DemoApp's header, `handlePModePillClick` sets `activePMode` (transient — cleared on next section click), updates `currentPModeRef.current` (sticky), and bumps `selectionKey`. The next render's viewerInput pushes `presentationModeCaptures[activePMode]` as `presentation`. The selectionKey bump ensures the Viewer's presentation hook re-syncs even when values match the previous push (handles the "Viewer's internal admin state diverged" case after a NavigationDemoPanel pMode button click).
+When admin clicks a pMode pill in DemoApp's header, `handlePModePillClick` sets `activePMode` (transient — cleared on next section click), updates `currentPModeRef.current` (sticky), and bumps `selectionKey`. The next render's viewerInput pushes `presentationModeCaptures[activePMode]` as `presentation`. The selectionKey bump ensures the Viewer's presentation hook re-syncs even when values match the previous push (handles the "Viewer's internal admin state diverged" case after the admin used the AuthoringPanel's pMode-tab helper buttons to mutate Viewer-internal state).
 
 ### Batch render flow
 

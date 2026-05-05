@@ -66,7 +66,7 @@ A section capture is a stored package for one section:
 In Admin Mode, the admin:
 
 1. Activates the section (App-rendered tab)
-2. Loads a starting state — either by clicking a pMode pill in the App header (loads App-stored snapshot if present) or by clicking a pMode button in the Viewer's NavigationDemoPanel (applies built-in lighting defaults)
+2. Loads a starting state — either by clicking a pMode pill in the App header (loads App-stored snapshot if present) or by clicking a pMode helper button at the top of the AuthoringPanel's pMode tab (applies built-in lighting defaults)
 3. Moves the camera, adjusts presentation, hides geometry as needed
 4. Sets the **Camera Mode** (Ext / Int / Ovh) in the authoring panel to label the mode — this does not move the camera, it tags which mode will be written into the payload
 5. Clicks **Section Capture**
@@ -259,7 +259,7 @@ DemoApp renders these as 2 rows of 3 clickable pills in the App header. In admin
 In Admin Mode, the admin:
 
 1. Selects the desired pMode by clicking a pill in DemoApp's header (loads any App-stored snapshot for that mode)
-2. Optionally clicks a pMode button in the Viewer's NavigationDemoPanel (applies Viewer's built-in lighting defaults — useful starting point if no stored snapshot)
+2. Optionally clicks a pMode helper button at the top of the AuthoringPanel's pMode tab (applies Viewer's built-in lighting defaults — useful starting point if no stored snapshot). The helper set (Summer/Winter × Day/Night, four buttons) is **independent** from DemoApp's 6-pill taxonomy; helpers seed defaults, the App's pill state determines where the next Mode Capture is routed.
 3. Adjusts all presentation settings to the desired state
 4. Clicks **Mode Capture** in the Viewer's Authoring Panel
 
@@ -354,7 +354,7 @@ When `input.presentation` is `undefined` (uncaptured-section navigation), the Vi
 
 **App-rendered pMode pill click in Admin Mode** loads the App-stored pMode snapshot via `viewerInput.presentation` and bumps `selectionKey`. The Viewer's presentation hook re-syncs (force-resync layer triggers because of the bump even when values match prior state).
 
-**Viewer-rendered pMode button click in Admin Mode** (NavigationDemoPanel pMode rows) applies the Viewer's built-in lighting defaults (`DAY_LIGHTING_DEFAULTS` / `NIGHT_LIGHTING_DEFAULTS`, plus seasonal HDRI/terrain for winter modes) directly to `presentationState`. No callback to App — pure Viewer-internal authoring convenience for "start fresh from defaults."
+**Viewer-rendered pMode helper button click in Admin Mode** (top of the AuthoringPanel's pMode tab — Summer/Winter × Day/Night) applies the Viewer's built-in lighting defaults (`DAY_LIGHTING_DEFAULTS` / `NIGHT_LIGHTING_DEFAULTS`, plus seasonal HDRI/terrain for winter buttons) directly to `presentationState`. No callback to App — pure Viewer-internal authoring convenience for "start fresh from defaults." Helper set is independent from any host App's pMode taxonomy.
 
 ---
 
@@ -396,7 +396,7 @@ Overhead floor click    → Viewer-internal camera navigation only. No callback.
 - **Section captures embed the full presentation snapshot** — self-contained replay; no external lookup required. Optional App-attached `presentationMode` tag enables re-skin via `presentationModeCaptures[tag] ?? capture.presentation`.
 - **Views collapsed into Sections** — a Section may have associated options or no options (an optionless Section serves as what v1.7 called a View).
 - **Presentation Mode taxonomy is App-side** — DemoApp uses 6 modes, other CustomApps may use any taxonomy or none. The Viewer has no built-in pMode awareness.
-- **Two admin-mode pMode UI surfaces serve different purposes**: DemoApp header pills load App-stored snapshots; Viewer's NavigationDemoPanel pMode buttons apply Viewer's built-in lighting defaults.
+- **Two admin-mode pMode UI surfaces serve different purposes** and are **independent**: DemoApp header pills (App-side capture-slot taxonomy, currently 6) load App-stored snapshots; the AuthoringPanel's pMode-tab helper buttons (Viewer-internal lighting-defaults seeders, 4) apply Viewer's built-in lighting defaults. Counts and labels are not required to match.
 - **`selectionKey`** is the App's "selection changed" signal — bump on section / pill clicks. Two Viewer responses: camera animation re-fire AND presentation re-sync (each gated on the corresponding input being provided).
 
 ---
