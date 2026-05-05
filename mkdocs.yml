@@ -61,7 +61,7 @@ nav:
   - Integration:
       - Integration Guide: integration_guide.md
       - Walkthrough: integration_walkthrough.md
-      - Viewer Contract v1.7: viewer_contract_v1_7.md
+      - Viewer Contract v1.8: viewer_contract_v1_8.md
       - DemoApp Reference: demoapp.md
   - Internals:
       - Architecture: architecture.md
