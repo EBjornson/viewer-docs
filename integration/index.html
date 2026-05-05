@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/integration/">
       
       
+        <link rel="prev" href="../overview/">
+      
+      
+        <link rel="next" href="../viewer_contract_v1_8/">
       
       
         
@@ -284,8 +288,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -296,11 +302,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -321,7 +327,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -336,10 +342,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../integration_guide.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -355,34 +388,535 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../integration_walkthrough.md" class="md-nav__link">
+      
         
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  <span class="md-ellipsis">
+  
     
   
-    Walkthrough
   
-
-    
-  </span>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
   
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery
+      
+    </span>
+  </a>
   
-
-      </a>
+    <nav class="md-nav" aria-label="Delivery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bundle-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bundle URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-assets-hdris-terrain-textures-material-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default assets (HDRIs, terrain textures, material textures)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vue-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vue 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vanilla-js" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanilla JS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#react-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        React (alternative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-element-event-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom element event names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-import-path-development-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source-import path (development only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-public-integration-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Public Integration Surface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-app-owns-vs-what-the-viewer-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What The App Owns vs What The Viewer Owns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-viewer-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building Viewer Input
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building Viewer Input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        camera
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        scene
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#presentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        presentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selectionkey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        selectionKey
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#receiving-viewer-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Receiving Viewer Output
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Receiving Viewer Output">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#onviewerready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onViewerReady
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture callbacks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onrendercaptured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onRenderCaptured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onbatchcapturecomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onBatchCaptureComplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onError
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section Replay
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section Replay">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategy-a-frozen-at-author-time-no-pmode-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy A — Frozen-at-author-time (no pMode storage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategy-b-re-skin-via-pmode-lookup-demoapp-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategy B — Re-skin via pMode lookup (DemoApp default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bumping-selectionkey-on-section-clicks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bumping selectionKey on section clicks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#option-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option Visibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-section-ownership-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Section Ownership Enforcement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cross-Section Ownership Enforcement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-material-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture Material Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notifying-the-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifying the user
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-contract-change-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No contract change required
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#batch-image-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Image Capture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-full-end-to-end-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Full End-to-End Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-app-should-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What The App Should Not Do
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What The App Should Not Do">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-do-not-reach-into-viewerroot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Do not reach into ViewerRoot
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-do-not-rely-on-viewer-internal-implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Do not rely on Viewer-internal implementation details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-do-not-ask-the-viewer-to-own-business-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Do not ask the Viewer to own business rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -402,7 +936,7 @@
   <span class="md-ellipsis">
     
   
-    Viewer Contract v1.8
+    Viewer Contract
   
 
     
@@ -681,6 +1215,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../marker_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tester_quickstart/" class="md-nav__link">
         
   
@@ -760,34 +1322,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../capabilities_and_limits.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Capabilities & Limits
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -1385,7 +1919,7 @@
 <strong>Next doc:</strong> <a href="../capture_and_replay/">Capture &amp; Replay</a> for the lifecycle deep-dive · <a href="../viewer_contract_v1_8/">Viewer Contract</a> for type-level reference · <a href="../demoapp/">DemoApp</a> for the reference host App in this repo.</p>
 <hr />
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>How a host App integrates the Viewer end-to-end — what to push in via <code>input</code>, what comes back via <code>output</code>, and the patterns a real host App needs to implement around them. <a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> is the canonical reference implementation; it covers every touch point in this guide.</p>
+<p>How a host App integrates the Viewer end-to-end — what to push in via <code>input</code>, what comes back via <code>output</code>, and the patterns a real host App needs to implement around them. <a href="https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> is the canonical reference implementation; it covers every touch point in this guide.</p>
 <blockquote>
 <p><strong>Core principle:</strong> the App tells the Viewer what to render; the Viewer fires events when something useful happens. The App owns persisted intent and all identity. The Viewer owns runtime execution.</p>
 </blockquote>
@@ -1524,7 +2058,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>The App builds <code>viewerInput</code> and provides callbacks in <code>viewerOutput</code>. The Viewer renders the input and fires callbacks when something useful happens. <strong>The App does not reach inside the Viewer; the Viewer does not persist state on the App's behalf.</strong></p>
-<p>Public surface: <a href="../src/public/Viewer.jsx">Viewer.jsx</a>. Code-level contract types: <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a>.</p>
+<p>Public surface: <a href="https://github.com/EBjornson/BPViewer/blob/main/src/public/Viewer.jsx">Viewer.jsx</a>. Code-level contract types: <a href="https://github.com/EBjornson/BPViewer/blob/main/src/public/viewerContractTypes.js">viewerContractTypes.js</a>.</p>
 <hr />
 <h2 id="what-the-app-owns-vs-what-the-viewer-owns">What The App Owns vs What The Viewer Owns<a class="headerlink" href="#what-the-app-owns-vs-what-the-viewer-owns" title="Permanent link">&para;</a></h2>
 <p>Before the buckets and callbacks, the mental model:</p>
@@ -1975,7 +2509,7 @@
 <p>DemoApp persists per-model snapshots to browser <code>localStorage</code> keyed by model ID (<code>demoapp_v3_${modelId}</code>); a production CustomApp would persist to its backend instead, but the data shapes are the same. See <a href="../demoapp/#persistence">DemoApp → Persistence</a> for the snapshot contents.</p>
 <hr />
 <h2 id="a-full-end-to-end-example">A Full End-to-End Example<a class="headerlink" href="#a-full-end-to-end-example" title="Permanent link">&para;</a></h2>
-<p><a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to <code>localStorage</code>, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp can mirror.</p>
+<p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx">DemoApp.jsx</a> is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to <code>localStorage</code>, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp can mirror.</p>
 <p>A few patterns in DemoApp are easy to miss from the type-level reference alone and worth a closer look:</p>
 <p><strong>Identity-free capture routing.</strong> All capture callbacks fire identity-free payloads. DemoApp routes by reading its own current selection state in the handlers — <code>selectedSectionIdRef</code>, <code>selectedOptionsRef</code>, and <code>currentPModeRef</code> (the App's sticky "currently active pMode" tracker, updated on pMode pill clicks and section selection from the section's pMode tag). The handlers attach the App-side identity on receipt and store accordingly.</p>
 <p><strong>Section capture — App-side pMode tagging.</strong> <code>onSectionCaptured</code> payload includes the embedded presentation snapshot but no pMode reference. DemoApp attaches <code>presentationMode: currentPModeRef.current</code> as App metadata when storing — enabling the optional re-skin replay path later. CustomApps that don't care about re-skin can skip the tag entirely; the embedded snapshot replays cleanly on its own.</p>

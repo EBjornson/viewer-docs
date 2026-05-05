@@ -341,7 +341,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_guide.md" class="md-nav__link">
+      <a href="../integration/" class="md-nav__link">
         
   
   
@@ -369,34 +369,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_walkthrough.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Walkthrough
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../viewer_contract_v1_8/" class="md-nav__link">
         
   
@@ -404,7 +376,7 @@
   <span class="md-ellipsis">
     
   
-    Viewer Contract v1.8
+    Viewer Contract
   
 
     
@@ -683,6 +655,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../marker_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tester_quickstart/" class="md-nav__link">
         
   
@@ -764,34 +764,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../capabilities_and_limits.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Capabilities & Limits
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -1473,7 +1445,7 @@
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">...</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">]</span>
 </code></pre></div>
-<p>This supersedes the Viewer's static import of <a href="../src/config/materialManifest.js"><code>materialManifest</code></a>. The App constructs and supplies it on every render.</p>
+<p>This supersedes the Viewer's static import of <a href="https://github.com/EBjornson/BPViewer/blob/main/src/config/materialManifest.js"><code>materialManifest</code></a>. The App constructs and supplies it on every render.</p>
 <h2 id="decisions">Decisions<a class="headerlink" href="#decisions" title="Permanent link">&para;</a></h2>
 <p>These were resolved during planning and should not be re-litigated without explicit reason:</p>
 <ol>
@@ -1484,7 +1456,7 @@
 </ol>
 <h2 id="phased-implementation-plan">Phased implementation plan<a class="headerlink" href="#phased-implementation-plan" title="Permanent link">&para;</a></h2>
 <h3 id="phase-1-extract-parsing-as-a-shared-module">Phase 1 — Extract parsing as a shared module<a class="headerlink" href="#phase-1-extract-parsing-as-a-shared-module" title="Permanent link">&para;</a></h3>
-<p>Pull the filename-pattern logic and manifest-record construction out of <a href="../scripts/generate-material-manifest.mjs"><code>scripts/generate-material-manifest.mjs</code></a> into a runtime-callable module, e.g. <code>src/utils/materialPackageParser.js</code>.</p>
+<p>Pull the filename-pattern logic and manifest-record construction out of <a href="https://github.com/EBjornson/BPViewer/blob/main/scripts/generate-material-manifest.mjs"><code>scripts/generate-material-manifest.mjs</code></a> into a runtime-callable module, e.g. <code>src/utils/materialPackageParser.js</code>.</p>
 <p><strong>Inputs:</strong> <code>Map&lt;filename, Blob&gt;</code> (or <code>Map&lt;filename, Buffer&gt;</code> server-side).<br />
 <strong>Outputs:</strong> manifest record <code>{ familyId, resolution, color, roughness, metalness, maps: { color, normal, roughness, ao } }</code> with map values as <code>{ filename, blob }</code> pairs (URL construction happens in the caller).</p>
 <p>Build script becomes a thin wrapper that walks the filesystem, reads files into Buffers, calls the parser, then writes URLs into the static manifest.</p>
@@ -1492,7 +1464,7 @@
 <p><strong>Risk:</strong> low. Pure refactor with no behavior change.</p>
 <h3 id="phase-2-capture-schema-add-materialref-preferred-keep-raw-urls-fallback">Phase 2 — Capture schema: add <code>materialRef</code> (preferred), keep raw URLs (fallback)<a class="headerlink" href="#phase-2-capture-schema-add-materialref-preferred-keep-raw-urls-fallback" title="Permanent link">&para;</a></h3>
 <p>Update the option-capture material assignment payload to populate <code>materialRef</code> whenever the assignment came from a catalog material. Material picker selections in admin produce <code>materialRef</code>; manual color/roughness-only edits without a catalog material leave <code>materialRef</code> undefined.</p>
-<p>Update App-side replay (in <a href="../src/DemoApp/DemoApp.jsx"><code>DemoApp.jsx</code></a> and any helpers under <a href="../src/DemoApp/"><code>src/DemoApp/</code></a>) to:</p>
+<p>Update App-side replay (in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx"><code>DemoApp.jsx</code></a> and any helpers under <a href="https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/"><code>src/DemoApp/</code></a>) to:</p>
 <ol>
 <li>If <code>materialRef</code> present → resolve current URLs via the catalog resolver and populate <code>maps</code>.</li>
 <li>If <code>materialRef</code> absent → use existing <code>maps</code> URLs as today (legacy path, supports old captures).</li>
@@ -1533,14 +1505,14 @@
 <h3 id="phase-5-merged-picker-in-the-viewer-admin-overlay">Phase 5 — Merged picker in the Viewer admin overlay<a class="headerlink" href="#phase-5-merged-picker-in-the-viewer-admin-overlay" title="Permanent link">&para;</a></h3>
 <p>Two changes:</p>
 <ol>
-<li><strong>Contract:</strong> add <code>viewerInput.materialCatalog</code> per the data shape above. Update <a href="../src/public/Viewer.jsx"><code>Viewer.jsx</code></a> and runtime in <a href="../src/viewer/ViewerRuntime.jsx"><code>ViewerRuntime.jsx</code></a> to thread the catalog through. Document in <a href="../viewer_contract_v1_8/">Viewer Contract</a>.</li>
-<li><strong>Picker UI:</strong> update the material picker (currently in <a href="../src/viewer/components/ViewerAuthoringDemoPanel.jsx"><code>ViewerAuthoringDemoPanel.jsx</code></a>) to:</li>
+<li><strong>Contract:</strong> add <code>viewerInput.materialCatalog</code> per the data shape above. Update <a href="https://github.com/EBjornson/BPViewer/blob/main/src/public/Viewer.jsx"><code>Viewer.jsx</code></a> and runtime in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx"><code>ViewerRuntime.jsx</code></a> to thread the catalog through. Document in <a href="../viewer_contract_v1_8/">Viewer Contract</a>.</li>
+<li><strong>Picker UI:</strong> update the material picker (currently in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerAuthoringDemoPanel.jsx"><code>ViewerAuthoringDemoPanel.jsx</code></a>) to:</li>
 <li>Consume the catalog from input rather than static import.</li>
 <li>Render entries grouped or filterable by source: <code>All</code> / <code>Platform</code> / <code>Yours</code>.</li>
 <li>Show a <code>Platform</code> / <code>Yours</code> badge per entry.</li>
 <li>Surface a "Manage materials" link that returns focus to the DemoApp header Materials panel (App-handled — Viewer fires a callback).</li>
 </ol>
-<p>The static import of <a href="../src/config/materialManifest.js"><code>materialManifest</code></a> inside the Viewer is removed in this phase; the manifest still exists in the codebase as the platform catalog source, just consumed by the App now, not the Viewer.</p>
+<p>The static import of <a href="https://github.com/EBjornson/BPViewer/blob/main/src/config/materialManifest.js"><code>materialManifest</code></a> inside the Viewer is removed in this phase; the manifest still exists in the codebase as the platform catalog source, just consumed by the App now, not the Viewer.</p>
 <h3 id="phase-6-lifecycle-ux">Phase 6 — Lifecycle UX<a class="headerlink" href="#phase-6-lifecycle-ux" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Delete:</strong> before deletion, count captures referencing this <code>materialRef</code> (a one-pass scan of stored captures in DemoApp localStorage). If &gt; 0, require confirmation and offer "soft delete" (hide from picker, keep blobs for resolver). If 0, hard delete and revoke Blob URLs.</li>
@@ -1605,7 +1577,7 @@
 </table>
 <p>The only code that gets rewritten in the migration is the <code>WorkspaceMaterialStore</code> implementation and the catalog-fetch logic in App init. The resolver, picker, capture schema, upload UI shell, and Viewer contract all stay as-is.</p>
 <h2 id="path-b-as-future-opportunity">Path B as future opportunity<a class="headerlink" href="#path-b-as-future-opportunity" title="Permanent link">&para;</a></h2>
-<p>This plan keeps the curated catalog in-repo (Path A). When the curated catalog grows past what's comfortable to ship in a deploy, or when a non-engineer needs to add curated materials without engineering involvement, the platform catalog migrates to the same cloud storage as workspace materials, served through the same API with <code>source: 'platform'</code>. The App-side resolver doesn't change. The static <a href="../src/config/materialManifest.js"><code>materialManifest.js</code></a> and <a href="../scripts/generate-material-manifest.mjs"><code>generate-material-manifest.mjs</code></a> are retired or repurposed as a CLI for seeding the platform bucket.</p>
+<p>This plan keeps the curated catalog in-repo (Path A). When the curated catalog grows past what's comfortable to ship in a deploy, or when a non-engineer needs to add curated materials without engineering involvement, the platform catalog migrates to the same cloud storage as workspace materials, served through the same API with <code>source: 'platform'</code>. The App-side resolver doesn't change. The static <a href="https://github.com/EBjornson/BPViewer/blob/main/src/config/materialManifest.js"><code>materialManifest.js</code></a> and <a href="https://github.com/EBjornson/BPViewer/blob/main/scripts/generate-material-manifest.mjs"><code>generate-material-manifest.mjs</code></a> are retired or repurposed as a CLI for seeding the platform bucket.</p>
 <h2 id="suggested-commit-pr-sequence">Suggested commit / PR sequence<a class="headerlink" href="#suggested-commit-pr-sequence" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Phase 1</strong> — parser extraction. Pure refactor; build script unchanged in behavior.</li>

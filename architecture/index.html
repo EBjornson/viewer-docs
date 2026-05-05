@@ -343,7 +343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_guide.md" class="md-nav__link">
+      <a href="../integration/" class="md-nav__link">
         
   
   
@@ -371,34 +371,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_walkthrough.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Walkthrough
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../viewer_contract_v1_8/" class="md-nav__link">
         
   
@@ -406,7 +378,7 @@
   <span class="md-ellipsis">
     
   
-    Viewer Contract v1.8
+    Viewer Contract
   
 
     
@@ -1106,6 +1078,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../marker_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tester_quickstart/" class="md-nav__link">
         
   
@@ -1185,34 +1185,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../capabilities_and_limits.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Capabilities & Limits
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -1719,7 +1691,7 @@
 <h2 id="current-layers">Current Layers<a class="headerlink" href="#current-layers" title="Permanent link">&para;</a></h2>
 <h3 id="demoapp">DemoApp<a class="headerlink" href="#demoapp" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/DemoApp/DemoApp.jsx">DemoApp.jsx</a></p>
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx">DemoApp.jsx</a></p>
 <p><code>DemoApp</code> is the reference host application. It demonstrates the full capture/replay pattern in a minimal host.</p>
 <p>It owns:</p>
 <ul>
@@ -1736,8 +1708,8 @@
 <p>For the DemoApp header UI, batch-capture button behavior, and developer-oriented aids (Loading/Ready indicator, capture status pills, error banner, payload inspector tooltips), see <a href="../demoapp/">DemoApp</a>.</p>
 <h3 id="viewer">Viewer<a class="headerlink" href="#viewer" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/public/Viewer.jsx">Viewer.jsx</a><br />
-- <a href="../src/public/viewerContractTypes.js">viewerContractTypes.js</a></p>
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/public/Viewer.jsx">Viewer.jsx</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/public/viewerContractTypes.js">viewerContractTypes.js</a></p>
 <p>This is the stable public integration surface.</p>
 <p>It is responsible for:</p>
 <ul>
@@ -1748,12 +1720,12 @@
 </ul>
 <h3 id="viewerruntime">ViewerRuntime<a class="headerlink" href="#viewerruntime" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/viewer/ViewerRuntime.jsx">ViewerRuntime.jsx</a><br />
-- <a href="../src/viewer/hooks/index.js">hooks/index.js</a><br />
-- <a href="../src/viewer/components/index.js">components/index.js</a><br />
-- <a href="../src/viewer/hooks/useViewerPresentationState.js">useViewerPresentationState.js</a><br />
-- <a href="../src/viewer/hooks/useViewerSelectionRuntime.js">useViewerSelectionRuntime.js</a><br />
-- <a href="../src/viewer/hooks/useViewerAuthoringCapture.js">useViewerAuthoringCapture.js</a></p>
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx">ViewerRuntime.jsx</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/index.js">hooks/index.js</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/index.js">components/index.js</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerPresentationState.js">useViewerPresentationState.js</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerSelectionRuntime.js">useViewerSelectionRuntime.js</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerAuthoringCapture.js">useViewerAuthoringCapture.js</a></p>
 <p>This is the shared internal wrapper runtime. It currently owns:</p>
 <ul>
 <li>presentation editing state (<code>useViewerPresentationState</code>)</li>
@@ -1766,8 +1738,8 @@
 </ul>
 <h3 id="vieweradminnavigationbridge">ViewerAdminNavigationBridge<a class="headerlink" href="#vieweradminnavigationbridge" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/viewer/components/ViewerAdminNavigationBridge.jsx">ViewerAdminNavigationBridge.jsx</a><br />
-- <a href="../src/viewer/hooks/useViewerAdminNavigationBridgeRuntime.js">useViewerAdminNavigationBridgeRuntime.js</a></p>
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerAdminNavigationBridge.jsx">ViewerAdminNavigationBridge.jsx</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerAdminNavigationBridgeRuntime.js">useViewerAdminNavigationBridgeRuntime.js</a></p>
 <p>This is a viewer-internal helper layer that:</p>
 <ul>
 <li>composes the navigation bridge runtime hook</li>
@@ -1776,12 +1748,12 @@
 <p>This is intentionally kept out of the public wrapper contract.</p>
 <h3 id="viewerroot">ViewerRoot<a class="headerlink" href="#viewerroot" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/viewer/ViewerRoot.jsx">ViewerRoot.jsx</a><br />
-- <a href="../src/viewer/components/ViewerSceneCanvas.jsx">ViewerSceneCanvas.jsx</a><br />
-- <a href="../src/viewer/components/ViewerPerformanceOverlay.jsx">ViewerPerformanceOverlay.jsx</a><br />
-- <a href="../src/viewer/components/ViewerDebugCanvasHelpers.jsx">ViewerDebugCanvasHelpers.jsx</a><br />
-- <a href="../src/viewer/hooks/useViewerCameraRuntime.js">useViewerCameraRuntime.js</a><br />
-- <a href="../src/viewer/hooks/useViewerSceneInteraction.js">useViewerSceneInteraction.js</a></p>
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRoot.jsx">ViewerRoot.jsx</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerSceneCanvas.jsx">ViewerSceneCanvas.jsx</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerPerformanceOverlay.jsx">ViewerPerformanceOverlay.jsx</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerDebugCanvasHelpers.jsx">ViewerDebugCanvasHelpers.jsx</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerCameraRuntime.js">useViewerCameraRuntime.js</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerSceneInteraction.js">useViewerSceneInteraction.js</a></p>
 <p><code>ViewerRoot</code> is the internal runtime boundary.</p>
 <p><code>ViewerDebugCanvasHelpers.jsx</code> powers navigation debug visuals and contains a parked custom axis-helper implementation that is intentionally left disabled for now.</p>
 <p>It owns:</p>
@@ -1802,7 +1774,7 @@
 <h2 id="scene-runtime">Scene Runtime<a class="headerlink" href="#scene-runtime" title="Permanent link">&para;</a></h2>
 <h3 id="visibility">Visibility<a class="headerlink" href="#visibility" title="Permanent link">&para;</a></h3>
 <p>Current file:<br />
-- <a href="../src/hooks/useVisibilityState.js">useVisibilityState.js</a></p>
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/hooks/useVisibilityState.js">useVisibilityState.js</a></p>
 <p>Current stable visibility model separates:</p>
 <ul>
 <li>manual hidden geometry</li>
@@ -1813,8 +1785,8 @@
 <p>Visibility assignments are included in section capture payloads and replayed by the App via <code>viewerInput.scene.visibilityAssignments</code>. The full shape is <code>{ hiddenGeometryIds, shownGeometryIds, instantHiddenGeometryIds, isolatedGeometryIds }</code>. The Viewer resolves show/hide priority: <code>shownGeometryIds</code> wins over <code>hiddenGeometryIds</code>; <code>instantHiddenGeometryIds</code> hides without fade.</p>
 <h3 id="materials">Materials<a class="headerlink" href="#materials" title="Permanent link">&para;</a></h3>
 <p>Current files:<br />
-- <a href="../src/hooks/useSelectionMaterialState.js">useSelectionMaterialState.js</a><br />
-- <a href="../src/viewer/hooks/useSceneAssignments.js">useSceneAssignments.js</a></p>
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/hooks/useSelectionMaterialState.js">useSelectionMaterialState.js</a><br />
+- <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useSceneAssignments.js">useSceneAssignments.js</a></p>
 <p><code>useSceneAssignments</code> is a thin coordinator that delegates to two sub-hooks:<br />
 - <code>useSceneVisibility</code> — fade animation and mesh visibility<br />
 - <code>useSceneMaterialAssignments</code> — texture and scalar material application</p>
