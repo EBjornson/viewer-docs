@@ -13,6 +13,10 @@
         <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/viewer_contract_v1_8/">
       
       
+        <link rel="prev" href="../integration_walkthrough/">
+      
+      
+        <link rel="next" href="../demoapp/">
       
       
         
@@ -284,8 +288,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -296,11 +302,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -321,7 +327,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -392,17 +398,44 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../viewer_contract_v1_7.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Contract v1.8
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    Viewer Contract v1.7
+    Viewer Contract v1.8
   
 
     
@@ -411,6 +444,549 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#changes-since-v17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes since v1.7
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public Boundary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-intent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Intent
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Intent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-host-app-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The host App owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-viewer-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Viewer owns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Level Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewer-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viewer Input
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Viewer Input">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Camera">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#camera-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scene">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scene-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#presentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Presentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#presentation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selectionkey" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        selectionKey
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Admin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#admin-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewer-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viewer Output
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Viewer Output">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capture-payload-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture payload types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capture payload types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capture-payload-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture payload notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#section-capture-is-self-contained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section capture is self-contained
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-pmode-tagging-app-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional pMode tagging (App pattern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-re-skin-app-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional re-skin (App pattern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewerreadyevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ViewerReadyEvent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewerrendercapturedevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ViewerRenderCapturedEvent
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ViewerRenderCapturedEvent">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onbatchcapturecomplete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        onBatchCaptureComplete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewererrorevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ViewerErrorEvent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#capture-store-replay-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture / Store / Replay Direction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Capture / Store / Replay Direction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-facing-authoring-command-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App-facing authoring command set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#views-as-optionless-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views as optionless sections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#presentation-modes-are-app-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation Modes are App-side
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-image-capture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Image Capture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working Rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Working Rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-owns-persisted-truth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App owns persisted truth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viewer-owns-runtime-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viewer owns runtime execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#public-wrapper-stays-narrow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public wrapper stays narrow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
