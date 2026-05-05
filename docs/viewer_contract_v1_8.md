@@ -22,7 +22,7 @@ The public integration surface is:
 
 The current shared code representation of these public shapes lives in:
 
-- [viewerContractTypes.js](../src/public/viewerContractTypes.js)
+- [viewerContractTypes.js](https://github.com/EBjornson/BPViewer/blob/main/src/public/viewerContractTypes.js)
 
 The App should always use `Viewer` directly. No wrapper is needed.
 
