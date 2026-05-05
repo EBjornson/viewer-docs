@@ -1597,7 +1597,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../capabilities_and_limits/" class="md-nav__link">
+      <a href="../capabilities_and_limits.md" class="md-nav__link">
         
   
   
@@ -3095,6 +3095,7 @@
 <li><strong>navigation markers</strong>: include <code>_RM</code> (room) or <code>_DW</code> (doorway) suffix anywhere in any node's name (e.g. <code>LivingDining_RM</code>, <code>Hall_FrontBedroom_DW</code>, <code>Exterior_LivingDining_DW</code>). Room names: PascalCase, no underscores. Markers can sit anywhere in the scene tree.</li>
 <li><strong>lighting markers</strong>: include <code>_PL</code> (point) or <code>_SL[&lt;degrees&gt;]</code> (spot, default 90°) suffix anywhere in any node's name (e.g. <code>RoomLights_PL</code>, <code>EntranceUpBulbs_SL90</code>). For fixture-bound lights, wrap markers + only that fixture's geometry under a shared parent component — the spawned light hides automatically when every fixture mesh is in the active hide set. Loose markers under structural top-level containers stay always-on.</li>
 <li><strong>pivot markers</strong> (click-to-rotate): include <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> substring anywhere in any group's name (e.g. <code>BedroomDoor_90CCW</code>). Set the SketchUp group axes with the origin at the hinge edge and the blue axis pointing up.</li>
+<li><strong>slide markers</strong> (click-to-slide): include <code>_SD&lt;mm&gt;</code> substring anywhere in any group's name (e.g. <code>PocketDoor_SD800</code> slides 800 mm). Set the SketchUp group axes with the <strong>red (+X) axis</strong> aimed in the open direction. State is session-only — same as pivots.</li>
 <li><strong>per-mesh shadow prefixes</strong>: <code>Glass_*</code>, <code>Water_*</code>, <code>Fixture_*</code> (translucent fixture parts only) disable shadow casting for that mesh.</li>
 <li><strong>emissive materials</strong>: prefix the <strong>material name</strong> with <code>Emissive_</code> for bulbs / LED strips / glowing panels.</li>
 <li>all matching is <strong>case-insensitive</strong> — capitalised PascalCase is the recommended convention for readability.</li>

@@ -898,7 +898,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../capabilities_and_limits/" class="md-nav__link">
+      <a href="../capabilities_and_limits.md" class="md-nav__link">
         
   
   
@@ -1133,14 +1133,14 @@
 </ul>
 <p>Persisted snapshot contents:</p>
 <ul>
-<li>section captures (<code>pose</code>, <code>cameraMode</code>, <code>presentationMode</code> reference, <code>visibilityAssignments</code>, <code>ui</code> flags)</li>
+<li>section captures (<code>pose</code>, <code>cameraMode</code>, <strong>embedded</strong> <code>presentation</code> snapshot, <code>visibilityAssignments</code>; plus optional App-side <code>presentationMode</code> tag for re-skin support)</li>
 <li>chosen options by section</li>
 <li>option captures (<code>geometryIds</code>, <code>materialAssignments</code>)</li>
 <li>model default material capture</li>
-<li>(no separate view captures in v1.8 — optionless Sections serve as views)</li>
-<li>presentation mode captures (keyed by mode; full <code>ViewerPresentationInput</code> snapshot; six modes: day / nightExt / nightInt / winterDay / winterNight / winterNightInt)</li>
+<li>presentation mode captures (keyed by mode; full <code>ViewerPresentationInput</code> snapshot; six modes: <code>day</code> / <code>nightExt</code> / <code>nightInt</code> / <code>winterDay</code> / <code>winterNight</code> / <code>winterNightInt</code>)</li>
 <li>section/option label renames</li>
 </ul>
+<p>(No separate view captures — optionless Sections serve as "view-like" stored moments.)</p>
 <p>A production CustomApp would persist these to its backend instead of <code>localStorage</code>, but the data shapes are the same.</p>
 <hr />
 <h2 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h2>

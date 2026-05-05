@@ -1193,7 +1193,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../capabilities_and_limits/" class="md-nav__link">
+      <a href="../capabilities_and_limits.md" class="md-nav__link">
         
   
   
@@ -1673,7 +1673,7 @@
 <strong>Next doc:</strong> <a href="../capture_and_replay/">Capture &amp; Replay deep-dive</a></p>
 <hr />
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>The current stable architecture of this repository — public Viewer boundary, internal Viewer runtime layers, and the DemoApp authoring/persistence model. This is the architectural map; for the contract surface see <a href="../viewer_contract_v1_8/">Viewer Contract v1.8</a>, and for the capture lifecycle see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
+<p>The current stable architecture of this repository — public Viewer boundary, internal Viewer runtime layers, and the DemoApp authoring/persistence model. This is the architectural map; for the contract surface see <a href="../viewer_contract_v1_8/">Viewer Contract</a>, and for the capture lifecycle see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
 <hr />
 <h2 id="top-level-shape">Top-Level Shape<a class="headerlink" href="#top-level-shape" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart LR
@@ -1727,7 +1727,7 @@
 <li>section and option state</li>
 <li>capture/replay orchestration</li>
 <li>admin mode toggle</li>
-<li>per-model persistence in <code>localStorage</code> keyed by model ID (<code>demoapp_v2_${modelId}</code>)</li>
+<li>per-model persistence in <code>localStorage</code> (DemoApp's implementation detail — see <a href="../demoapp/#persistence">DemoApp → Persistence</a>)</li>
 </ul>
 <p>It integrates the Viewer through the public contract only:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">Viewer</span><span class="w"> </span><span class="na">input</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerInput</span><span class="p">}</span><span class="w"> </span><span class="na">output</span><span class="o">=</span><span class="p">{</span><span class="nx">viewerOutput</span><span class="p">}</span><span class="w"> </span><span class="p">/&gt;</span>
@@ -1837,7 +1837,7 @@
 <h2 id="current-authoring-model">Current Authoring Model<a class="headerlink" href="#current-authoring-model" title="Permanent link">&para;</a></h2>
 <h3 id="admin-mode-is-self-contained-in-the-viewer">Admin mode is self-contained in the Viewer<a class="headerlink" href="#admin-mode-is-self-contained-in-the-viewer" title="Permanent link">&para;</a></h3>
 <p>When <code>input.admin.enabled = true</code>, <code>ViewerRuntime</code> renders the built-in <code>ViewerAuthoringDemoPanel</code> (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App.</p>
-<p>The Authoring Panel uses <strong>internal Section / Option / pMode tabs</strong> for context selection. The App is not involved in driving panel focus — there is no <code>activeAuthoringFocus</code> contract field in v1.8. Top of the Section tab carries a <strong>View row</strong> (Exterior / Interior / Overhead) that navigates the camera to the Viewer's built-in default poses; top of the pMode tab carries four <strong>pMode helper buttons</strong> (Summer Day / Summer Night / Winter Day / Winter Night) that load the Viewer's built-in lighting defaults. Both are pure Viewer-internal authoring conveniences — no public callbacks. The pMode helper set is <strong>independent</strong> from any host App's pMode taxonomy; helpers seed defaults, App-side pMode pills route stored captures (DemoApp uses 6 pills, the Viewer offers 4 helpers — counts and labels are intentionally allowed to differ).</p>
+<p>The Authoring Panel uses <strong>internal Section / Option / pMode tabs</strong> for context selection. The App is not involved in driving panel focus — there is no <code>activeAuthoringFocus</code> contract field. Top of the Section tab carries a <strong>View row</strong> (Exterior / Interior / Overhead) that navigates the camera to the Viewer's built-in default poses; top of the pMode tab carries four <strong>pMode helper buttons</strong> (Summer Day / Summer Night / Winter Day / Winter Night) that load the Viewer's built-in lighting defaults. Both are pure Viewer-internal authoring conveniences — no public callbacks. The pMode helper set is <strong>independent</strong> from any host App's pMode taxonomy; helpers seed defaults, App-side pMode pills route stored captures (DemoApp uses 6 pills, the Viewer offers 4 helpers — counts and labels are intentionally allowed to differ).</p>
 <p>The Viewer internally manages:<br />
 - presentation editing state (exposure, HDR, terrain, lighting, solar, point lights)<br />
 - mesh selection and material editing state<br />
@@ -1851,28 +1851,18 @@
 <li><strong>Model default materials</strong> — model-level baseline material assignments</li>
 <li><strong>Presentation mode captures</strong> <em>(App-side)</em> — full <code>ViewerPresentationInput</code> snapshot per App-defined pMode key. DemoApp uses 6 modes (<code>'day'</code>, <code>'nightExt'</code>, <code>'nightInt'</code>, <code>'winterDay'</code>, <code>'winterNight'</code>, <code>'winterNightInt'</code>) as a convention; CustomApps may use any taxonomy or none. <strong>Independent from the Viewer's pMode helper buttons</strong> (4 buttons inside the AuthoringPanel that seed lighting defaults) — helper count and labels need not match the App's pMode store.</li>
 </ul>
-<p>Views collapsed into Sections in v1.8 — a Section may have associated options or no options (an optionless Section serves as what v1.7 called a View). Section captures embed the full presentation snapshot directly, so they replay self-contained even when the App doesn't maintain a pMode store. Apps that <em>do</em> maintain a pMode store can opt into "re-skin" semantics — tagging section captures with a pMode key (App metadata, not contract data), and re-resolving via <code>presentationModeCaptures[tag]</code> at replay time so updates to a pMode automatically propagate to all sections that share it. Embedded snapshot serves as the fallback.</p>
+<p>A Section may have associated options or no options (an optionless Section serves as a stored "view-like" moment). Section captures embed the full presentation snapshot directly, so they replay self-contained even when the App doesn't maintain a pMode store. Apps that <em>do</em> maintain a pMode store can opt into "re-skin" semantics — tagging section captures with a pMode key (App metadata, not contract data), and re-resolving via <code>presentationModeCaptures[tag]</code> at replay time so updates to a pMode automatically propagate to all sections that share it. Embedded snapshot serves as the fallback.</p>
 <p>For payload shapes, replay paths, identity-free routing, and Admin vs User Mode rendering paths, see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
 <h3 id="ownership-rules-app-enforced">Ownership rules (App-enforced)<a class="headerlink" href="#ownership-rules-app-enforced" title="Permanent link">&para;</a></h3>
 <p>Two <strong>independent</strong> cross-section ownership rules apply at the App's <code>onOptionCaptured</code> handler — show/hide ownership and material assignment ownership, each exclusive across sections. Enforcement lives at the App layer because section identity is App-owned (the Viewer fires <code>onOptionCaptured</code> with no section context). DemoApp implements the enforcement; any production App integrating the Viewer is expected to apply equivalent rules.</p>
 <p>See <a href="../integration_guide/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> in the integration guide for the canonical rules, the conflict-detection code, and the rejection-banner pattern.</p>
 <hr />
 <h2 id="persistence-model">Persistence Model<a class="headerlink" href="#persistence-model" title="Permanent link">&para;</a></h2>
-<p>Current stable DemoApp behavior:</p>
-<ul>
-<li>authored state is persisted per model, keyed by model ID (<code>demoapp_v2_${modelId}</code>)</li>
-<li>storage mechanism is browser <code>localStorage</code></li>
-<li>manifest models use a stable model ID; uploaded ad hoc files are not persisted</li>
-</ul>
-<p>Persisted snapshot contents include:<br />
-- section captures (<code>pose</code>, <code>cameraMode</code>, <code>presentationMode</code> reference, <code>visibilityAssignments</code>, <code>ui</code> flags)<br />
-- chosen options by section<br />
-- option captures (<code>geometryIds</code>, <code>materialAssignments</code>)<br />
-- model default material capture<br />
-- presentation mode captures <em>(App-side, optional)</em> — full <code>ViewerPresentationInput</code> snapshot per App-defined pMode key (DemoApp uses six modes: day / nightExt / nightInt / winterDay / winterNight / winterNightInt; CustomApps may use any taxonomy or none)</p>
+<p>The Viewer never persists state on behalf of the App — every capture fires through <code>viewerOutput</code>, the App stores the payload, and the App replays it via <code>viewerInput</code>. There is no internal store the App can ask the Viewer to commit or load.</p>
+<p>DemoApp's reference implementation persists per-model snapshots to browser <code>localStorage</code>. A production CustomApp would persist to its backend instead, but the data shapes are unchanged. For the keys, snapshot contents, and what does/does-not persist, see <a href="../demoapp/#persistence">DemoApp → Persistence</a>.</p>
 <hr />
 <h2 id="camera-presentation-runtime">Camera / Presentation Runtime<a class="headerlink" href="#camera-presentation-runtime" title="Permanent link">&para;</a></h2>
-<p>The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead floor-tile click that navigates to a clicked space via pathNav (presentation/visibility persists from the active section's capture in v1.8 — no callback fired).</p>
+<p>The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead floor-tile click that navigates to a clicked space via pathNav (presentation/visibility persists from the active section's capture — no callback fired).</p>
 <p>The presentation runtime owns the visual state — HDR environment, terrain preset, exposure, lighting, solar, point/spot lights — plus User Visibility flags for the panel set (Solar / Site, North Arrow, Space Menu). Field-level details live in <a href="../viewer_contract_v1_8/#presentation"><code>ViewerPresentationInput</code></a>.</p>
 <p>Solar date/time is included in section capture snapshots as part of the <code>presentation.solar.time</code> field (inside the embedded presentation snapshot). When a capture is replayed, the sun angle is restored to exactly what it was at capture time. There is no standalone App-level solar time control — interactive solar adjustment lives in the Viewer's SolarPanel. The App acts as a transparent conduit: it stores <code>solar.time</code> as part of the capture payload and passes it back through <code>viewerInput.presentation.solar.time</code> during replay.</p>
 <h3 id="solar-time-two-tracks">Solar Time — Two Tracks<a class="headerlink" href="#solar-time-two-tracks" title="Permanent link">&para;</a></h3>

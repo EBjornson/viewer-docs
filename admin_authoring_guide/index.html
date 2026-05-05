@@ -1402,7 +1402,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../capabilities_and_limits/" class="md-nav__link">
+      <a href="../capabilities_and_limits.md" class="md-nav__link">
         
   
   
@@ -2126,7 +2126,7 @@
 </tr>
 </tbody>
 </table>
-<p>A section capture stores the <strong>full presentation snapshot embedded</strong> in v1.8 (no longer a reference-by-name), but the section tab still exposes camera/visibility controls only — adjust lighting via the pMode tab and capture it there separately, or by using the App-rendered pMode pills in the DemoApp header (admin-mode only) to load App-stored snapshots as starting points.</p>
+<p>A section capture stores the <strong>full presentation snapshot embedded</strong> alongside camera and visibility, but the section tab itself exposes only camera/visibility controls — adjust lighting via the pMode tab and capture it there separately, or use the App-rendered pMode pills in the DemoApp header (admin-mode only) to load App-stored snapshots as starting points.</p>
 <h3 id="capture-clear-pattern">Capture / clear pattern<a class="headerlink" href="#capture-clear-pattern" title="Permanent link">&para;</a></h3>
 <p>The capture families share a Capture / Clear button pair at the top of each tab:</p>
 <ul>
@@ -2135,7 +2135,7 @@
 <li><strong>Option tab</strong> → Option Capture / Option Clear (plus the Capture Material Only variant)</li>
 <li><strong>Material Defaults</strong> (always available in option tab) → Capture Material Defaults / Clear Material Defaults</li>
 </ul>
-<p>Note: there is <strong>no separate View capture family</strong> in v1.8. A "view-like" stored moment is an optionless Section — the App may have Sections with associated options or with no options. Authoring a "view" is the same workflow as authoring any other Section.</p>
+<p>Note: there is <strong>no separate View capture family</strong>. A "view-like" stored moment is an optionless Section — the App may have Sections with associated options or with no options. Authoring a "view" is the same workflow as authoring any other Section.</p>
 <hr />
 <h2 id="what-you-are-authoring">What You Are Authoring<a class="headerlink" href="#what-you-are-authoring" title="Permanent link">&para;</a></h2>
 <p>There are five kinds of authored state. The <strong>recommended order</strong> (next section) walks through them in the sequence that flows most smoothly — but they are largely independent and can be revisited in any order.</p>
@@ -2149,7 +2149,7 @@
 <p>The Summer and Winter rows can each be hidden from users via the User Visibility toggles. Use this when a product does not need a winter presentation.</p>
 <h3 id="2-view-navigation-admin-only">2. View navigation (admin-only)<a class="headerlink" href="#2-view-navigation-admin-only" title="Permanent link">&para;</a></h3>
 <p>The AuthoringPanel's Section-tab <strong>View row</strong> (Exterior / Interior / Overhead, top of the Section tab) holds admin-only authoring conveniences. They navigate the camera to the Viewer's default pose for each camera mode — useful as a starting point when framing a section's hero shot. They do not store any state and do not fire callbacks. Future enhancement: per-session capture/clear of view button defaults (deferred).</p>
-<p>A "view-like" persistent stored moment in v1.8 is just an optionless Section. Author it via the Section workflow below.</p>
+<p>A "view-like" persistent stored moment is just an optionless Section. Author it via the Section workflow below.</p>
 <h3 id="3-section-captures">3. Section captures<a class="headerlink" href="#3-section-captures" title="Permanent link">&para;</a></h3>
 <p>A section capture stores a camera pose, the camera mode, the <strong>embedded presentation snapshot</strong> (full lighting/HDR/terrain/solar/UI flags), and geometry visibility for one product section (Roof, Flooring, Solar Package, etc.). DemoApp also attaches the active pMode key as App-side metadata at receipt for optional re-skin support.</p>
 <p>Activating a section in user mode replays the capture: the camera animates to the pose, the presentation switches to the referenced mode, and the geometry visibility updates.</p>
@@ -2169,10 +2169,10 @@
 <p>Use this order when authoring a new model. Each step builds on the previous in a way that minimizes back-and-forth.</p>
 <ol>
 <li><strong>Capture at least one Presentation Mode.</strong> Start with Summer Day — adjust HDR, terrain, exposure, sun, and ambient light until the daytime exterior looks right, then click <strong>Mode Capture</strong> with Summer Day active. You can return to capture additional modes (Summer Night, Winter Day, etc.) later.</li>
-<li><strong>Capture Sections.</strong> Section captures are the primary "stored moments" in v1.8 — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View row at the top of the AuthoringPanel's Section tab as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click <strong>Section Capture</strong>. Optionless sections (Sections without associated options) serve as what v1.7 called Views — author them the same way.</li>
+<li><strong>Capture Sections.</strong> Section captures are the primary "stored moments" — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View row at the top of the AuthoringPanel's Section tab as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click <strong>Section Capture</strong>. Optionless sections serve as "view-like" stored moments — author them the same way.</li>
 <li><strong>Capture Option geometry membership.</strong> Per section, per option: click the option, select the parts of the model that belong to that option, and click <strong>Option Capture</strong>.</li>
 <li><strong>Capture Option material assignments.</strong> Per option that needs custom materials: click the option, select the geometry, edit the material (color, roughness, metalness, or apply a library texture), and click <strong>Option Capture</strong>. If the geometry is already owned for show/hide by a different section, use <strong>Capture Material Only</strong> (see <a href="#cross-section-ownership">Cross-section ownership</a> below).</li>
-<li><strong>Capture Model Defaults — anytime, optionally.</strong> Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. Some authors prefer to do this immediately after Views; others leave it to the end. There is no wrong time.</li>
+<li><strong>Capture Model Defaults — anytime, optionally.</strong> Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. There is no wrong time.</li>
 </ol>
 <p>You do not have to work in this exact order, but it is the cleanest path on a fresh model.</p>
 <hr />
@@ -2188,7 +2188,7 @@
 <p><strong>Winter mode defaults.</strong> When you switch to a winter mode that has no capture yet, the HDR environment is automatically set to <em>Horn Koppe Snow</em> and the terrain preset to <em>Snow</em>. All other settings stay where they are. This gives a sensible winter starting point. Summer modes have no equivalent default — switching to an uncaptured summer mode leaves all settings as-is.</p>
 <hr />
 <h2 id="overhead-floor-tile-click-navigation">Overhead floor-tile click navigation<a class="headerlink" href="#overhead-floor-tile-click-navigation" title="Permanent link">&para;</a></h2>
-<p>When the user is in an Overhead-mode section and clicks a floor tile (a recognized <code>_RM</code> room marker face), the Viewer navigates the camera into that interior space via pathNav. <strong>No callback fires</strong> in v1.8 — the camera movement is purely Viewer-internal. The active section's presentation and visibility persist throughout the navigation.</p>
+<p>When the user is in an Overhead-mode section and clicks a floor tile (a recognized <code>_RM</code> room marker face), the Viewer navigates the camera into that interior space via pathNav. <strong>No callback fires</strong> — the camera movement is purely Viewer-internal. The active section's presentation and visibility persist throughout the navigation.</p>
 <p>Authoring guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position. If you want lighting to change on floor-tile-click navigation, the App-side option is to designate a separate "interior" optionless Section and have the App switch to it on this gesture (see the <a href="../capture_and_replay/#overhead-floor-tile-click">Capture &amp; Replay</a> doc for the App-side pattern).</p>
 <hr />
 <h2 id="section-workflow">Section Workflow<a class="headerlink" href="#section-workflow" title="Permanent link">&para;</a></h2>
@@ -2296,7 +2296,7 @@
 <p>If an older saved model has cross-section conflicts from before the rules were enforced, an amber banner surfaces them on load. The banner lists show/hide and material conflicts in separate groups so each kind can be addressed independently.</p>
 <hr />
 <h2 id="user-visibility-toggles">User Visibility toggles<a class="headerlink" href="#user-visibility-toggles" title="Permanent link">&para;</a></h2>
-<p>The User Visibility section in the Section tab of the Authoring Panel controls which user-facing UI panels are visible in non-admin mode. <strong>Three toggles</strong> in v1.8 (down from six in v1.7 — the View row and Summer/Winter pMode rows are admin-only in v1.8 and don't need user-visibility controls):</p>
+<p>The User Visibility section in the Section tab of the Authoring Panel controls which user-facing UI panels are visible in non-admin mode. <strong>Three toggles</strong>:</p>
 <ul>
 <li><strong>Solar</strong> — Solar / Site panel</li>
 <li><strong>Rooms</strong> — SpaceMenu / Rooms panel (scrollable list of navigable rooms)</li>
@@ -2369,7 +2369,7 @@
 <hr />
 <h2 id="short-summary">Short summary<a class="headerlink" href="#short-summary" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Sections own presentation</strong> — pose, cameraMode, embedded presentation snapshot, visibility. Sections may have associated options or no options (an optionless Section serves as what v1.7 called a View).</li>
+<li><strong>Sections own presentation</strong> — pose, cameraMode, embedded presentation snapshot, visibility. Sections may have associated options or no options (an optionless Section serves as a stored "view-like" moment).</li>
 <li><strong>Presentation modes own the full visual environment</strong> — HDR, terrain, lighting, solar, point lights, exposure</li>
 <li><strong>Options own configuration effects</strong> — geometry membership and material assignments per option</li>
 <li><strong>Model defaults own the baseline appearance</strong> — material assignments applied before any option assignments</li>

@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#viewer-contract-v18" class="md-skip">
+        <a href="#viewer-contract" class="md-skip">
           Skip to content
         </a>
       
@@ -459,17 +459,6 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#changes-since-v17" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changes since v1.7
-      
-    </span>
-  </a>
-  
-</li>
       
         <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
@@ -1344,7 +1333,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../capabilities_and_limits/" class="md-nav__link">
+      <a href="../capabilities_and_limits.md" class="md-nav__link">
         
   
   
@@ -1425,17 +1414,6 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#changes-since-v17" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changes since v1.7
-      
-    </span>
-  </a>
-  
-</li>
       
         <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
@@ -1969,38 +1947,10 @@
   
 
 
-<h1 id="viewer-contract-v18">Viewer Contract v1.8<a class="headerlink" href="#viewer-contract-v18" title="Permanent link">&para;</a></h1>
+<h1 id="viewer-contract">Viewer Contract<a class="headerlink" href="#viewer-contract" title="Permanent link">&para;</a></h1>
 <p><strong>Primary reader:</strong> App-side developer<br />
 <strong>Job-to-be-done:</strong> Reference for the Viewer's input/output types<br />
 <strong>Next doc:</strong> <a href="../integration_guide/">Integration Guide</a></p>
-<hr />
-<h2 id="changes-since-v17">Changes since v1.7<a class="headerlink" href="#changes-since-v17" title="Permanent link">&para;</a></h2>
-<p>v1.8 is a substantial simplification. The Viewer no longer tracks active state on behalf of the App, and capture payloads no longer carry identity. The App is the single source of truth for which section, option, and presentation mode are active.</p>
-<p><strong>Removed from contract:</strong><br />
-- <code>viewerInput.presentationModeCaptures</code> — pMode storage is App-internal; the Viewer never reads it<br />
-- <code>viewerInput.activePresentationMode</code> — Viewer doesn't track active pMode<br />
-- <code>presentationMode</code> field on Section/View capture payloads — App attaches its own metadata if it wants pMode tagging<br />
-- Capture family: <code>View</code> — Views are now <strong>optionless Sections</strong> (a Section may exist without options)<br />
-- Callbacks: <code>onViewCaptured</code>, <code>onViewCaptureCleared</code>, <code>onViewSelected</code>, <code>onActivePresentationModeChanged</code><br />
-- <code>VIEWER_PRESENTATION_MODES</code> enum — pMode taxonomy is App-side; the 6-mode convention is a DemoApp default<br />
-- UI flags: <code>showPresetViews</code>, <code>showPresentationPresets</code>, <code>showWinterPresets</code> — the Viewer no longer renders View rows or pMode rows; the App owns those UI surfaces</p>
-<p><strong>Renamed:</strong><br />
-- <code>presentationSyncKey</code> → <code>selectionKey</code> (one purpose: force camera animation re-fire on bump)</p>
-<p><strong>Also removed (no current consumer):</strong><br />
-- <code>viewerInput.admin.activeOptionCapture</code> — Viewer's authoring panel renders pending edits without comparing against App-stored state<br />
-- <code>viewerInput.admin.activeAuthoringFocus</code> — Viewer's authoring panel uses an internal admin tab/toggle to pick context instead of being driven by the App<br />
-- <code>onSpaceTileWalkActivated</code> — floor-tile-click navigation is purely viewer-internal; author designs the overhead-view section's presentation to read acceptably from both overhead and interior camera positions<br />
-- <code>onGeometryPicked</code> — Viewer tracks admin selection internally for material editing; no current App-side consumer</p>
-<p><strong>Capture payload changes:</strong><br />
-- All capture callbacks fire <strong>identity-free, mode-agnostic payloads</strong>. The App attaches identity (active section, active option, active pMode) from its own state on receipt.<br />
-- Section capture payloads embed the <strong>full <code>ViewerPresentationInput</code> snapshot</strong> instead of carrying a <code>presentationMode</code> reference. Section captures are self-contained — they replay without any external lookup.</p>
-<p><strong><code>selectionKey</code> semantic:</strong> two-layer "selection changed — force fresh apply" signal. The App bumps the counter on every section selection click and every admin pMode pill click. The Viewer responds in two layers (each gated on the corresponding input being provided): (1) camera animation re-fires from <code>input.camera.pose</code> even when its reference is unchanged; (2) presentation re-syncs from <code>input.presentation</code> even when values are identical to current internal state. The view-button-clearing and mode-highlight-resync layers from v1.7's <code>presentationSyncKey</code> are removed (their underlying state is gone from the Viewer); the camera-re-fire and presentation-resync semantics survive in cleaner symmetric form.</p>
-<p><strong>What stayed:</strong><br />
-- Public boundary is still <code>&lt;Viewer input={viewerInput} output={viewerOutput} /&gt;</code><br />
-- <code>model</code>, <code>camera</code>, <code>scene</code>, <code>presentation</code>, <code>admin</code> input buckets<br />
-- Capture/store/replay direction (Viewer fires capture, App stores, App replays via input)<br />
-- Section, Option, Material Defaults, Presentation Mode capture families (Section subsumes View)<br />
-- Batch render flow</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>The contract boundary between the host App and the Viewer: input shape, output callbacks, replay direction. <strong>The App owns persisted intent and all identity. The Viewer owns runtime execution.</strong></p>
@@ -2379,7 +2329,7 @@
 <p><code>Clear Recent Material Changes</code> is a viewer-local authoring reset tool, not an App-facing command.</p>
 <p><strong>Clear buttons always fire.</strong> Even when the Viewer has no locally-cached capture for the current session, clear callbacks fire unconditionally. The App may hold a stored capture from a previous session that the Viewer doesn't know about; the unconditional callback lets the App remove any persisted value.</p>
 <h3 id="views-as-optionless-sections">Views as optionless sections<a class="headerlink" href="#views-as-optionless-sections" title="Permanent link">&para;</a></h3>
-<p>There is no separate <code>View</code> capture family in v1.8. A Section may exist <strong>with options</strong> (functionally serving as what v1.7 called a Section) or <strong>without options</strong> (functionally serving as what v1.7 called a View). Both replay through the same Section Capture / Replay path.</p>
+<p>There is no separate <code>View</code> capture family. A Section may exist <strong>with options</strong> or <strong>without options</strong>; both replay through the same Section Capture / Replay path. An optionless Section serves as a stored "view-like" moment.</p>
 <p>If a Section has options, exactly one option must be active. The App's option list within that section is rendered however the App chooses.</p>
 <h3 id="presentation-modes-are-app-side">Presentation Modes are App-side<a class="headerlink" href="#presentation-modes-are-app-side" title="Permanent link">&para;</a></h3>
 <p>The 6-mode taxonomy used in DemoApp (<code>day</code>, <code>nightExt</code>, <code>nightInt</code>, <code>winterDay</code>, <code>winterNight</code>, <code>winterNightInt</code>) is an App-side convention, <strong>not a contract surface</strong>. Other Apps may use any taxonomy — fewer modes, more modes, different names, or no modes at all.</p>

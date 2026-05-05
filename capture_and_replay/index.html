@@ -1214,7 +1214,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../capabilities_and_limits/" class="md-nav__link">
+      <a href="../capabilities_and_limits.md" class="md-nav__link">
         
   
   
@@ -1711,18 +1711,18 @@
 
 <h1 id="capture-replay">Capture &amp; Replay<a class="headerlink" href="#capture-replay" title="Permanent link">&para;</a></h1>
 <p><strong>Primary reader:</strong> App or Viewer engineer<br />
-<strong>Job-to-be-done:</strong> Deep-dive on the v1.8 capture lifecycle (sections, options, material defaults, presentation modes)<br />
-<strong>Next doc:</strong> <a href="../viewer_contract_v1_8/">Viewer Contract v1.8</a></p>
+<strong>Job-to-be-done:</strong> Deep-dive on the capture lifecycle (sections, options, material defaults, presentation modes)<br />
+<strong>Next doc:</strong> <a href="../viewer_contract_v1_8/">Viewer Contract</a></p>
 <hr />
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>This document describes the complete capture/replay lifecycle for v1.8: <strong>section captures</strong>, <strong>option captures</strong>, <strong>material default captures</strong>, and <strong>presentation mode captures</strong> — including how they interact with the Space Menu, the overhead floor-tile-click navigation, and Admin vs User rendering modes.</p>
+<p>This document describes the complete capture/replay lifecycle: <strong>section captures</strong>, <strong>option captures</strong>, <strong>material default captures</strong>, and <strong>presentation mode captures</strong> — including how they interact with the Space Menu, the overhead floor-tile-click navigation, and Admin vs User rendering modes.</p>
 <hr />
 <h2 id="the-core-principle">The Core Principle<a class="headerlink" href="#the-core-principle" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p><strong>The App stores intent. The Viewer executes it.</strong></p>
 </blockquote>
 <p>The Viewer never persists state on behalf of the App. Every capture produces a serialisable payload that the Viewer fires back through a <code>ViewerOutput</code> callback. The App stores the payload, then replays it later by passing the stored values back into <code>viewerInput</code>. The Viewer reacts to changed input — no sync, no dual state.</p>
-<p>In v1.8 this principle goes further: <strong>the Viewer doesn't even know identity</strong>. Capture callbacks fire identity-free payloads — the Viewer never knows which section, option, or pMode is "active." The App attaches identity from its own state at the moment of capture and routes the payload accordingly.</p>
+<p>The principle goes further: <strong>the Viewer doesn't even know identity</strong>. Capture callbacks fire identity-free payloads — the Viewer never knows which section, option, or pMode is "active." The App attaches identity from its own state at the moment of capture and routes the payload accordingly.</p>
 <hr />
 <h2 id="capture-types-at-a-glance">Capture Types at a Glance<a class="headerlink" href="#capture-types-at-a-glance" title="Permanent link">&para;</a></h2>
 <p>The contract has <strong>3 capture families</strong>. Presentation Mode captures exist as an App-side concept — DemoApp uses a 6-mode taxonomy, but other CustomApps may use any taxonomy or none.</p>
@@ -1762,7 +1762,7 @@
 </tr>
 </tbody>
 </table>
-<p>Views collapsed into Sections in v1.8 — a Section may have associated options or no options; an optionless Section serves as what v1.7 called a View. Single capture family, single replay path.</p>
+<p>A Section may have associated options or no options. An optionless Section serves as a stored "view-like" moment. Single capture family, single replay path for both shapes.</p>
 <hr />
 <h2 id="identity-free-payloads">Identity-Free Payloads<a class="headerlink" href="#identity-free-payloads" title="Permanent link">&para;</a></h2>
 <p>All capture callbacks fire payloads with <strong>no section / option / pMode identifier</strong>. The App routes the payload to the correct storage location using its own current selection state at capture time:</p>
@@ -1772,7 +1772,7 @@
 <li><code>onMaterialDefaultsCaptured(payload)</code> → global, no identity needed</li>
 <li><code>onPresentationModeCaptured(snapshot)</code> → App routes to its currently active pMode (if maintaining a pMode taxonomy)</li>
 </ul>
-<p>The Viewer never knows which section/option/pMode is currently active. The App is the sole authority for routing. This eliminates an entire category of v1.7 contract surface (<code>activePresentationMode</code>, <code>activeAuthoringFocus</code>, <code>presentationModeCaptures</code> input field, mode-arg in capture callbacks) and removes the need for App↔Viewer state sync on identity.</p>
+<p>The Viewer never knows which section/option/pMode is currently active. The App is the sole authority for routing. There is no App↔Viewer state sync on identity.</p>
 <hr />
 <h2 id="section-captures">Section Captures<a class="headerlink" href="#section-captures" title="Permanent link">&para;</a></h2>
 <h3 id="what-a-section-capture-owns">What a section capture owns<a class="headerlink" href="#what-a-section-capture-owns" title="Permanent link">&para;</a></h3>
@@ -1902,7 +1902,7 @@
 <p>The App passes <code>defaultMaterialAssignments</code> on every <code>viewerInput</code> build regardless of which section or option is active.</p>
 <hr />
 <h2 id="presentation-mode-captures-app-side">Presentation Mode Captures (App-side)<a class="headerlink" href="#presentation-mode-captures-app-side" title="Permanent link">&para;</a></h2>
-<p>Presentation Mode is <strong>not a contract concept</strong> in v1.8 — it's a useful App-side convention for organizing presentation snapshots and enabling re-skin semantics. DemoApp uses a 6-mode taxonomy as the reference example; other CustomApps may use any taxonomy or none.</p>
+<p>Presentation Mode is <strong>not a contract concept</strong> — it's a useful App-side convention for organizing presentation snapshots and enabling re-skin semantics. DemoApp uses a 6-mode taxonomy as the reference example; other CustomApps may use any taxonomy or none.</p>
 <h3 id="what-a-presentation-mode-capture-owns">What a presentation mode capture owns<a class="headerlink" href="#what-a-presentation-mode-capture-owns" title="Permanent link">&para;</a></h3>
 <p>A presentation mode capture is a <strong>full <code>ViewerPresentationInput</code> snapshot</strong> stored by the App under one of its pMode keys. It owns everything — environment, terrain, HDR settings, exposure, lighting, point light, solar configuration, light source mode, and UI flags.</p>
 <h3 id="demoapps-6-mode-taxonomy">DemoApp's 6-mode taxonomy<a class="headerlink" href="#demoapps-6-mode-taxonomy" title="Permanent link">&para;</a></h3>
@@ -1987,7 +1987,7 @@
 <p><strong>Bulk clear:</strong> DemoApp's <strong>Reset Model</strong> button clears all captured payloads at once — section captures, material defaults, and all presentation mode captures. It resets the App's full in-memory and persisted state for the current model.</p>
 <hr />
 <h2 id="overhead-floor-tile-click">Overhead Floor-Tile Click<a class="headerlink" href="#overhead-floor-tile-click" title="Permanent link">&para;</a></h2>
-<p>When the user is in <strong>overhead view</strong> (a section captured with <code>cameraMode: 'overhead'</code>) and clicks a floor tile (a recognized <code>_RM</code> room marker face), the Viewer navigates the camera into that interior space via pathNav. <strong>No callback fires</strong> in v1.8 — the camera movement is purely Viewer-internal navigation.</p>
+<p>When the user is in <strong>overhead view</strong> (a section captured with <code>cameraMode: 'overhead'</code>) and clicks a floor tile (a recognized <code>_RM</code> room marker face), the Viewer navigates the camera into that interior space via pathNav. <strong>No callback fires</strong> — the camera movement is purely Viewer-internal navigation.</p>
 <p>The active section's presentation/visibility persists during and after the navigation. Author guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position (or implement App-side logic to switch sections on this gesture by tagging the overhead section's presentation as "dual-purpose").</p>
 <hr />
 <h2 id="space-menu-space-entry-buttons">Space Menu — Space / Entry Buttons<a class="headerlink" href="#space-menu-space-entry-buttons" title="Permanent link">&para;</a></h2>
@@ -1997,7 +1997,7 @@
 <h3 id="user-mode-inputadminenabled-false">User Mode (<code>input.admin.enabled = false</code>)<a class="headerlink" href="#user-mode-inputadminenabled-false" title="Permanent link">&para;</a></h3>
 <p><code>ViewerRoot</code> renders from <code>input.presentation</code> directly. The App fully controls presentation by writing into <code>viewerInput</code>.</p>
 <p><strong>Section replay</strong> works by the App reading its stored section capture and pushing the resolved presentation snapshot (per the strategy chosen — frozen embedded vs. re-resolved via pMode lookup) into <code>input.presentation</code>.</p>
-<p><strong>No user-mode pMode toggle in DemoApp.</strong> Per the v1.8 design choice, DemoApp omits user-facing pMode buttons. Users navigate by section tabs only. CustomApps can opt in to a user-mode pMode toggle by rendering their own buttons that swap <code>viewerInput.presentation</code> while leaving camera/visibility alone — this is App-side wiring with no contract change.</p>
+<p><strong>No user-mode pMode toggle in DemoApp.</strong> DemoApp omits user-facing pMode buttons by design. Users navigate by section tabs only. CustomApps can opt in to a user-mode pMode toggle by rendering their own buttons that swap <code>viewerInput.presentation</code> while leaving camera/visibility alone — this is App-side wiring with no contract change.</p>
 <h3 id="admin-mode-inputadminenabled-true">Admin Mode (<code>input.admin.enabled = true</code>)<a class="headerlink" href="#admin-mode-inputadminenabled-true" title="Permanent link">&para;</a></h3>
 <p><code>ViewerRoot</code> renders from <code>presentationState.snapshot</code> — the Viewer's internal mutable presentation state, owned by <code>useViewerPresentationState</code>. The Admin authoring panel edits this state directly.</p>
 <p><code>presentationState</code> syncs from <code>input.presentation</code> when:<br />
@@ -2042,7 +2042,7 @@
 <li><strong>3 contract capture families</strong>: Section, Option, Material Defaults — plus App-side <strong>Presentation Mode</strong> as an optional convention.</li>
 <li><strong>All capture payloads are identity-free</strong> — App attaches identity (active section / option / pMode tag) from its own state on receipt.</li>
 <li><strong>Section captures embed the full presentation snapshot</strong> — self-contained replay; no external lookup required. Optional App-attached <code>presentationMode</code> tag enables re-skin via <code>presentationModeCaptures[tag] ?? capture.presentation</code>.</li>
-<li><strong>Views collapsed into Sections</strong> — a Section may have associated options or no options (an optionless Section serves as what v1.7 called a View).</li>
+<li><strong>Sections may have options or no options</strong> — an optionless Section serves as a stored "view-like" moment.</li>
 <li><strong>Presentation Mode taxonomy is App-side</strong> — DemoApp uses 6 modes, other CustomApps may use any taxonomy or none. The Viewer has no built-in pMode awareness.</li>
 <li><strong>Two admin-mode pMode UI surfaces serve different purposes</strong> and are <strong>independent</strong>: DemoApp header pills (App-side capture-slot taxonomy, currently 6) load App-stored snapshots; the AuthoringPanel's pMode-tab helper buttons (Viewer-internal lighting-defaults seeders, 4) apply Viewer's built-in lighting defaults. Counts and labels are not required to match.</li>
 <li><strong><code>selectionKey</code></strong> is the App's "selection changed" signal — bump on section / pill clicks. Two Viewer responses: camera animation re-fire AND presentation re-sync (each gated on the corresponding input being provided).</li>
