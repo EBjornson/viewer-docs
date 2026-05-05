@@ -11,5 +11,5 @@ A React + Three.js runtime for configurable, geometric SaaS products (homes, cab
 - **Working on Viewer internals?** [Architecture](architecture.md), [Capture & Replay](capture_and_replay.md).
 - **Authoring captures (admin)?** [Admin Authoring Guide](admin_authoring_guide.md).
 - **Preparing a 3D model?** [Model Authoring Guide](model_authoring_guide.md).
-- **Testing the live build?** [Tester Quickstart](tester_quickstart.md).
+- **Hands-on tour of the live build?** [Demo Walkthrough](demo_walkthrough.md).
 - **Roadmap (planning docs)?** [Subscriber Materials Plan](subscriber_materials_plan.md).

@@ -2,7 +2,7 @@
 
 **Primary reader:** Anyone arriving at the project (PM, engineer, author, evaluator)
 **Job-to-be-done:** Understand the Viewer, the host-App pattern, and shared terminology
-**Next doc:** Pick one — [Viewer Contract](viewer_contract_v1_8.md) (developers) · [Admin Authoring](admin_authoring_guide.md) (authors) · [Tester Quickstart](tester_quickstart.md) (testers)
+**Next doc:** Pick one — [Viewer Contract](viewer_contract_v1_8.md) (developers) · [Admin Authoring](admin_authoring_guide.md) (authors) · [Demo Walkthrough](demo_walkthrough.md) (hands-on tour)
 
 ---
 

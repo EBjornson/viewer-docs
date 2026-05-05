@@ -1,14 +1,19 @@
-# Tester Quickstart
+# Demo Walkthrough
 
-**Primary reader:** Non-technical tester
-**Goal:** Get to a working configuration in about 15 minutes
-**Next doc:** [Admin Authoring Guide](admin_authoring_guide.md), once you're comfortable with the basics
+**Primary reader:** Anyone exploring the Viewer hands-on for the first time
+**Goal:** Hands-on tour of both the customer experience and the admin authoring experience using a pre-loaded demo model — about 20 minutes
+**Next doc:** [Admin Authoring Guide](admin_authoring_guide.md) for deeper authoring detail · [Overview](overview.md) for the architectural mental model
 
 ---
 
-Thank you for taking the time to test this early build. This is early-stage software, and your experience — what feels clear, what's confusing, what breaks — is genuinely valuable feedback.
+Welcome. This guide is a hands-on tour of the Viewer using a live demo. No setup, no install — just open the URL and follow along. By the end you'll understand both sides of the experience: what an end customer sees configuring a product, and what an admin does to author that experience in the first place.
 
-This guide walks you from your first page load to a working authored configuration in about 15 minutes. No technical background is needed.
+The Viewer has two perspectives that share the same 3D environment:
+
+- **User Mode** — what a customer would see browsing a configurable product on a website. Click a section (Roof, Flooring, etc.) and the camera animates to a view that highlights that part of the product, with the right lighting and presentation. Pick options inside each section to see the result update live.
+- **Admin Mode** — the authoring side. An admin uses this to set up everything the customer eventually sees: the camera moments, the lighting environments, which geometry belongs to which option, what materials to apply. Captures from this mode are what drive the customer's experience.
+
+We'll start in Admin Mode because the demo models ship without any pre-authored content; you'll capture a few sections and options, then flip to User Mode to see the customer experience using what you just built.
 
 ---
 
@@ -16,9 +21,7 @@ This guide walks you from your first page load to a working authored configurati
 
 Open the test site: **https://bp-viewer-theta.vercel.app/**
 
-This is a configurable product viewer. The idea is that a company selling a repeatable, customisable product — a cabin, a tiny home, a boat — can author a guided 3D experience for their customers. Customers browse sections of the product (Roof, Flooring, Solar Package, etc.), choose options within each section, and see the result immediately in 3D.
-
-What you are testing today is the **authoring side** of that experience — the tools an admin uses to set up how the product looks and behaves before a customer ever sees it.
+This is a configurable product viewer. The idea is that a company selling a repeatable, customisable product — a cabin, a tiny home, a boat — can author a guided 3D experience for their customers. Customers browse sections of the product, choose options within each section, and see the result immediately in 3D.
 
 The interface has three main areas:
 
@@ -55,7 +58,7 @@ How you move the camera depends on the camera mode of the current view (set when
 
 If you click directly on the floor of a room while in overhead mode, the camera will navigate down into that interior space.
 
-In user mode, camera mode is set by whichever section is active. Clicking between sections animates the camera to whatever pose and view mode that section was captured with. There is no separate "view selector" for end users — the section is the camera selector.
+In User Mode, camera mode is set by whichever section is active. Clicking between sections animates the camera to whatever pose and view mode that section was captured with. There is no separate "view selector" for end users — the section is the camera selector.
 
 In Admin Mode, an extra **View row** (Exterior / Interior / Overhead) appears at the top of the Section tab in the authoring overlay. These are admin-only conveniences — they jump you to default poses while you're framing a section, before you capture.
 
@@ -92,11 +95,9 @@ Both are pure shortcuts — they don't save anything, they just set up a startin
 
 In the DemoApp header, six **pMode pills** (Summer Day, Summer Night, Summer Night Interior, Winter Day, Winter Night, Winter Night Interior) live separately. These are the **slots** your captured presentation modes are stored under. Clicking a pill in admin mode makes that slot "active" so the next Mode Capture lands there. (The four AuthoringPanel helper buttons and the six header pills are intentionally separate surfaces — helpers seed lighting defaults; pills route stored captures.)
 
-To return to the clean customer-facing view, click **Admin Mode** again to turn it off.
-
 ---
 
-## Your First Authoring Exercise
+## The Authoring Exercise
 
 Work through these four steps in roughly this order. Each one builds on the previous, but you do not have to follow the order strictly — once you have one Presentation Mode captured, you can revisit any step in any order as needed.
 
@@ -137,7 +138,7 @@ For each section:
 
 **Sections without options.** Some sections may exist purely as stored "view-like" moments — no options associated. The capture workflow is identical; just don't author options for that section.
 
-**Testing the replay.** To see the camera animation working, capture **at least two sections**. Then click between them — each click should animate the camera to the position and lighting you captured for that section. Switching to a section that has no capture leaves the current view alone (the Viewer preserves whatever state is already on screen).
+**Testing the replay.** Capture **at least two sections** so you can see the camera replay between them. Click between captured sections — each click should animate the camera to the position and lighting you captured. Switching to a section that has no capture leaves the current view alone (the Viewer preserves whatever state is already on screen).
 
 To remove a capture and start over, click **Section Clear** while that section is active.
 
@@ -155,7 +156,7 @@ With sections captured, you can author the options within each section.
 4. Use the geometry visibility and material assignment controls to configure what this option looks like — select parts of the model, hide / show, edit color / roughness / metalness, or apply a library texture
 5. Click **Option Capture**
 
-Repeat for as many options as you want to test. Clicking between options in the same section should now show the configured changes in the viewer.
+Repeat for as many options as you want to try out. Clicking between options in the same section should now show the configured changes in the viewer.
 
 **Cross-section ownership.** Two independent rules keep the configuration system deterministic:
 
@@ -188,14 +189,31 @@ If no sections have captures yet, the button stays neutral and clicking it has n
 
 ---
 
+## Try the Customer Experience
+
+Click **Admin Mode** in the header again to turn it off. The authoring overlay disappears, the User Visibility toggles take effect, and you're now seeing exactly what an end customer would see browsing the configured product.
+
+Things to try:
+
+- **Click between sections** — the camera animates to each captured pose with the right lighting. This is the core of the customer experience: each section is a guided "moment" highlighting one product decision area.
+- **Pick options within a section** — geometry and materials update live based on what you authored. The customer never sees the show/hide or material-assignment plumbing — they just see Option 1 looks different from Option 2.
+- **Try the Rooms panel** (right side of the viewer, if your demo model has interior rooms) — clicking a room navigates the camera to that location without changing lighting or visibility. Pure camera-only navigation.
+- **Click the floor in an overhead view** — the camera dives into that interior space.
+- **Notice what's hidden** — User Visibility toggles you set per section now hide panels (Solar / Rooms / North Arrow) that should be off for that section. This is how an admin shapes which UI surfaces are appropriate for each moment.
+
+What's notably absent from User Mode: there is no Admin Mode toggle visible to the customer, no presentation mode pills, no view buttons. Customers navigate by section choices alone. The product author shapes everything else through their captures.
+
+---
+
 ## Model Defaults (optional, anytime)
 
-Some models benefit from a baseline appearance — a default exterior color the customer sees before making any choices. To set this:
+Some products benefit from a baseline appearance — a default exterior color the customer sees before making any choices. To set this:
 
-1. With **no option active** (so you're not editing on top of an option assignment), open the Option tab in the authoring panel
-2. Select the geometry you want to set a baseline for
-3. Adjust the color, roughness, metalness, or apply a library texture
-4. Click **Capture Material Defaults**
+1. Re-enable Admin Mode
+2. With **no option active** (so you're not editing on top of an option assignment), open the Option tab in the authoring panel
+3. Select the geometry you want to set a baseline for
+4. Adjust the color, roughness, metalness, or apply a library texture
+5. Click **Capture Material Defaults**
 
 The baseline replays automatically on every load, before any option assignments. Option assignments always override defaults for the same geometry, so if every option for a piece of geometry sets its own material, the default is never visible and capturing one is unnecessary.
 
@@ -219,24 +237,11 @@ Note that interior navigation requires navigation markers to be set up in the mo
 
 ---
 
-## What to Watch For
+## Things to Know
 
-As you explore, please note anything that:
+A few honest expectations about this early build:
 
-- **Feels confusing or unclear** — steps that required guesswork, labels that did not explain themselves, anything you had to try twice
-- **Behaved unexpectedly** — captures that did not replay correctly, camera motion that felt wrong, sections or options that did not update the viewer as expected
-- **Broke or produced an error** — anything that stopped working, showed a red error banner, or left the viewer in a broken state
-- **Felt slow** — model load times, camera animation, response to option changes
-
-If you can include a brief description of what you were doing when something happened, and what you expected vs. what actually happened, that is the most useful form of feedback.
-
----
-
-## Known Rough Edges
-
-A few things to be aware of in this early version so they do not surprise you:
-
-- **Section and option labels are placeholders** — use the Rename button in Admin Mode to give them meaningful names for your testing. Label changes are display-only and do not affect captured data.
+- **Section and option labels are placeholders** — use the Rename button in Admin Mode to give them meaningful names. Label changes are display-only and do not affect captured data.
 - **The authoring tools are a working prototype** — the admin overlay is functional but not yet polished. Some controls are more refined than others.
 - **Persistence is browser-local** — there is no cloud save or account yet. Your work lives in this browser only.
 - **Uploaded models are not persisted** — reload the page and any work on an uploaded model is lost.
@@ -246,16 +251,25 @@ A few things to be aware of in this early version so they do not surprise you:
 
 ---
 
+## Where to Go Next
+
+If you want to dig deeper:
+
+- [Overview](overview.md) — the architectural mental model: Viewer + host App, the contract boundary, how the pieces fit together
+- [Admin Authoring Guide](admin_authoring_guide.md) — the deeper reference for everything Admin Mode does, including the workflows here in more detail
+- [Capture & Replay](capture_and_replay.md) — what every capture payload contains and how replay resolves them deterministically
+- [Model Authoring Guide](model_authoring_guide.md) — for understanding how the demo models themselves were prepared (`.glb` conventions, marker naming for navigation/lighting/pivots/slides)
+
+---
+
 ## Short Summary
 
 1. Open **https://bp-viewer-theta.vercel.app/**
 2. Select a demo model and wait for **Ready**
-3. Explore with the camera controls
+3. Explore briefly with the camera controls
 4. Click **Admin Mode** to enable the authoring overlay (Section / Option / pMode tabs)
 5. Capture at least one Presentation Mode (Summer Day to start) via the pMode tab
 6. Capture at least two Sections via the Section tab — to see the camera-replay animation between them
 7. Capture Options within each section via the Option tab
 8. Once sections are captured, click **Complete Build** in the header to generate one JPEG per captured section
-9. Note anything that surprises, confuses, or breaks
-
-Thank you for testing.
+9. Click **Admin Mode** off to see the customer experience using what you authored

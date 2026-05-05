@@ -10,7 +10,7 @@
 
 This guide explains how to author a model — the camera moments, lighting, geometry visibility, and material choices that make up a configurable product experience. It is written for the person doing the authoring, not for developers integrating the system.
 
-If you are working through this for the first time, the [Tester Quickstart](tester_quickstart.md) gets you to your first working configuration in about 15 minutes. This guide is the deeper reference once you are comfortable with the basics.
+If you are working through this for the first time, the [Demo Walkthrough](demo_walkthrough.md) gets you to your first working configuration in about 20 minutes. This guide is the deeper reference once you are comfortable with the basics.
 
 ---
 
