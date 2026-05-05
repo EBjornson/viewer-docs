@@ -1,329 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SECTION_DEMO_ITEMS } from '../config/sectionDemoConfig'
 import { modelManifest } from '../config/modelManifest'
-import { decimalToTimeString12h, dayOfYearToDateString } from '../utils/solarFormatUtils'
-
-// ─── Capture image overlay ───────────────────────────────────────────────────
-
-const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-
-function formatShortDate(dayOfYear) {
-  const dateStr = dayOfYearToDateString(dayOfYear)
-  const [, month, day] = dateStr.split('-').map(Number)
-  return `${MONTH_ABBR[month - 1]} ${day}`
-}
-
-function formatLatLon(lat, lon) {
-  const latStr = `${Math.abs(lat).toFixed(2)}° ${lat >= 0 ? 'N' : 'S'}`
-  const lonStr = `${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? 'E' : 'W'}`
-  return `${latStr},  ${lonStr}`
-}
-
-function compositeInfoOverlay(blob, metadata) {
-  return new Promise((resolve) => {
-    const img = new Image()
-    const url = URL.createObjectURL(blob)
-    img.onload = () => {
-      URL.revokeObjectURL(url)
-      const canvas = document.createElement('canvas')
-      canvas.width = img.width
-      canvas.height = img.height
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(img, 0, 0)
-
-      const barHeight = 130
-      const barY = img.height - barHeight
-      const padX = 72
-
-      // Background bar
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.62)'
-      ctx.fillRect(0, barY, img.width, barHeight)
-
-      // Subtle top border
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.12)'
-      ctx.fillRect(0, barY, img.width, 1)
-
-      // Section name + selected option
-      ctx.font = '600 62px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)'
-      ctx.fillText(`${metadata.sectionLabel}  —  ${metadata.optionLabel}`, padX, barY + 66)
-
-      // Solar info line — only rendered when the captured presentation supplies
-      // all four solar fields. Skipped if missing, since the overlay must not
-      // claim solar values the rendered image wasn't actually produced with.
-      const hasSolarMetadata =
-        typeof metadata.solarDayOfYear === 'number' &&
-        typeof metadata.solarHour === 'number' &&
-        typeof metadata.latitude === 'number' &&
-        typeof metadata.longitude === 'number'
-      if (hasSolarMetadata) {
-        const date = formatShortDate(metadata.solarDayOfYear)
-        const time = decimalToTimeString12h(metadata.solarHour)
-        const latLon = formatLatLon(metadata.latitude, metadata.longitude)
-        const solarLine = `Solar Date & Location:  ${date}  ·  ${time}  ·  ${latLon}`
-
-        ctx.font = '400 40px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.65)'
-        ctx.fillText(solarLine, padX, barY + 114)
-      }
-
-      canvas.toBlob((result) => resolve(result ?? blob), 'image/jpeg', 0.92)
-    }
-    img.onerror = () => { URL.revokeObjectURL(url); resolve(blob) }
-    img.src = url
-  })
-}
-
-// ─── Cross-section ownership enforcement ────────────────────────────────────
-//
-// Two App-level rules:
-//   1) a geometry item can not be owned by multiple different sections
-//   2) a geometry's material assignment can not be owned by multiple different
-//      sections (option in section A assigning a material to geometry G blocks
-//      any option in sections B..N from assigning materials to G)
-//
-// These rules live at the App layer because section identity is App-owned;
-// the Viewer fires onOptionCaptured with no section context. We enforce by
-// scanning existing optionCaptures for the geometryIds in the incoming
-// payload and rejecting if any are owned by a different section.
-
-function findGeometryOwner(optionCaptures, excludeSectionId, geometryId, kind) {
-  for (const sectionId of Object.keys(optionCaptures)) {
-    if (sectionId === excludeSectionId) continue
-    const options = optionCaptures[sectionId]
-    if (!options) continue
-    for (const optionId of Object.keys(options)) {
-      const capture = options[optionId]
-      if (kind === 'geometry') {
-        if (capture?.geometryIds?.includes(geometryId)) {
-          return { sectionId, optionId }
-        }
-      } else {
-        const owned = capture?.materialAssignments?.some((a) =>
-          a?.geometryIds?.includes(geometryId)
-        )
-        if (owned) return { sectionId, optionId }
-      }
-    }
-  }
-  return null
-}
-
-function findOptionCaptureConflicts(optionCaptures, activeSectionId, payload) {
-  const geometry = []
-  ;(payload?.geometryIds ?? []).forEach((id) => {
-    if (!id) return
-    const owner = findGeometryOwner(optionCaptures, activeSectionId, id, 'geometry')
-    if (owner) geometry.push({ id, ...owner })
-  })
-
-  const materialTargetIds = new Set()
-  ;(payload?.materialAssignments ?? []).forEach((a) => {
-    a?.geometryIds?.forEach((id) => { if (id) materialTargetIds.add(id) })
-  })
-  const material = []
-  materialTargetIds.forEach((id) => {
-    const owner = findGeometryOwner(optionCaptures, activeSectionId, id, 'material')
-    if (owner) material.push({ id, ...owner })
-  })
-
-  return { geometry, material }
-}
-
-// One-time scan of persisted state for existing cross-section violations.
-// Runs two independent passes — show/hide geometry ownership and material
-// assignment ownership — and tags each violation with its `kind` so the
-// banner can describe it precisely. The two rules are intentionally
-// independent: the same geometry MAY appear in section A's show/hide list
-// AND section B's material assignments without being a violation.
-function findExistingCrossSectionViolations(optionCaptures) {
-  const showHideSections = new Map()  // id -> Set<sectionId>
-  const materialSections = new Map()  // id -> Set<sectionId>
-
-  for (const sectionId of Object.keys(optionCaptures ?? {})) {
-    const options = optionCaptures[sectionId]
-    if (!options) continue
-    for (const optionId of Object.keys(options)) {
-      const capture = options[optionId]
-      capture?.geometryIds?.forEach((id) => {
-        if (!id) return
-        if (!showHideSections.has(id)) showHideSections.set(id, new Set())
-        showHideSections.get(id).add(sectionId)
-      })
-      capture?.materialAssignments?.forEach((a) => {
-        a?.geometryIds?.forEach((id) => {
-          if (!id) return
-          if (!materialSections.has(id)) materialSections.set(id, new Set())
-          materialSections.get(id).add(sectionId)
-        })
-      })
-    }
-  }
-
-  const violations = []
-  showHideSections.forEach((sectionIds, id) => {
-    if (sectionIds.size > 1) violations.push({ id, kind: 'geometry', sectionIds: [...sectionIds] })
-  })
-  materialSections.forEach((sectionIds, id) => {
-    if (sectionIds.size > 1) violations.push({ id, kind: 'material', sectionIds: [...sectionIds] })
-  })
-  return violations
-}
-
-// Groups a flat list of `{id, sectionId, optionId}` conflicts into one entry
-// per (sectionId, optionId) owner, accumulating all conflicting geometryIds.
-function groupConflictsByOwner(conflicts) {
-  const map = new Map()
-  conflicts.forEach((c) => {
-    const key = `${c.sectionId}::${c.optionId}`
-    if (!map.has(key)) {
-      map.set(key, { sectionId: c.sectionId, optionId: c.optionId, ids: [] })
-    }
-    map.get(key).ids.push(c.id)
-  })
-  return [...map.values()]
-}
-
-const CONFLICT_ID_PREVIEW_COUNT = 3
-
-function formatIdPreview(ids) {
-  if (ids.length <= CONFLICT_ID_PREVIEW_COUNT) return ids.join(', ')
-  const head = ids.slice(0, CONFLICT_ID_PREVIEW_COUNT).join(', ')
-  return `${head} (+${ids.length - CONFLICT_ID_PREVIEW_COUNT} more)`
-}
-
-function CaptureConflictBanner({ conflict, formatOwnerLabel, onDismiss }) {
-  const geometryGroups = groupConflictsByOwner(conflict.conflicts.geometry)
-  const materialGroups = groupConflictsByOwner(conflict.conflicts.material)
-  return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      gap: 4,
-      background: 'rgba(200,50,50,0.92)',
-      border: '1px solid rgba(255,100,100,0.5)',
-      borderRadius: 8,
-      padding: '8px 14px',
-      fontSize: 13,
-      color: 'white',
-      boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
-      pointerEvents: 'auto',
-      position: 'relative',
-      paddingRight: 28,
-    }}>
-      <span style={{ fontWeight: 700 }}>Capture rejected — cross-section ownership conflict</span>
-      {geometryGroups.map((g) => (
-        <span key={`g-${g.sectionId}-${g.optionId}`} style={{ opacity: 0.92 }}>
-          Already in show/hide list of <strong>{formatOwnerLabel(g.sectionId, g.optionId)}</strong>: {formatIdPreview(g.ids)}
-        </span>
-      ))}
-      {materialGroups.map((g) => (
-        <span key={`m-${g.sectionId}-${g.optionId}`} style={{ opacity: 0.92 }}>
-          Already material-assigned by <strong>{formatOwnerLabel(g.sectionId, g.optionId)}</strong>: {formatIdPreview(g.ids)}
-        </span>
-      ))}
-      <span style={{ opacity: 0.75, fontSize: 11, marginTop: 2 }}>
-        Clear that capture first, or pick different geometry.
-      </span>
-      <button
-        onClick={onDismiss}
-        style={{
-          position: 'absolute',
-          top: 6,
-          right: 8,
-          background: 'none',
-          border: 'none',
-          color: 'white',
-          cursor: 'pointer',
-          fontSize: 16,
-          lineHeight: 1,
-          padding: '0 2px',
-        }}
-      >
-        ×
-      </button>
-    </div>
-  )
-}
-
-function LoadViolationsBanner({ violations, onDismiss }) {
-  const showHide = violations.filter((v) => v.kind === 'geometry').map((v) => v.id)
-  const material = violations.filter((v) => v.kind === 'material').map((v) => v.id)
-  return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      gap: 4,
-      background: 'rgba(200,140,40,0.9)',
-      border: '1px solid rgba(255,180,80,0.5)',
-      borderRadius: 8,
-      padding: '8px 14px',
-      fontSize: 12,
-      color: 'white',
-      boxShadow: '0 2px 12px rgba(0,0,0,0.5)',
-      pointerEvents: 'auto',
-      position: 'relative',
-      paddingRight: 28,
-    }}>
-      <span style={{ fontWeight: 700 }}>
-        Pre-existing cross-section conflicts ({violations.length})
-      </span>
-      {showHide.length > 0 && (
-        <span style={{ opacity: 0.92 }}>
-          Show/hide ownership ({showHide.length}): {formatIdPreview(showHide)}
-        </span>
-      )}
-      {material.length > 0 && (
-        <span style={{ opacity: 0.92 }}>
-          Material assignment ownership ({material.length}): {formatIdPreview(material)}
-        </span>
-      )}
-      <span style={{ opacity: 0.75, fontSize: 11, marginTop: 2 }}>
-        Clear and re-author the affected captures to fix.
-      </span>
-      <button
-        onClick={onDismiss}
-        style={{
-          position: 'absolute',
-          top: 6,
-          right: 8,
-          background: 'none',
-          border: 'none',
-          color: 'white',
-          cursor: 'pointer',
-          fontSize: 16,
-          lineHeight: 1,
-          padding: '0 2px',
-        }}
-      >
-        ×
-      </button>
-    </div>
-  )
-}
-
-// ─── Option capture merge ────────────────────────────────────────────────────
-
-function mergeOptionCapture(existing, incoming) {
-  const mergedGeometryIds = [...new Set([
-    ...(existing?.geometryIds ?? []),
-    ...(incoming?.geometryIds ?? []),
-  ])]
-  const byId = new Map()
-  ;(existing?.materialAssignments ?? []).forEach((a) => {
-    ;(a.geometryIds ?? []).forEach((id) => { if (id) byId.set(id, a) })
-  })
-  ;(incoming?.materialAssignments ?? []).forEach((a) => {
-    ;(a.geometryIds ?? []).forEach((id) => { if (id) byId.set(id, a) })
-  })
-  const mergedMaterials = [...byId.values()]
-  return {
-    geometryIds: mergedGeometryIds.length ? mergedGeometryIds : undefined,
-    materialAssignments: mergedMaterials.length ? mergedMaterials : undefined,
-  }
-}
+import { compositeInfoOverlay } from './captureImageOverlay'
+import {
+  findOptionCaptureConflicts,
+  findExistingCrossSectionViolations,
+  mergeOptionCapture,
+} from './crossSectionConflicts'
+import { CaptureConflictBanner, LoadViolationsBanner } from './CaptureConflictBanners'
+import { CaptureTooltip } from './CaptureTooltip'
 
 // ─── Persistence ────────────────────────────────────────────────────────────
 
@@ -338,7 +23,10 @@ function loadCaptures(modelId) {
   try {
     const raw = localStorage.getItem(`${STORAGE_KEY}_${modelId}`)
     return raw ? JSON.parse(raw) : null
-  } catch { return null }
+  } catch (err) {
+    console.warn(`[DemoApp] Failed to parse captures for ${modelId}:`, err)
+    return null
+  }
 }
 
 function saveCaptures(modelId, data) {
@@ -396,155 +84,6 @@ const modelSelectStyle = {
   maxWidth: 200,
 }
 
-// ─── CaptureTooltip ──────────────────────────────────────────────────────────
-
-function CaptureTooltip({ payload, position = 'below', containerStyle, enabled = true, children }) {
-  const [visible, setVisible] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const [coords, setCoords] = useState(null)
-  const wrapperRef = useRef(null)
-  const showTimerRef = useRef(null)
-  const hideTimerRef = useRef(null)
-  const copyTimerRef = useRef(null)
-
-  useEffect(() => () => {
-    clearTimeout(showTimerRef.current)
-    clearTimeout(hideTimerRef.current)
-    clearTimeout(copyTimerRef.current)
-  }, [])
-
-  // Suppress descendant `title` attributes while the payload flyout is up so
-  // the native browser tooltip does not sit on top of the JSON. Stash each
-  // value on `data-suppressed-title` and restore on hide.
-  useEffect(() => {
-    const root = wrapperRef.current
-    if (!root || !visible) return undefined
-    const stripTitle = (el) => {
-      const value = el.getAttribute('title')
-      if (value == null) return
-      el.setAttribute('data-suppressed-title', value)
-      el.removeAttribute('title')
-    }
-    if (root.hasAttribute('title')) stripTitle(root)
-    root.querySelectorAll('[title]').forEach(stripTitle)
-    return () => {
-      const restoreTitle = (el) => {
-        const value = el.getAttribute('data-suppressed-title')
-        if (value == null) return
-        el.setAttribute('title', value)
-        el.removeAttribute('data-suppressed-title')
-      }
-      if (root.hasAttribute('data-suppressed-title')) restoreTitle(root)
-      root.querySelectorAll('[data-suppressed-title]').forEach(restoreTitle)
-    }
-  }, [visible])
-
-  const computeCoords = () => {
-    if (!wrapperRef.current) return null
-    const r = wrapperRef.current.getBoundingClientRect()
-    if (position === 'right') return { top: r.top, left: r.right + 6 }
-    if (position === 'below-right') return { top: r.bottom + 4, right: window.innerWidth - r.right }
-    return { top: r.bottom + 4, left: r.left }
-  }
-
-  const scheduleShow = () => {
-    clearTimeout(hideTimerRef.current)
-    if (!enabled || !payload) return
-    showTimerRef.current = setTimeout(() => {
-      setCoords(computeCoords())
-      setVisible(true)
-    }, 3000)
-  }
-
-  const scheduleHide = () => {
-    clearTimeout(showTimerRef.current)
-    hideTimerRef.current = setTimeout(() => setVisible(false), 150)
-  }
-
-  const cancelHide = () => clearTimeout(hideTimerRef.current)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(JSON.stringify(payload, null, 2))
-    setCopied(true)
-    clearTimeout(copyTimerRef.current)
-    copyTimerRef.current = setTimeout(() => setCopied(false), 1500)
-  }
-
-  return (
-    <div
-      ref={wrapperRef}
-      style={{ position: 'relative', ...containerStyle }}
-      onMouseEnter={scheduleShow}
-      onMouseLeave={scheduleHide}
-    >
-      {children}
-      {visible && payload && coords && (
-        <div
-          onMouseEnter={cancelHide}
-          onMouseLeave={scheduleHide}
-          style={{
-            position: 'fixed',
-            ...coords,
-            zIndex: 1000,
-            background: '#0d0d1a',
-            border: '1px solid rgba(255,255,255,0.18)',
-            borderRadius: 7,
-            overflow: 'hidden',
-            minWidth: 260,
-            maxWidth: 400,
-            boxShadow: '0 4px 20px rgba(0,0,0,0.7)',
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '5px 10px',
-            borderBottom: '1px solid rgba(255,255,255,0.1)',
-          }}>
-            <span style={{
-              fontSize: 10,
-              fontWeight: 700,
-              color: 'rgba(255,255,255,0.4)',
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-            }}>
-              Captured Payload
-            </span>
-            <button
-              onClick={handleCopy}
-              style={{
-                background: 'none',
-                border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: 4,
-                color: copied ? 'rgba(100,220,130,0.9)' : 'rgba(255,255,255,0.5)',
-                fontSize: 10,
-                fontWeight: 600,
-                cursor: 'pointer',
-                padding: '2px 7px',
-              }}
-            >
-              {copied ? 'Copied!' : 'Copy'}
-            </button>
-          </div>
-          <pre style={{
-            margin: 0,
-            padding: '8px 10px',
-            fontSize: 11,
-            fontFamily: 'monospace',
-            color: 'rgba(200,220,255,0.9)',
-            maxHeight: '60vh',
-            overflowY: 'auto',
-            whiteSpace: 'pre',
-          }}>
-            {JSON.stringify(payload, null, 2)}
-          </pre>
-        </div>
-      )}
-    </div>
-  )
-}
-
 // ─── Component ───────────────────────────────────────────────────────────────
 
 // `ViewerComponent` is supplied by the entry point so DemoApp itself doesn't
@@ -567,10 +106,11 @@ export function DemoApp(props = {}) {
   // animation. Maps 1:1 to viewerInput.selectionKey.
   const [selectionKey, setSelectionKey] = useState(0)
   const [selectedSectionId, setSelectedSectionId] = useState(SECTION_DEMO_ITEMS[0]?.id)
-  // activePMode — non-null only when admin clicked a pMode pill (transient
-  // override). When null, the active section's resolved presentation drives
+  // pModeOverride — non-null only when admin clicked a pMode pill (transient
+  // override flag, NOT the active pMode itself; that's the derived `activePMode`
+  // below). When null, the active section's resolved presentation drives
   // viewerInput.presentation. Cleared on section selection.
-  const [activePMode, setActivePMode] = useState(null)
+  const [pModeOverride, setPModeOverride] = useState(null)
   const [selectedOptions, setSelectedOptions] = useState(
     () => INITIAL_SAVED?.selectedOptions ?? { ...DEFAULT_SELECTED_OPTIONS }
   )
@@ -651,19 +191,27 @@ export function DemoApp(props = {}) {
     resetTimerRef.current = setTimeout(() => setConfirmingReset(false), 5000)
   }, [])
 
+  // Loads the seven capture/options/labels pieces from a stored snapshot
+  // (or resets them to defaults if `snapshot` is null/empty). Each caller
+  // layers its own additional cleanup (URL revoke, viewer status, banners)
+  // around this — those vary by trigger so they stay at the call site.
+  const applyCaptureSnapshot = useCallback((snapshot) => {
+    setSectionCaptures(snapshot?.sectionCaptures ?? {})
+    setOptionCaptures(snapshot?.optionCaptures ?? {})
+    setMaterialDefaultCapture(snapshot?.materialDefaultCapture ?? null)
+    setPresentationModeCaptures(snapshot?.presentationModeCaptures ?? {})
+    setSelectedOptions(snapshot?.selectedOptions ?? { ...DEFAULT_SELECTED_OPTIONS })
+    setSectionLabelOverrides(snapshot?.sectionLabelOverrides ?? {})
+    setOptionLabelOverrides(snapshot?.optionLabelOverrides ?? {})
+  }, [])
+
   const handleResetConfirm = useCallback(() => {
     clearTimeout(resetTimerRef.current)
     setConfirmingReset(false)
-    setSectionCaptures({})
-    setOptionCaptures({})
-    setMaterialDefaultCapture(null)
-    setPresentationModeCaptures({})
-    setSelectedOptions({ ...DEFAULT_SELECTED_OPTIONS })
-    setSectionLabelOverrides({})
-    setOptionLabelOverrides({})
+    applyCaptureSnapshot(null)
     setCaptureConflict(null)
     setLoadViolations([])
-  }, [])
+  }, [applyCaptureSnapshot])
 
   const handleResetCancel = useCallback(() => {
     clearTimeout(resetTimerRef.current)
@@ -716,39 +264,27 @@ export function DemoApp(props = {}) {
     }
     const saved = loadCaptures(modelId)
     setSelectedModelId(modelId)
-    setSectionCaptures(saved?.sectionCaptures ?? {})
-    setOptionCaptures(saved?.optionCaptures ?? {})
-    setMaterialDefaultCapture(saved?.materialDefaultCapture ?? null)
-    setPresentationModeCaptures(saved?.presentationModeCaptures ?? {})
-    setSelectedOptions(saved?.selectedOptions ?? { ...DEFAULT_SELECTED_OPTIONS })
-    setSectionLabelOverrides(saved?.sectionLabelOverrides ?? {})
-    setOptionLabelOverrides(saved?.optionLabelOverrides ?? {})
-    setActivePMode(null)
+    applyCaptureSnapshot(saved)
+    setPModeOverride(null)
     setViewerReady(null)
     setViewerError(null)
     setCaptureConflict(null)
     setLoadViolations(findExistingCrossSectionViolations(saved?.optionCaptures ?? {}))
-  }, [modelObjectUrl])
+  }, [applyCaptureSnapshot, modelObjectUrl])
 
   const handleFileChange = useCallback((e) => {
     const file = e.target.files?.[0]
     if (!file) return
     setSelectedModelId(null)
-    setSectionCaptures({})
-    setOptionCaptures({})
-    setMaterialDefaultCapture(null)
-    setPresentationModeCaptures({})
-    setSelectedOptions({ ...DEFAULT_SELECTED_OPTIONS })
-    setSectionLabelOverrides({})
-    setOptionLabelOverrides({})
-    setActivePMode(null)
+    applyCaptureSnapshot(null)
+    setPModeOverride(null)
     setViewerReady(null)
     setViewerError(null)
     setModelObjectUrl((prev) => {
       if (prev) URL.revokeObjectURL(prev)
       return URL.createObjectURL(file)
     })
-  }, [])
+  }, [applyCaptureSnapshot])
 
   // ─── ViewerOutput ─────────────────────────────────────────────────────────
 
@@ -884,6 +420,17 @@ export function DemoApp(props = {}) {
 
   const sectionCapture = sectionCaptures[selectedSectionId] ?? null
 
+  // activePMode — the currently active pMode (App-side selection state, mirrors
+  // `selectedSectionId` for sections). Shown by the pill's blue-background
+  // indicator. Falls through admin override → section's tag → sticky
+  // currentPModeRef so exactly one pill is always blue. Distinct from "what
+  // the Viewer is rendering" — most of the time they line up, but they can
+  // diverge (e.g. uncaptured-section navigation pushes no presentation, yet
+  // the active pMode still tracks something sticky).
+  const activePMode = pModeOverride
+    ?? sectionCapture?.presentationMode
+    ?? currentPModeRef.current
+
   // Camera pose — fresh ref on every selectionKey bump so re-clicks retrigger
   // animation even when the underlying pose object is identical.
   const requestedCameraPose = useMemo(
@@ -902,8 +449,8 @@ export function DemoApp(props = {}) {
   // - Spread to a fresh object every render so the Viewer's presentation hook
   //   sees a new reference and re-syncs cleanly.
   const resolvedPresentation = useMemo(() => {
-    if (activePMode) {
-      const fromStore = presentationModeCaptures[activePMode]
+    if (pModeOverride) {
+      const fromStore = presentationModeCaptures[pModeOverride]
       return fromStore ? { ...fromStore } : undefined
     }
     if (!sectionCapture) return undefined
@@ -911,7 +458,7 @@ export function DemoApp(props = {}) {
     return { ...(fromStore ?? sectionCapture.presentation) }
     // selectionKey included so re-clicks force a fresh reference (admin-edit reset).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePMode, sectionCapture, presentationModeCaptures, selectionKey])
+  }, [pModeOverride, sectionCapture, presentationModeCaptures, selectionKey])
 
   const visibilityAssignments = useMemo(() => {
     const captureHidden = sectionCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
@@ -937,7 +484,9 @@ export function DemoApp(props = {}) {
         } : undefined
         const sectionLabel = sectionLabelOverrides[section.id] ?? section.label
         const selectedOption = selectedOptions[section.id]
-        const optionLabel = optionLabelOverrides[section.id]?.[selectedOption] ?? selectedOption
+        const optionLabel = selectedOption
+          ? (optionLabelOverrides[section.id]?.[selectedOption] ?? selectedOption)
+          : undefined
         // Resolve presentation per v1.8: pMode lookup with embedded fallback.
         const pres = presentationModeCaptures?.[capture.presentationMode] ?? capture.presentation
         return {
@@ -999,8 +548,9 @@ export function DemoApp(props = {}) {
 
   const handleSectionClick = useCallback((sectionId) => {
     setSelectedSectionId(sectionId)
-    // Clear pMode override so the section's resolved presentation drives.
-    setActivePMode(null)
+    // Clear admin pMode override so the active pMode falls through to the
+    // section's tag (or sticky currentPMode if uncaptured).
+    setPModeOverride(null)
     // Update sticky currentPMode from this section's tag (if any) so future
     // captures and admin pMode actions route to the section's "home" pMode.
     const cap = sectionCaptures[sectionId]
@@ -1019,7 +569,7 @@ export function DemoApp(props = {}) {
 
   const handlePModePillClick = useCallback((mode) => {
     if (!adminEnabled) return  // user mode: pills are read-only indicators
-    setActivePMode(mode)
+    setPModeOverride(mode)
     currentPModeRef.current = mode
     setSelectionKey((n) => n + 1)
   }, [adminEnabled])
@@ -1094,18 +644,18 @@ export function DemoApp(props = {}) {
   // (or do nothing if no snapshot yet captured). In user mode they remain
   // read-only blue/gray status indicators.
   const buildPModePillStyle = (key, isFirst, isLast) => {
-    const captured = !!presentationModeCaptures[key]
     const isActive = activePMode === key
     return {
       ...secondaryBtn,
+      position: 'relative',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
       padding: '3px 0',
       width: 68,
-      background: captured ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
-      borderColor: isActive ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.2)',
+      background: isActive ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
+      borderColor: 'rgba(255,255,255,0.2)',
       borderRadius: isFirst ? '7px 0 0 7px' : isLast ? '0 7px 7px 0' : '0',
       cursor: adminEnabled ? 'pointer' : 'default',
       userSelect: 'none',
@@ -1224,16 +774,29 @@ export function DemoApp(props = {}) {
 
         <CaptureTooltip payload={materialDefaultCapture} position="below-right" enabled={adminEnabled}>
           <span
-            title="Persistent indicator for materialDefaultCapture (model-level baseline materials, applied before any option assignments). Blue = a capture is stored. Hover ~3s in Admin Mode for the payload."
+            title="Persistent indicator for materialDefaultCapture (model-level baseline materials, applied before any option assignments). Blue dot = a capture is stored. Hover ~3s in Admin Mode for the payload."
             style={{
               ...secondaryBtn,
+              position: 'relative',
               display: 'block',
-              background: materialDefaultCapture ? 'rgba(72,127,255,0.42)' : 'rgba(0,0,0,0.58)',
+              background: 'rgba(0,0,0,0.58)',
               cursor: 'default',
               userSelect: 'none',
             }}
           >
             Mat. Defaults
+            {materialDefaultCapture && (
+              <span style={{
+                position: 'absolute',
+                top: 3,
+                right: 4,
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#487fff',
+                pointerEvents: 'none',
+              }} />
+            )}
           </span>
         </CaptureTooltip>
 
@@ -1255,27 +818,43 @@ export function DemoApp(props = {}) {
             ],
           ].map((row, rowIndex) => (
             <div key={rowIndex} style={{ display: 'flex', alignItems: 'stretch' }}>
-              {row.map(({ key, label, fullName }, i, arr) => (
-                <CaptureTooltip
-                  key={key}
-                  payload={presentationModeCaptures[key]}
-                  position="below-right"
-                  containerStyle={{ marginLeft: i > 0 ? -1 : 0, position: 'relative', zIndex: presentationModeCaptures[key] ? 1 : 0, display: 'flex' }}
-                  enabled={adminEnabled}
-                >
-                  <button
-                    type="button"
-                    onClick={() => handlePModePillClick(key)}
-                    disabled={!adminEnabled}
-                    title={adminEnabled
-                      ? `${fullName} (mode key: ${key}). Click to set currentPMode='${key}' and load presentationModeCaptures.${key} as viewerInput.presentation. The Viewer's Mode Capture / Mode Clear buttons will then route to this pMode. Blue = a capture is stored; hover ~3s for the payload. White border = currently active pMode.`
-                      : `${fullName} (mode key: ${key}). Persistent indicator: blue = presentationModeCaptures.${key} is stored. Read-only in user mode.`}
-                    style={buildPModePillStyle(key, i === 0, i === arr.length - 1)}
+              {row.map(({ key, label, fullName }, i, arr) => {
+                const isActive = activePMode === key
+                const captured = !!presentationModeCaptures[key]
+                return (
+                  <CaptureTooltip
+                    key={key}
+                    payload={presentationModeCaptures[key]}
+                    position="below-right"
+                    containerStyle={{ marginLeft: i > 0 ? -1 : 0, position: 'relative', zIndex: isActive ? 1 : 0, display: 'flex' }}
+                    enabled={adminEnabled}
                   >
-                    {label}
-                  </button>
-                </CaptureTooltip>
-              ))}
+                    <button
+                      type="button"
+                      onClick={() => handlePModePillClick(key)}
+                      disabled={!adminEnabled}
+                      title={adminEnabled
+                        ? `${fullName} (mode key: ${key}). Click to set currentPMode='${key}' and load presentationModeCaptures.${key} as viewerInput.presentation. The Viewer's Mode Capture / Mode Clear buttons will then route to this pMode. Blue background = currently active pMode (App-side selection state); blue dot = a capture is stored (hover ~3s for the payload).`
+                        : `${fullName} (mode key: ${key}). Persistent indicator: blue background = currently active pMode (App-side selection state); blue dot = presentationModeCaptures.${key} is stored. Read-only in user mode.`}
+                      style={buildPModePillStyle(key, i === 0, i === arr.length - 1)}
+                    >
+                      {label}
+                      {captured && (
+                        <span style={{
+                          position: 'absolute',
+                          top: 3,
+                          right: 4,
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          background: isActive ? 'white' : '#487fff',
+                          pointerEvents: 'none',
+                        }} />
+                      )}
+                    </button>
+                  </CaptureTooltip>
+                )
+              })}
             </div>
           ))}
         </div>
@@ -1301,7 +880,6 @@ export function DemoApp(props = {}) {
 
       <div style={{ display: 'flex', flexShrink: 0, gap: 6, padding: '8px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', background: '#111' }}>
         {SECTION_DEMO_ITEMS.map((section) => {
-          const isActiveDriver = section.id === selectedSectionId && !activePMode
           const isSelectedSection = section.id === selectedSectionId
           const hasSectionCapture = !!sectionCaptures[section.id]
           const isEditingThis = editingLabel?.type === 'section' && editingLabel.id === section.id
@@ -1344,12 +922,12 @@ export function DemoApp(props = {}) {
                     justifyContent: 'center',
                     gap: 6,
                     padding: adminEnabled ? '10px 72px 10px 14px' : '10px 14px',
-                    background: isActiveDriver ? 'rgba(72, 127, 255, 0.42)' : 'rgba(255,255,255,0.08)',
-                    border: isActiveDriver ? '1px solid rgba(147, 180, 255, 0.65)' : '1px solid rgba(255,255,255,0.2)',
+                    background: isSelectedSection ? 'rgba(72, 127, 255, 0.42)' : 'rgba(255,255,255,0.08)',
+                    border: isSelectedSection ? '1px solid rgba(147, 180, 255, 0.65)' : '1px solid rgba(255,255,255,0.2)',
                     borderRadius: '6px',
-                    color: isActiveDriver ? 'white' : isSelectedSection ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.45)',
+                    color: isSelectedSection ? 'white' : 'rgba(255,255,255,0.45)',
                     fontSize: 16,
-                    fontWeight: isActiveDriver ? 600 : 400,
+                    fontWeight: isSelectedSection ? 600 : 400,
                     cursor: 'pointer',
                   }}
                 >
@@ -1359,7 +937,7 @@ export function DemoApp(props = {}) {
                       width: 6,
                       height: 6,
                       borderRadius: '50%',
-                      background: isActiveDriver ? 'white' : '#487fff',
+                      background: isSelectedSection ? 'white' : '#487fff',
                       flexShrink: 0,
                     }} />
                   )}
@@ -1392,7 +970,7 @@ export function DemoApp(props = {}) {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
         <div style={{ width: 260, borderRight: '1px solid rgba(255,255,255,0.1)', overflowY: 'auto', flexShrink: 0, background: '#161616', padding: '8px' }}>
-          {activeSection?.options.map((option) => {
+          {activeSection?.options?.length ? activeSection.options.map((option) => {
             const isSelected = selectedOptions[selectedSectionId] === option
             const hasOptionCapture = !!(
               optionCaptures[selectedSectionId]?.[option]?.geometryIds?.length ||
@@ -1487,7 +1065,17 @@ export function DemoApp(props = {}) {
                 )}
               </CaptureTooltip>
             )
-          })}
+          }) : (
+            <div style={{
+              padding: '24px 12px',
+              fontSize: 13,
+              color: 'rgba(255,255,255,0.4)',
+              textAlign: 'center',
+              fontStyle: 'italic',
+            }}>
+              (no options for this section)
+            </div>
+          )}
         </div>
 
         <div style={{ flex: 1, position: 'relative' }}>
