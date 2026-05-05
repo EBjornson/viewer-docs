@@ -9,6 +9,7 @@ import {
 } from './crossSectionConflicts'
 import { CaptureConflictBanner, LoadViolationsBanner } from './CaptureConflictBanners'
 import { CaptureTooltip } from './CaptureTooltip'
+import { usePModeResolver } from './usePModeResolver'
 
 // ─── Persistence ────────────────────────────────────────────────────────────
 
@@ -106,11 +107,6 @@ export function DemoApp(props = {}) {
   // animation. Maps 1:1 to viewerInput.selectionKey.
   const [selectionKey, setSelectionKey] = useState(0)
   const [selectedSectionId, setSelectedSectionId] = useState(SECTION_DEMO_ITEMS[0]?.id)
-  // pModeOverride — non-null only when admin clicked a pMode pill (transient
-  // override flag, NOT the active pMode itself; that's the derived `activePMode`
-  // below). When null, the active section's resolved presentation drives
-  // viewerInput.presentation. Cleared on section selection.
-  const [pModeOverride, setPModeOverride] = useState(null)
   const [selectedOptions, setSelectedOptions] = useState(
     () => INITIAL_SAVED?.selectedOptions ?? { ...DEFAULT_SELECTED_OPTIONS }
   )
@@ -226,14 +222,6 @@ export function DemoApp(props = {}) {
   const selectedSectionIdRef = useRef(selectedSectionId)
   const selectedOptionsRef = useRef(selectedOptions)
   const optionCapturesRef = useRef(optionCaptures)
-  // currentPModeRef — sticky across section/pMode clicks. Updated by:
-  //   1) admin pMode pill click → set to clicked mode
-  //   2) section selection → set from sectionCaptures[id].presentationMode
-  //      tag if present (so re-captures inherit the section's prior pMode tag)
-  // Used to attach the pMode tag (App-side metadata, not contract data) on
-  // section captures and to route identity-free pMode capture/clear callbacks
-  // to the correct presentationModeCaptures entry.
-  const currentPModeRef = useRef('day')
   selectedSectionIdRef.current = selectedSectionId
   selectedOptionsRef.current = selectedOptions
   optionCapturesRef.current = optionCaptures
@@ -255,6 +243,20 @@ export function DemoApp(props = {}) {
     sectionCaptures, selectedModelId, selectedOptions,
     sectionLabelOverrides, optionLabelOverrides])
 
+  const sectionCapture = sectionCaptures[selectedSectionId] ?? null
+
+  // activePMode mirrors `selectedSectionId` — Section pill indicators are
+  // App-side selection state. Shown by the pill's blue-background. Distinct
+  // from "what the Viewer is rendering" — most of the time they line up, but
+  // they can diverge (e.g. uncaptured-section navigation pushes no
+  // presentation, yet the active pMode still tracks something sticky).
+  const pmode = usePModeResolver({
+    sectionCapture,
+    presentationModeCaptures,
+    selectionKey,
+  })
+  const { activePMode, resolvedPresentation, currentPModeRef } = pmode
+
   // ─── Model switching ──────────────────────────────────────────────────────
 
   const switchToManifestModel = useCallback((modelId) => {
@@ -265,26 +267,26 @@ export function DemoApp(props = {}) {
     const saved = loadCaptures(modelId)
     setSelectedModelId(modelId)
     applyCaptureSnapshot(saved)
-    setPModeOverride(null)
+    pmode.onModelSwitch()
     setViewerReady(null)
     setViewerError(null)
     setCaptureConflict(null)
     setLoadViolations(findExistingCrossSectionViolations(saved?.optionCaptures ?? {}))
-  }, [applyCaptureSnapshot, modelObjectUrl])
+  }, [applyCaptureSnapshot, modelObjectUrl, pmode])
 
   const handleFileChange = useCallback((e) => {
     const file = e.target.files?.[0]
     if (!file) return
     setSelectedModelId(null)
     applyCaptureSnapshot(null)
-    setPModeOverride(null)
+    pmode.onModelSwitch()
     setViewerReady(null)
     setViewerError(null)
     setModelObjectUrl((prev) => {
       if (prev) URL.revokeObjectURL(prev)
       return URL.createObjectURL(file)
     })
-  }, [applyCaptureSnapshot])
+  }, [applyCaptureSnapshot, pmode])
 
   // ─── ViewerOutput ─────────────────────────────────────────────────────────
 
@@ -388,6 +390,8 @@ export function DemoApp(props = {}) {
         setTimeout(() => URL.revokeObjectURL(url), 1000)
       }
     },
+    // currentPModeRef is a stable ref-from-hook, intentionally omitted from deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [triggerCaptureFlash])
 
   // ─── ViewerInput ──────────────────────────────────────────────────────────
@@ -418,19 +422,6 @@ export function DemoApp(props = {}) {
     [selectedOptions, optionCaptures]
   )
 
-  const sectionCapture = sectionCaptures[selectedSectionId] ?? null
-
-  // activePMode — the currently active pMode (App-side selection state, mirrors
-  // `selectedSectionId` for sections). Shown by the pill's blue-background
-  // indicator. Falls through admin override → section's tag → sticky
-  // currentPModeRef so exactly one pill is always blue. Distinct from "what
-  // the Viewer is rendering" — most of the time they line up, but they can
-  // diverge (e.g. uncaptured-section navigation pushes no presentation, yet
-  // the active pMode still tracks something sticky).
-  const activePMode = pModeOverride
-    ?? sectionCapture?.presentationMode
-    ?? currentPModeRef.current
-
   // Camera pose — fresh ref on every selectionKey bump so re-clicks retrigger
   // animation even when the underlying pose object is identical.
   const requestedCameraPose = useMemo(
@@ -438,27 +429,6 @@ export function DemoApp(props = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [sectionCapture?.pose, selectionKey]
   )
-
-  // Presentation resolution — re-skin with fallback, per v1.8 design Q2.
-  // - When admin clicked a pMode pill, push that pMode's stored snapshot
-  //   (transient override; cleared on next section click).
-  // - Otherwise: re-resolve via presentationModeCaptures[capture.tag] for
-  //   re-skin support. Falls back to the section's embedded snapshot if the
-  //   App has no pMode storage for that tag — this means Apps without pMode
-  //   storage still get section replay (frozen-at-author-time).
-  // - Spread to a fresh object every render so the Viewer's presentation hook
-  //   sees a new reference and re-syncs cleanly.
-  const resolvedPresentation = useMemo(() => {
-    if (pModeOverride) {
-      const fromStore = presentationModeCaptures[pModeOverride]
-      return fromStore ? { ...fromStore } : undefined
-    }
-    if (!sectionCapture) return undefined
-    const fromStore = presentationModeCaptures?.[sectionCapture.presentationMode]
-    return { ...(fromStore ?? sectionCapture.presentation) }
-    // selectionKey included so re-clicks force a fresh reference (admin-edit reset).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pModeOverride, sectionCapture, presentationModeCaptures, selectionKey])
 
   const visibilityAssignments = useMemo(() => {
     const captureHidden = sectionCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
@@ -548,18 +518,12 @@ export function DemoApp(props = {}) {
 
   const handleSectionClick = useCallback((sectionId) => {
     setSelectedSectionId(sectionId)
-    // Clear admin pMode override so the active pMode falls through to the
-    // section's tag (or sticky currentPMode if uncaptured).
-    setPModeOverride(null)
-    // Update sticky currentPMode from this section's tag (if any) so future
-    // captures and admin pMode actions route to the section's "home" pMode.
-    const cap = sectionCaptures[sectionId]
-    if (cap?.presentationMode) currentPModeRef.current = cap.presentationMode
+    pmode.onSectionSelected(sectionCaptures[sectionId])
     // Bump selectionKey so requestedCameraPose / resolvedPresentation memos
     // produce fresh refs, triggering camera animation re-fire and presentation
     // re-sync even if values are identical.
     setSelectionKey((n) => n + 1)
-  }, [sectionCaptures])
+  }, [pmode, sectionCaptures])
 
   const handleOptionClick = useCallback((sectionId, option) => {
     setSelectedOptions((prev) => ({ ...prev, [sectionId]: option }))
@@ -569,10 +533,9 @@ export function DemoApp(props = {}) {
 
   const handlePModePillClick = useCallback((mode) => {
     if (!adminEnabled) return  // user mode: pills are read-only indicators
-    setPModeOverride(mode)
-    currentPModeRef.current = mode
+    pmode.onPModeSelected(mode)
     setSelectionKey((n) => n + 1)
-  }, [adminEnabled])
+  }, [adminEnabled, pmode])
 
   // ─── Label helpers ────────────────────────────────────────────────────────
 
