@@ -343,7 +343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_guide/" class="md-nav__link">
+      <a href="../integration_guide.md" class="md-nav__link">
         
   
   
@@ -371,7 +371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_walkthrough/" class="md-nav__link">
+      <a href="../integration_walkthrough.md" class="md-nav__link">
         
   
   
@@ -1855,7 +1855,7 @@
 <p>For payload shapes, replay paths, identity-free routing, and Admin vs User Mode rendering paths, see <a href="../capture_and_replay/">Capture &amp; Replay</a>.</p>
 <h3 id="ownership-rules-app-enforced">Ownership rules (App-enforced)<a class="headerlink" href="#ownership-rules-app-enforced" title="Permanent link">&para;</a></h3>
 <p>Two <strong>independent</strong> cross-section ownership rules apply at the App's <code>onOptionCaptured</code> handler — show/hide ownership and material assignment ownership, each exclusive across sections. Enforcement lives at the App layer because section identity is App-owned (the Viewer fires <code>onOptionCaptured</code> with no section context). DemoApp implements the enforcement; any production App integrating the Viewer is expected to apply equivalent rules.</p>
-<p>See <a href="../integration_guide/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> in the integration guide for the canonical rules, the conflict-detection code, and the rejection-banner pattern.</p>
+<p>See <a href="../integration/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> in the integration guide for the canonical rules, the conflict-detection code, and the rejection-banner pattern.</p>
 <hr />
 <h2 id="persistence-model">Persistence Model<a class="headerlink" href="#persistence-model" title="Permanent link">&para;</a></h2>
 <p>The Viewer never persists state on behalf of the App — every capture fires through <code>viewerOutput</code>, the App stores the payload, and the App replays it via <code>viewerInput</code>. There is no internal store the App can ask the Viewer to commit or load.</p>

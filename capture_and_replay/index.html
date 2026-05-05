@@ -343,7 +343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_guide/" class="md-nav__link">
+      <a href="../integration_guide.md" class="md-nav__link">
         
   
   
@@ -371,7 +371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_walkthrough/" class="md-nav__link">
+      <a href="../integration_walkthrough.md" class="md-nav__link">
         
   
   
@@ -1862,7 +1862,7 @@
 <li><strong>Option Capture</strong> — fires <code>onOptionCaptured</code> with both <code>geometryIds</code> (from current selection) and <code>materialAssignments</code> (from recent material changes). The standard "this option owns this geometry, possibly with this material" capture.</li>
 <li><strong>Capture Material Only</strong> — fires <code>onOptionCaptured</code> with <code>materialAssignments</code> only — <code>geometryIds</code> is omitted. Used when the option's intent is to color geometry already owned for show/hide by another section, so Rule 1 (show/hide ownership) is not triggered for the selected geometry.</li>
 </ul>
-<p>This is by design: the contract stays clean, and the App retains full ownership of its data model. The author's responsibility is to have the correct section and option selected before clicking Capture. The App is also expected to enforce two independent cross-section ownership rules — show/hide list ownership and material assignment ownership — each exclusive across sections. DemoApp's <code>onOptionCaptured</code> handler scans the existing captures and rejects any capture whose geometry IDs or material assignments would violate either rule, with a banner notification. See <a href="../integration_guide/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> in the integration guide.</p>
+<p>This is by design: the contract stays clean, and the App retains full ownership of its data model. The author's responsibility is to have the correct section and option selected before clicking Capture. The App is also expected to enforce two independent cross-section ownership rules — show/hide list ownership and material assignment ownership — each exclusive across sections. DemoApp's <code>onOptionCaptured</code> handler scans the existing captures and rejects any capture whose geometry IDs or material assignments would violate either rule, with a banner notification. See <a href="../integration/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> in the integration guide.</p>
 <h3 id="app-storage">App storage<a class="headerlink" href="#app-storage" title="Permanent link">&para;</a></h3>
 <p>Option capture is <strong>additive</strong>: each capture merges into the existing stored payload for that option rather than replacing it entirely.</p>
 <ul>

@@ -345,7 +345,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_guide/" class="md-nav__link">
+      <a href="../integration_guide.md" class="md-nav__link">
         
   
   
@@ -373,7 +373,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integration_walkthrough/" class="md-nav__link">
+      <a href="../integration_walkthrough.md" class="md-nav__link">
         
   
   
@@ -1080,7 +1080,7 @@
 <h1 id="demoapp">DemoApp<a class="headerlink" href="#demoapp" title="Permanent link">&para;</a></h1>
 <p><strong>Primary reader:</strong> App-side developer<br />
 <strong>Job-to-be-done:</strong> See what a reference host App looks like and how it surfaces Viewer events<br />
-<strong>Next doc:</strong> <a href="../integration_guide/">Integration Guide</a></p>
+<strong>Next doc:</strong> <a href="../integration/">Integration Guide</a></p>
 <hr />
 <h2 id="what-demoapp-is">What DemoApp Is<a class="headerlink" href="#what-demoapp-is" title="Permanent link">&para;</a></h2>
 <p>DemoApp is the canonical reference host App in this repo. Source: <a href="../src/DemoApp/DemoApp.jsx">src/DemoApp/DemoApp.jsx</a>.</p>
@@ -1120,7 +1120,7 @@
 <li><strong>pMode + Mat. Defaults pills</strong> <em>(also listed above)</em> — hovering any pill (after a 3-second delay) shows the stored JSON payload in a floating panel with a Copy button. Same pattern is applied to section tabs and option buttons — the payload tooltip surfaces the exact data that flowed back through the corresponding <code>viewerOutput</code> callback.</li>
 <li><strong>Payload inspector tooltips</strong> — the unifying name for the hover-and-copy pattern above. Useful for verifying the shape of any capture payload during integration without instrumenting your own logging.</li>
 <li><strong>Error banner</strong> — a dismissable red banner overlaid on the viewer panel when <code>onError</code> fires, showing the error code and message. Clears on dismiss or model switch.</li>
-<li><strong>Capture conflict banners</strong> — a red banner when <code>onOptionCaptured</code> is rejected by cross-section ownership enforcement (names the conflicting geometry IDs and the owning section/option), and a separate amber banner for pre-existing conflicts surfaced from persisted state on load. See <a href="../integration_guide/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> for the rules and the rejection pattern.</li>
+<li><strong>Capture conflict banners</strong> — a red banner when <code>onOptionCaptured</code> is rejected by cross-section ownership enforcement (names the conflicting geometry IDs and the owning section/option), and a separate amber banner for pre-existing conflicts surfaced from persisted state on load. See <a href="../integration/#cross-section-ownership-enforcement">Cross-Section Ownership Enforcement</a> for the rules and the rejection pattern.</li>
 </ul>
 <p>The Viewer's own capture indicators (highlighted state on individual capture buttons inside the admin overlay) are session-only and reset on reload — they reflect the current authoring session, not stored state. Use the DemoApp header pills for stored-capture status.</p>
 <hr />
