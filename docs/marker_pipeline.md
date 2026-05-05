@@ -270,7 +270,7 @@ Nothing to replay. Every model load starts every slide closed.
 ## What this doc deliberately omits
 
 - **Authoring conventions** (substring rules, hierarchy patterns, axis placement) — those are in [Model Authoring Guide](model_authoring_guide.md).
-- **Capture payload shapes and replay strategies** — those are in [Capture & Replay](capture_and_replay.md) and [Viewer Contract v1.8](viewer_contract_v1_8.md).
+- **Capture payload shapes and replay strategies** — those are in [Capture & Replay](capture_and_replay.md) and [Viewer Contract](viewer_contract_v1_8.md).
 - **Per-mesh shadow prefixes** (`Glass_*`, `Water_*`, `Fixture_*`) and **emissive material prefixes** (`Emissive_*`) — these are not marker families; they apply to individual meshes/materials at load time and are documented in the model authoring guide.
 
 ---

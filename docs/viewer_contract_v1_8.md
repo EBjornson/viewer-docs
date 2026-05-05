@@ -1,45 +1,8 @@
-# Viewer Contract v1.8
+# Viewer Contract
 
 **Primary reader:** App-side developer
 **Job-to-be-done:** Reference for the Viewer's input/output types
 **Next doc:** [Integration Guide](integration_guide.md)
-
----
-
-## Changes since v1.7
-
-v1.8 is a substantial simplification. The Viewer no longer tracks active state on behalf of the App, and capture payloads no longer carry identity. The App is the single source of truth for which section, option, and presentation mode are active.
-
-**Removed from contract:**
-- `viewerInput.presentationModeCaptures` — pMode storage is App-internal; the Viewer never reads it
-- `viewerInput.activePresentationMode` — Viewer doesn't track active pMode
-- `presentationMode` field on Section/View capture payloads — App attaches its own metadata if it wants pMode tagging
-- Capture family: `View` — Views are now **optionless Sections** (a Section may exist without options)
-- Callbacks: `onViewCaptured`, `onViewCaptureCleared`, `onViewSelected`, `onActivePresentationModeChanged`
-- `VIEWER_PRESENTATION_MODES` enum — pMode taxonomy is App-side; the 6-mode convention is a DemoApp default
-- UI flags: `showPresetViews`, `showPresentationPresets`, `showWinterPresets` — the Viewer no longer renders View rows or pMode rows; the App owns those UI surfaces
-
-**Renamed:**
-- `presentationSyncKey` → `selectionKey` (one purpose: force camera animation re-fire on bump)
-
-**Also removed (no current consumer):**
-- `viewerInput.admin.activeOptionCapture` — Viewer's authoring panel renders pending edits without comparing against App-stored state
-- `viewerInput.admin.activeAuthoringFocus` — Viewer's authoring panel uses an internal admin tab/toggle to pick context instead of being driven by the App
-- `onSpaceTileWalkActivated` — floor-tile-click navigation is purely viewer-internal; author designs the overhead-view section's presentation to read acceptably from both overhead and interior camera positions
-- `onGeometryPicked` — Viewer tracks admin selection internally for material editing; no current App-side consumer
-
-**Capture payload changes:**
-- All capture callbacks fire **identity-free, mode-agnostic payloads**. The App attaches identity (active section, active option, active pMode) from its own state on receipt.
-- Section capture payloads embed the **full `ViewerPresentationInput` snapshot** instead of carrying a `presentationMode` reference. Section captures are self-contained — they replay without any external lookup.
-
-**`selectionKey` semantic:** two-layer "selection changed — force fresh apply" signal. The App bumps the counter on every section selection click and every admin pMode pill click. The Viewer responds in two layers (each gated on the corresponding input being provided): (1) camera animation re-fires from `input.camera.pose` even when its reference is unchanged; (2) presentation re-syncs from `input.presentation` even when values are identical to current internal state. The view-button-clearing and mode-highlight-resync layers from v1.7's `presentationSyncKey` are removed (their underlying state is gone from the Viewer); the camera-re-fire and presentation-resync semantics survive in cleaner symmetric form.
-
-**What stayed:**
-- Public boundary is still `<Viewer input={viewerInput} output={viewerOutput} />`
-- `model`, `camera`, `scene`, `presentation`, `admin` input buckets
-- Capture/store/replay direction (Viewer fires capture, App stores, App replays via input)
-- Section, Option, Material Defaults, Presentation Mode capture families (Section subsumes View)
-- Batch render flow
 
 ---
 
@@ -507,7 +470,7 @@ The Viewer fires a `ViewerOutput` callback for each authoring action. The App st
 
 ### Views as optionless sections
 
-There is no separate `View` capture family in v1.8. A Section may exist **with options** (functionally serving as what v1.7 called a Section) or **without options** (functionally serving as what v1.7 called a View). Both replay through the same Section Capture / Replay path.
+There is no separate `View` capture family. A Section may exist **with options** or **without options**; both replay through the same Section Capture / Replay path. An optionless Section serves as a stored "view-like" moment.
 
 If a Section has options, exactly one option must be active. The App's option list within that section is rendered however the App chooses.
 

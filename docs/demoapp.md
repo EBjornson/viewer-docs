@@ -71,13 +71,14 @@ The Viewer's own capture indicators (highlighted state on individual capture but
 
 Persisted snapshot contents:
 
-- section captures (`pose`, `cameraMode`, `presentationMode` reference, `visibilityAssignments`, `ui` flags)
+- section captures (`pose`, `cameraMode`, **embedded** `presentation` snapshot, `visibilityAssignments`; plus optional App-side `presentationMode` tag for re-skin support)
 - chosen options by section
 - option captures (`geometryIds`, `materialAssignments`)
 - model default material capture
-- (no separate view captures in v1.8 — optionless Sections serve as views)
-- presentation mode captures (keyed by mode; full `ViewerPresentationInput` snapshot; six modes: day / nightExt / nightInt / winterDay / winterNight / winterNightInt)
+- presentation mode captures (keyed by mode; full `ViewerPresentationInput` snapshot; six modes: `day` / `nightExt` / `nightInt` / `winterDay` / `winterNight` / `winterNightInt`)
 - section/option label renames
+
+(No separate view captures — optionless Sections serve as "view-like" stored moments.)
 
 A production CustomApp would persist these to its backend instead of `localStorage`, but the data shapes are the same.
 

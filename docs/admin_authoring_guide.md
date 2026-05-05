@@ -35,7 +35,7 @@ The panel has three context tabs at the top — **Section / Option / pMode** —
 | **Option** | Option Capture / Capture Material Only / Clear, Material Defaults, geometry tools, Assembly Inspector, Materials picker |
 | **pMode** | Mode Capture/Clear, Presentation sliders, HDR Environment, Terrain Preset, Light Source mode |
 
-A section capture stores the **full presentation snapshot embedded** in v1.8 (no longer a reference-by-name), but the section tab still exposes camera/visibility controls only — adjust lighting via the pMode tab and capture it there separately, or by using the App-rendered pMode pills in the DemoApp header (admin-mode only) to load App-stored snapshots as starting points.
+A section capture stores the **full presentation snapshot embedded** alongside camera and visibility, but the section tab itself exposes only camera/visibility controls — adjust lighting via the pMode tab and capture it there separately, or use the App-rendered pMode pills in the DemoApp header (admin-mode only) to load App-stored snapshots as starting points.
 
 ### Capture / clear pattern
 
@@ -46,7 +46,7 @@ The capture families share a Capture / Clear button pair at the top of each tab:
 - **Option tab** → Option Capture / Option Clear (plus the Capture Material Only variant)
 - **Material Defaults** (always available in option tab) → Capture Material Defaults / Clear Material Defaults
 
-Note: there is **no separate View capture family** in v1.8. A "view-like" stored moment is an optionless Section — the App may have Sections with associated options or with no options. Authoring a "view" is the same workflow as authoring any other Section.
+Note: there is **no separate View capture family**. A "view-like" stored moment is an optionless Section — the App may have Sections with associated options or with no options. Authoring a "view" is the same workflow as authoring any other Section.
 
 ---
 
@@ -69,7 +69,7 @@ The Summer and Winter rows can each be hidden from users via the User Visibility
 
 The AuthoringPanel's Section-tab **View row** (Exterior / Interior / Overhead, top of the Section tab) holds admin-only authoring conveniences. They navigate the camera to the Viewer's default pose for each camera mode — useful as a starting point when framing a section's hero shot. They do not store any state and do not fire callbacks. Future enhancement: per-session capture/clear of view button defaults (deferred).
 
-A "view-like" persistent stored moment in v1.8 is just an optionless Section. Author it via the Section workflow below.
+A "view-like" persistent stored moment is just an optionless Section. Author it via the Section workflow below.
 
 ### 3. Section captures
 
@@ -101,10 +101,10 @@ Model defaults are **optional**. If every option for a given piece of geometry a
 Use this order when authoring a new model. Each step builds on the previous in a way that minimizes back-and-forth.
 
 1. **Capture at least one Presentation Mode.** Start with Summer Day — adjust HDR, terrain, exposure, sun, and ambient light until the daytime exterior looks right, then click **Mode Capture** with Summer Day active. You can return to capture additional modes (Summer Night, Winter Day, etc.) later.
-2. **Capture Sections.** Section captures are the primary "stored moments" in v1.8 — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View row at the top of the AuthoringPanel's Section tab as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click **Section Capture**. Optionless sections (Sections without associated options) serve as what v1.7 called Views — author them the same way.
-4. **Capture Option geometry membership.** Per section, per option: click the option, select the parts of the model that belong to that option, and click **Option Capture**.
-5. **Capture Option material assignments.** Per option that needs custom materials: click the option, select the geometry, edit the material (color, roughness, metalness, or apply a library texture), and click **Option Capture**. If the geometry is already owned for show/hide by a different section, use **Capture Material Only** (see [Cross-section ownership](#cross-section-ownership) below).
-6. **Capture Model Defaults — anytime, optionally.** Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. Some authors prefer to do this immediately after Views; others leave it to the end. There is no wrong time.
+2. **Capture Sections.** Section captures are the primary "stored moments" — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View row at the top of the AuthoringPanel's Section tab as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click **Section Capture**. Optionless sections serve as "view-like" stored moments — author them the same way.
+3. **Capture Option geometry membership.** Per section, per option: click the option, select the parts of the model that belong to that option, and click **Option Capture**.
+4. **Capture Option material assignments.** Per option that needs custom materials: click the option, select the geometry, edit the material (color, roughness, metalness, or apply a library texture), and click **Option Capture**. If the geometry is already owned for show/hide by a different section, use **Capture Material Only** (see [Cross-section ownership](#cross-section-ownership) below).
+5. **Capture Model Defaults — anytime, optionally.** Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. There is no wrong time.
 
 You do not have to work in this exact order, but it is the cleanest path on a fresh model.
 
@@ -127,7 +127,7 @@ To remove a stored mode, click **Mode Clear**.
 
 ## Overhead floor-tile click navigation
 
-When the user is in an Overhead-mode section and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** in v1.8 — the camera movement is purely Viewer-internal. The active section's presentation and visibility persist throughout the navigation.
+When the user is in an Overhead-mode section and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** — the camera movement is purely Viewer-internal. The active section's presentation and visibility persist throughout the navigation.
 
 Authoring guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position. If you want lighting to change on floor-tile-click navigation, the App-side option is to designate a separate "interior" optionless Section and have the App switch to it on this gesture (see the [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click) doc for the App-side pattern).
 
@@ -289,7 +289,7 @@ If an older saved model has cross-section conflicts from before the rules were e
 
 ## User Visibility toggles
 
-The User Visibility section in the Section tab of the Authoring Panel controls which user-facing UI panels are visible in non-admin mode. **Three toggles** in v1.8 (down from six in v1.7 — the View row and Summer/Winter pMode rows are admin-only in v1.8 and don't need user-visibility controls):
+The User Visibility section in the Section tab of the Authoring Panel controls which user-facing UI panels are visible in non-admin mode. **Three toggles**:
 
 - **Solar** — Solar / Site panel
 - **Rooms** — SpaceMenu / Rooms panel (scrollable list of navigable rooms)
@@ -386,7 +386,7 @@ Section and option labels are renameable. Click **Rename** beside any section or
 
 ## Short summary
 
-- **Sections own presentation** — pose, cameraMode, embedded presentation snapshot, visibility. Sections may have associated options or no options (an optionless Section serves as what v1.7 called a View).
+- **Sections own presentation** — pose, cameraMode, embedded presentation snapshot, visibility. Sections may have associated options or no options (an optionless Section serves as a stored "view-like" moment).
 - **Presentation modes own the full visual environment** — HDR, terrain, lighting, solar, point lights, exposure
 - **Options own configuration effects** — geometry membership and material assignments per option
 - **Model defaults own the baseline appearance** — material assignments applied before any option assignments

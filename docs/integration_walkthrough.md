@@ -79,8 +79,8 @@ const appState = {
       ],
     },
   },
-  // pMode storage is App-side in v1.8 — DemoApp uses a 6-mode taxonomy as a
-  // convention. Other CustomApps may use any taxonomy, fewer modes, or none.
+  // pMode storage is App-side — DemoApp uses a 6-mode taxonomy as a convention.
+  // Other CustomApps may use any taxonomy, fewer modes, or none.
   presentationModeCaptures: {
     day: { environmentId: '/hdri/meadow.exr', exposure: 0.6 },
     nightExt: { environmentId: '/hdri/city-night.exr', exposure: 0.3 },
@@ -115,7 +115,7 @@ For example:
 const activeCapture = appState.sectionCaptures[appState.activeSectionId]
 const activeOptionCapture = appState.optionCaptures[`${appState.activeSectionId}_${chosenOption}`]
 
-// v1.8 presentation resolution — re-skin via pMode lookup with embedded
+// Presentation resolution — re-skin via pMode lookup with embedded
 // snapshot fallback. Apps without pMode storage use just `activeCapture.presentation`.
 const presentation =
   appState.presentationModeCaptures?.[activeCapture?.presentationMode]
@@ -151,7 +151,7 @@ In plain language:
 - The App does the product thinking
 - then sends the Viewer a clean set of instructions
 - `defaultMaterialAssignments` is passed from the App's `modelDefaultCapture` record — the Viewer merges it with `materialAssignments` internally
-- Section captures **embed the full presentation snapshot** in v1.8, so a CustomApp without pMode storage can replay using `activeCapture.presentation` directly. Apps that maintain pMode storage opt into "re-skin" semantics via the pMode lookup with embedded snapshot fallback. See [Capture & Replay → Section Captures](capture_and_replay.md#section-captures) for both replay strategies.
+- Section captures **embed the full presentation snapshot**, so a CustomApp without pMode storage can replay using `activeCapture.presentation` directly. Apps that maintain pMode storage opt into "re-skin" semantics via the pMode lookup with embedded snapshot fallback. See [Capture & Replay → Section Captures](capture_and_replay.md#section-captures) for both replay strategies.
 
 ---
 
@@ -334,7 +334,7 @@ A few patterns in DemoApp are easy to miss from the contract reference alone and
 
 ### Identity-free capture routing
 
-All capture callbacks in v1.8 fire identity-free payloads. DemoApp routes by reading its own current selection state in the handlers — `selectedSectionIdRef`, `selectedOptionsRef`, and `currentPModeRef` (the App's sticky "currently active pMode" tracker, updated on pMode pill clicks and section selection from the section's pMode tag). The handlers attach the App-side identity (section ID, section+option, pMode key) on receipt and store accordingly.
+All capture callbacks fire identity-free payloads. DemoApp routes by reading its own current selection state in the handlers — `selectedSectionIdRef`, `selectedOptionsRef`, and `currentPModeRef` (the App's sticky "currently active pMode" tracker, updated on pMode pill clicks and section selection from the section's pMode tag). The handlers attach the App-side identity (section ID, section+option, pMode key) on receipt and store accordingly.
 
 ### Section capture — App-side pMode tagging
 

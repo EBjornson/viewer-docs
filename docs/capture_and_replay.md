@@ -1,14 +1,14 @@
 # Capture & Replay
 
 **Primary reader:** App or Viewer engineer
-**Job-to-be-done:** Deep-dive on the v1.8 capture lifecycle (sections, options, material defaults, presentation modes)
-**Next doc:** [Viewer Contract v1.8](viewer_contract_v1_8.md)
+**Job-to-be-done:** Deep-dive on the capture lifecycle (sections, options, material defaults, presentation modes)
+**Next doc:** [Viewer Contract](viewer_contract_v1_8.md)
 
 ---
 
 ## Purpose
 
-This document describes the complete capture/replay lifecycle for v1.8: **section captures**, **option captures**, **material default captures**, and **presentation mode captures** — including how they interact with the Space Menu, the overhead floor-tile-click navigation, and Admin vs User rendering modes.
+This document describes the complete capture/replay lifecycle: **section captures**, **option captures**, **material default captures**, and **presentation mode captures** — including how they interact with the Space Menu, the overhead floor-tile-click navigation, and Admin vs User rendering modes.
 
 ---
 
@@ -18,7 +18,7 @@ This document describes the complete capture/replay lifecycle for v1.8: **sectio
 
 The Viewer never persists state on behalf of the App. Every capture produces a serialisable payload that the Viewer fires back through a `ViewerOutput` callback. The App stores the payload, then replays it later by passing the stored values back into `viewerInput`. The Viewer reacts to changed input — no sync, no dual state.
 
-In v1.8 this principle goes further: **the Viewer doesn't even know identity**. Capture callbacks fire identity-free payloads — the Viewer never knows which section, option, or pMode is "active." The App attaches identity from its own state at the moment of capture and routes the payload accordingly.
+The principle goes further: **the Viewer doesn't even know identity**. Capture callbacks fire identity-free payloads — the Viewer never knows which section, option, or pMode is "active." The App attaches identity from its own state at the moment of capture and routes the payload accordingly.
 
 ---
 
@@ -33,7 +33,7 @@ The contract has **3 capture families**. Presentation Mode captures exist as an 
 | **Material Defaults** | model-level baseline materialAssignments | `onMaterialDefaultsCaptured` | App writes `input.scene.defaultMaterialAssignments` on every model load |
 | **Presentation Mode** *(App-side)* | full presentation snapshot keyed by App's pMode taxonomy | `onPresentationModeCaptured` | When App tags section captures with a pMode key, replay can re-resolve via `presentationModeCaptures[capture.presentationMode]` for "re-skin" semantics — falls back to embedded snapshot when no pMode store exists. |
 
-Views collapsed into Sections in v1.8 — a Section may have associated options or no options; an optionless Section serves as what v1.7 called a View. Single capture family, single replay path.
+A Section may have associated options or no options. An optionless Section serves as a stored "view-like" moment. Single capture family, single replay path for both shapes.
 
 ---
 
@@ -46,7 +46,7 @@ All capture callbacks fire payloads with **no section / option / pMode identifie
 - `onMaterialDefaultsCaptured(payload)` → global, no identity needed
 - `onPresentationModeCaptured(snapshot)` → App routes to its currently active pMode (if maintaining a pMode taxonomy)
 
-The Viewer never knows which section/option/pMode is currently active. The App is the sole authority for routing. This eliminates an entire category of v1.7 contract surface (`activePresentationMode`, `activeAuthoringFocus`, `presentationModeCaptures` input field, mode-arg in capture callbacks) and removes the need for App↔Viewer state sync on identity.
+The Viewer never knows which section/option/pMode is currently active. The App is the sole authority for routing. There is no App↔Viewer state sync on identity.
 
 ---
 
@@ -235,7 +235,7 @@ The App passes `defaultMaterialAssignments` on every `viewerInput` build regardl
 
 ## Presentation Mode Captures (App-side)
 
-Presentation Mode is **not a contract concept** in v1.8 — it's a useful App-side convention for organizing presentation snapshots and enabling re-skin semantics. DemoApp uses a 6-mode taxonomy as the reference example; other CustomApps may use any taxonomy or none.
+Presentation Mode is **not a contract concept** — it's a useful App-side convention for organizing presentation snapshots and enabling re-skin semantics. DemoApp uses a 6-mode taxonomy as the reference example; other CustomApps may use any taxonomy or none.
 
 ### What a presentation mode capture owns
 
@@ -315,7 +315,7 @@ Like all clear buttons, this fires even when the Viewer has no locally-cached ca
 
 ## Overhead Floor-Tile Click
 
-When the user is in **overhead view** (a section captured with `cameraMode: 'overhead'`) and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** in v1.8 — the camera movement is purely Viewer-internal navigation.
+When the user is in **overhead view** (a section captured with `cameraMode: 'overhead'`) and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** — the camera movement is purely Viewer-internal navigation.
 
 The active section's presentation/visibility persists during and after the navigation. Author guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position (or implement App-side logic to switch sections on this gesture by tagging the overhead section's presentation as "dual-purpose").
 
@@ -335,7 +335,7 @@ Clicking a **Space** or **Entry** button in the Space Menu (right column, contro
 
 **Section replay** works by the App reading its stored section capture and pushing the resolved presentation snapshot (per the strategy chosen — frozen embedded vs. re-resolved via pMode lookup) into `input.presentation`.
 
-**No user-mode pMode toggle in DemoApp.** Per the v1.8 design choice, DemoApp omits user-facing pMode buttons. Users navigate by section tabs only. CustomApps can opt in to a user-mode pMode toggle by rendering their own buttons that swap `viewerInput.presentation` while leaving camera/visibility alone — this is App-side wiring with no contract change.
+**No user-mode pMode toggle in DemoApp.** DemoApp omits user-facing pMode buttons by design. Users navigate by section tabs only. CustomApps can opt in to a user-mode pMode toggle by rendering their own buttons that swap `viewerInput.presentation` while leaving camera/visibility alone — this is App-side wiring with no contract change.
 
 ### Admin Mode (`input.admin.enabled = true`)
 
@@ -394,7 +394,7 @@ Overhead floor click    → Viewer-internal camera navigation only. No callback.
 - **3 contract capture families**: Section, Option, Material Defaults — plus App-side **Presentation Mode** as an optional convention.
 - **All capture payloads are identity-free** — App attaches identity (active section / option / pMode tag) from its own state on receipt.
 - **Section captures embed the full presentation snapshot** — self-contained replay; no external lookup required. Optional App-attached `presentationMode` tag enables re-skin via `presentationModeCaptures[tag] ?? capture.presentation`.
-- **Views collapsed into Sections** — a Section may have associated options or no options (an optionless Section serves as what v1.7 called a View).
+- **Sections may have options or no options** — an optionless Section serves as a stored "view-like" moment.
 - **Presentation Mode taxonomy is App-side** — DemoApp uses 6 modes, other CustomApps may use any taxonomy or none. The Viewer has no built-in pMode awareness.
 - **Two admin-mode pMode UI surfaces serve different purposes** and are **independent**: DemoApp header pills (App-side capture-slot taxonomy, currently 6) load App-stored snapshots; the AuthoringPanel's pMode-tab helper buttons (Viewer-internal lighting-defaults seeders, 4) apply Viewer's built-in lighting defaults. Counts and labels are not required to match.
 - **`selectionKey`** is the App's "selection changed" signal — bump on section / pill clicks. Two Viewer responses: camera animation re-fire AND presentation re-sync (each gated on the corresponding input being provided).

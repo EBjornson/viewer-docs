@@ -200,7 +200,7 @@ Important:
 - The App owns this **intent**
 - The Viewer owns the actual runtime execution of that motion
 - When the user activates a section in User Mode, the App reads its stored section capture and rebuilds `viewerInput` with the capture's `pose`, `cameraMode`, embedded `presentation` snapshot (with optional re-resolution via App-side `presentationModeCaptures` lookup for re-skin support), and `visibilityAssignments`. Bumping `selectionKey` ensures the Viewer animates the camera even when the pose reference is identical to the previous render.
-- View captures don't exist in v1.8 — a Section may have associated options or no options. An optionless Section serves as what v1.7 called a View. Same Section Capture / Replay path for both.
+- There is no separate View capture family — a Section may have associated options or no options. An optionless Section serves as a stored "view-like" moment. Same Section Capture / Replay path for both.
 
 ### 3. `scene`
 
@@ -305,7 +305,7 @@ Think of this as:
 
 When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer preserves its current state regardless of `selectionKey` — admin tweaks aren't stomped. Option clicks should not bump `selectionKey` (they change material/visibility intent, not camera or presentation intent).
 
-**Presentation Mode is App-side in v1.8.** There is no `viewerInput.presentationModeCaptures` field — pMode storage and routing live entirely on the App side. DemoApp uses a 6-mode taxonomy (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) as a convention; CustomApps may use any taxonomy, fewer modes, or no pMode concept at all. When an admin clicks a pMode pill in DemoApp's header, DemoApp pushes the App-stored snapshot via `viewerInput.presentation` and bumps `selectionKey`.
+**Presentation Mode is App-side.** There is no `viewerInput.presentationModeCaptures` field — pMode storage and routing live entirely on the App side. DemoApp uses a 6-mode taxonomy (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) as a convention; CustomApps may use any taxonomy, fewer modes, or no pMode concept at all. When an admin clicks a pMode pill in DemoApp's header, DemoApp pushes the App-stored snapshot via `viewerInput.presentation` and bumps `selectionKey`.
 
 ### 5. `admin`
 
@@ -384,7 +384,7 @@ This is useful for:
 
 ### Capture callbacks
 
-These are the primary authoring output events. The Viewer fires them when the admin clicks a capture button. **All capture payloads are identity-free in v1.8** — the App attaches identity (active section / option / pMode tag) from its own state at receipt.
+These are the primary authoring output events. The Viewer fires them when the admin clicks a capture button. **All capture payloads are identity-free** — the App attaches identity (active section / option / pMode tag) from its own state at receipt.
 
 | Callback | Payload | App action |
 |---|---|---|
@@ -573,7 +573,7 @@ The Viewer continues to fire `onOptionCaptured` exactly as before — rejection 
 
 The Authoring Panel (left-side overlay rendered when `input.admin.enabled = true`) uses **internal Section / Option / pMode tabs** for context selection. The admin clicks the tab they're authoring against; the panel filters its content accordingly.
 
-The App is **not involved** in driving panel context — there is no `activeAuthoringFocus` field in the v1.8 contract. The admin's tab choice is purely a Viewer-internal UI state.
+The App is **not involved** in driving panel context — there is no `activeAuthoringFocus` field in the contract. The admin's tab choice is purely a Viewer-internal UI state.
 
 ---
 
