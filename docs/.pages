@@ -1,0 +1,23 @@
+nav:
+  - overview.md
+  - Integration:
+      - integration.md
+      - viewer_contract_v1_8.md
+      - demoapp.md
+  - Internals:
+      - architecture.md
+      - capture_and_replay.md
+  - Authoring:
+      - admin_authoring_guide.md
+      - model_authoring_guide.md
+      - marker_pipeline.md
+      - demo_walkthrough.md
+  - Reference:
+      - subscriber_materials_plan.md
+  - ...
+
+# index.md is the auto-rendered home page (linked from the site title); it
+# should be reachable but not duplicated in the sidebar. New "draft" docs you
+# want deployed but hidden from the sidebar can be added here too.
+not_in_nav: |
+  index.md
