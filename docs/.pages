@@ -27,3 +27,4 @@ nav:
 # want deployed but hidden from the sidebar can be added here too.
 not_in_nav: |
   index.md
+  docs_publishing.md
