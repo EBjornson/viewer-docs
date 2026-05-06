@@ -75,7 +75,7 @@ The descriptors flow into [`ViewerRuntime.jsx:360`](https://github.com/EBjornson
 
 - [`useViewerNavigation`](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerNavigation.js) — builds a `buildNavigationGraph` and exposes `walkToLocation`, `walkToCapturedPose`, `walkToFloorPoint`, `walkToExteriorPoint`, `walkToDefaultInterior`, `directNavTo`. Camera routing through doorways uses `findNavigationPath` over this graph.
 - The **Rooms panel** (`SpaceMenu`) — renders a clickable list of spaces and entries. Clicks call `walkToLocation` and only move the camera (no presentation/visibility change).
-- **Overhead floor-tile click** — when a section is captured with `cameraMode: 'overhead'` and the user clicks a recognized `_RM` room face, `walkToFloorPoint` routes the camera into the interior space. **No callback fires.**
+- **Overhead floor-tile click** — when a section is captured with `cameraMode: 'overhead'` and the user clicks a recognized `_RM` room face, `walkToFloorPoint` routes the camera into the interior space. **No callback fires.** During the dive, the Viewer auto-suspends the section's `instantHiddenGeometryIds` (typically the roof) so the user can see what they've dived into; reapplies when the camera returns to overhead. See [Overhead Floor-Tile Click](capture_and_replay.md#overhead-floor-tile-click) for details.
 - **Floor Nav / NavPath debug overlays** — visualize the walkable landing zones derived from `_RM` bounds and the path-graph segments between rooms.
 - **Auto-mode lights** — when `lightSourceMode === 'auto'`, [`SceneLights`](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SceneLights.jsx#L155) places one point light per resolved `space`.
 

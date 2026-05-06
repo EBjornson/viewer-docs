@@ -127,9 +127,11 @@ To remove a stored mode, click **Mode Clear**.
 
 ## Overhead floor-tile click navigation
 
-When the user is in an Overhead-mode section and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** — the camera movement is purely Viewer-internal. The active section's presentation and visibility persist throughout the navigation.
+When the user is in an Overhead-mode section and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** — the camera movement is purely Viewer-internal.
 
-Authoring guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position. If you want lighting to change on floor-tile-click navigation, the App-side option is to designate a separate "interior" optionless Section and have the App switch to it on this gesture (see the [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click) doc for the App-side pattern).
+**The roof comes back automatically.** Sections captured at overhead typically hide the roof so the floor plan reads cleanly. The Viewer detects the dive and auto-suspends the section's hidden geometry for the duration of the dive — so the user sees inside a roofed building, not a roofless one. The hides reapply when the camera returns to overhead (re-click the section pill, or in admin mode click the View row Overhead button). The same behavior applies to Rooms-panel clicks while in overhead and (in admin mode) the View row Interior button.
+
+Authoring guidance: presentation (lighting, environment, exposure, etc.) still persists across the dive — only the captured hidden geometry is suspended. If the lighting reads acceptably from interior poses, no further authoring is required. If you want lighting to change on this gesture, designate a separate interior optionless Section and have the App switch to it (see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click) for the App-side pattern).
 
 ---
 
@@ -308,7 +310,7 @@ The Rooms panel — implemented by the internal `SpaceMenu` component — is a s
 Two things to know about Rooms panel navigation:
 
 - Clicking a room in the Rooms panel **only navigates the camera**. It does not change lighting, environment, exposure, materials, or geometry visibility.
-- Clicking on a floor tile from an overhead-mode section also navigates the camera into that interior space (Viewer-internal pathNav, no callback). Active section's presentation/visibility persists. See [Overhead floor-tile click](#overhead-floor-tile-click-navigation) above.
+- Clicking on a floor tile from an overhead-mode section also navigates the camera into that interior space (Viewer-internal pathNav, no callback). The section's hidden geometry is auto-suspended during the dive so the roof comes back; presentation persists. Same auto-suspension fires on a Rooms-panel click made while in overhead. See [Overhead floor-tile click](#overhead-floor-tile-click-navigation) above.
 
 ---
 

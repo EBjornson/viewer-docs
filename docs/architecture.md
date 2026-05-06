@@ -256,7 +256,7 @@ DemoApp's reference implementation persists per-model snapshots to browser `loca
 
 ## Camera / Presentation Runtime
 
-The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead floor-tile click that navigates to a clicked space via pathNav (presentation/visibility persists from the active section's capture — no callback fired).
+The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead floor-tile click that navigates to a clicked space via pathNav (presentation persists; the section's `instantHiddenGeometryIds` are auto-suspended during the dive so the roof comes back — see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click)).
 
 The presentation runtime owns the visual state — HDR environment, terrain preset, exposure, lighting, solar, point/spot lights — plus User Visibility flags for the panel set (Solar / Site, North Arrow, Space Menu). Field-level details live in [`ViewerPresentationInput`](viewer_contract_v1_8.md#presentation).
 
