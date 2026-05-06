@@ -1960,7 +1960,9 @@
 <hr />
 <h2 id="overhead-floor-tile-click">Overhead Floor-Tile Click<a class="headerlink" href="#overhead-floor-tile-click" title="Permanent link">&para;</a></h2>
 <p>When the user is in <strong>overhead view</strong> (a section captured with <code>cameraMode: 'overhead'</code>) and clicks a floor tile (a recognized <code>_RM</code> room marker face), the Viewer navigates the camera into that interior space via pathNav. <strong>No callback fires</strong> — the camera movement is purely Viewer-internal navigation.</p>
-<p>The active section's presentation/visibility persists during and after the navigation. Author guidance: design the overhead-view section's presentation to read acceptably from both the overhead camera position and the resulting interior camera position (or implement App-side logic to switch sections on this gesture by tagging the overhead section's presentation as "dual-purpose").</p>
+<p><strong>Overhead-nav suspension.</strong> Sections captured at overhead typically hide the roof (or similar overhead-only obstructions) so the floor plan reads cleanly — those hides come through <code>instantHiddenGeometryIds</code> per the App-side capture pattern. Without intervention, the user would dive into a roofless interior. To prevent this, the Viewer auto-suspends the section's <code>instantHiddenGeometryIds</code> for the duration of the dive — the roof comes back as the camera descends. Suspension resets when the camera returns to overhead (Section pill re-click, admin View row Overhead button) or when the App expresses fresh navigation intent (<code>selectionKey</code> bump on a different section).</p>
+<p>The same suspension fires on Rooms-panel clicks while in overhead, and on the admin View row Interior button. Other visibility fields — the option-visibility pool (<code>hiddenGeometryIds</code>), <code>shownGeometryIds</code>, and <code>isolatedGeometryIds</code> — pass through untouched, so option visibility continues to behave correctly during the dive.</p>
+<p>Presentation (lighting, environment, exposure, etc.) still persists across the dive — only the captured hidden geometry is suspended. If the section's presentation reads acceptably from interior poses, no further authoring is required. If you want lighting to change on this gesture, designate a separate interior optionless Section and have the App switch to it.</p>
 <hr />
 <h2 id="space-menu-space-entry-buttons">Space Menu — Space / Entry Buttons<a class="headerlink" href="#space-menu-space-entry-buttons" title="Permanent link">&para;</a></h2>
 <p>Clicking a <strong>Space</strong> or <strong>Entry</strong> button in the Space Menu (right column, controlled by <code>ui.showSpaceMenu</code>) navigates the camera to that location only. It does <strong>not</strong> change lighting, environment, exposure, material assignments, or geometry visibility. Pure camera navigation.</p>
@@ -2005,8 +2007,11 @@
 <a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>                          and rely on section captures&#39; embedded snapshots.
 <a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
 <a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>Overhead floor click    → Viewer-internal camera navigation only. No callback.
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>                          Author designs overhead-section presentation to work
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>                          from both viewing angles, or App switches sections.
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>                          Section&#39;s instantHiddenGeometryIds (typically the
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>                          roof) auto-suspend during the dive so the user can
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>                          see what they&#39;ve dived into. Same applies to Rooms-
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>                          panel clicks and admin View row Interior while in
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>                          overhead. Reapplies on return to overhead.
 </code></pre></div>
 <hr />
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
