@@ -20,6 +20,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - run: pip install mkdocs-material mkdocs-redirects
+      - run: pip install mkdocs-material mkdocs-redirects mkdocs-awesome-pages-plugin
 
       - run: mkdocs gh-deploy --force

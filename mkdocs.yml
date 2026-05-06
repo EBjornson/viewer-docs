@@ -41,12 +41,16 @@ extra_css:
 # `plugins:` is empty by default; mkdocs-material auto-enables the search plugin.
 # Once we add a plugins list we have to re-include `search` explicitly or it
 # gets disabled. Redirects let renamed/removed docs keep working at their old
-# URL — add a new entry whenever you move or delete a doc.
+# URL — add a new entry whenever you move or delete a doc. awesome-pages reads
+# docs/.pages (synced from BPViewer) to build the sidebar nav from the
+# filesystem with curated grouping/ordering — that's why this file no longer
+# carries an explicit `nav:` block.
 plugins:
   - search
   - redirects:
       redirect_maps:
         tester_quickstart.md: demo_walkthrough.md
+  - awesome-pages
 
 markdown_extensions:
   # Treat single newlines as <br> so the 3-line audience header blocks at the top of each doc render correctly.
@@ -64,21 +68,7 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
 
-# nav paths are relative to docs_dir (so "overview.md" not "docs/overview.md").
-# The first item is what serves as the site's home page.
-nav:
-  - Overview: overview.md
-  - Integration:
-      - Integration Guide: integration.md
-      - Viewer Contract: viewer_contract_v1_8.md
-      - DemoApp Reference: demoapp.md
-  - Internals:
-      - Architecture: architecture.md
-      - Capture & Replay: capture_and_replay.md
-  - Authoring:
-      - Admin Authoring Guide: admin_authoring_guide.md
-      - Model Authoring Guide: model_authoring_guide.md
-      - Marker Pipeline: marker_pipeline.md
-      - Demo Walkthrough: demo_walkthrough.md
-  - Reference:
-      - Subscriber Materials Plan: subscriber_materials_plan.md
+# Sidebar nav is filesystem-driven by mkdocs-awesome-pages-plugin reading
+# docs/.pages, which is authored in BPViewer's main and carried here by the
+# sync workflow. Edit BPViewer's docs/.pages (not this file) to change ordering,
+# grouping, friendly titles, or to hide a doc with `not_in_nav:`.
