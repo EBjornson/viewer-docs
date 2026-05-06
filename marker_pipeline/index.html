@@ -1760,16 +1760,19 @@
 <li><code>closedZRotation</code> (the authored Z rotation, treated as "closed")</li>
 <li><code>openDelta</code> (signed radians; sign comes from CW/CCW direction)</li>
 <li><code>degrees</code>, <code>direction</code></li>
+<li><code>closedBoundsCenter</code>, <code>closedBoundsRadius</code> — world-space bounds of the closed-pose geometry, used by the proximity auto-trigger</li>
 </ul>
 <p>Unlike Spaces/Lights, descendant meshes are <strong>not</strong> hidden — they're the visible swinging geometry.</p>
 <h3 id="runtime-consumes_2">Runtime consumes<a class="headerlink" href="#runtime-consumes_2" title="Permanent link">&para;</a></h3>
 <p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useScenePivots.js"><code>useScenePivots</code></a> owns per-pivot runtime state in a <code>pivotStateRef</code> map (<code>isOpen</code>, in-flight <code>anim</code>, references to <code>node</code> / <code>closedZRotation</code> / <code>openDelta</code>). It exposes:</p>
 <ul>
 <li><code>togglePivot(pivotId)</code> — schedules an animation if the pivot isn't already animating</li>
+<li><code>openPivot(pivotId)</code> / <code>closePivot(pivotId)</code> — state-aware variants used by the proximity auto-trigger; idempotent (no-op if already in the target state or mid-animation)</li>
 <li><code>meshIdToPivotId</code> — <code>Map&lt;meshUuid, pivotId&gt;</code> used for click routing</li>
 </ul>
 <p>Click routing in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/components/Model.jsx#L175"><code>Model.jsx:175</code></a> walks the picked mesh's ancestor chain looking up both <code>meshIdToPivotId</code> and <code>meshIdToSlideId</code>. <strong>Pivot toggle fires only in consumer mode (<code>!adminEnabled</code>)</strong> — in Admin Mode the toggle is suppressed so clicks on pivot geometry route to selection (for material assignment, hide/show, etc.) like any other mesh.</p>
 <p>The frame-by-frame rotation update lives in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/PivotAnimationController.jsx"><code>PivotAnimationController</code></a> so <code>useFrame</code> runs inside the Canvas. Animation duration and easing are shared with Slides via <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/markerUtils.js#L83"><code>MARKER_ANIMATION_DURATION</code></a> and <code>applyMarkerEasing</code> (cosine ease-in-out, 450 ms).</p>
+<p><strong>Proximity auto-trigger.</strong> Alongside click-to-toggle, <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/PivotProximityController.jsx"><code>PivotProximityController</code></a> auto-opens pivots as the camera approaches and auto-closes them as the camera recedes — a small navigation pizazz that makes doors feel responsive when walking through interiors. Each frame, it measures the camera's distance to each pivot's <code>closedBoundsCenter</code> and fires <code>openPivot</code> / <code>closePivot</code> when the (hysteretic) thresholds are crossed. Constants live at the top of that file (<code>PIVOT_PROXIMITY_OPEN_DISTANCE</code>, <code>PIVOT_PROXIMITY_CLOSE_DISTANCE</code>); CLOSE &gt; OPEN prevents oscillation; setting CLOSE to <code>Infinity</code> disables auto-close. Suppressed entirely in Admin Mode (admin clicks already route to selection — auto-open during inspection would be disorienting). Runs on the demand-loop only: a stationary camera produces no frames, so no work and no state change. Mid-animation events are dropped naturally by the existing reversal-ignore in <code>setPivotState</code>.</p>
 <p>State resets to closed when the <code>pivots</code> array identity changes (i.e., a new model is loaded).</p>
 <h3 id="captures-interact_2">Captures interact<a class="headerlink" href="#captures-interact_2" title="Permanent link">&para;</a></h3>
 <p><strong>No.</strong> Open/closed state is intentionally session-only:</p>
