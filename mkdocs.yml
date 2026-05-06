@@ -38,6 +38,16 @@ theme:
 extra_css:
   - stylesheets/extra.css
 
+# `plugins:` is empty by default; mkdocs-material auto-enables the search plugin.
+# Once we add a plugins list we have to re-include `search` explicitly or it
+# gets disabled. Redirects let renamed/removed docs keep working at their old
+# URL — add a new entry whenever you move or delete a doc.
+plugins:
+  - search
+  - redirects:
+      redirect_maps:
+        tester_quickstart.md: demo_walkthrough.md
+
 markdown_extensions:
   # Treat single newlines as <br> so the 3-line audience header blocks at the top of each doc render correctly.
   - nl2br
