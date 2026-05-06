@@ -1,4 +1,4 @@
-# DemoApp
+# DemoApp Reference
 
 **Primary reader:** App-side developer
 **Job-to-be-done:** See what a reference host App looks like and how it surfaces Viewer events

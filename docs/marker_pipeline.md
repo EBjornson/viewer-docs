@@ -1,4 +1,4 @@
-# Marker Pipeline: Authoring → Resolution → Runtime → Capture
+# Marker Pipeline
 
 **Primary reader:** Engineer or advanced author tracing how a marker in a `.glb` becomes runtime behavior, and when (or whether) that behavior persists in a capture.
 **Job-to-be-done:** Understand the end-to-end pipeline for each marker family on a single page — what the resolver extracts, which hook consumes it, and what survives a capture/replay.

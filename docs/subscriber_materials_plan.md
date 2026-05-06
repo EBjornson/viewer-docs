@@ -1,4 +1,4 @@
-# Subscriber Materials Implementation Plan
+# Subscriber Materials Plan
 
 **Primary reader:** Engineer planning the subscriber-materials feature
 **Job-to-be-done:** Understand the Path A design (curated platform catalog + per-tenant private materials)
@@ -8,7 +8,7 @@
 
 **Status:** Planning / not yet implemented
 **Date drafted:** 2026-04-30
-**Related docs:** [Viewer Contract](viewer_contract_v1_8.md), [System Architecture](architecture.md), [Admin Authoring Guide](admin_authoring_guide.md), [Model Authoring Guide](model_authoring_guide.md)
+**Related docs:** [Viewer Contract](viewer_contract_v1_8.md), [Architecture](architecture.md), [Admin Authoring Guide](admin_authoring_guide.md), [Model Authoring Guide](model_authoring_guide.md)
 
 ## Overview
 

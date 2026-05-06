@@ -1,4 +1,4 @@
-# System Architecture
+# Architecture
 
 **Primary reader:** Engineer working on Viewer internals
 **Job-to-be-done:** Understand layer boundaries and runtime composition
