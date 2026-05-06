@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#subscriber-materials-implementation-plan" class="md-skip">
+        <a href="#subscriber-materials-plan" class="md-skip">
           Skip to content
         </a>
       
@@ -1376,14 +1376,14 @@
   
 
 
-<h1 id="subscriber-materials-implementation-plan">Subscriber Materials Implementation Plan<a class="headerlink" href="#subscriber-materials-implementation-plan" title="Permanent link">&para;</a></h1>
+<h1 id="subscriber-materials-plan">Subscriber Materials Plan<a class="headerlink" href="#subscriber-materials-plan" title="Permanent link">&para;</a></h1>
 <p><strong>Primary reader:</strong> Engineer planning the subscriber-materials feature<br />
 <strong>Job-to-be-done:</strong> Understand the Path A design (curated platform catalog + per-tenant private materials)<br />
 <strong>Next doc:</strong> <a href="../admin_authoring_guide/">Admin Authoring Guide</a></p>
 <hr />
 <p><strong>Status:</strong> Planning / not yet implemented<br />
 <strong>Date drafted:</strong> 2026-04-30<br />
-<strong>Related docs:</strong> <a href="../viewer_contract_v1_8/">Viewer Contract</a>, <a href="../architecture/">System Architecture</a>, <a href="../admin_authoring_guide/">Admin Authoring Guide</a>, <a href="../model_authoring_guide/">Model Authoring Guide</a></p>
+<strong>Related docs:</strong> <a href="../viewer_contract_v1_8/">Viewer Contract</a>, <a href="../architecture/">Architecture</a>, <a href="../admin_authoring_guide/">Admin Authoring Guide</a>, <a href="../model_authoring_guide/">Model Authoring Guide</a></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This plan moves the project from its current single-source PBR material library to a <strong>curated platform catalog + subscriber private extension</strong> model (Path A — curated set stays in-repo, private set lives per-tenant). The PoC is implemented in DemoApp using browser-local storage; the data shapes and resolver are designed so that migrating to a real backend in a future CustomApp is a storage-adapter swap rather than an architectural rewrite.</p>
 <p>Reference systems using this dual-source model: Threekit, Roomle, Emersya, Combeenation. The single-picker-with-source-badge UX convention is borrowed from these and from non-3D analogues like Canva (stock + Brand Kit) and Figma (community + team libraries).</p>
