@@ -47,7 +47,7 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * @typedef {object} ViewerSceneVisibilityAssignments
  * @property {string[]} [hiddenGeometryIds]      - Geometry to hide (fade). Overridden by shownGeometryIds.
  * @property {string[]} [shownGeometryIds]        - Geometry to show even if present in hiddenGeometryIds.
- * @property {string[]} [instantHiddenGeometryIds]
+ * @property {string[]} [sectionHiddenGeometryIds] - Geometry to hide (fade) at the section level. Not overridable by shownGeometryIds. Auto-suspended by the Viewer during overhead-nav (see capture_and_replay.md).
  * @property {string[] | null} [isolatedGeometryIds]
  */
 

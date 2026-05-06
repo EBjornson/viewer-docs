@@ -267,7 +267,7 @@ scene: {
   visibilityAssignments: {
     hiddenGeometryIds: allOptionGeometryIds,        // every option's geometry IDs (the pool)
     shownGeometryIds: activeOptionGeometryIds,      // currently active option's geometry IDs
-    instantHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
+    sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
     isolatedGeometryIds: null,
   },
   defaultMaterialAssignments: appState.modelDefaultCapture?.defaultMaterialAssignments,
@@ -277,7 +277,7 @@ scene: {
 
 **Visibility resolution rules:**
 - The Viewer resolves show/hide priority — `shownGeometryIds` wins over `hiddenGeometryIds`. The App never computes a set difference.
-- `instantHiddenGeometryIds` hides without fade — used for section-level hides that happen during the camera animation, where a fade animation would just be visual noise.
+- `sectionHiddenGeometryIds` is the section-level hide list. Like `hiddenGeometryIds` it fades on transition, but unlike `hiddenGeometryIds` it is **not overridable** by `shownGeometryIds`. Used for section-level hides (typically the roof in overhead views). The Viewer auto-suspends this list during overhead-nav dives — see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click).
 - `shownGeometryIds` + `hiddenGeometryIds` together support **combinatorial ownership** — one option owning a superset of geometry that other options partially overlap (e.g. O4 owns both lights, O2 owns left only, O3 owns right only). The hide/show split handles all combinations without the App needing to understand the geometry relationships. See [Option Visibility](#option-visibility) below.
 
 **Material resolution rules:**
@@ -509,7 +509,7 @@ scene: {
   visibilityAssignments: {
     hiddenGeometryIds: allOptionGeometryIds,
     shownGeometryIds: activeOptionGeometryIds,
-    instantHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
+    sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
   },
   materialAssignments: activeOptionCapture?.materialAssignments ?? [],
   defaultMaterialAssignments: appState.modelDefaultCapture?.defaultMaterialAssignments,
@@ -518,7 +518,7 @@ scene: {
 
 This pattern supports **combinatorial ownership**: one option owns a superset of geometry that other options partially overlap (e.g. O4 owns both lights, O2 owns left only, O3 owns right only). The hide/show split handles all combinations without the App needing to understand the geometry relationships.
 
-`instantHiddenGeometryIds` is used for section-level geometry hides because they take effect during the camera animation triggered by a section change — there is no benefit from a fade animation in that context. Using `instantHiddenGeometryIds` avoids a visible fade artifact during the transition.
+`sectionHiddenGeometryIds` is the right field for section-level geometry hides. Like `hiddenGeometryIds` it fades on transition (so the roof fades in / out gracefully alongside the camera animation), but unlike `hiddenGeometryIds` it is not overridable by `shownGeometryIds` — so it survives even when an option's `shownGeometryIds` happens to overlap the same geometry. The Viewer also auto-suspends this list during overhead-nav floor-tile / Rooms-panel dives.
 
 ---
 
@@ -634,7 +634,7 @@ const items = sections
       visibilityAssignments: {
         hiddenGeometryIds: sectionCaptures[s.id].visibilityAssignments?.hiddenGeometryIds ?? [],
         shownGeometryIds: activeOptionGeometryIdsForSection(s.id),
-        instantHiddenGeometryIds: [],
+        sectionHiddenGeometryIds: [],
       },
     },
     presentation: presentationModeCaptures?.[sectionCaptures[s.id].presentationMode]

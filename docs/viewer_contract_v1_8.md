@@ -135,9 +135,9 @@ type ViewerCameraInput = {
 ```ts
 type ViewerSceneInput = {
   visibilityAssignments?: {
-    hiddenGeometryIds?: string[]         // geometry to hide (fade); overridden by shownGeometryIds
+    hiddenGeometryIds?: string[]         // geometry to hide (fade); overridable by shownGeometryIds
     shownGeometryIds?: string[]          // geometry to show even if present in hiddenGeometryIds
-    instantHiddenGeometryIds?: string[]  // geometry to hide instantly (no fade)
+    sectionHiddenGeometryIds?: string[]  // section-level hidden geometry (fade); NOT overridable by shownGeometryIds; auto-suspended during overhead-nav
     isolatedGeometryIds?: string[] | null
   }
   defaultMaterialAssignments?: ViewerMaterialAssignment[]
@@ -165,7 +165,7 @@ type ViewerMaterialAssignment = {
 #### Scene Notes
 
 - Scene assignments are rendering instructions only. They do not imply business meaning by themselves.
-- The Viewer resolves show/hide priority: `shownGeometryIds` wins over `hiddenGeometryIds`. `instantHiddenGeometryIds` hides without fade animation.
+- The Viewer resolves show/hide priority: `shownGeometryIds` wins over `hiddenGeometryIds`. `sectionHiddenGeometryIds` is a parallel hide list that fades on transition like `hiddenGeometryIds` but is **not** overridable by `shownGeometryIds`. The Viewer also auto-suspends `sectionHiddenGeometryIds` during overhead-nav dives — see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click).
 - `defaultMaterialAssignments` and `materialAssignments` are two distinct layers merged by the Viewer:
   - `defaultMaterialAssignments` — model-level baseline; applied first.
   - `materialAssignments` — option-driven overrides; applied second, winning for any geometry also covered by a default.

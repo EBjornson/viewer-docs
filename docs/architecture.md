@@ -180,7 +180,7 @@ Current stable visibility model separates:
 
 Section presentation replay and authoring tools both affect visibility, but they are not the same kind of state.
 
-Visibility assignments are included in section capture payloads and replayed by the App via `viewerInput.scene.visibilityAssignments`. The full shape is `{ hiddenGeometryIds, shownGeometryIds, instantHiddenGeometryIds, isolatedGeometryIds }`. The Viewer resolves show/hide priority: `shownGeometryIds` wins over `hiddenGeometryIds`; `instantHiddenGeometryIds` hides without fade.
+Visibility assignments are included in section capture payloads and replayed by the App via `viewerInput.scene.visibilityAssignments`. The full shape is `{ hiddenGeometryIds, shownGeometryIds, sectionHiddenGeometryIds, isolatedGeometryIds }`. The Viewer resolves show/hide priority: `shownGeometryIds` wins over `hiddenGeometryIds`; `sectionHiddenGeometryIds` is a parallel hide list (fades like `hiddenGeometryIds`) that is not overridable by `shownGeometryIds` and is auto-suspended by the Viewer during overhead-nav dives.
 
 ### Materials
 
@@ -256,7 +256,7 @@ DemoApp's reference implementation persists per-model snapshots to browser `loca
 
 ## Camera / Presentation Runtime
 
-The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead floor-tile click that navigates to a clicked space via pathNav (presentation persists; the section's `instantHiddenGeometryIds` are auto-suspended during the dive so the roof comes back — see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click)).
+The camera runtime composes a handful of distinct behaviors: startup reveal, quick views (exterior/interior/overhead), App-owned pose playback, section-capture replay, viewer-resolved routed interior navigation, interior constraint handling during free browsing, and overhead floor-tile click that navigates to a clicked space via pathNav (presentation persists; the section's `sectionHiddenGeometryIds` are auto-suspended during the dive so the roof comes back — see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click)).
 
 The presentation runtime owns the visual state — HDR environment, terrain preset, exposure, lighting, solar, point/spot lights — plus User Visibility flags for the panel set (Solar / Site, North Arrow, Space Menu). Field-level details live in [`ViewerPresentationInput`](viewer_contract_v1_8.md#presentation).
 
