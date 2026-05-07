@@ -317,9 +317,9 @@ Like all clear buttons, this fires even when the Viewer has no locally-cached ca
 
 When the user is in **overhead view** (a section captured with `cameraMode: 'overhead'`) and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** — the camera movement is purely Viewer-internal navigation.
 
-**Overhead-nav suspension.** Sections captured at overhead typically hide the roof (or similar overhead-only obstructions) so the floor plan reads cleanly — those hides come through `sectionHiddenGeometryIds` per the App-side capture pattern. Without intervention, the user would dive into a roofless interior. To prevent this, the Viewer auto-suspends the section's `sectionHiddenGeometryIds` for the duration of the dive — the roof comes back as the camera descends. Suspension resets when the camera returns to overhead (Section pill re-click, admin View row Overhead button) or when the App expresses fresh navigation intent (`selectionKey` bump on a different section).
+**Overhead-nav suspension.** Sections captured at overhead typically hide the roof (or similar overhead-only obstructions) so the floor plan reads cleanly — those hides come through `sectionHiddenGeometryIds` per the App-side capture pattern. Without intervention, the user would dive into a roofless interior. To prevent this, the Viewer auto-suspends the section's `sectionHiddenGeometryIds` for the duration of the dive — the roof comes back as the camera descends. Suspension resets when the camera returns to overhead (Section pill re-click, admin Quickview Overhead button) or when the App expresses fresh navigation intent (`selectionKey` bump on a different section).
 
-The same suspension fires on Rooms-panel clicks while in overhead, and on the admin View row Interior button. Other visibility fields — the option-visibility pool (`hiddenGeometryIds`), `shownGeometryIds`, and `isolatedGeometryIds` — pass through untouched, so option visibility continues to behave correctly during the dive.
+The same suspension fires on Rooms-panel clicks while in overhead, and on the admin Quickview Interior button. Other visibility fields — the option-visibility pool (`hiddenGeometryIds`), `shownGeometryIds`, and `isolatedGeometryIds` — pass through untouched, so option visibility continues to behave correctly during the dive.
 
 Presentation (lighting, environment, exposure, etc.) still persists across the dive — only the captured hidden geometry is suspended. If the section's presentation reads acceptably from interior poses, no further authoring is required. If you want lighting to change on this gesture, designate a separate interior optionless Section and have the App switch to it.
 
@@ -350,7 +350,7 @@ Clicking a **Space** or **Entry** button in the Space Menu (right column, contro
 - `selectionKey` bumps (force re-sync — for the "Viewer's internal admin state diverged from App's pushed state" case), or
 - `hasLightMarkers` flips (smart default re-evaluation on model load)
 
-When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** regardless of `selectionKey` — admin tweaks aren't stomped.
+When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** regardless of `selectionKey` — admin tweaks aren't stomped. The same preserve-on-undefined rule applies to `input.scene.visibilityAssignments.sectionHiddenGeometryIds` (so a captured section's hides — typically the roof in overhead views — survive navigation to an uncaptured section). Together with the camera-pose no-op on falsy `input.camera.pose`, uncaptured-section navigation is a universal scene no-op: the camera doesn't move, lighting doesn't change, visibility stays as it was.
 
 **Section replay in Admin Mode** triggers the sync effect by either changing the presentation reference or bumping `selectionKey`. Any active solar preview state is cleared and the Viewer reverts to the authoritative solar time from the replayed snapshot.
 
@@ -390,7 +390,7 @@ Overhead floor click    → Viewer-internal camera navigation only. No callback.
                           The section's `sectionHiddenGeometryIds` (typically
                           the roof) auto-suspend during the dive so the user
                           can see what they've dived into. Same applies to
-                          Rooms-panel clicks and admin View row Interior while
+                          Rooms-panel clicks and admin Quickview Interior while
                           in overhead. Reapplies on return to overhead.
 ```
 

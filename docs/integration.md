@@ -278,6 +278,7 @@ scene: {
 **Visibility resolution rules:**
 - The Viewer resolves show/hide priority — `shownGeometryIds` wins over `hiddenGeometryIds`. The App never computes a set difference.
 - `sectionHiddenGeometryIds` is the section-level hide list. Like `hiddenGeometryIds` it fades on transition, but unlike `hiddenGeometryIds` it is **not overridable** by `shownGeometryIds`. Used for section-level hides (typically the roof in overhead views). The Viewer auto-suspends this list during overhead-nav dives — see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click).
+- **Preserve-on-undefined for `sectionHiddenGeometryIds`:** when this field is `undefined` (uncaptured-section navigation, where the App has no captured hides to push), the Viewer **preserves the last-applied value** — the prior section's hides survive. Symmetric with `pose` and `presentation`; together they make uncaptured navigation a scene no-op. Push `[]` (defined empty array) to explicitly clear hides on a captured section. Only `sectionHiddenGeometryIds` preserves; `hiddenGeometryIds` / `shownGeometryIds` / `isolatedGeometryIds` reflect current state and must be driven each push.
 - `shownGeometryIds` + `hiddenGeometryIds` together support **combinatorial ownership** — one option owning a superset of geometry that other options partially overlap (e.g. O4 owns both lights, O2 owns left only, O3 owns right only). The hide/show split handles all combinations without the App needing to understand the geometry relationships. See [Option Visibility](#option-visibility) below.
 
 **Material resolution rules:**
@@ -315,7 +316,7 @@ presentation: {
 
 **Initial-load defaults:** the Viewer has built-in defaults for every `presentation` field. The whole `presentation` field is optional on initial model load. Providing a `presentation` payload is only necessary when the App needs to replay a stored capture or apply a stored pMode snapshot.
 
-**Preserve-on-undefined:** when `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** — admin tweaks aren't reset by a navigation that has nothing to push.
+**Preserve-on-undefined:** when `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** — admin tweaks aren't reset by a navigation that has nothing to push. The same rule applies to `input.scene.visibilityAssignments.sectionHiddenGeometryIds` (see [scene](#scene) above) — together with the camera-pose no-op on falsy `input.camera.pose`, uncaptured navigation is a universal scene no-op.
 
 **Presentation Mode is App-side.** There is no `viewerInput.presentationModeCaptures` field — pMode storage and routing live entirely on the App side. DemoApp uses a 6-mode taxonomy (`'day'`, `'nightExt'`, `'nightInt'`, `'winterDay'`, `'winterNight'`, `'winterNightInt'`) as a convention; CustomApps may use any taxonomy, fewer modes, or no pMode concept at all. When an admin clicks a pMode pill in DemoApp's header, DemoApp pushes the App-stored snapshot via `viewerInput.presentation` and bumps `selectionKey`.
 
@@ -330,7 +331,7 @@ The App's "selection changed — force fresh apply" signal. Bump on every sectio
 1. **Camera animation re-fires** from `input.camera.pose` even when its reference identity is unchanged. Handles "user clicks the active section to return to its captured pose after free-navigating."
 2. **Presentation re-syncs** from `input.presentation` even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the AuthoringPanel's pMode-tab helper buttons that mutate Viewer state without updating App state, then re-clicked an App pill to reload).
 
-When `input.presentation` is `undefined`, the Viewer preserves its current state regardless of `selectionKey` — admin tweaks aren't stomped. **Option clicks should not bump `selectionKey`** — they change material/visibility intent (App pushes via different state), not camera or presentation intent.
+When `input.presentation` is `undefined`, the Viewer preserves its current state regardless of `selectionKey` — admin tweaks aren't stomped. The same preserve-on-undefined rule applies to `input.scene.visibilityAssignments.sectionHiddenGeometryIds`. **Option clicks should not bump `selectionKey`** — they change material/visibility intent (App pushes via different state), not camera or presentation intent.
 
 ### `admin`
 
@@ -354,7 +355,7 @@ admin: {
 When `admin.enabled = true`, the Viewer renders its built-in **Authoring Panel** (left-side overlay) containing all capture/clear actions and authoring tools. The panel uses internal Section / Option / pMode tabs for context selection — the App is not involved in driving panel focus. No extra setup required from the App beyond setting `enabled: true`.
 
 Inside the panel, two admin-only helper rows sit above the capture controls:
-- **Section tab — View row** (Exterior / Interior / Overhead): camera navigates to the Viewer's default poses.
+- **Section tab — Quickviews row** (Exterior / Interior / Overhead): camera navigates to the Viewer's default poses.
 - **pMode tab — pMode helper buttons** (Summer/Winter × Day/Night, four buttons): loads the Viewer's built-in lighting defaults.
 
 Both are pure Viewer-internal authoring conveniences — no public callbacks. The pMode helper count and labels are **independent** from any host App's pMode taxonomy: helpers seed presentation state, App-side pMode pills route stored captures.
@@ -518,7 +519,7 @@ scene: {
 
 This pattern supports **combinatorial ownership**: one option owns a superset of geometry that other options partially overlap (e.g. O4 owns both lights, O2 owns left only, O3 owns right only). The hide/show split handles all combinations without the App needing to understand the geometry relationships.
 
-`sectionHiddenGeometryIds` is the right field for section-level geometry hides. Like `hiddenGeometryIds` it fades on transition (so the roof fades in / out gracefully alongside the camera animation), but unlike `hiddenGeometryIds` it is not overridable by `shownGeometryIds` — so it survives even when an option's `shownGeometryIds` happens to overlap the same geometry. The Viewer also auto-suspends this list during overhead-nav floor-tile / Rooms-panel dives.
+`sectionHiddenGeometryIds` is the right field for section-level geometry hides. Like `hiddenGeometryIds` it fades on transition (so the roof fades in / out gracefully alongside the camera animation), but unlike `hiddenGeometryIds` it is not overridable by `shownGeometryIds` — so it survives even when an option's `shownGeometryIds` happens to overlap the same geometry. The Viewer also auto-suspends this list during overhead-nav floor-tile / Rooms-panel dives, and **preserves-on-undefined** during uncaptured-section navigation (omit the field on uncaptured sections so the prior section's hides aren't cleared).
 
 ---
 

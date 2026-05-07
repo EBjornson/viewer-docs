@@ -60,7 +60,7 @@ If you click directly on the floor of a room while in overhead mode, the camera 
 
 In User Mode, camera mode is set by whichever section is active. Clicking between sections animates the camera to whatever pose and view mode that section was captured with. There is no separate "view selector" for end users — the section is the camera selector.
 
-In Admin Mode, an extra **View row** (Exterior / Interior / Overhead) appears at the top of the Section tab in the authoring overlay. These are admin-only conveniences — they jump you to default poses while you're framing a section, before you capture.
+In Admin Mode, an extra **Quickviews row** (Exterior / Interior / Overhead) appears at the top of the Section tab in the authoring overlay. These are admin-only conveniences — they jump you to default poses while you're framing a section, before you capture.
 
 ---
 
@@ -88,7 +88,7 @@ The **Authoring Panel** appears as an overlay on the left side of the viewer. Th
 
 You click the tab that matches what you're authoring against. The two top rows in the Section and pMode tabs are admin-only conveniences:
 
-- **Section tab → View row** (Exterior / Interior / Overhead): jumps the camera to the Viewer's built-in default pose for that camera mode. Useful as a starting point before framing your section.
+- **Section tab → Quickviews row** (Exterior / Interior / Overhead): jumps the camera to the Viewer's built-in default pose for that camera mode. Useful as a starting point before framing your section.
 - **pMode tab → pMode helper buttons** (Summer Day / Summer Night / Winter Day / Winter Night, four buttons): loads the Viewer's built-in lighting defaults, plus the snowy HDRI/terrain pair for the winter buttons. Useful when you want a sensible starting point for a presentation mode.
 
 Both are pure shortcuts — they don't save anything, they just set up a starting state. To save, you still click the Capture button in the active tab.
@@ -201,7 +201,7 @@ Things to try:
 - **Click the floor in an overhead view** — the camera dives into that interior space.
 - **Notice what's hidden** — User Visibility toggles you set per section now hide panels (Solar / Rooms / North Arrow) that should be off for that section. This is how an admin shapes which UI surfaces are appropriate for each moment.
 
-What's notably absent from User Mode: there is no Admin Mode toggle visible to the customer, no presentation mode pills, no view buttons. Customers navigate by section choices alone. The product author shapes everything else through their captures.
+What's notably absent from User Mode: there is no Admin Mode toggle visible to the customer, no presentation mode pills, no Quickview buttons. Customers navigate by section choices alone. The product author shapes everything else through their captures.
 
 ---
 

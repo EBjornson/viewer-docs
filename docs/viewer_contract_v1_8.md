@@ -137,7 +137,7 @@ type ViewerSceneInput = {
   visibilityAssignments?: {
     hiddenGeometryIds?: string[]         // geometry to hide (fade); overridable by shownGeometryIds
     shownGeometryIds?: string[]          // geometry to show even if present in hiddenGeometryIds
-    sectionHiddenGeometryIds?: string[]  // section-level hidden geometry (fade); NOT overridable by shownGeometryIds; auto-suspended during overhead-nav
+    sectionHiddenGeometryIds?: string[]  // section-level hidden geometry (fade); NOT overridable by shownGeometryIds; auto-suspended during overhead-nav; preserve-on-undefined
     isolatedGeometryIds?: string[] | null
   }
   defaultMaterialAssignments?: ViewerMaterialAssignment[]
@@ -166,6 +166,7 @@ type ViewerMaterialAssignment = {
 
 - Scene assignments are rendering instructions only. They do not imply business meaning by themselves.
 - The Viewer resolves show/hide priority: `shownGeometryIds` wins over `hiddenGeometryIds`. `sectionHiddenGeometryIds` is a parallel hide list that fades on transition like `hiddenGeometryIds` but is **not** overridable by `shownGeometryIds`. The Viewer also auto-suspends `sectionHiddenGeometryIds` during overhead-nav dives — see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click).
+- **Preserve-on-undefined for `sectionHiddenGeometryIds`:** when the field is `undefined` (uncaptured-section navigation, where the App has no captured hides to push), the Viewer **preserves the last-applied value** rather than clearing the prior section's hides. Symmetric with `pose` and `presentation` preserve-on-undefined — together they make uncaptured navigation a scene no-op (camera doesn't move, lighting doesn't change, visibility stays as it was). To explicitly clear hides on a captured section, push `sectionHiddenGeometryIds: []` (defined empty array). The other `visibilityAssignments` fields (`hiddenGeometryIds`, `shownGeometryIds`, `isolatedGeometryIds`) are **not** preserve-on-undefined — they reflect current option-pool / isolation state that the App must drive in real time.
 - `defaultMaterialAssignments` and `materialAssignments` are two distinct layers merged by the Viewer:
   - `defaultMaterialAssignments` — model-level baseline; applied first.
   - `materialAssignments` — option-driven overrides; applied second, winning for any geometry also covered by a default.
@@ -240,7 +241,7 @@ The Viewer responds in two layers (each gated on the corresponding input being p
 1. **Camera animation re-fires** from `input.camera.pose` even when its reference identity is unchanged. Handles the "user clicks the active section to return to its captured pose after free-navigating" case.
 2. **Presentation re-syncs** from `input.presentation` even when values are identical to current internal state. Handles the case where the Viewer's internal admin presentation state has diverged from what the App last pushed (e.g. admin used the AuthoringPanel's pMode-tab helper buttons that mutate Viewer state without updating App state, then re-clicked an App pMode pill to reload the App-stored snapshot).
 
-When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** regardless of `selectionKey` — admin tweaks aren't stomped by a navigation that has nothing to push.
+When `input.presentation` is `undefined` (uncaptured-section navigation), the Viewer **preserves its current state** regardless of `selectionKey` — admin tweaks aren't stomped by a navigation that has nothing to push. The same preserve-on-undefined rule applies to `input.scene.visibilityAssignments.sectionHiddenGeometryIds` (see [Scene Notes](#scene-notes)) — together with the camera-pose no-op on falsy `input.camera.pose`, uncaptured-section navigation is a universal scene no-op.
 
 Bumping when neither input is provided is harmless. Option clicks should not bump `selectionKey` — they change material/visibility intent (App pushes via different state), not camera or presentation intent.
 
@@ -270,7 +271,7 @@ type ViewerAdminInput = {
 - The admin bucket remains part of the runtime input boundary.
 - The App only needs to decide whether the Viewer should expose admin/authoring tooling (`enabled: true`) or display the product in presentation mode (`enabled: false`).
 - When `enabled: true`, the Viewer renders its own built-in Authoring Panel (left-side overlay) — no external panel hosting required from the App. The panel uses internal tabs/toggles for context selection (Section / Option / pMode); the App is not involved in driving panel focus.
-- The Viewer's admin overlay also includes Viewer-internal authoring conveniences (quick-view buttons for default Exterior/Interior/Overhead poses; default lighting buttons for Day/Night starting points). These are admin-mode-only Viewer UI and do not enter the contract.
+- The Viewer's admin overlay also includes Viewer-internal authoring conveniences (Quickview buttons for default Exterior/Interior/Overhead poses; default lighting buttons for Day/Night starting points). These are admin-mode-only Viewer UI and do not enter the contract.
 
 `batchCapture` triggers a programmatic multi-item render sequence. The App constructs a list of `ViewerBatchRenderCaptureItem` entries and increments `nonce` to start the batch. The Viewer processes the items in sequence — snapping the camera to each item's pose, settling for materials and shadows, then capturing a 3840×2160 JPEG. The Viewer fires `onRenderCaptured` after each item and `onBatchCaptureComplete` when all items are done. Admin overlays and debug helpers are automatically hidden during capture so they do not appear in rendered images.
 
@@ -480,7 +481,7 @@ The 6-mode taxonomy used in DemoApp (`day`, `nightExt`, `nightInt`, `winterDay`,
 
 The App renders pMode selection buttons (admin-mode for authoring; optionally user-mode for runtime presentation switching). The Viewer's only role is rendering whatever `viewerInput.presentation` snapshot the App pushes.
 
-The AuthoringPanel's **pMode helper buttons** (Summer/Winter × Day/Night → built-in lighting defaults) are a Viewer-internal authoring convenience, separate from the App's pMode store. Helper count and labels are independent from the App's pill set — same parallel-but-independent relationship as the View row to App-side Section pills. Helpers seed presentation state; the admin then routes via Mode Capture to whichever App pMode slot is currently active.
+The AuthoringPanel's **pMode helper buttons** (Summer/Winter × Day/Night → built-in lighting defaults) are a Viewer-internal authoring convenience, separate from the App's pMode store. Helper count and labels are independent from the App's pill set — same parallel-but-independent relationship as the Quickviews row to App-side Section pills. Helpers seed presentation state; the admin then routes via Mode Capture to whichever App pMode slot is currently active.
 
 The Viewer's Authoring Panel keeps **Mode Capture** and **Mode Clear** buttons (admin-only) for the admin to persist the currently-edited presentation snapshot. These callbacks fire identity-free; the App attaches the pMode tag from its own active-pMode state.
 

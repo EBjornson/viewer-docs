@@ -20,7 +20,7 @@ Click **Admin Mode** in the header to enter authoring. The button highlights whe
 
 Inside the Authoring Panel, two admin-only **helper rows** sit above the capture controls in their respective tabs:
 
-- **Section tab — View row** (Exterior / Interior / Overhead): navigates the camera to the Viewer's built-in default pose for that camera mode.
+- **Section tab — Quickviews row** (Exterior / Interior / Overhead): navigates the camera to the Viewer's built-in default pose for that camera mode.
 - **pMode tab — pMode helper buttons** (Summer Day / Summer Night / Winter Day / Winter Night, four buttons in a 2×2 layout): loads the Viewer's built-in lighting defaults (and winter HDRI/terrain pair for the Winter row).
 
 Both are pure Viewer-internal authoring conveniences — no public callbacks, no effect on App-stored state. The pMode helper count and labels are **independent** from any host App's pMode store: DemoApp's header pills are an App-side capture-slot taxonomy (currently 6 pills: Summer Day/Night/Interior + Winter Day/Night/Interior); the Viewer's helpers seed lighting starting points (currently 4: Summer/Winter × Day/Night). Helpers feed the admin → admin tweaks sliders → admin clicks Mode Capture → App routes to whichever pMode pill it currently has selected.
@@ -65,9 +65,9 @@ Sections and views *reference* a presentation mode by name. Capturing a mode onc
 
 The Summer and Winter rows can each be hidden from users via the User Visibility toggles. Use this when a product does not need a winter presentation.
 
-### 2. View navigation (admin-only)
+### 2. Quickview navigation (admin-only)
 
-The AuthoringPanel's Section-tab **View row** (Exterior / Interior / Overhead, top of the Section tab) holds admin-only authoring conveniences. They navigate the camera to the Viewer's default pose for each camera mode — useful as a starting point when framing a section's hero shot. They do not store any state and do not fire callbacks. Future enhancement: per-session capture/clear of view button defaults (deferred).
+The AuthoringPanel's Section-tab **Quickviews row** (Exterior / Interior / Overhead, top of the Section tab) holds admin-only authoring conveniences. They navigate the camera to the Viewer's default pose for each camera mode — useful as a starting point when framing a section's hero shot. They do not store any state and do not fire callbacks. Future enhancement: per-session capture/clear of Quickview button defaults (deferred).
 
 A "view-like" persistent stored moment is just an optionless Section. Author it via the Section workflow below.
 
@@ -101,7 +101,7 @@ Model defaults are **optional**. If every option for a given piece of geometry a
 Use this order when authoring a new model. Each step builds on the previous in a way that minimizes back-and-forth.
 
 1. **Capture at least one Presentation Mode.** Start with Summer Day — adjust HDR, terrain, exposure, sun, and ambient light until the daytime exterior looks right, then click **Mode Capture** with Summer Day active. You can return to capture additional modes (Summer Night, Winter Day, etc.) later.
-2. **Capture Sections.** Section captures are the primary "stored moments" — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only View row at the top of the AuthoringPanel's Section tab as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click **Section Capture**. Optionless sections serve as "view-like" stored moments — author them the same way.
+2. **Capture Sections.** Section captures are the primary "stored moments" — they hold pose, cameraMode, embedded presentation snapshot, visibility, and User Visibility flags. For each section: click the section tab in the App, navigate (use the admin-only Quickviews row at the top of the AuthoringPanel's Section tab as quick starting points if useful), load a pMode pill in the App header to apply the right starting lighting, set the matching Camera Mode in the Authoring Panel, set User Visibility, hide any presentation-context geometry (e.g. roof for an overhead view), and click **Section Capture**. Optionless sections serve as "view-like" stored moments — author them the same way.
 3. **Capture Option geometry membership.** Per section, per option: click the option, select the parts of the model that belong to that option, and click **Option Capture**.
 4. **Capture Option material assignments.** Per option that needs custom materials: click the option, select the geometry, edit the material (color, roughness, metalness, or apply a library texture), and click **Option Capture**. If the geometry is already owned for show/hide by a different section, use **Capture Material Only** (see [Cross-section ownership](#cross-section-ownership) below).
 5. **Capture Model Defaults — anytime, optionally.** Some models benefit from a baseline appearance (a default exterior color the user sees before choosing). Other models capture a material on every option, so the default is never visible and capturing one is unnecessary. There is no wrong time.
@@ -129,7 +129,7 @@ To remove a stored mode, click **Mode Clear**.
 
 When the user is in an Overhead-mode section and clicks a floor tile (a recognized `_RM` room marker face), the Viewer navigates the camera into that interior space via pathNav. **No callback fires** — the camera movement is purely Viewer-internal.
 
-**The roof comes back automatically.** Sections captured at overhead typically hide the roof so the floor plan reads cleanly. The Viewer detects the dive and auto-suspends the section's hidden geometry for the duration of the dive — so the user sees inside a roofed building, not a roofless one. The hides reapply when the camera returns to overhead (re-click the section pill, or in admin mode click the View row Overhead button). The same behavior applies to Rooms-panel clicks while in overhead and (in admin mode) the View row Interior button.
+**The roof comes back automatically.** Sections captured at overhead typically hide the roof so the floor plan reads cleanly. The Viewer detects the dive and auto-suspends the section's hidden geometry for the duration of the dive — so the user sees inside a roofed building, not a roofless one. The hides reapply when the camera returns to overhead (re-click the section pill, or in admin mode click the Quickview Overhead button). The same behavior applies to Rooms-panel clicks while in overhead and (in admin mode) the Quickview Interior button.
 
 Authoring guidance: presentation (lighting, environment, exposure, etc.) still persists across the dive — only the captured hidden geometry is suspended. If the lighting reads acceptably from interior poses, no further authoring is required. If you want lighting to change on this gesture, designate a separate interior optionless Section and have the App switch to it (see [Capture & Replay](capture_and_replay.md#overhead-floor-tile-click) for the App-side pattern).
 
@@ -145,7 +145,7 @@ If the section already has a captured preset, activating it replays that preset.
 
 ### Step 2 — adjust the view
 
-A common starting move is to press a View button in the AuthoringPanel's Section tab (often Exterior or Overhead) to land at a default pose, then orbit / pan / zoom to the section's hero angle. Optionally click a pMode pill in the DemoApp header to load the App-stored pMode snapshot as the lighting starting point.
+A common starting move is to press a Quickview button in the AuthoringPanel's Section tab (often Exterior or Overhead) to land at a default pose, then orbit / pan / zoom to the section's hero angle. Optionally click a pMode pill in the DemoApp header to load the App-stored pMode snapshot as the lighting starting point.
 
 Adjust as needed:
 
@@ -333,7 +333,7 @@ After authoring, simulate real use:
 
 1. Activate each section and confirm the camera, lighting, and visibility match what you captured.
 2. Click between options inside a section and confirm geometry and materials change correctly.
-3. Press each View button (admin AuthoringPanel's Section-tab View row) and confirm it navigates to the default pose for that camera mode.
+3. Press each Quickview button (admin AuthoringPanel's Section-tab Quickviews row) and confirm it navigates to the default pose for that camera mode.
 4. Switch presentation modes and confirm each mode renders the captured environment.
 5. Reload the page and confirm everything still works (persistence is browser-local — see below).
 

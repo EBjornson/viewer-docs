@@ -116,7 +116,7 @@ This is the shared internal wrapper runtime. It currently owns:
 - authoring capture coordination (`useViewerAuthoringCapture`) — fires `ViewerOutput` capture callbacks when admin clicks a capture action
 - visibility state (`useVisibilityState`)
 - `ViewerAdminNavigationBridge` composition
-- when `input.admin.enabled = true`: renders the built-in `ViewerAuthoringDemoPanel` (the authoring overlay on the left) as a viewer-side overlay. The panel uses internal Section / Option / pMode tabs for context selection — no App-driven focus field. Top of the Section tab carries a **View row** (Exterior / Interior / Overhead → Viewer's built-in default poses); top of the pMode tab carries **pMode helper buttons** (Summer/Winter × Day/Night → Viewer's built-in lighting defaults). Both are pure Viewer-internal authoring conveniences; neither fires public callbacks. The pMode helper count is independent from any App's pMode taxonomy
+- when `input.admin.enabled = true`: renders the built-in `ViewerAuthoringDemoPanel` (the authoring overlay on the left) as a viewer-side overlay. The panel uses internal Section / Option / pMode tabs for context selection — no App-driven focus field. Top of the Section tab carries a **Quickviews row** (Exterior / Interior / Overhead → Viewer's built-in default poses); top of the pMode tab carries **pMode helper buttons** (Summer/Winter × Day/Night → Viewer's built-in lighting defaults). Both are pure Viewer-internal authoring conveniences; neither fires public callbacks. The pMode helper count is independent from any App's pMode taxonomy
 - `ViewerRoot` handoff
 
 ### ViewerAdminNavigationBridge
@@ -217,13 +217,13 @@ A `restoreOriginalMaterial: true` entry in `materialAssignments` restores to the
 
 When `input.admin.enabled = true`, `ViewerRuntime` renders the built-in `ViewerAuthoringDemoPanel` (left-side authoring overlay) as a viewer-side overlay. No external panel hosting is needed from the App.
 
-The Authoring Panel uses **internal Section / Option / pMode tabs** for context selection. The App is not involved in driving panel focus — there is no `activeAuthoringFocus` contract field. Top of the Section tab carries a **View row** (Exterior / Interior / Overhead) that navigates the camera to the Viewer's built-in default poses; top of the pMode tab carries four **pMode helper buttons** (Summer Day / Summer Night / Winter Day / Winter Night) that load the Viewer's built-in lighting defaults. Both are pure Viewer-internal authoring conveniences — no public callbacks. The pMode helper set is **independent** from any host App's pMode taxonomy; helpers seed defaults, App-side pMode pills route stored captures (DemoApp uses 6 pills, the Viewer offers 4 helpers — counts and labels are intentionally allowed to differ).
+The Authoring Panel uses **internal Section / Option / pMode tabs** for context selection. The App is not involved in driving panel focus — there is no `activeAuthoringFocus` contract field. Top of the Section tab carries a **Quickviews row** (Exterior / Interior / Overhead) that navigates the camera to the Viewer's built-in default poses; top of the pMode tab carries four **pMode helper buttons** (Summer Day / Summer Night / Winter Day / Winter Night) that load the Viewer's built-in lighting defaults. Both are pure Viewer-internal authoring conveniences — no public callbacks. The pMode helper set is **independent** from any host App's pMode taxonomy; helpers seed defaults, App-side pMode pills route stored captures (DemoApp uses 6 pills, the Viewer offers 4 helpers — counts and labels are intentionally allowed to differ).
 
 The Viewer internally manages:
 - presentation editing state (exposure, HDR, terrain, lighting, solar, point lights)
 - mesh selection and material editing state
 - authoring capture coordination
-- transient highlight state for the AuthoringPanel's View row and pMode helper buttons
+- transient highlight state for the AuthoringPanel's Quickviews row and pMode helper buttons
 
 In Admin Mode, the Spaces / Solar panels are always visible regardless of their User Visibility flag values (`ui.showSpaceMenu` / `ui.showSolarSitePanel`). Panels hidden from users show a dashed orange outline so the admin can distinguish them without losing readability. The North Arrow has no admin override — it shows or hides as-is.
 
