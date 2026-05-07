@@ -130,6 +130,8 @@ These were resolved during planning and should not be re-litigated without expli
 
 ### Phase 1 — Extract parsing as a shared module
 
+**Status:** Shipped 2026-05-06 — see [`src/utils/materialPackageParser.js`](https://github.com/EBjornson/BPViewer/blob/main/src/utils/materialPackageParser.js) and its test suite. Build script is now a thin I/O wrapper; manifest output is byte-identical to pre-refactor. Map values use `{ filename, source }` (not `blob`) so the same parser serves Buffer (Node) and Blob (browser) callers without renaming.
+
 Pull the filename-pattern logic and manifest-record construction out of [`scripts/generate-material-manifest.mjs`](https://github.com/EBjornson/BPViewer/blob/main/scripts/generate-material-manifest.mjs) into a runtime-callable module, e.g. `src/utils/materialPackageParser.js`.
 
 **Inputs:** `Map<filename, Blob>` (or `Map<filename, Buffer>` server-side).
