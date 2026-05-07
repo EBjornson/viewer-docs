@@ -431,14 +431,20 @@ export function DemoApp(props = {}) {
   )
 
   const visibilityAssignments = useMemo(() => {
-    const captureHidden = sectionCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
-    if (!captureHidden.length && !allOptionGeometryIds.length) return undefined
+    // sectionHiddenGeometryIds is preserve-on-undefined at the Viewer (per
+    // contract): omit when this section is uncaptured so the Viewer keeps
+    // the prior section's hides instead of clearing them. Push [] explicitly
+    // when the section is captured but holds no hides ("apply empty").
+    const sectionHidden = sectionCapture
+      ? (sectionCapture.visibilityAssignments?.hiddenGeometryIds ?? [])
+      : undefined
+    if (sectionHidden === undefined && !allOptionGeometryIds.length) return undefined
     return {
       hiddenGeometryIds: allOptionGeometryIds,
       shownGeometryIds: activeOptionGeometryIds,
-      sectionHiddenGeometryIds: captureHidden,
+      ...(sectionHidden !== undefined && { sectionHiddenGeometryIds: sectionHidden }),
     }
-  }, [sectionCapture?.visibilityAssignments?.hiddenGeometryIds, allOptionGeometryIds, activeOptionGeometryIds])
+  }, [sectionCapture, allOptionGeometryIds, activeOptionGeometryIds])
 
   const handleCaptureSectionRenderings = useCallback(() => {
     const items = SECTION_DEMO_ITEMS
