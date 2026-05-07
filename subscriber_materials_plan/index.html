@@ -1512,6 +1512,7 @@
 </ol>
 <h2 id="phased-implementation-plan">Phased implementation plan<a class="headerlink" href="#phased-implementation-plan" title="Permanent link">&para;</a></h2>
 <h3 id="phase-1-extract-parsing-as-a-shared-module">Phase 1 — Extract parsing as a shared module<a class="headerlink" href="#phase-1-extract-parsing-as-a-shared-module" title="Permanent link">&para;</a></h3>
+<p><strong>Status:</strong> Shipped 2026-05-06 — see <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/materialPackageParser.js"><code>src/utils/materialPackageParser.js</code></a> and its test suite. Build script is now a thin I/O wrapper; manifest output is byte-identical to pre-refactor. Map values use <code>{ filename, source }</code> (not <code>blob</code>) so the same parser serves Buffer (Node) and Blob (browser) callers without renaming.</p>
 <p>Pull the filename-pattern logic and manifest-record construction out of <a href="https://github.com/EBjornson/BPViewer/blob/main/scripts/generate-material-manifest.mjs"><code>scripts/generate-material-manifest.mjs</code></a> into a runtime-callable module, e.g. <code>src/utils/materialPackageParser.js</code>.</p>
 <p><strong>Inputs:</strong> <code>Map&lt;filename, Blob&gt;</code> (or <code>Map&lt;filename, Buffer&gt;</code> server-side).<br />
 <strong>Outputs:</strong> manifest record <code>{ familyId, resolution, color, roughness, metalness, maps: { color, normal, roughness, ao } }</code> with map values as <code>{ filename, blob }</code> pairs (URL construction happens in the caller).</p>
