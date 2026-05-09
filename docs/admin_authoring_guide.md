@@ -31,7 +31,7 @@ The panel has three context tabs at the top — **Section / Option / pMode** —
 
 | Tab | Panel surfaces |
 |---|---|
-| **Section** | Section Capture/Clear, geometry tools, User Visibility toggles, Camera Mode selector |
+| **Section** | Section Capture/Clear, geometry tools, User Visibility toggles |
 | **Option** | Option Capture / Capture Material Only / Clear, Material Defaults, geometry tools, Assembly Inspector, Materials picker |
 | **pMode** | Mode Capture/Clear, Presentation sliders, HDR Environment, Terrain Preset, Light Source mode |
 
@@ -149,8 +149,7 @@ A common starting move is to press a Quickview button in the AuthoringPanel's Se
 
 Adjust as needed:
 
-- camera pose
-- camera mode (Ext / Int / Ovh in the authoring panel — declarative, see View workflow)
+- camera pose (the active camera mode — set by the most recent Quickview click or captured-pose replay — is what the capture's `cameraMode` is tagged with)
 - presentation mode (which mode this section should use)
 - geometry to hide as presentation context (e.g. hide the roof for an overhead view)
 - User Visibility toggles for what users should see when this section is active

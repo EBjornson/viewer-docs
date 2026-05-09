@@ -67,9 +67,8 @@ In Admin Mode, the admin:
 
 1. Activates the section (App-rendered tab)
 2. Loads a starting state — either by clicking a pMode pill in the App header (loads App-stored snapshot if present) or by clicking a pMode helper button at the top of the AuthoringPanel's pMode tab (applies built-in lighting defaults)
-3. Moves the camera, adjusts presentation, hides geometry as needed
-4. Sets the **Camera Mode** (Ext / Int / Ovh) in the authoring panel to label the mode — this does not move the camera, it tags which mode will be written into the payload
-5. Clicks **Section Capture**
+3. Moves the camera, adjusts presentation, hides geometry as needed. The capture's `cameraMode` is set automatically from the active mode (changed via Quickview clicks at the top of the Section tab, or by replaying a captured pose).
+4. Clicks **Section Capture**
 
 The Viewer fires:
 

@@ -466,7 +466,7 @@ export function DemoApp(props = {}) {
     return {
       hiddenGeometryIds: allOptionGeometryIds,
       shownGeometryIds: activeOptionGeometryIds,
-      instantHiddenGeometryIds: captureHidden,
+      sectionHiddenGeometryIds: captureHidden,
     }
   }, [sectionCapture?.visibilityAssignments?.hiddenGeometryIds, allOptionGeometryIds, activeOptionGeometryIds])
 
@@ -480,7 +480,7 @@ export function DemoApp(props = {}) {
         const mergedVisibility = hasVisibility ? {
           hiddenGeometryIds: allOptionGeometryIds,
           shownGeometryIds: activeOptionGeometryIds,
-          instantHiddenGeometryIds: captureHidden,
+          sectionHiddenGeometryIds: captureHidden,
         } : undefined
         const sectionLabel = sectionLabelOverrides[section.id] ?? section.label
         const selectedOption = selectedOptions[section.id]

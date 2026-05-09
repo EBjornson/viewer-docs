@@ -82,7 +82,7 @@ Find the **Admin Mode** button in the header and click it. It will highlight to 
 
 The **Authoring Panel** appears as an overlay on the left side of the viewer. This is where all the capture tools live. The panel has three internal tabs at the top:
 
-- **Section** — capture and clear actions for sections, geometry visibility tools, User Visibility toggles, Camera Mode selector
+- **Section** — capture and clear actions for sections, geometry visibility tools, User Visibility toggles
 - **Option** — capture and clear actions for options, the materials picker, model default materials, geometry tools
 - **pMode** — capture and clear actions for the active presentation mode, lighting and environment sliders, HDR / terrain / light source mode
 
@@ -126,15 +126,14 @@ A section capture is a stored "moment" for one product section: a camera pose + 
 For each section:
 
 1. Click the section tab (e.g. **Section 1**) to make it active
-2. (Optional) click a **View** button at the top of the AuthoringPanel's Section tab (Exterior / Interior / Overhead) to land at a default pose, then orbit/zoom/pan to your section's hero angle
+2. Click a **Quickview** button at the top of the AuthoringPanel's Section tab (Exterior / Interior / Overhead) to enter that camera mode and land at its default pose, then orbit/zoom/pan to your section's hero angle. (Skippable for the first exterior section since the camera starts in exterior mode; required when the section needs a different mode, since the capture's `cameraMode` is tagged from the active mode.)
 3. (Optional) click a pMode pill in the header (e.g. **Summer Day**) to apply the lighting you captured in Step 1 — this loads the stored snapshot into the live view
-4. Set the matching **Camera Mode** in the Section tab (Ext / Int / Ovh) — this labels the mode that will be stored, it does *not* move the camera
-5. Set the **User Visibility** toggles for which panels customers should see when this section is active. There are three:
+4. Set the **User Visibility** toggles for which panels customers should see when this section is active. There are three:
    - **Solar** — show or hide the Solar / Site panel
    - **Rooms** — show or hide the Rooms panel
    - **North** — show or hide the North Arrow overlay
-6. (Optional) hide any presentation-context geometry — for an overhead section you'll usually hide the roof so the floor plan is visible
-7. Click **Section Capture**
+5. (Optional) hide any presentation-context geometry — for an overhead section you'll usually hide the roof so the floor plan is visible
+6. Click **Section Capture**
 
 **Sections without options.** Some sections may exist purely as stored "view-like" moments — no options associated. The capture workflow is identical; just don't author options for that section.
 

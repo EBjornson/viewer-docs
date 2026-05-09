@@ -13,6 +13,7 @@ nav:
   - Internals:
       - architecture.md
       - capture_and_replay.md
+      - performance.md
   - Authoring:
       - admin_authoring_guide.md
       - model_authoring_guide.md
