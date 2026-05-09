@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/admin_authoring_guide/">
       
       
-        <link rel="prev" href="../capture_and_replay/">
+        <link rel="prev" href="../performance/">
       
       
         <link rel="next" href="../model_authoring_guide/">
@@ -522,6 +522,34 @@
     
   
     Capture &amp; Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
   
 
     
@@ -1484,6 +1512,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../thermal_marker_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thermal Marker Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -2140,7 +2195,7 @@
 <tbody>
 <tr>
 <td><strong>Section</strong></td>
-<td>Section Capture/Clear, geometry tools, User Visibility toggles, Camera Mode selector</td>
+<td>Section Capture/Clear, geometry tools, User Visibility toggles</td>
 </tr>
 <tr>
 <td><strong>Option</strong></td>
@@ -2226,8 +2281,7 @@
 <p>A common starting move is to press a Quickview button in the AuthoringPanel's Section tab (often Exterior or Overhead) to land at a default pose, then orbit / pan / zoom to the section's hero angle. Optionally click a pMode pill in the DemoApp header to load the App-stored pMode snapshot as the lighting starting point.</p>
 <p>Adjust as needed:</p>
 <ul>
-<li>camera pose</li>
-<li>camera mode (Ext / Int / Ovh in the authoring panel — declarative, see View workflow)</li>
+<li>camera pose (the active camera mode — set by the most recent Quickview click or captured-pose replay — is what the capture's <code>cameraMode</code> is tagged with)</li>
 <li>presentation mode (which mode this section should use)</li>
 <li>geometry to hide as presentation context (e.g. hide the roof for an overhead view)</li>
 <li>User Visibility toggles for what users should see when this section is active</li>

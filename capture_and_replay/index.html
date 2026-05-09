@@ -16,7 +16,7 @@
         <link rel="prev" href="../architecture/">
       
       
-        <link rel="next" href="../admin_authoring_guide/">
+        <link rel="next" href="../performance/">
       
       
         
@@ -977,6 +977,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1284,6 +1312,33 @@
     
   
     Docs Publishing System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../thermal_marker_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thermal Marker Authoring Guide
   
 
     
@@ -1814,8 +1869,7 @@
 <ol>
 <li>Activates the section (App-rendered tab)</li>
 <li>Loads a starting state — either by clicking a pMode pill in the App header (loads App-stored snapshot if present) or by clicking a pMode helper button at the top of the AuthoringPanel's pMode tab (applies built-in lighting defaults)</li>
-<li>Moves the camera, adjusts presentation, hides geometry as needed</li>
-<li>Sets the <strong>Camera Mode</strong> (Ext / Int / Ovh) in the authoring panel to label the mode — this does not move the camera, it tags which mode will be written into the payload</li>
+<li>Moves the camera, adjusts presentation, hides geometry as needed. The capture's <code>cameraMode</code> is set automatically from the active mode (changed via Quickview clicks at the top of the Section tab, or by replaying a captured pose).</li>
 <li>Clicks <strong>Section Capture</strong></li>
 </ol>
 <p>The Viewer fires:</p>

@@ -1,0 +1,1571 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation and integration kit for the Viewer — a React + Three.js runtime for configurable, geometric SaaS products">
+      
+      
+      
+        <link rel="canonical" href="https://ebjornson.github.io/viewer-docs/performance/">
+      
+      
+        <link rel="prev" href="../capture_and_replay/">
+      
+      
+        <link rel="next" href="../admin_authoring_guide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Performance - Viewer Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#performance" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Viewer Documentation" class="md-header__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Viewer Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Performance
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Viewer Documentation" class="md-nav__button md-logo" aria-label="Viewer Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Viewer Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/EBjornson/viewer-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    EBjornson/viewer-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../viewer_contract_v1_8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demoapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DemoApp Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Internals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capture_and_replay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture &amp; Replay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr-current-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR — current state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-frame-budget-goes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the frame budget goes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authoring-budgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring budgets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shipped-levers-what-attacks-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipped levers — what attacks what
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to measure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to measure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-browser-no-chrome-devtools-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-browser, no Chrome DevTools needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chrome-devtools-trace-call-tree-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chrome DevTools trace + call-tree parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What NOT to use
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#symptom-likely-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Symptom → likely cause
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#levers-considered-but-not-shipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Levers considered but not shipped
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-models-grow-more-complex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When models grow more complex
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-entries-project-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory entries (project history)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Authoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Authoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../admin_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../marker_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marker Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../demo_walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Demo Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subscriber_materials_plan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subscriber Materials Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Viewer Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docs_publishing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docs Publishing System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../thermal_marker_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thermal Marker Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr-current-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR — current state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-frame-budget-goes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the frame budget goes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authoring-budgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authoring budgets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shipped-levers-what-attacks-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipped levers — what attacks what
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to measure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to measure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-browser-no-chrome-devtools-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-browser, no Chrome DevTools needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chrome-devtools-trace-call-tree-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chrome DevTools trace + call-tree parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What NOT to use
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#symptom-likely-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Symptom → likely cause
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#levers-considered-but-not-shipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Levers considered but not shipped
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-models-grow-more-complex" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When models grow more complex
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-entries-project-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory entries (project history)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h1>
+<p>This page is the working reference for keeping the Viewer smooth as models grow more complex. It's organized for <strong>fast triage</strong> when something feels jittery, plus <strong>authoring budgets</strong> to anchor what "fits" today.</p>
+<p>The Viewer's real-world frame rate is dominated by GPU fragment-shader cost during transit (camera animations through the model), not main-thread JS. Knowing that shapes every lever below.</p>
+<h2 id="tldr-current-state">TL;DR — current state<a class="headerlink" href="#tldr-current-state" title="Permanent link">&para;</a></h2>
+<p>A model on a Retina display (devicePixelRatio=2) with the audit's reference setup (5 shadow casters, ~150 visible meshes, alphaHash dithering) hits <strong>60 fps with zero frame drops &gt; 18 ms</strong> during every camera-animation cell, including the worst-case ovh→int pathNav. The shipped levers (memoization, shadow-update gating, fade-shadow throttle, animation-only DPR drop) are doing the heavy lifting. If you're seeing jitter, something has changed: model got more complex, a new code path is bypassing the gating, or the measurement environment is pathological.</p>
+<h2 id="where-the-frame-budget-goes">Where the frame budget goes<a class="headerlink" href="#where-the-frame-budget-goes" title="Permanent link">&para;</a></h2>
+<p>A render frame in the Viewer typically spends time, in order:</p>
+<ol>
+<li><strong>GPU scene render</strong> — fragment-shader work scaling with <code>pixelRatio² × visible-mesh-coverage × material-cost</code>. <strong>This is the bottleneck during pathNav transit</strong> at full DPR=2.</li>
+<li><strong>GPU shadow map render</strong> — only when <code>gl.shadowMap.needsUpdate = true</code>. Re-renders all 5 shadow casters (sun + 4 marker spots). ~10–15 ms per bump on the reference scene.</li>
+<li><strong>Three.js update</strong> — matrix world updates, frustum culling, sorting. ~1–2 ms.</li>
+<li><strong>R3F useFrame callbacks</strong> — <code>CameraAnimator</code>, <code>ViewerOrbitControls</code>, the various controllers. ~1–2 ms.</li>
+<li><strong>React reconciliation</strong> — only on actual state changes (not every frame; <code>frameloop="demand"</code> + memoized child components). ~30–80 ms on a Section pill click; effectively zero between clicks.</li>
+</ol>
+<p>When frames drop &gt; 50 ms, suspect <strong>GPU shadow regen</strong> (look at #2). When frames sustain ~30 Hz with no individual long task, suspect <strong>GPU scene render at full DPR</strong> (look at #1). When the click handler itself stalls, suspect <strong>React reconciliation</strong> (#5).</p>
+<h2 id="authoring-budgets">Authoring budgets<a class="headerlink" href="#authoring-budgets" title="Permanent link">&para;</a></h2>
+<p>These are the proven-fits-today numbers for the reference model on a 2× DPR Retina display. They're not contractual limits; treat them as the territory we know is safe. Push past them and re-measure.</p>
+<table>
+<thead>
+<tr>
+<th>Budget</th>
+<th>Reference</th>
+<th>What costs more if exceeded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visible meshes during transit</td>
+<td>~150</td>
+<td>GPU scene render (#1 above) — pathNav cells are the first to drop fps</td>
+</tr>
+<tr>
+<td>Cloned materials</td>
+<td>~189</td>
+<td>Each gets its own <code>customDepthMaterial</code> for alphaHash; shadow-pass cost scales</td>
+</tr>
+<tr>
+<td>Shadow casters (lights with <code>castShadow</code>)</td>
+<td>5 (1 sun + 4 marker spots)</td>
+<td>Every shadow re-render re-renders ALL casters; cost is multiplicative</td>
+</tr>
+<tr>
+<td>Spot shadow map size</td>
+<td>512² each</td>
+<td>Quadratic in resolution. 1024² would 4× spot shadow cost</td>
+</tr>
+<tr>
+<td>Sun shadow frustum</td>
+<td>60 × 60</td>
+<td>Tuned for the reference scene size; bias values are calibrated to it</td>
+</tr>
+<tr>
+<td>Light markers (<code>_PL</code>, <code>_SL[deg]</code>)</td>
+<td>~12 (8 point + 4 spot)</td>
+<td>Point lights don't cast shadows (cheap); spot lights do (see above)</td>
+</tr>
+<tr>
+<td>Concurrent fades</td>
+<td>~10 meshes per crossfade</td>
+<td>Throttled per F3 — see below</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Canary</strong>: the longest cross-mode pathNav (e.g. <code>S5→S1</code> ovh→int with orbit pre-alignment + multi-segment path) is the first cell to drop frames when the budget tightens. Re-measure it after any model authoring change.</p>
+<h2 id="shipped-levers-what-attacks-what">Shipped levers — what attacks what<a class="headerlink" href="#shipped-levers-what-attacks-what" title="Permanent link">&para;</a></h2>
+<p>Each entry: what it does, what cost it attacks, where it lives.</p>
+<table>
+<thead>
+<tr>
+<th>Lever</th>
+<th>Attacks</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>React.memo</code> on heavy leaves (<code>NorthArrow</code>, <code>FloorPointClickNav</code>, <code>ExteriorOrbitClickNav</code>, <code>SolarPanel</code>, <code>SpaceMenu</code>, <code>SceneLights</code>)</td>
+<td>React re-render cascade on <code>selectionKey</code> bump</td>
+<td><a href="src/viewer/components/ViewerSceneCanvas.jsx">ViewerSceneCanvas.jsx</a>, <a href="src/viewer/components/SolarPanel.jsx">SolarPanel.jsx</a>, <a href="src/viewer/components/SpaceMenu.jsx">SpaceMenu.jsx</a>, <a href="src/viewer/components/SceneLights.jsx">SceneLights.jsx</a></td>
+</tr>
+<tr>
+<td><code>useMemo</code> on <code>viewerNavigationState</code> / <code>viewerSceneState</code></td>
+<td>Wrapper-object ref churn into <code>ViewerRoot</code>/<code>ViewerSceneCanvas</code></td>
+<td><a href="src/viewer/ViewerRuntime.jsx#L658">ViewerRuntime.jsx:658,675</a></td>
+</tr>
+<tr>
+<td>Shadow <code>needsUpdate</code> content-fingerprint dedup</td>
+<td>Redundant full shadow re-renders on Section pill clicks where visibility content didn't actually change</td>
+<td><code>ShadowMapAutoUpdate</code> in <a href="src/viewer/components/ViewerSceneCanvas.jsx">ViewerSceneCanvas.jsx</a></td>
+</tr>
+<tr>
+<td>Shadow <code>needsUpdate</code> 50 ms grace + apply-on-animation-complete</td>
+<td>Mid-animation shadow re-render stalling a single frame on the GPU during cross-mode transitions</td>
+<td>same</td>
+</tr>
+<tr>
+<td>Fade-driven shadow update throttle (every-3rd-frame + final-bump)</td>
+<td>The 27-frames-of-shadow-pass cost during a 450 ms crossfade</td>
+<td><a href="src/viewer/components/VisibilityFadeController.jsx">VisibilityFadeController.jsx</a></td>
+</tr>
+<tr>
+<td><strong>Animation-only DPR drop</strong></td>
+<td>GPU fragment cost during camera-animation transit on Retina displays — biggest single win</td>
+<td><code>AnimationDprGate</code> in <a href="src/viewer/components/ViewerSceneCanvas.jsx">ViewerSceneCanvas.jsx</a></td>
+</tr>
+</tbody>
+</table>
+<p>Other architectural levers already in place from earlier perf work:<br />
+- <code>frameloop="demand"</code> (<a href="src/viewer/components/ViewerSceneCanvas.jsx">ViewerSceneCanvas.jsx</a>) — render only when <code>invalidate()</code> is called.<br />
+- <code>gl.shadowMap.autoUpdate = false</code> (<a href="src/viewer/components/ViewerSceneCanvas.jsx"><code>ShadowMapAutoUpdate</code></a>) — shadows never re-render unless <code>needsUpdate = true</code>.<br />
+- <code>gl.compileAsync</code> for shader pre-warming (<a href="src/viewer/components/ViewerSceneCanvas.jsx"><code>ShaderPreCompile</code></a>).<br />
+- alphaHash dithering instead of <code>transparent + opacity</code> for visibility fade (<a href="src/viewer/hooks/useSceneVisibility.js">useSceneVisibility.js</a>).<br />
+- Eager material clone with <code>customDepthMaterial</code> attach to pre-warm patched-shader compiles (<a href="src/utils/modelPreparationUtils.js">modelPreparationUtils.js</a>).</p>
+<h2 id="how-to-measure">How to measure<a class="headerlink" href="#how-to-measure" title="Permanent link">&para;</a></h2>
+<h3 id="in-browser-no-chrome-devtools-needed">In-browser, no Chrome DevTools needed<a class="headerlink" href="#in-browser-no-chrome-devtools-needed" title="Permanent link">&para;</a></h3>
+<p>A self-scheduling rAF tick + <code>PerformanceObserver</code> for long tasks. Captures real per-frame deltas, fps, drop counts, blocking-task counts. Paste into the dev console:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">window</span><span class="p">.</span><span class="nx">__perfWatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">W</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">longTasks</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nx">rafTimes</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="nx">_activeWatch</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nx">W</span><span class="p">.</span><span class="nx">startWatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nx">W</span><span class="p">.</span><span class="nx">longTasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">_activeWatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">tick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">ts</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">W</span><span class="p">.</span><span class="nx">_activeWatch</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">ts</span><span class="p">);</span><span class="w"> </span><span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">tick</span><span class="p">);</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">tick</span><span class="p">);</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">};</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nx">W</span><span class="p">.</span><span class="nx">stopWatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">_activeWatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nx">W</span><span class="p">.</span><span class="nx">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">deltas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="nx">deltas</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">[</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">]);</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">wallMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">.</span><span class="nx">at</span><span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nx">frames</span><span class="o">:</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span><span class="w"> </span><span class="nx">wallMs</span><span class="o">:</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">wallMs</span><span class="p">),</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="nx">fps</span><span class="o">:</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">((</span><span class="nx">W</span><span class="p">.</span><span class="nx">rafTimes</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">wallMs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">10</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="nx">top10</span><span class="o">:</span><span class="w"> </span><span class="p">[...</span><span class="nx">deltas</span><span class="p">].</span><span class="nx">sort</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">a</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">d</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">d</span><span class="p">)),</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="nx">drops50</span><span class="o">:</span><span class="w"> </span><span class="nx">deltas</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">d</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">d</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">50</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">      </span><span class="nx">drops18</span><span class="o">:</span><span class="w"> </span><span class="nx">deltas</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">d</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">d</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">18</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">      </span><span class="nx">longTasks</span><span class="o">:</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">longTasks</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">t</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">t</span><span class="p">.</span><span class="nx">duration</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">50</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="p">};</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span><span class="p">};</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="ow">new</span><span class="w"> </span><span class="nx">PerformanceObserver</span><span class="p">((</span><span class="nx">list</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">e</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">list</span><span class="p">.</span><span class="nx">getEntries</span><span class="p">())</span><span class="w"> </span><span class="nx">W</span><span class="p">.</span><span class="nx">longTasks</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="w"> </span><span class="nx">start</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">startTime</span><span class="p">,</span><span class="w"> </span><span class="nx">duration</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">duration</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">    </span><span class="p">.</span><span class="nx">observe</span><span class="p">({</span><span class="w"> </span><span class="nx">entryTypes</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;longtask&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">W</span><span class="p">;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">})();</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1">// Usage:</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="nx">__perfWatch</span><span class="p">.</span><span class="nx">startWatch</span><span class="p">();</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1">// ... click a Section pill, wait for the animation to complete, then:</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="nx">__perfWatch</span><span class="p">.</span><span class="nx">stopWatch</span><span class="p">();</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nx">__perfWatch</span><span class="p">.</span><span class="nx">summary</span><span class="p">();</span>
+</code></pre></div>
+<p>Read the output:<br />
+- <code>drops50 &gt; 0</code> → a frame took &gt; 50 ms (likely GPU shadow regen, GPU scene render spike, or main-thread long task).<br />
+- <code>drops18 &gt; 5%</code> of total frames → sustained sub-vsync rendering (likely GPU fragment-shader cost during transit).<br />
+- <code>longTasks &gt; 0</code> → main-thread blocking ≥ 50 ms (look at React reconciliation, click handler).<br />
+- <code>top10</code> deltas all 16–18 ms → 60 fps clean.<br />
+- <code>top10</code> deltas clustered at 33–34 ms → 30 fps GPU-bound.</p>
+<p>Run twice; first run can be cold (shader compile, GPU resource alloc). Second run is the real number.</p>
+<h3 id="chrome-devtools-trace-call-tree-parser">Chrome DevTools trace + call-tree parser<a class="headerlink" href="#chrome-devtools-trace-call-tree-parser" title="Permanent link">&para;</a></h3>
+<p>When the rAF watcher says "drops happen but I don't know why," capture a Chrome perf trace through the DevTools Performance tab (or via Chrome DevTools MCP if you have it), save the JSON, then parse the V8 sample profiler chunks to bucket time by leaf function during a chosen window.</p>
+<p>A reusable parser stub lives at <code>/tmp/parse-trace.mjs</code> during audits — its core idea:<br />
+1. Find the click event timestamp.<br />
+2. Define an animation window (<code>click+200ms</code> to <code>click+4000ms</code>) skipping the click handler tax.<br />
+3. Reconstruct the <code>ProfileChunk</code> samples + <code>timeDeltas</code> into per-sample timestamps.<br />
+4. Bucket samples by leaf-function self time AND by full-stack total time.<br />
+5. Filter to user-source-only paths to focus on app code.</p>
+<p>Use it when the symptom is sustained sub-vsync rendering. Look for high <code>WebGLRenderer.render</code>, <code>WebGLShadowMap.render</code>, or <code>setProgram</code> totals. If those dominate and main-thread script time is light, you're GPU-bound — see the levers list.</p>
+<h3 id="what-not-to-use">What NOT to use<a class="headerlink" href="#what-not-to-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Chrome DevTools' "INP" alone — only catches the click handler, misses the steady-state animation drops that matter most.</li>
+<li><code>PerformanceObserver({ type: 'long-animation-frame' })</code> alone — gives the right shape (script time vs render time within a single frame) but only fires for frames &gt; 50 ms, missing sustained 30 Hz where every frame is 33 ms.</li>
+</ul>
+<h2 id="symptom-likely-cause">Symptom → likely cause<a class="headerlink" href="#symptom-likely-cause" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First place to look</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Click feels laggy (~150 ms) but animation runs smooth</td>
+<td>React reconciliation cost; check that any new heavy children of <code>ViewerSceneCanvas</code> / <code>ViewerRuntime</code> are memoized</td>
+</tr>
+<tr>
+<td>One ~100 ms stall mid-animation, then smooth</td>
+<td>Shadow re-render firing during animation — verify the F2 defer + content fingerprint cover the trigger</td>
+</tr>
+<tr>
+<td>Sustained ~30 Hz throughout transit (every frame ~33 ms)</td>
+<td>GPU fragment cost; verify <code>AnimationDprGate</code> is wrapping that animation type (not all scene-motion uses <code>animationTarget</code>)</td>
+</tr>
+<tr>
+<td>Sustained ~30 Hz only during a fade window (~450 ms after click)</td>
+<td>F3's fade-shadow throttle isn't firing — check <code>VisibilityFadeController</code>'s every-3rd-frame logic</td>
+</tr>
+<tr>
+<td>Frame drops only on the FIRST animation after page load</td>
+<td>Cold shader cache; verify <code>ShaderPreCompile</code> is firing on <code>loadedObject</code> change</td>
+</tr>
+<tr>
+<td>Cold-load is slow</td>
+<td>Out of scope for this doc — see the early-perf-series commits (<code>7ad8012</code>, <code>9412373</code>, <code>bb4269d</code>, <code>a1be960</code>); also the <code>project_startup_perf</code> memory entry</td>
+</tr>
+</tbody>
+</table>
+<h2 id="levers-considered-but-not-shipped">Levers considered but not shipped<a class="headerlink" href="#levers-considered-but-not-shipped" title="Permanent link">&para;</a></h2>
+<p>Documented so future investigations don't re-walk the same dead ends.</p>
+<ul>
+<li><strong>Drop <code>SPOT_SHADOW_MAP_RES</code> from 512² to 256²</strong>: tested, no measurable gain. With shadow updates already gated by F2/F3 to fire only during fades, the spot-shadow render frequency is too low for the resolution drop to matter. <strong>Visual cost would be real (fuzzier spot shadows in interior); benefit was not.</strong> Reverted.</li>
+<li><strong>Permanent <code>dpr=1</code></strong> (always low-DPR): tested, hits 60 fps everywhere. <strong>Visual cost is too high</strong> — the at-rest view of the model is noticeably pixelated on Retina. Animation-only DPR drop is the right balance. <strong>Don't lower this further</strong> unless we add an at-rest dpr restore that fades smoothly.</li>
+<li><strong>Defer fade-driven shadow updates entirely (skip during animation, snap at end)</strong> instead of F3's throttle: tested implicitly, would create a visible "shadow snap" at fade-end where a fading mesh's cast shadow suddenly appears or disappears. Throttle is the right pattern.</li>
+<li><strong>Stabilize <code>visibilityAssignments</code> ref upstream in DemoApp</strong> to prevent ref churn into the Viewer: explored, would require restructuring DemoApp's <code>viewerInput</code> memo. The downstream content-fingerprint dedup at the Viewer (F2) achieves the same end-state without touching App code. Keep the dedup.</li>
+</ul>
+<h2 id="when-models-grow-more-complex">When models grow more complex<a class="headerlink" href="#when-models-grow-more-complex" title="Permanent link">&para;</a></h2>
+<p>The likely failure modes, in order of when they'll bite:</p>
+<ol>
+<li><strong>Visible mesh count exceeds budget</strong> (~150). pathNav transit cells start dropping frames first. <strong>Mitigation</strong>: aggressive culling (e.g. occlusion culling for meshes hidden by walls), or lowering <code>dpr</code> further during animation (e.g. <code>Math.min(0.75, baseDpr)</code> if 1 isn't enough).</li>
+<li><strong>Shadow caster count grows past 5</strong>. Shadow re-render during fades takes longer; the F3 every-3rd-frame throttle becomes insufficient. <strong>Mitigation</strong>: drop <code>castShadow</code> from less-important lights, or lower spot shadow map size for marginal lights only.</li>
+<li><strong>Cloned material count grows past ~250</strong>. Each material clone creates its own <code>customDepthMaterial</code> patched-shader; deep-clone cost on model-load goes up (this is what 7ad8012 fixed in 2026-04). <strong>Mitigation</strong>: re-share materials where possible during model prep, or accept the load-time hit.</li>
+<li><strong>Per-frame React work creeps back in</strong>. New components in <code>ViewerSceneCanvas</code> / <code>ViewerRuntime</code> not memoized. <strong>Mitigation</strong>: re-run the rAF watcher with the <a href="https://react.dev/reference/react/Profiler">DevTools React Profiler</a> to find unmemoized re-renders; apply F1-style <code>React.memo</code> wraps.</li>
+</ol>
+<p>When you do hit one of these, the measurement loop is: run the rAF watcher, identify which symptom row matches, apply the lever or budget tweak, re-measure.</p>
+<h2 id="memory-entries-project-history">Memory entries (project history)<a class="headerlink" href="#memory-entries-project-history" title="Permanent link">&para;</a></h2>
+<p>A few memory entries record specific calibrations not worth duplicating here:<br />
+- <code>project_shadow_bias</code> — sun bias values for the 60×60 frustum.<br />
+- <code>project_spot_shadow_near</code> — why spot shadow camera near=0.05 (not stock 0.5).<br />
+- <code>project_startup_perf</code> — cold-load tuning history.<br />
+- <code>project_memory_management</code> — model cache eviction, material/texture disposal.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

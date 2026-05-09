@@ -535,6 +535,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1096,6 +1124,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../thermal_marker_authoring_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thermal Marker Authoring Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1390,7 +1445,7 @@
 <p>Find the <strong>Admin Mode</strong> button in the header and click it. It will highlight to show it is active.</p>
 <p>The <strong>Authoring Panel</strong> appears as an overlay on the left side of the viewer. This is where all the capture tools live. The panel has three internal tabs at the top:</p>
 <ul>
-<li><strong>Section</strong> — capture and clear actions for sections, geometry visibility tools, User Visibility toggles, Camera Mode selector</li>
+<li><strong>Section</strong> — capture and clear actions for sections, geometry visibility tools, User Visibility toggles</li>
 <li><strong>Option</strong> — capture and clear actions for options, the materials picker, model default materials, geometry tools</li>
 <li><strong>pMode</strong> — capture and clear actions for the active presentation mode, lighting and environment sliders, HDR / terrain / light source mode</li>
 </ul>
@@ -1422,9 +1477,8 @@
 <p>For each section:</p>
 <ol>
 <li>Click the section tab (e.g. <strong>Section 1</strong>) to make it active</li>
-<li>(Optional) click a <strong>View</strong> button at the top of the AuthoringPanel's Section tab (Exterior / Interior / Overhead) to land at a default pose, then orbit/zoom/pan to your section's hero angle</li>
+<li>Click a <strong>Quickview</strong> button at the top of the AuthoringPanel's Section tab (Exterior / Interior / Overhead) to enter that camera mode and land at its default pose, then orbit/zoom/pan to your section's hero angle. (Skippable for the first exterior section since the camera starts in exterior mode; required when the section needs a different mode, since the capture's <code>cameraMode</code> is tagged from the active mode.)</li>
 <li>(Optional) click a pMode pill in the header (e.g. <strong>Summer Day</strong>) to apply the lighting you captured in Step 1 — this loads the stored snapshot into the live view</li>
-<li>Set the matching <strong>Camera Mode</strong> in the Section tab (Ext / Int / Ovh) — this labels the mode that will be stored, it does <em>not</em> move the camera</li>
 <li>Set the <strong>User Visibility</strong> toggles for which panels customers should see when this section is active. There are three:</li>
 <li><strong>Solar</strong> — show or hide the Solar / Site panel</li>
 <li><strong>Rooms</strong> — show or hide the Rooms panel</li>
