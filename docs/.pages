@@ -11,13 +11,12 @@ nav:
       - viewer_contract_v1_8.md
       - capture_and_replay.md
       - demoapp.md
+      - persistence_patterns.md
   - Authoring:
       - admin_authoring_guide.md
       - model_authoring_guide.md
       - marker_pipeline.md
       - demo_walkthrough.md
-  - Reference:
-      - subscriber_materials_plan.md
   - ...
 
 # index.md is the auto-rendered home page (linked from the site title); it
@@ -25,10 +24,13 @@ nav:
 # performance.md are BPViewer-maintainer-internal — they cite source files
 # under src/viewer/ that aren't published in the integration kit, so they're
 # kept rendered (so any inbound link still resolves) but hidden from the
-# public sidebar. New "draft" docs you want deployed but hidden from the
-# sidebar can be added here too.
+# public sidebar. subscriber_materials_plan.md is also internal-planning
+# (BPViewer-side architecture for a future feature, not CustomApp-facing).
+# New "draft" docs you want deployed but hidden from the sidebar can be added
+# here too.
 not_in_nav: |
   index.md
   docs_publishing.md
   architecture.md
   performance.md
+  subscriber_materials_plan.md

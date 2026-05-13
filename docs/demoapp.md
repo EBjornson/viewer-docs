@@ -85,6 +85,128 @@ A production CustomApp would persist these to its backend instead of `localStora
 
 ---
 
+## Common patterns from DemoApp.jsx
+
+The full file is the reference, but a few load-bearing patterns deserve a quick read here so you can scan before diving into the code.
+
+### State shape
+
+DemoApp organizes its persistent state around six concerns. Recreating this shape (or a subset) in your CustomApp gives you a clean place to load from / save to whatever backend you choose:
+
+```js
+// Capture storage (populated by ViewerOutput callbacks)
+const [sectionCaptures, setSectionCaptures] = useState({})       // { [sectionId]: ViewerSectionCapturePayload + optional .presentationMode tag }
+const [optionCaptures, setOptionCaptures] = useState({})         // { [sectionId]: { [optionId]: { geometryIds, materialAssignments } } }
+const [materialDefaultCapture, setMaterialDefaultCapture] = useState(null)
+const [presentationModeCaptures, setPresentationModeCaptures] = useState({})
+
+// Per-session selection state
+const [selectedSectionId, setSelectedSectionId] = useState(SECTION_DEMO_ITEMS[0]?.id)
+const [selectedOptions, setSelectedOptions] = useState({ /* sectionId → optionId */ })
+
+// Selection-key signal (App's "fresh apply" trigger — bumped on every section/pMode click)
+const [selectionKey, setSelectionKey] = useState(0)
+```
+
+### `viewerInput` memo — translating App state into the contract
+
+The single most important pattern in DemoApp: a `useMemo` that derives `viewerInput` from App state. Triggers a fresh push to the Viewer whenever any input changes:
+
+```js
+const viewerInput = useMemo(() => ({
+  model: { modelUrl },
+  camera: {
+    cameraMode: sectionCapture?.cameraMode,
+    pose: requestedCameraPose,             // freshens on every selectionKey bump
+  },
+  scene: {
+    visibilityAssignments,                 // hide pool + active option's shown set
+    defaultMaterialAssignments: materialDefaultCapture?.defaultMaterialAssignments,
+    materialAssignments: optionMaterialAssignments,
+  },
+  presentation: resolvedPresentation,      // from usePModeResolver
+  admin: { enabled: adminEnabled, ...(batchCaptureRequest.nonce > 0 ? { batchCapture: batchCaptureRequest } : {}) },
+  selectionKey,
+}), [/* deps */])
+```
+
+`requestedCameraPose` is itself a `useMemo` keyed on both `sectionCapture?.pose` and `selectionKey` so re-clicking the same section produces a new pose reference and re-fires the camera animation.
+
+### Identity-free capture routing — `onSectionCaptured`
+
+Every capture callback fires identity-free; the App attaches identity from its own selection state. Use stable refs (not state) inside callbacks so they don't stale-close:
+
+```js
+const selectedSectionIdRef = useRef(selectedSectionId)
+selectedSectionIdRef.current = selectedSectionId
+
+// inside viewerOutput memo
+onSectionCaptured: (payload) => {
+  const sectionId = selectedSectionIdRef.current
+  setSectionCaptures((prev) => ({
+    ...prev,
+    [sectionId]: { ...payload, presentationMode: currentPModeRef.current },  // optional pMode tag for re-skin
+  }))
+}
+```
+
+### Section click → bump selectionKey
+
+Section pill clicks bump `selectionKey` so the Viewer re-fires both camera animation and presentation re-sync — even when the underlying values haven't changed:
+
+```js
+const handleSectionClick = useCallback((sectionId) => {
+  setSelectedSectionId(sectionId)
+  pModeOnSectionSelected(sectionCaptures[sectionId])
+  setSelectionKey((n) => n + 1)
+}, [sectionCaptures, pModeOnSectionSelected])
+```
+
+Option clicks **don't** bump `selectionKey` — they change material/visibility intent (App pushes via different state), not camera or presentation intent.
+
+### Visibility assignments — combinatorial ownership
+
+Two flat lists; the Viewer resolves `shownGeometryIds` wins over `hiddenGeometryIds`:
+
+```js
+const visibilityAssignments = useMemo(() => {
+  const hasCapture = !!sectionCapture
+  const captureHidden = sectionCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
+  if (!hasCapture && !inactiveOptionGeometryIds.length) return undefined  // uncaptured-section nav: preserve-on-undefined
+  return {
+    hiddenGeometryIds: inactiveOptionGeometryIds,    // per-section union of inactive options' geometry
+    shownGeometryIds: activeOptionGeometryIds,        // active option's geometry per section
+    sectionHiddenGeometryIds: hasCapture ? captureHidden : undefined,  // section-level hides (typically the roof)
+  }
+}, [sectionCapture, inactiveOptionGeometryIds, activeOptionGeometryIds])
+```
+
+Critical detail: when the section has a capture but no hides, push `sectionHiddenGeometryIds: []` (not `undefined`) so the prior section's hides clear. Returning `undefined` for the whole assignments object only when truly nothing to express AND no capture exists. See [Capture & Replay → Section captures](capture_and_replay.md#section-captures) for the preserve-on-undefined contract.
+
+### Cross-section ownership enforcement — `onOptionCaptured`
+
+Two independent rules: show/hide ownership and material-assignment ownership. DemoApp validates incoming captures via `findOptionCaptureConflicts` and rejects with a banner on either rule:
+
+```js
+onOptionCaptured: (payload) => {
+  const sectionId = selectedSectionIdRef.current
+  const chosenOption = selectedOptionsRef.current[sectionId]
+  const conflicts = findOptionCaptureConflicts(optionCapturesRef.current, sectionId, payload)
+  if (conflicts.geometry.length || conflicts.material.length) {
+    setCaptureConflict({ sectionId, optionId: chosenOption, conflicts })
+    return  // do not store
+  }
+  setOptionCaptures((prev) => ({
+    ...prev,
+    [sectionId]: { ...prev[sectionId], [chosenOption]: mergeOptionCapture(prev[sectionId]?.[chosenOption], payload) },
+  }))
+}
+```
+
+If your CustomApp has only one option per section (or no options), the conflict-detection machinery isn't needed — skip [`crossSectionConflicts.js`](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/crossSectionConflicts.js) and [`CaptureConflictBanners.jsx`](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/CaptureConflictBanners.jsx).
+
+---
+
 ## Source
 
 - [DemoApp.jsx](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/DemoApp.jsx) — the full reference component.

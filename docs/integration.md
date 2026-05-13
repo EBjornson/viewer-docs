@@ -14,6 +14,22 @@ How a host App integrates the Viewer end-to-end — what to push in via `input`,
 
 ---
 
+## CustomApp patterns — pick your starting shape
+
+The Viewer's contract is intentionally minimal — sections, options, materials, presentation. CustomApps assemble these into different product shapes. Three common ones cover most real apps; identify yours before reading further so you know which integration-kit files apply and which to skip.
+
+| Pattern | Use case | Sections | Options per section | pMode taxonomy | Kit files used | Kit files skipped |
+|---|---|---|---|---|---|---|
+| **Build & Price** (DemoApp) | Configurable product (homes, cabins, vehicles) — buyer picks options per section, sees price | Many | Many | Yes (re-skin) | All | None |
+| **Walkthrough / inspection** | Curated visual tour, photo + text per stop, optional PDF report (TestPoint pattern) | Many | None (`options: []`) | No | DemoApp.jsx, ViewerElementReactBridge, viewerOutputEventMap, sectionDemoConfig (replace), captureImageOverlay (if PDF), CaptureTooltip (if admin) | usePModeResolver, crossSectionConflicts, CaptureConflictBanners |
+| **Single-product configurator** | One product, many user choices (variants, finishes) | One | Many | Sometimes | DemoApp.jsx, ViewerElementReactBridge, viewerOutputEventMap, sectionDemoConfig (replace), crossSectionConflicts (if multi-rule ownership matters) | usePModeResolver (unless variants change presentation), CaptureConflictBanners (for one section, ownership rules collapse to "one option active per section" — trivially satisfied) |
+
+The **section-only walkthrough** pattern is fully supported even though the contract talks about sections "containing options" — `sectionDemoConfig.js` in the kit shows entries with `options: []` (sections 2 and 5), and the kit DemoApp's right column gracefully handles them as "view-like stored moments." Strip the option-related machinery (cross-section conflicts, `usePModeResolver` if you also skip pModes) and you have a clean walkthrough App.
+
+The patterns above are descriptive, not prescriptive — your CustomApp can mix them or invent new ones. The kit is a menu, not a contract.
+
+---
+
 ## Delivery
 
 The Viewer ships as a self-contained ESM bundle on jsDelivr. Loading the bundle auto-registers a `<viewer-element>` custom element that any host framework can mount.
@@ -89,23 +105,44 @@ watch(viewerInput, (next) => {
 </html>
 ```
 
-### React (alternative)
+### React
 
-For React hosts that prefer JSX, the bundle also exports `Viewer` as a React component:
+For React hosts, use the [`ViewerElementReactBridge`](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/ViewerElementReactBridge.jsx) shipped in the integration kit. The bridge is a ~30-line React adapter that mounts `<viewer-element>` and exposes the same `{ input, output }` prop shape the rest of this guide assumes.
 
 ```jsx
-import { Viewer } from 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1.1.0/viewer.js'
+import { ViewerElementReactBridge } from './ViewerElementReactBridge'  // copied from the kit
+// Side-effect import registers the custom element. Pin to @v1.X.Y for an
+// immutable version, or @v1 for the auto-upgrading float.
+import 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1/viewer.js'
 
 function App() {
-  return <Viewer input={viewerInput} output={viewerOutput} />
+  return <ViewerElementReactBridge input={viewerInput} output={viewerOutput} />
 }
 ```
 
-The rest of this guide is written against the React `<Viewer>` surface (`input` prop, `output` prop). Custom-element hosts use the same payload shapes; only the wiring is different — DOM property in place of `input`, DOM events in place of each `output.on…` callback.
+#### Why the bridge is required (and not a convenience)
+
+The Viewer bundle ships its own React internally — alongside Three.js and `@react-three/fiber` — so the entire scene runtime is self-contained and works in Vue, Svelte, and Vanilla hosts without forcing them to install React. The trade-off: a React host that *also* has React installed runs **two React instances** at once. React's hooks system requires every hook call within a component tree to dispatch against the **same** React instance; if the host's React renders a component whose body calls hooks against the bundle's React, you get *"Invalid hook call"* — which manifests as a blank page with no obvious error to a developer expecting the documented import-and-render pattern to just work.
+
+The custom element `<viewer-element>` (registered globally when the bundle loads) sidesteps the problem entirely: it creates its own React root internally, so the bundle's React renders into a tree the host's React never traverses. The bridge is just a host-side React component that renders the element and adapts its DOM property + DOM events to the React `{ input, output }` API. This is the same pattern Vue / Svelte / Vanilla hosts use; the bridge wraps it React-friendly.
+
+If you write your own bridge from scratch instead of copying the kit's, you'll need the complete event-name mapping — see the [Custom element event names](#custom-element-event-names) table below, or import [`VIEWER_OUTPUT_EVENT_MAP`](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/viewerOutputEventMap.js) from the kit and iterate it programmatically (the kit's bridge does exactly this).
+
+The rest of this guide is written against the React `{ input, output }` surface, which is what the bridge exposes. Custom-element hosts use the same payload shapes directly — DOM property in place of `input`, DOM events in place of each `output.on…` callback.
+
+#### Bundler notes
+
+How your bundler handles HTTPS imports matters for the side-effect-import line above:
+
+- **Vite** (any version since 4.x): passes HTTPS imports through to the browser by default. Works as written.
+- **Webpack, Rollup, Parcel, esbuild standalone**: typically reject or try to bundle HTTPS imports, failing the build. Workaround: load the bundle via a `<script type="module" src="...">` tag in your `index.html` so the browser fetches it directly and registers the custom element before your React app mounts. Drop the `import 'https://...'` line from your component file.
+- **Next.js**: same as Webpack; load via `<script>` in your `_document.js` / `app/layout.tsx` `<head>`.
+
+In all cases, the bridge import (a regular relative `./ViewerElementReactBridge`) is bundler-agnostic.
 
 ### Custom element event names
 
-The Viewer's React `output` callbacks become DOM events on `<viewer-element>`. Naming convention: drop the `on` prefix, lowercase the rest. Exception: `onError` → `viewererror` (avoids the native DOM `error` event).
+The Viewer's React `output` callbacks become DOM events on `<viewer-element>`. Naming convention: drop the `on` prefix, lowercase the rest. Exception: `onError` → `viewererror` (avoids the native DOM `error` event). **The complete callback → event mapping is in the table below** (12 entries) — also exported programmatically as [`VIEWER_OUTPUT_EVENT_MAP`](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/viewerOutputEventMap.js) in the integration kit so adapters can iterate it without copy-pasting.
 
 | React callback | Custom element event |
 |---|---|

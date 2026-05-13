@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { SECTION_DEMO_ITEMS } from '../config/sectionDemoConfig'
-import { modelManifest } from '../config/modelManifest'
+import { SECTION_DEMO_ITEMS } from './sectionDemoConfig'
+import { modelManifest } from './modelManifest'
 import { compositeInfoOverlay } from './captureImageOverlay'
 import {
   findOptionCaptureConflicts,
