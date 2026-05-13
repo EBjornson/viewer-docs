@@ -399,121 +399,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../demoapp/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    DemoApp Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Internals
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Internals
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../capture_and_replay/" class="md-nav__link">
         
   
@@ -542,14 +427,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../performance/" class="md-nav__link">
+      <a href="../demoapp/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Performance
+    DemoApp Reference
   
 
     
@@ -592,10 +477,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -613,8 +498,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1164,10 +1049,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -1185,8 +1070,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1265,6 +1150,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../docs_publishing/" class="md-nav__link">
         
   
@@ -1273,6 +1185,33 @@
     
   
     Docs Publishing System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
   
 
     
@@ -1738,9 +1677,9 @@
 </code></pre></div>
 <p>A few cross-cutting notes:</p>
 <ul>
-<li><strong>First-matching-ancestor-wins.</strong> All resolvers walk the scene with the same primitive in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/markerUtils.js#L49">markerUtils.js:49</a> (<code>walkFirstMatchAncestors</code>); once a node matches, descendants are not re-considered. SketchUp's instance-of-definition wrappers inside a marker component are absorbed transparently.</li>
-<li><strong>Geometry IDs are upstream of all of this.</strong> During model preparation, <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/modelPreparationUtils.js#L160"><code>assignStableScenePaths</code></a> writes a stable scene-graph path into <code>userData.geometryId</code> for every mesh. Captures (visibility lists, material assignments, light hide-propagation) all key off these IDs. <strong>Re-exporting a model with renames, regroupings, or reordering inside a marker container can change the IDs and invalidate existing captures</strong> — there is no auto-migration.</li>
-<li><strong>Visible vs. helper-only marker subtrees.</strong> Space and Light markers wrap <em>authoring helpers</em> (boxes, cones, spheres) that exist only so the SketchUp author can locate the marker; their meshes are hidden at load via <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/markerUtils.js#L72"><code>hideMarkerSubtree</code></a> and tagged <code>userData.isHiddenMarker = true</code> so <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useSceneVisibility.js"><code>useSceneVisibility</code></a> skips them. Pivot and Slide markers wrap <em>visible product geometry</em> (the swinging door slab, the sliding sash) — their descendants stay rendered and animate as a rigid unit.</li>
+<li><strong>First-matching-ancestor-wins.</strong> All resolvers walk the scene with the same primitive in markerUtils.js:49 (<code>walkFirstMatchAncestors</code>); once a node matches, descendants are not re-considered. SketchUp's instance-of-definition wrappers inside a marker component are absorbed transparently.</li>
+<li><strong>Geometry IDs are upstream of all of this.</strong> During model preparation, <code>assignStableScenePaths</code> writes a stable scene-graph path into <code>userData.geometryId</code> for every mesh. Captures (visibility lists, material assignments, light hide-propagation) all key off these IDs. <strong>Re-exporting a model with renames, regroupings, or reordering inside a marker container can change the IDs and invalidate existing captures</strong> — there is no auto-migration.</li>
+<li><strong>Visible vs. helper-only marker subtrees.</strong> Space and Light markers wrap <em>authoring helpers</em> (boxes, cones, spheres) that exist only so the SketchUp author can locate the marker; their meshes are hidden at load via <code>hideMarkerSubtree</code> and tagged <code>userData.isHiddenMarker = true</code> so <code>useSceneVisibility</code> skips them. Pivot and Slide markers wrap <em>visible product geometry</em> (the swinging door slab, the sliding sash) — their descendants stay rendered and animate as a rigid unit.</li>
 <li><strong>Captured vs. session-only.</strong> Of the four families, only <strong>Spaces</strong> and <strong>Lights</strong> appear in capture payloads (indirectly — see each family's section). <strong>Pivots</strong> and <strong>Slides</strong> are session-only: clicking opens or closes them, page reload returns to closed, no payload field carries their state.</li>
 </ul>
 <hr />
@@ -1755,22 +1694,22 @@
 <h3 id="author-writes">Author writes<a class="headerlink" href="#author-writes" title="Permanent link">&para;</a></h3>
 <p>A node whose name contains <code>_RM</code> (room) or <code>_DW</code> (doorway), with the boundary rule (preceded by <code>_</code>, followed by <code>_</code> or end-of-name). Doorway leaves are <code>&lt;RoomA&gt;_&lt;RoomB&gt;</code> for interior connections or <code>Exterior_&lt;RoomName&gt;</code> for entries. PascalCase room names — see <a href="../model_authoring_guide/#navigation-marker-conventions">Navigation Marker Conventions</a> for full authoring rules and edge cases.</p>
 <h3 id="resolver-extracts">Resolver extracts<a class="headerlink" href="#resolver-extracts" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/spaceResolver.js#L102"><code>resolveSpaces</code></a> walks the scene and returns <code>{ spaces, entries, doorways }</code>. Each descriptor carries:</p>
+<p><code>resolveSpaces</code> walks the scene and returns <code>{ spaces, entries, doorways }</code>. Each descriptor carries:</p>
 <ul>
 <li><code>id</code>, <code>label</code> (humanized), <code>type</code> (<code>'space' | 'entry' | 'doorway'</code>)</li>
 <li><code>node</code>, <code>meshes</code>, <code>meshIds</code></li>
 <li><code>box</code>, <code>center</code>, <code>size</code> (world-space bounds — <code>prepareLoadedModel</code> recenters the model before this runs)</li>
-<li><code>connectedLocationId</code> / connection metadata, populated by <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/navigationGraphUtils.js"><code>resolveDoorwayConnections</code></a> and <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/navigationGraphUtils.js"><code>resolveEntryConnections</code></a></li>
+<li><code>connectedLocationId</code> / connection metadata, populated by <code>resolveDoorwayConnections</code> and <code>resolveEntryConnections</code></li>
 </ul>
 <p>The resolver also calls <code>hideSpaceMarkerMeshes</code>, hiding visible authoring helpers under each marker subtree.</p>
 <h3 id="runtime-consumes">Runtime consumes<a class="headerlink" href="#runtime-consumes" title="Permanent link">&para;</a></h3>
-<p>The descriptors flow into <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx#L360"><code>ViewerRuntime.jsx:360</code></a> (<code>interiorConstraintData</code>) and from there into:</p>
+<p>The descriptors flow into <code>ViewerRuntime.jsx:360</code> (<code>interiorConstraintData</code>) and from there into:</p>
 <ul>
-<li><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerNavigation.js"><code>useViewerNavigation</code></a> — builds a <code>buildNavigationGraph</code> and exposes <code>walkToLocation</code>, <code>walkToCapturedPose</code>, <code>walkToFloorPoint</code>, <code>walkToExteriorPoint</code>, <code>walkToDefaultInterior</code>, <code>directNavTo</code>. Camera routing through doorways uses <code>findNavigationPath</code> over this graph.</li>
+<li><code>useViewerNavigation</code> — builds a <code>buildNavigationGraph</code> and exposes <code>walkToLocation</code>, <code>walkToCapturedPose</code>, <code>walkToFloorPoint</code>, <code>walkToExteriorPoint</code>, <code>walkToDefaultInterior</code>, <code>directNavTo</code>. Camera routing through doorways uses <code>findNavigationPath</code> over this graph.</li>
 <li>The <strong>Rooms panel</strong> (<code>SpaceMenu</code>) — renders a clickable list of spaces and entries. Clicks call <code>walkToLocation</code> and only move the camera (no presentation/visibility change).</li>
 <li><strong>Overhead floor-tile click</strong> — when a section is captured with <code>cameraMode: 'overhead'</code> and the user clicks a recognized <code>_RM</code> room face, <code>walkToFloorPoint</code> routes the camera into the interior space. <strong>No callback fires.</strong> During the dive, the Viewer auto-suspends the section's <code>sectionHiddenGeometryIds</code> (typically the roof) so the user can see what they've dived into; reapplies when the camera returns to overhead. See <a href="../capture_and_replay/#overhead-floor-tile-click">Overhead Floor-Tile Click</a> for details.</li>
 <li><strong>Floor Nav / NavPath debug overlays</strong> — visualize the walkable landing zones derived from <code>_RM</code> bounds and the path-graph segments between rooms.</li>
-<li><strong>Auto-mode lights</strong> — when <code>lightSourceMode === 'auto'</code>, <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SceneLights.jsx#L155"><code>SceneLights</code></a> places one point light per resolved <code>space</code>.</li>
+<li><strong>Auto-mode lights</strong> — when <code>lightSourceMode === 'auto'</code>, <code>SceneLights</code> places one point light per resolved <code>space</code>.</li>
 </ul>
 <h3 id="fallback-when-no-markers-are-authored">Fallback when no markers are authored<a class="headerlink" href="#fallback-when-no-markers-are-authored" title="Permanent link">&para;</a></h3>
 <p>When a model has no <code>_RM</code> / <code>_DW</code> markers, the navigation graph is empty and pathNav has no route to build. In that state the camera-routing table's three <code>pathNav</code> cells swap to a <code>directInterior</code> strategy:</p>
@@ -1778,7 +1717,7 @@
 <li><strong>Quickview Interior</strong> → camera lerps to bbox center at standing height.</li>
 <li><strong>Floor-click</strong> (interior or overhead) → camera lerps to the clicked point at standing height.</li>
 </ul>
-<p>Target heading preserves the camera's current view direction (leveled to horizontal, with the canonical interior down-tilt applied) — same as authored floor-click via <code>buildFloorPointDestinationPose</code>. Looking-straight-down sources (overhead → interior) fall back to facing the model's south side. No entry-approach orbit, no doorway choreography — pure direct lerp. A bbox-wide floor hotspot is rendered in place of the missing per-room hotspots so floor-click has something to receive the click. Authored markers always win; this fallback only fires on quick / unauthored models. See <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/cameraPoseUtils.js"><code>buildDirectInteriorPose</code></a> and <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/navigation/cameraRoutingTable.js"><code>pickStrategy</code></a>.</p>
+<p>Target heading preserves the camera's current view direction (leveled to horizontal, with the canonical interior down-tilt applied) — same as authored floor-click via <code>buildFloorPointDestinationPose</code>. Looking-straight-down sources (overhead → interior) fall back to facing the model's south side. No entry-approach orbit, no doorway choreography — pure direct lerp. A bbox-wide floor hotspot is rendered in place of the missing per-room hotspots so floor-click has something to receive the click. Authored markers always win; this fallback only fires on quick / unauthored models. See <code>buildDirectInteriorPose</code> and <code>pickStrategy</code>.</p>
 <h3 id="captures-interact">Captures interact<a class="headerlink" href="#captures-interact" title="Permanent link">&para;</a></h3>
 <p><strong>No payload field references space markers directly.</strong> The graph is rebuilt from the model on every load.</p>
 <p>What <em>is</em> captured is camera state that <em>resulted from</em> navigating the graph: the <code>pose</code> and <code>cameraMode</code> in a section capture record where the camera ended up, regardless of whether the author got there by clicking a room, walking through a doorway, or dragging the orbit. Replay restores the pose without re-running graph navigation — <code>walkToCapturedPose</code> is used when the App wants to animate through the graph to a captured pose, but a direct pose set works too.</p>
@@ -1795,7 +1734,7 @@
 <h3 id="author-writes_1">Author writes<a class="headerlink" href="#author-writes_1" title="Permanent link">&para;</a></h3>
 <p>A node whose name contains <code>_PL</code> (point) or <code>_SL[&lt;degrees&gt;]</code> (spot, default 90° full beam if degrees omitted). Bound vs. unbound rule: wrap markers and only that fixture's geometry under a dedicated parent component to make the light hide-propagate; loose markers under structural top-level containers stay always-on. Full rules and the spot-housing-occlusion authoring caveat are in <a href="../model_authoring_guide/#lighting-marker-conventions">Lighting Marker Conventions</a>.</p>
 <h3 id="resolver-extracts_1">Resolver extracts<a class="headerlink" href="#resolver-extracts_1" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/lightMarkerResolver.js#L106"><code>resolveLightMarkers</code></a> returns <code>{ point: [...], spot: [...] }</code>. Each descriptor carries:</p>
+<p><code>resolveLightMarkers</code> returns <code>{ point: [...], spot: [...] }</code>. Each descriptor carries:</p>
 <ul>
 <li><code>id</code>, <code>type</code>, <code>node</code>, <code>position</code> (world)</li>
 <li>For spots: <code>direction</code> (world, marker's local −Z), <code>angleDegrees</code> (parsed from <code>_SL&lt;n&gt;</code> or <code>null</code> → defaults to 90° at render time)</li>
@@ -1803,12 +1742,12 @@
 </ul>
 <p>The resolver also hides visible authoring helpers (sphere/cone meshes) inside each marker subtree.</p>
 <h3 id="runtime-consumes_1">Runtime consumes<a class="headerlink" href="#runtime-consumes_1" title="Permanent link">&para;</a></h3>
-<p>Resolution happens in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx#L163"><code>ViewerRuntime.jsx:163</code></a>. The <code>boundGeometryIds</code> field is then consumed by the <strong><code>visibleLightMarkers</code> filter</strong> at <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx#L328"><code>ViewerRuntime.jsx:328</code></a>:</p>
+<p>Resolution happens in <code>ViewerRuntime.jsx:163</code>. The <code>boundGeometryIds</code> field is then consumed by the <strong><code>visibleLightMarkers</code> filter</strong> at <code>ViewerRuntime.jsx:328</code>:</p>
 <ul>
 <li>A marker passes through if <code>boundGeometryIds</code> is empty (unbound) <strong>or</strong> at least one bound mesh is <em>not</em> in the active hide set computed from <code>effectiveInput.scene.visibilityAssignments</code>.</li>
 <li>This is the only place where capture state (visibility) gates a marker family's runtime output. <code>useSceneVisibility</code> applies the same hide rule to the meshes themselves; this filter is the parallel rule for the spawned lights.</li>
 </ul>
-<p>The filtered set flows into <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SceneLights.jsx"><code>SceneLights</code></a> which renders point/spot lights based on <code>lightSourceMode</code>:</p>
+<p>The filtered set flows into <code>SceneLights</code> which renders point/spot lights based on <code>lightSourceMode</code>:</p>
 <ul>
 <li><code>'import'</code> — render the resolved <code>_PL</code> / <code>_SL</code> markers, with <code>boundGeometryIds</code>-based hide-propagation.</li>
 <li><code>'auto'</code> — ignore markers; place one point light per resolved <code>_RM</code> space (via <code>navigationSpaces</code>).</li>
@@ -1823,7 +1762,7 @@
 </ul>
 <p>So a section that hides a light's fixture geometry will <em>also</em> hide its bound lights at replay; that's the whole point of binding.</p>
 <h3 id="replay_1">Replay<a class="headerlink" href="#replay_1" title="Permanent link">&para;</a></h3>
-<p>On replay, the App pushes <code>viewerInput.presentation.lightSourceMode</code> and <code>viewerInput.scene.visibilityAssignments</code>. The Viewer re-resolves markers from the model, then filters them against the new visibility set, then renders. The <code>lightSourceMode</code> smart default fires only when the captured value is missing (<code>'import'</code> if markers are detected, <code>'auto'</code> otherwise) — captured values always win. See <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerPresentationState.js"><code>useViewerPresentationState.js</code></a>.</p>
+<p>On replay, the App pushes <code>viewerInput.presentation.lightSourceMode</code> and <code>viewerInput.scene.visibilityAssignments</code>. The Viewer re-resolves markers from the model, then filters them against the new visibility set, then renders. The <code>lightSourceMode</code> smart default fires only when the captured value is missing (<code>'import'</code> if markers are detected, <code>'auto'</code> otherwise) — captured values always win. See <code>useViewerPresentationState.js</code>.</p>
 <hr />
 <h2 id="pivots-_degreescwccw">Pivots — <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code><a class="headerlink" href="#pivots-_degreescwccw" title="Permanent link">&para;</a></h2>
 <p>Click-to-rotate hinged geometry — doors, casement windows, lids. <strong>Session-only</strong>: state is not captured, not persisted, and does not affect path navigation.</p>
@@ -1837,7 +1776,7 @@
 <h3 id="author-writes_2">Author writes<a class="headerlink" href="#author-writes_2" title="Permanent link">&para;</a></h3>
 <p>A group whose name contains <code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code> (e.g. <code>BedroomDoor_90CCW</code>). Authoring requirements: SketchUp <strong>Change Axes</strong> so the local origin sits at the hinge edge and blue (Z) axis points up. CW/CCW is "as viewed from above." Full authoring rules in <a href="../model_authoring_guide/#pivot-marker-conventions">Pivot Marker Conventions</a>.</p>
 <h3 id="resolver-extracts_2">Resolver extracts<a class="headerlink" href="#resolver-extracts_2" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/pivotMarkerResolver.js#L54"><code>resolvePivotMarkers</code></a> returns one descriptor per pivot:</p>
+<p><code>resolvePivotMarkers</code> returns one descriptor per pivot:</p>
 <ul>
 <li><code>id</code>, <code>node</code></li>
 <li><code>descendantMeshes</code> — used to build the click-routing map</li>
@@ -1848,15 +1787,15 @@
 </ul>
 <p>Unlike Spaces/Lights, descendant meshes are <strong>not</strong> hidden — they're the visible swinging geometry.</p>
 <h3 id="runtime-consumes_2">Runtime consumes<a class="headerlink" href="#runtime-consumes_2" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useScenePivots.js"><code>useScenePivots</code></a> owns per-pivot runtime state in a <code>pivotStateRef</code> map (<code>isOpen</code>, in-flight <code>anim</code>, references to <code>node</code> / <code>closedZRotation</code> / <code>openDelta</code>). It exposes:</p>
+<p><code>useScenePivots</code> owns per-pivot runtime state in a <code>pivotStateRef</code> map (<code>isOpen</code>, in-flight <code>anim</code>, references to <code>node</code> / <code>closedZRotation</code> / <code>openDelta</code>). It exposes:</p>
 <ul>
 <li><code>togglePivot(pivotId)</code> — schedules an animation if the pivot isn't already animating</li>
 <li><code>openPivot(pivotId)</code> / <code>closePivot(pivotId)</code> — state-aware variants used by the proximity auto-trigger; idempotent (no-op if already in the target state or mid-animation)</li>
 <li><code>meshIdToPivotId</code> — <code>Map&lt;meshUuid, pivotId&gt;</code> used for click routing</li>
 </ul>
-<p>Click routing in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/components/Model.jsx#L175"><code>Model.jsx:175</code></a> walks the picked mesh's ancestor chain looking up both <code>meshIdToPivotId</code> and <code>meshIdToSlideId</code>. <strong>Pivot toggle fires only in consumer mode (<code>!adminEnabled</code>)</strong> — in Admin Mode the toggle is suppressed so clicks on pivot geometry route to selection (for material assignment, hide/show, etc.) like any other mesh.</p>
-<p>The frame-by-frame rotation update lives in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/PivotAnimationController.jsx"><code>PivotAnimationController</code></a> so <code>useFrame</code> runs inside the Canvas. Animation duration and easing are shared with Slides via <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/markerUtils.js#L83"><code>MARKER_ANIMATION_DURATION</code></a> and <code>applyMarkerEasing</code> (cosine ease-in-out, 450 ms).</p>
-<p><strong>Proximity auto-trigger.</strong> Alongside click-to-toggle, <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/PivotProximityController.jsx"><code>PivotProximityController</code></a> auto-opens pivots as the camera approaches and auto-closes them as the camera recedes — a small navigation pizazz that makes doors feel responsive when walking through interiors. Each frame, it measures the camera's distance to each pivot's <code>closedBoundsCenter</code> and fires <code>openPivot</code> / <code>closePivot</code> when the (hysteretic) thresholds are crossed. Constants live at the top of that file (<code>PIVOT_PROXIMITY_OPEN_DISTANCE</code>, <code>PIVOT_PROXIMITY_CLOSE_DISTANCE</code>); CLOSE &gt; OPEN prevents oscillation; setting CLOSE to <code>Infinity</code> disables auto-close. Suppressed entirely in Admin Mode (admin clicks already route to selection — auto-open during inspection would be disorienting). Runs on the demand-loop only: a stationary camera produces no frames, so no work and no state change. Mid-animation events are dropped naturally by the existing reversal-ignore in <code>setPivotState</code>.</p>
+<p>Click routing in <code>Model.jsx:175</code> walks the picked mesh's ancestor chain looking up both <code>meshIdToPivotId</code> and <code>meshIdToSlideId</code>. <strong>Pivot toggle fires only in consumer mode (<code>!adminEnabled</code>)</strong> — in Admin Mode the toggle is suppressed so clicks on pivot geometry route to selection (for material assignment, hide/show, etc.) like any other mesh.</p>
+<p>The frame-by-frame rotation update lives in <code>PivotAnimationController</code> so <code>useFrame</code> runs inside the Canvas. Animation duration and easing are shared with Slides via <code>MARKER_ANIMATION_DURATION</code> and <code>applyMarkerEasing</code> (cosine ease-in-out, 450 ms).</p>
+<p><strong>Proximity auto-trigger.</strong> Alongside click-to-toggle, <code>PivotProximityController</code> auto-opens pivots as the camera approaches and auto-closes them as the camera recedes — a small navigation pizazz that makes doors feel responsive when walking through interiors. Each frame, it measures the camera's distance to each pivot's <code>closedBoundsCenter</code> and fires <code>openPivot</code> / <code>closePivot</code> when the (hysteretic) thresholds are crossed. Constants live at the top of that file (<code>PIVOT_PROXIMITY_OPEN_DISTANCE</code>, <code>PIVOT_PROXIMITY_CLOSE_DISTANCE</code>); CLOSE &gt; OPEN prevents oscillation; setting CLOSE to <code>Infinity</code> disables auto-close. Suppressed entirely in Admin Mode (admin clicks already route to selection — auto-open during inspection would be disorienting). Runs on the demand-loop only: a stationary camera produces no frames, so no work and no state change. Mid-animation events are dropped naturally by the existing reversal-ignore in <code>setPivotState</code>.</p>
 <p>State resets to closed when the <code>pivots</code> array identity changes (i.e., a new model is loaded).</p>
 <h3 id="captures-interact_2">Captures interact<a class="headerlink" href="#captures-interact_2" title="Permanent link">&para;</a></h3>
 <p><strong>No.</strong> Open/closed state is intentionally session-only:</p>
@@ -1881,7 +1820,7 @@
 <h3 id="author-writes_3">Author writes<a class="headerlink" href="#author-writes_3" title="Permanent link">&para;</a></h3>
 <p>A group whose name contains <code>_SD&lt;mm&gt;</code> (integer millimeters; <code>_SD800</code> slides 800 mm). Authoring requirements: SketchUp <strong>Change Axes</strong> so the local +X axis points the way the panel slides open. Why integer mm — exporters strip periods from component names. Full rules in <a href="../model_authoring_guide/#slide-marker-conventions">Slide Marker Conventions</a>.</p>
 <h3 id="resolver-extracts_3">Resolver extracts<a class="headerlink" href="#resolver-extracts_3" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/slideMarkerResolver.js#L48"><code>resolveSlideMarkers</code></a> returns one descriptor per slide:</p>
+<p><code>resolveSlideMarkers</code> returns one descriptor per slide:</p>
 <ul>
 <li><code>id</code>, <code>node</code>, <code>descendantMeshes</code></li>
 <li><code>closedPosition</code> — the authored local position (the "closed" pose)</li>
@@ -1889,7 +1828,7 @@
 <li><code>distanceMillimeters</code> — original parsed value for logging</li>
 </ul>
 <h3 id="runtime-consumes_3">Runtime consumes<a class="headerlink" href="#runtime-consumes_3" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useSceneSlides.js"><code>useSceneSlides</code></a> parallels <code>useScenePivots</code> exactly: per-slide state in a <code>slideStateRef</code> map, <code>toggleSlide</code>, <code>meshIdToSlideId</code>. The frame-by-frame position update lives in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SlideAnimationController.jsx"><code>SlideAnimationController</code></a>.</p>
+<p><code>useSceneSlides</code> parallels <code>useScenePivots</code> exactly: per-slide state in a <code>slideStateRef</code> map, <code>toggleSlide</code>, <code>meshIdToSlideId</code>. The frame-by-frame position update lives in <code>SlideAnimationController</code>.</p>
 <p>The non-obvious bit is the open-position computation:</p>
 <ul>
 <li>The marker's local +X is converted to a <strong>world-space</strong> direction via <code>getWorldQuaternion</code>.</li>
@@ -1897,7 +1836,7 @@
 <li>That world position is then converted back to <strong>parent-local</strong> space so it can drive <code>node.position</code> directly during animation.</li>
 </ul>
 <p>This survives any parent scale baked into the SketchUp glTF export (typical exports have a 0.0254 inch→meter scale on a wrapper node) — <code>_SD800</code> always means 800 mm in the rendered scene.</p>
-<p>Click routing in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/components/Model.jsx#L175"><code>Model.jsx:175</code></a> walks ancestors checking both pivot and slide maps; <strong>pivot wins ties</strong> when both match the same ancestor. As with pivots, the toggle fires only in consumer mode.</p>
+<p>Click routing in <code>Model.jsx:175</code> walks ancestors checking both pivot and slide maps; <strong>pivot wins ties</strong> when both match the same ancestor. As with pivots, the toggle fires only in consumer mode.</p>
 <h3 id="captures-interact_3">Captures interact<a class="headerlink" href="#captures-interact_3" title="Permanent link">&para;</a></h3>
 <p><strong>No.</strong> Same as Pivots: open/closed state is session-only, ignored by path navigation, never captured.</p>
 <h3 id="replay_3">Replay<a class="headerlink" href="#replay_3" title="Permanent link">&para;</a></h3>
@@ -1918,43 +1857,43 @@
 <tr>
 <td>Space (room)</td>
 <td><code>_RM</code></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/spaceResolver.js">spaceResolver.js</a></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerNavigation.js">useViewerNavigation</a>, <code>SpaceMenu</code>, <code>SceneLights</code> (auto mode), Floor Nav debug</td>
+<td>spaceResolver.js</td>
+<td>useViewerNavigation, <code>SpaceMenu</code>, <code>SceneLights</code> (auto mode), Floor Nav debug</td>
 <td>No (re-derived from model). Captured camera pose may <em>result from</em> navigating the graph.</td>
 </tr>
 <tr>
 <td>Doorway</td>
 <td><code>_DW</code></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/spaceResolver.js">spaceResolver.js</a></td>
+<td>spaceResolver.js</td>
 <td>Same — feeds the navigation graph</td>
 <td>No</td>
 </tr>
 <tr>
 <td>Point light</td>
 <td><code>_PL</code></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/lightMarkerResolver.js">lightMarkerResolver.js</a></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SceneLights.jsx">SceneLights</a> (import mode), <code>visibleLightMarkers</code> filter in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx#L328">ViewerRuntime</a></td>
+<td>lightMarkerResolver.js</td>
+<td>SceneLights (import mode), <code>visibleLightMarkers</code> filter in ViewerRuntime</td>
 <td>No (markers re-resolved from model). <code>presentation.lightSourceMode</code> and <code>scene.visibilityAssignments</code> <em>are</em> captured and gate which lights render.</td>
 </tr>
 <tr>
 <td>Spot light</td>
 <td><code>_SL[&lt;degrees&gt;]</code></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/lightMarkerResolver.js">lightMarkerResolver.js</a></td>
+<td>lightMarkerResolver.js</td>
 <td>Same as point</td>
 <td>Same as point</td>
 </tr>
 <tr>
 <td>Pivot</td>
 <td><code>_&lt;degrees&gt;&lt;CW|CCW&gt;</code></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/pivotMarkerResolver.js">pivotMarkerResolver.js</a></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useScenePivots.js">useScenePivots</a>, <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/PivotAnimationController.jsx">PivotAnimationController</a>, click routing in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/components/Model.jsx">Model.jsx</a></td>
+<td>pivotMarkerResolver.js</td>
+<td>useScenePivots, PivotAnimationController, click routing in Model.jsx</td>
 <td><strong>No — session-only.</strong> Open/closed never persists.</td>
 </tr>
 <tr>
 <td>Slide</td>
 <td><code>_SD&lt;mm&gt;</code></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/slideMarkerResolver.js">slideMarkerResolver.js</a></td>
-<td><a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useSceneSlides.js">useSceneSlides</a>, <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SlideAnimationController.jsx">SlideAnimationController</a>, click routing in <a href="https://github.com/EBjornson/BPViewer/blob/main/src/components/Model.jsx">Model.jsx</a></td>
+<td>slideMarkerResolver.js</td>
+<td>useSceneSlides, SlideAnimationController, click routing in Model.jsx</td>
 <td><strong>No — session-only.</strong> Same as pivot.</td>
 </tr>
 </tbody>
