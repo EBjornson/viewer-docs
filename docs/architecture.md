@@ -62,7 +62,7 @@ flowchart LR
 ### DemoApp
 
 Current file:
-- [DemoApp.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx)
+- DemoApp.jsx
 
 `DemoApp` is the reference host application. It demonstrates the full capture/replay pattern in a minimal host.
 
@@ -87,8 +87,8 @@ For the DemoApp header UI, batch-capture button behavior, and developer-oriented
 ### Viewer
 
 Current file:
-- [Viewer.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/public/Viewer.jsx)
-- [viewerContractTypes.js](https://github.com/EBjornson/BPViewer/blob/main/src/public/viewerContractTypes.js)
+- Viewer.jsx
+- viewerContractTypes.js
 
 This is the stable public integration surface.
 
@@ -102,12 +102,12 @@ It is responsible for:
 ### ViewerRuntime
 
 Current file:
-- [ViewerRuntime.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx)
-- [hooks/index.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/index.js)
-- [components/index.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/index.js)
-- [useViewerPresentationState.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerPresentationState.js)
-- [useViewerSelectionRuntime.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerSelectionRuntime.js)
-- [useViewerAuthoringCapture.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerAuthoringCapture.js)
+- ViewerRuntime.jsx
+- hooks/index.js
+- components/index.js
+- useViewerPresentationState.js
+- useViewerSelectionRuntime.js
+- useViewerAuthoringCapture.js
 
 This is the shared internal wrapper runtime. It currently owns:
 
@@ -122,8 +122,8 @@ This is the shared internal wrapper runtime. It currently owns:
 ### ViewerAdminNavigationBridge
 
 Current file:
-- [ViewerAdminNavigationBridge.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerAdminNavigationBridge.jsx)
-- [useViewerAdminNavigationBridgeRuntime.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerAdminNavigationBridgeRuntime.js)
+- ViewerAdminNavigationBridge.jsx
+- useViewerAdminNavigationBridgeRuntime.js
 
 This is a viewer-internal helper layer that:
 
@@ -135,12 +135,12 @@ This is intentionally kept out of the public wrapper contract.
 ### ViewerRoot
 
 Current file:
-- [ViewerRoot.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRoot.jsx)
-- [ViewerSceneCanvas.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerSceneCanvas.jsx)
-- [ViewerPerformanceOverlay.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerPerformanceOverlay.jsx)
-- [ViewerDebugCanvasHelpers.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerDebugCanvasHelpers.jsx)
-- [useViewerCameraRuntime.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerCameraRuntime.js)
-- [useViewerSceneInteraction.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useViewerSceneInteraction.js)
+- ViewerRoot.jsx
+- ViewerSceneCanvas.jsx
+- ViewerPerformanceOverlay.jsx
+- ViewerDebugCanvasHelpers.jsx
+- useViewerCameraRuntime.js
+- useViewerSceneInteraction.js
 
 `ViewerRoot` is the internal runtime boundary.
 
@@ -170,7 +170,7 @@ It owns:
 ### Visibility
 
 Current file:
-- [useVisibilityState.js](https://github.com/EBjornson/BPViewer/blob/main/src/hooks/useVisibilityState.js)
+- useVisibilityState.js
 
 Current stable visibility model separates:
 
@@ -185,8 +185,8 @@ Visibility assignments are included in section capture payloads and replayed by 
 ### Materials
 
 Current files:
-- [useSelectionMaterialState.js](https://github.com/EBjornson/BPViewer/blob/main/src/hooks/useSelectionMaterialState.js)
-- [useSceneAssignments.js](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/hooks/useSceneAssignments.js)
+- useSelectionMaterialState.js
+- useSceneAssignments.js
 
 `useSceneAssignments` is a thin coordinator that delegates to two sub-hooks:
 - `useSceneVisibility` — fade animation and mesh visibility

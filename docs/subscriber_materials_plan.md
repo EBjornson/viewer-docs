@@ -115,7 +115,7 @@ viewerInput.materialCatalog = [
 ]
 ```
 
-This supersedes the Viewer's static import of [`materialManifest`](https://github.com/EBjornson/BPViewer/blob/main/src/config/materialManifest.js). The App constructs and supplies it on every render.
+This supersedes the Viewer's static import of `materialManifest`. The App constructs and supplies it on every render.
 
 ## Decisions
 
@@ -130,9 +130,9 @@ These were resolved during planning and should not be re-litigated without expli
 
 ### Phase 1 — Extract parsing as a shared module
 
-**Status:** Shipped 2026-05-06 — see [`src/utils/materialPackageParser.js`](https://github.com/EBjornson/BPViewer/blob/main/src/utils/materialPackageParser.js) and its test suite. Build script is now a thin I/O wrapper; manifest output is byte-identical to pre-refactor. Map values use `{ filename, source }` (not `blob`) so the same parser serves Buffer (Node) and Blob (browser) callers without renaming.
+**Status:** Shipped 2026-05-06 — see `src/utils/materialPackageParser.js` and its test suite. Build script is now a thin I/O wrapper; manifest output is byte-identical to pre-refactor. Map values use `{ filename, source }` (not `blob`) so the same parser serves Buffer (Node) and Blob (browser) callers without renaming.
 
-Pull the filename-pattern logic and manifest-record construction out of [`scripts/generate-material-manifest.mjs`](https://github.com/EBjornson/BPViewer/blob/main/scripts/generate-material-manifest.mjs) into a runtime-callable module, e.g. `src/utils/materialPackageParser.js`.
+Pull the filename-pattern logic and manifest-record construction out of `scripts/generate-material-manifest.mjs` into a runtime-callable module, e.g. `src/utils/materialPackageParser.js`.
 
 **Inputs:** `Map<filename, Blob>` (or `Map<filename, Buffer>` server-side).
 **Outputs:** manifest record `{ familyId, resolution, color, roughness, metalness, maps: { color, normal, roughness, ao } }` with map values as `{ filename, blob }` pairs (URL construction happens in the caller).
@@ -147,7 +147,7 @@ Build script becomes a thin wrapper that walks the filesystem, reads files into 
 
 Update the option-capture material assignment payload to populate `materialRef` whenever the assignment came from a catalog material. Material picker selections in admin produce `materialRef`; manual color/roughness-only edits without a catalog material leave `materialRef` undefined.
 
-Update App-side replay (in [`DemoApp.jsx`](https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx) and any helpers under [`src/DemoApp/`](https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/)) to:
+Update App-side replay (in `DemoApp.jsx` and any helpers under `src/DemoApp/`) to:
 
 1. If `materialRef` present → resolve current URLs via the catalog resolver and populate `maps`.
 2. If `materialRef` absent → use existing `maps` URLs as today (legacy path, supports old captures).
@@ -201,14 +201,14 @@ Add a small dedicated area in the DemoApp header — e.g. a "Materials" button t
 
 Two changes:
 
-1. **Contract:** add `viewerInput.materialCatalog` per the data shape above. Update [`Viewer.jsx`](https://github.com/EBjornson/BPViewer/blob/main/src/public/Viewer.jsx) and runtime in [`ViewerRuntime.jsx`](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/ViewerRuntime.jsx) to thread the catalog through. Document in [Viewer Contract](viewer_contract_v1_8.md).
-2. **Picker UI:** update the material picker (currently in [`ViewerAuthoringDemoPanel.jsx`](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/ViewerAuthoringDemoPanel.jsx)) to:
+1. **Contract:** add `viewerInput.materialCatalog` per the data shape above. Update `Viewer.jsx` and runtime in `ViewerRuntime.jsx` to thread the catalog through. Document in [Viewer Contract](viewer_contract_v1_8.md).
+2. **Picker UI:** update the material picker (currently in `ViewerAuthoringDemoPanel.jsx`) to:
    - Consume the catalog from input rather than static import.
    - Render entries grouped or filterable by source: `All` / `Platform` / `Yours`.
    - Show a `Platform` / `Yours` badge per entry.
    - Surface a "Manage materials" link that returns focus to the DemoApp header Materials panel (App-handled — Viewer fires a callback).
 
-The static import of [`materialManifest`](https://github.com/EBjornson/BPViewer/blob/main/src/config/materialManifest.js) inside the Viewer is removed in this phase; the manifest still exists in the codebase as the platform catalog source, just consumed by the App now, not the Viewer.
+The static import of `materialManifest` inside the Viewer is removed in this phase; the manifest still exists in the codebase as the platform catalog source, just consumed by the App now, not the Viewer.
 
 ### Phase 6 — Lifecycle UX
 
@@ -240,7 +240,7 @@ The only code that gets rewritten in the migration is the `WorkspaceMaterialStor
 
 ## Path B as future opportunity
 
-This plan keeps the curated catalog in-repo (Path A). When the curated catalog grows past what's comfortable to ship in a deploy, or when a non-engineer needs to add curated materials without engineering involvement, the platform catalog migrates to the same cloud storage as workspace materials, served through the same API with `source: 'platform'`. The App-side resolver doesn't change. The static [`materialManifest.js`](https://github.com/EBjornson/BPViewer/blob/main/src/config/materialManifest.js) and [`generate-material-manifest.mjs`](https://github.com/EBjornson/BPViewer/blob/main/scripts/generate-material-manifest.mjs) are retired or repurposed as a CLI for seeding the platform bucket.
+This plan keeps the curated catalog in-repo (Path A). When the curated catalog grows past what's comfortable to ship in a deploy, or when a non-engineer needs to add curated materials without engineering involvement, the platform catalog migrates to the same cloud storage as workspace materials, served through the same API with `source: 'platform'`. The App-side resolver doesn't change. The static `materialManifest.js` and `generate-material-manifest.mjs` are retired or repurposed as a CLI for seeding the platform bucket.
 
 ## Suggested commit / PR sequence
 

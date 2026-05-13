@@ -8,7 +8,7 @@
 
 ## Purpose
 
-How a host App integrates the Viewer end-to-end — what to push in via `input`, what comes back via `output`, and the patterns a real host App needs to implement around them. [DemoApp.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx) is the canonical reference implementation; it covers every touch point in this guide.
+How a host App integrates the Viewer end-to-end — what to push in via `input`, what comes back via `output`, and the patterns a real host App needs to implement around them. [DemoApp.jsx](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/DemoApp.jsx) is the canonical reference implementation; it covers every touch point in this guide.
 
 > **Core principle:** the App tells the Viewer what to render; the Viewer fires events when something useful happens. The App owns persisted intent and all identity. The Viewer owns runtime execution.
 
@@ -140,7 +140,7 @@ The App and the Viewer communicate through a single component:
 
 The App builds `viewerInput` and provides callbacks in `viewerOutput`. The Viewer renders the input and fires callbacks when something useful happens. **The App does not reach inside the Viewer; the Viewer does not persist state on the App's behalf.**
 
-Public surface: [Viewer.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/public/Viewer.jsx). Code-level contract types: [viewerContractTypes.js](https://github.com/EBjornson/BPViewer/blob/main/src/public/viewerContractTypes.js).
+Code-level contract types: [viewerContractTypes.js](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/viewerContractTypes.js). The public surface is the bundled `<Viewer>` React component (or `<viewer-element>` custom element) — see *Delivery* above for the import / mount paths; you don't need to look at source.
 
 ---
 
@@ -665,7 +665,7 @@ DemoApp persists per-model snapshots to browser `localStorage` keyed by model ID
 
 ## A Full End-to-End Example
 
-[DemoApp.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx) is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to `localStorage`, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp can mirror.
+[DemoApp.jsx](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/DemoApp.jsx) is the canonical end-to-end example. It implements every callback in the contract, persists per-model snapshots to `localStorage`, enforces cross-section ownership, runs the batch render flow, and is the reference any future CustomApp can mirror.
 
 A few patterns in DemoApp are easy to miss from the type-level reference alone and worth a closer look:
 

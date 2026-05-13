@@ -124,7 +124,7 @@ This is the canonical glossary for the documentation set. Other docs link here r
 
 - **Viewer** — The rendering/runtime layer (this repository's primary product). Loads the model, animates the camera, applies scene/presentation instructions, exposes capture tooling.
 - **Host App** (also: *CustomApp*) — Any business/application layer that consumes the Viewer. Owns persisted intent, pricing, product logic, and saved configurations. **DemoApp** is the reference example shipped in this repo; **Build & Price** is one planned future CustomApp.
-- **DemoApp** — The reference host App in this repo (`src/DemoApp/DemoApp.jsx`). Demonstrates the full capture/replay pattern; not a published API or production target. See [DemoApp](demoapp.md).
+- **DemoApp** — The reference host App; published to the integration kit as [DemoApp.jsx](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/DemoApp.jsx). Demonstrates the full capture/replay pattern; not a published API or production target. See [DemoApp](demoapp.md).
 - **Viewer Input** — The structured object the host App passes into the Viewer to control what it renders. Buckets: `model`, `camera`, `scene`, `presentation`, `admin`, plus `selectionKey`.
 - **Viewer Output** — The set of callbacks the Viewer uses to send events back to the host App — readiness, capture payloads, render captures, errors.
 - **Section** — A major product decision area such as Roof, Flooring, or Solar Package. Host-App-owned identity. May have associated options (one active at a time) or no options (in which case it serves as a stored "view-like" moment).

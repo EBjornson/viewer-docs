@@ -42,19 +42,19 @@ Each entry: what it does, what cost it attacks, where it lives.
 
 | Lever | Attacks | Source |
 |---|---|---|
-| `React.memo` on heavy leaves (`NorthArrow`, `FloorPointClickNav`, `ExteriorOrbitClickNav`, `SolarPanel`, `SpaceMenu`, `SceneLights`) | React re-render cascade on `selectionKey` bump | [ViewerSceneCanvas.jsx](src/viewer/components/ViewerSceneCanvas.jsx), [SolarPanel.jsx](src/viewer/components/SolarPanel.jsx), [SpaceMenu.jsx](src/viewer/components/SpaceMenu.jsx), [SceneLights.jsx](src/viewer/components/SceneLights.jsx) |
-| `useMemo` on `viewerNavigationState` / `viewerSceneState` | Wrapper-object ref churn into `ViewerRoot`/`ViewerSceneCanvas` | [ViewerRuntime.jsx:658,675](src/viewer/ViewerRuntime.jsx#L658) |
-| Shadow `needsUpdate` content-fingerprint dedup | Redundant full shadow re-renders on Section pill clicks where visibility content didn't actually change | `ShadowMapAutoUpdate` in [ViewerSceneCanvas.jsx](src/viewer/components/ViewerSceneCanvas.jsx) |
+| `React.memo` on heavy leaves (`NorthArrow`, `FloorPointClickNav`, `ExteriorOrbitClickNav`, `SolarPanel`, `SpaceMenu`, `SceneLights`) | React re-render cascade on `selectionKey` bump | ViewerSceneCanvas.jsx, SolarPanel.jsx, SpaceMenu.jsx, SceneLights.jsx |
+| `useMemo` on `viewerNavigationState` / `viewerSceneState` | Wrapper-object ref churn into `ViewerRoot`/`ViewerSceneCanvas` | ViewerRuntime.jsx:658,675 |
+| Shadow `needsUpdate` content-fingerprint dedup | Redundant full shadow re-renders on Section pill clicks where visibility content didn't actually change | `ShadowMapAutoUpdate` in ViewerSceneCanvas.jsx |
 | Shadow `needsUpdate` 50 ms grace + apply-on-animation-complete | Mid-animation shadow re-render stalling a single frame on the GPU during cross-mode transitions | same |
-| Fade-driven shadow update throttle (every-3rd-frame + final-bump) | The 27-frames-of-shadow-pass cost during a 450 ms crossfade | [VisibilityFadeController.jsx](src/viewer/components/VisibilityFadeController.jsx) |
-| **Animation-only DPR drop** | GPU fragment cost during camera-animation transit on Retina displays — biggest single win | `AnimationDprGate` in [ViewerSceneCanvas.jsx](src/viewer/components/ViewerSceneCanvas.jsx) |
+| Fade-driven shadow update throttle (every-3rd-frame + final-bump) | The 27-frames-of-shadow-pass cost during a 450 ms crossfade | VisibilityFadeController.jsx |
+| **Animation-only DPR drop** | GPU fragment cost during camera-animation transit on Retina displays — biggest single win | `AnimationDprGate` in ViewerSceneCanvas.jsx |
 
 Other architectural levers already in place from earlier perf work:
-- `frameloop="demand"` ([ViewerSceneCanvas.jsx](src/viewer/components/ViewerSceneCanvas.jsx)) — render only when `invalidate()` is called.
-- `gl.shadowMap.autoUpdate = false` ([`ShadowMapAutoUpdate`](src/viewer/components/ViewerSceneCanvas.jsx)) — shadows never re-render unless `needsUpdate = true`.
-- `gl.compileAsync` for shader pre-warming ([`ShaderPreCompile`](src/viewer/components/ViewerSceneCanvas.jsx)).
-- alphaHash dithering instead of `transparent + opacity` for visibility fade ([useSceneVisibility.js](src/viewer/hooks/useSceneVisibility.js)).
-- Eager material clone with `customDepthMaterial` attach to pre-warm patched-shader compiles ([modelPreparationUtils.js](src/utils/modelPreparationUtils.js)).
+- `frameloop="demand"` (ViewerSceneCanvas.jsx) — render only when `invalidate()` is called.
+- `gl.shadowMap.autoUpdate = false` (`ShadowMapAutoUpdate`) — shadows never re-render unless `needsUpdate = true`.
+- `gl.compileAsync` for shader pre-warming (`ShaderPreCompile`).
+- alphaHash dithering instead of `transparent + opacity` for visibility fade (useSceneVisibility.js).
+- Eager material clone with `customDepthMaterial` attach to pre-warm patched-shader compiles (modelPreparationUtils.js).
 
 ## How to measure
 

@@ -8,7 +8,7 @@
 
 ## What DemoApp Is
 
-DemoApp is the canonical reference host App in this repo. Source: [src/DemoApp/DemoApp.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx).
+DemoApp is the canonical reference host App in this repo. Source: [DemoApp.jsx](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/DemoApp.jsx).
 
 It demonstrates the full capture/replay pattern in a minimal host. It is **not** a published API and **not** the production target — pricing, product catalogs, multi-user workflows, backend persistence, and other production concerns are intentionally minimal or absent. **Build & Price** is one planned future host App (a *CustomApp*) that will consume the Viewer; DemoApp is the integration example any future CustomApp can mirror.
 
@@ -87,7 +87,7 @@ A production CustomApp would persist these to its backend instead of `localStora
 
 ## Source
 
-- [src/DemoApp/DemoApp.jsx](https://github.com/EBjornson/BPViewer/blob/main/src/DemoApp/DemoApp.jsx) — the full reference component.
+- [DemoApp.jsx](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/DemoApp.jsx) — the full reference component.
 
 ---
 
