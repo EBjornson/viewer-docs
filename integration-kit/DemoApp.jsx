@@ -74,6 +74,12 @@ const headerStyle = {
   alignItems: 'center',
   gap: 12,
   padding: '10px 16px',
+  // Stable height regardless of which items render (admin vs user mode) and
+  // how many pMode pill rows are visible. Sized to fit the tallest case:
+  // admin mode with the 2-row pMode pill grid (~50px content + 20px vertical
+  // padding). Items center vertically within this min-height; user mode's
+  // sparser content occupies horizontal space but vertical height stays put.
+  minHeight: 70,
   borderBottom: '1px solid rgba(255,255,255,0.1)',
   flexShrink: 0,
   background: '#3c3b3b',
@@ -727,7 +733,19 @@ export function DemoApp(props = {}) {
           DemoApp
         </span>
 
-        {modelManifest.length > 0 && (
+        {/* Admin Mode toggle stays in the same slot (right after the title)
+            in both modes so its position never shifts as users flip between
+            them. Admin-only items below it appear/disappear; this button's
+            slot is the stable anchor. */}
+        <button
+          style={adminEnabled ? activeAdminBtn : secondaryBtn}
+          onClick={() => setAdminEnabled((prev) => !prev)}
+          title="Toggle input.admin.enabled. When on, the Viewer renders its built-in Authoring Panel with capture/clear controls. (In a real CustomApp this button would typically be hidden from end users — admin/authoring access would happen via a separate route or auth-gated UI. DemoApp keeps it visible in both modes for demo convenience so reviewers can flip back and forth.)"
+        >
+          Admin Mode
+        </button>
+
+        {adminEnabled && modelManifest.length > 0 && (
           <select
             style={modelSelectStyle}
             value={selectedModelId ?? ''}
@@ -741,15 +759,7 @@ export function DemoApp(props = {}) {
           </select>
         )}
 
-        <button
-          style={adminEnabled ? activeAdminBtn : secondaryBtn}
-          onClick={() => setAdminEnabled((prev) => !prev)}
-          title="Toggle input.admin.enabled. When on, the Viewer renders its built-in Authoring Panel with capture/clear controls."
-        >
-          Admin Mode
-        </button>
-
-        {confirmingReset ? (
+        {adminEnabled && (confirmingReset ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
             <span style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,110,110,0.95)', whiteSpace: 'nowrap' }}>
               Reset all captures?
@@ -781,33 +791,39 @@ export function DemoApp(props = {}) {
           >
             Reset Model
           </button>
+        ))}
+
+        {adminEnabled && (
+          <>
+            <button
+              style={secondaryBtn}
+              onClick={() => modelFileInputRef.current?.click()}
+              title="Load an ad-hoc .glb file. Captures on uploaded files do NOT persist — refreshing clears them. Use the model dropdown for the manifest models that do persist."
+            >
+              Upload .glb
+            </button>
+            <input
+              ref={modelFileInputRef}
+              type="file"
+              accept=".glb,.gltf"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+            />
+          </>
         )}
 
-        <button
-          style={secondaryBtn}
-          onClick={() => modelFileInputRef.current?.click()}
-          title="Load an ad-hoc .glb file. Captures on uploaded files do NOT persist — refreshing clears them. Use the model dropdown for the manifest models that do persist."
-        >
-          Upload .glb
-        </button>
-        <input
-          ref={modelFileInputRef}
-          type="file"
-          accept=".glb,.gltf"
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
+        {adminEnabled && (
+          <a
+            href="/downloads/00%20TestModel.skp"
+            download="00 TestModel.skp"
+            style={{ ...primaryBtn, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+            title="Download the SketchUp source for the demo model. Useful for studying the marker conventions (Spaces > Rooms / Doorways, _PL / _SL light markers, _RM room markers, pivot/slide markers)."
+          >
+            Download .skp
+          </a>
+        )}
 
-        <a
-          href="/downloads/00%20TestModel.skp"
-          download="00 TestModel.skp"
-          style={{ ...primaryBtn, textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
-          title="Download the SketchUp source for the demo model. Useful for studying the marker conventions (Spaces > Rooms / Doorways, _PL / _SL light markers, _RM room markers, pivot/slide markers)."
-        >
-          Download .skp
-        </a>
-
-        {modelUrl && (
+        {adminEnabled && modelUrl && (
           <CaptureTooltip payload={viewerReady} position="below" enabled={adminEnabled}>
             <span
               title="Reflects onViewerReady. Hover ~3s in Admin Mode to inspect the full payload (modelUrl, productId, modelVersion, cameraMode, cameraInfo). Resets on every model switch."
@@ -829,33 +845,35 @@ export function DemoApp(props = {}) {
 
         <span style={{ flex: 1 }} />
 
-        <CaptureTooltip payload={materialDefaultCapture} position="below-right" enabled={adminEnabled}>
-          <span
-            title="Persistent indicator for materialDefaultCapture (model-level baseline materials, applied before any option assignments). Blue dot = a capture is stored. Hover ~3s in Admin Mode for the payload."
-            style={{
-              ...secondaryBtn,
-              position: 'relative',
-              display: 'block',
-              background: 'rgba(0,0,0,0.58)',
-              cursor: 'default',
-              userSelect: 'none',
-            }}
-          >
-            Mat. Defaults
-            {materialDefaultCapture && (
-              <span style={{
-                position: 'absolute',
-                top: 3,
-                right: 4,
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                background: '#487fff',
-                pointerEvents: 'none',
-              }} />
-            )}
-          </span>
-        </CaptureTooltip>
+        {adminEnabled && (
+          <CaptureTooltip payload={materialDefaultCapture} position="below-right" enabled={adminEnabled}>
+            <span
+              title="Persistent indicator for materialDefaultCapture (model-level baseline materials, applied before any option assignments). Blue dot = a capture is stored. Hover ~3s in Admin Mode for the payload."
+              style={{
+                ...secondaryBtn,
+                position: 'relative',
+                display: 'block',
+                background: 'rgba(0,0,0,0.58)',
+                cursor: 'default',
+                userSelect: 'none',
+              }}
+            >
+              Mat. Defaults
+              {materialDefaultCapture && (
+                <span style={{
+                  position: 'absolute',
+                  top: 3,
+                  right: 4,
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: '#487fff',
+                  pointerEvents: 'none',
+                }} />
+              )}
+            </span>
+          </CaptureTooltip>
+        )}
 
         {/* Visual Override toggle — opt-in user-facing control that exposes
             the pMode pills in user mode. Off by default. Hidden in admin
