@@ -6,6 +6,7 @@ A React + Three.js runtime for configurable, geometric SaaS products (homes, cab
 
 - **New here?** [Overview](overview.md) — what the Viewer is, the host-App pattern, and the canonical glossary.
 - **Integrating the Viewer into your App?** [Integration Guide](integration.md).
+- **Building a CustomApp from a real example?** Browse the [Integration Kit](https://github.com/EBjornson/viewer-docs/tree/main/integration-kit) — `DemoApp.jsx`, the contract types, the pMode resolver hook, conflict-enforcement helpers, and the capture-tooltip wrapper, ready to copy into your project. The kit's [README](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/README.md) describes the recommended consumption workflow.
 - **Reference for `input` / `output` types?** [Viewer Contract](viewer_contract_v1_8.md).
 - **Want to see a real integration?** [DemoApp Reference](demoapp.md).
 - **Working on Viewer internals?** [Architecture](architecture.md), [Capture & Replay](capture_and_replay.md).
