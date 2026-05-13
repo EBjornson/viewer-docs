@@ -814,6 +814,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#fallback-when-no-markers-are-authored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback when no markers are authored
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#captures-interact" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1395,6 +1406,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#fallback-when-no-markers-are-authored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fallback when no markers are authored
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#captures-interact" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1750,6 +1772,13 @@
 <li><strong>Floor Nav / NavPath debug overlays</strong> — visualize the walkable landing zones derived from <code>_RM</code> bounds and the path-graph segments between rooms.</li>
 <li><strong>Auto-mode lights</strong> — when <code>lightSourceMode === 'auto'</code>, <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SceneLights.jsx#L155"><code>SceneLights</code></a> places one point light per resolved <code>space</code>.</li>
 </ul>
+<h3 id="fallback-when-no-markers-are-authored">Fallback when no markers are authored<a class="headerlink" href="#fallback-when-no-markers-are-authored" title="Permanent link">&para;</a></h3>
+<p>When a model has no <code>_RM</code> / <code>_DW</code> markers, the navigation graph is empty and pathNav has no route to build. In that state the camera-routing table's three <code>pathNav</code> cells swap to a <code>directInterior</code> strategy:</p>
+<ul>
+<li><strong>Quickview Interior</strong> → camera lerps to bbox center at standing height.</li>
+<li><strong>Floor-click</strong> (interior or overhead) → camera lerps to the clicked point at standing height.</li>
+</ul>
+<p>Target heading preserves the camera's current view direction (leveled to horizontal, with the canonical interior down-tilt applied) — same as authored floor-click via <code>buildFloorPointDestinationPose</code>. Looking-straight-down sources (overhead → interior) fall back to facing the model's south side. No entry-approach orbit, no doorway choreography — pure direct lerp. A bbox-wide floor hotspot is rendered in place of the missing per-room hotspots so floor-click has something to receive the click. Authored markers always win; this fallback only fires on quick / unauthored models. See <a href="https://github.com/EBjornson/BPViewer/blob/main/src/utils/cameraPoseUtils.js"><code>buildDirectInteriorPose</code></a> and <a href="https://github.com/EBjornson/BPViewer/blob/main/src/viewer/navigation/cameraRoutingTable.js"><code>pickStrategy</code></a>.</p>
 <h3 id="captures-interact">Captures interact<a class="headerlink" href="#captures-interact" title="Permanent link">&para;</a></h3>
 <p><strong>No payload field references space markers directly.</strong> The graph is rebuilt from the model on every load.</p>
 <p>What <em>is</em> captured is camera state that <em>resulted from</em> navigating the graph: the <code>pose</code> and <code>cameraMode</code> in a section capture record where the camera ended up, regardless of whether the author got there by clicking a room, walking through a doorway, or dragging the orbit. Replay restores the pose without re-running graph navigation — <code>walkToCapturedPose</code> is used when the App wants to animate through the graph to a captured pose, but a direct pose set works too.</p>

@@ -2693,6 +2693,9 @@
 <hr />
 <h2 id="navigation-marker-conventions">Navigation Marker Conventions<a class="headerlink" href="#navigation-marker-conventions" title="Permanent link">&para;</a></h2>
 <p>Adds room navigation, doorway connections, and exterior entries to the model. The viewer surfaces these as a clickable Rooms panel for end users and uses the connection graph to route the camera between rooms via doorways.</p>
+<blockquote>
+<p><strong>No markers? Quickview Interior and floor-click still work.</strong> When a model has zero <code>_RM</code> / <code>_DW</code> markers the camera-routing pathNav cells fall back to a direct lerp at standing height — bbox center for Quickview Interior, the clicked point for floor-click (a bbox-wide floor hotspot replaces the per-room hotspots). Target heading preserves the camera's current view direction (same math as authored floor-click), so the camera doesn't snap on every navigation. Authored markers always win; this fallback is for quick / unauthored models intended for internal use. See <a href="../marker_pipeline/#fallback-when-no-markers-are-authored">marker_pipeline.md → Fallback when no markers are authored</a>.</p>
+</blockquote>
 <h3 id="marker-name-suffix">Marker name suffix<a class="headerlink" href="#marker-name-suffix" title="Permanent link">&para;</a></h3>
 <p>A node whose name contains <code>_RM</code> (room) or <code>_DW</code> (doorway) — preceded by <code>_</code> and followed by <code>_</code> or end-of-name — is a navigation marker. Markers can live anywhere in the scene tree; there is no top-level container.</p>
 <table>
