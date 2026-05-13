@@ -27,15 +27,23 @@ These are **example files, meant to be copied into your project** — not a publ
 2. **Pin the Viewer bundle** in your CustomApp's HTML or JSX per the [Integration Guide's "Delivery" section](https://ebjornson.github.io/viewer-docs/integration/#delivery). The bundle URL is `https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1/viewer.js` (float — auto-upgrade on patch / minor releases) or `@v1.X.Y` (immutable exact pin). React, Three.js, and `@react-three/fiber` are bundled internally — your App doesn't need to install them.
 3. **For React hosts: copy `ViewerElementReactBridge.jsx` and `viewerOutputEventMap.js`** into your project. The bridge is the load-bearing piece — it mounts the bundle's custom element with a React-friendly `{ input, output }` API. You can't skip it and import `Viewer` directly; the bundle's bundled React would clash with your host's React. See the [Integration Guide's "React" section](https://ebjornson.github.io/viewer-docs/integration/#react) for the full explanation. A skeleton entry-point looks like:
    ```jsx
-   import 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1/viewer.js'  // side-effect: registers <viewer-element>
-   import { ViewerElementReactBridge } from './ViewerElementReactBridge'
+   // main.jsx — side-effect import registers <viewer-element> at app startup
+   import 'https://cdn.jsdelivr.net/gh/EBjornson/viewer-dist@v1/viewer.js'
    import { App } from './App'
    import ReactDOM from 'react-dom/client'
 
-   ReactDOM.createRoot(document.getElementById('root')).render(
-     <App ViewerComponent={ViewerElementReactBridge} />
-   )
+   ReactDOM.createRoot(document.getElementById('root')).render(<App />)
    ```
+   ```jsx
+   // App.jsx — render the bridge directly inside your component tree
+   import { ViewerElementReactBridge } from './ViewerElementReactBridge'
+
+   export function App() {
+     // ...your state, ProjectView, etc.
+     return <ViewerElementReactBridge input={viewerInput} output={viewerOutput} />
+   }
+   ```
+   **Two patterns for hosting the bridge.** The skeleton above renders the bridge directly inside your App — the simplest path, used when your App is purpose-built for one mount target (most CustomApps, including TestPoint). The alternative is the prop-pattern that BPViewer's DemoApp uses (`<App ViewerComponent={ViewerElementReactBridge} />`), which lets the same App component be hosted by either the bridge OR a source-imported `Viewer` for development. Adopt the prop-pattern only if you need that dual-mode flexibility — otherwise direct-render is cleaner.
 4. **Copy `DemoApp.jsx` as your starting template.** It uses the same `<Viewer input={...} output={...} />` surface a CustomApp would. Adapt its UI to your product; the contract translation pattern (state → `viewerInput`, `viewerOutput` → state) is the load-bearing part to keep. The [Common patterns from DemoApp.jsx](https://ebjornson.github.io/viewer-docs/demoapp/#common-patterns-from-demoappjsx) section in the docs inlines the most-used snippets so you can scan before diving into the code.
 5. **Pull in helpers as needed**: `crossSectionConflicts.js` for ownership enforcement, `usePModeResolver.js` if your App has a presentation mode taxonomy, `CaptureTooltip.jsx` for admin tooltip-on-hover, etc. Each file is independent — adopt only what you need.
 6. **Replace `sectionDemoConfig.js` and `modelManifest.js`** with your own product structure. The shapes (`[{ id, label, options }]` and `[{ id, label, path }]`) are what `DemoApp.jsx` consumes; if your product structure differs, `DemoApp.jsx`'s rendering / state code is the surface to adapt.

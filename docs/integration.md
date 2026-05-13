@@ -161,10 +161,6 @@ The Viewer's React `output` callbacks become DOM events on `<viewer-element>`. N
 
 Each event's `.detail` carries the same payload the corresponding React callback would receive.
 
-### Source-import path (development only)
-
-This repo's own DemoApp imports `Viewer` from source for fast HMR during development. External integrators should always use the CDN URL — source imports require this repo's full toolchain.
-
 ---
 
 ## The Public Integration Surface
