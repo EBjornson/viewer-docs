@@ -186,6 +186,8 @@ then persistence and mapping become harder.
 
 Adds room navigation, doorway connections, and exterior entries to the model. The viewer surfaces these as a clickable Rooms panel for end users and uses the connection graph to route the camera between rooms via doorways.
 
+> **No markers? Quickview Interior and floor-click still work.** When a model has zero `_RM` / `_DW` markers the camera-routing pathNav cells fall back to a direct lerp at standing height — bbox center for Quickview Interior, the clicked point for floor-click (a bbox-wide floor hotspot replaces the per-room hotspots). Target heading preserves the camera's current view direction (same math as authored floor-click), so the camera doesn't snap on every navigation. Authored markers always win; this fallback is for quick / unauthored models intended for internal use. See [marker_pipeline.md → Fallback when no markers are authored](marker_pipeline.md#fallback-when-no-markers-are-authored).
+
 ### Marker name suffix
 
 A node whose name contains `_RM` (room) or `_DW` (doorway) — preceded by `_` and followed by `_` or end-of-name — is a navigation marker. Markers can live anywhere in the scene tree; there is no top-level container.

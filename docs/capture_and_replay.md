@@ -208,7 +208,7 @@ Geometry visibility for non-active options is driven by `input.scene.visibilityA
 
 ### Clearing
 
-`onOptionCaptureCleared()` fires when the admin clears the active option's capture. The App removes or zeroes the stored entry for that section/option pair.
+`onOptionCaptureCleared()` fires when the admin clears the active option's capture. The App removes the stored entry for that section/option pair (symmetric with `onSectionCaptureCleared` deleting its entry).
 
 ---
 
@@ -251,7 +251,7 @@ A presentation mode capture is a **full `ViewerPresentationInput` snapshot** sto
 | Winter Night | `'winterNight'` | Winter night exterior |
 | Winter Night Interior | `'winterNightInt'` | Winter night interior |
 
-DemoApp renders these as 2 rows of 3 clickable pills in the App header. In admin mode, clicking a pill loads the App-stored snapshot for that pMode via `viewerInput.presentation` (or shows nothing if not yet captured). In user mode, the pills are pure read-only "blue when captured" status indicators.
+DemoApp renders these as 2 rows of 3 pills in the App header. In admin mode, the pills are always live: clicking loads the App-stored snapshot for that pMode via `viewerInput.presentation` (or shows nothing if not yet captured). In user mode, the pills are hidden by default; toggling DemoApp's opt-in **Visual Override** switch in the header reveals the captured pills as clickable runtime preset switchers (described in *Optional user-mode pMode override in DemoApp* below).
 
 ### Capturing
 
@@ -338,7 +338,7 @@ Clicking a **Space** or **Entry** button in the Space Menu (right column, contro
 
 **Section replay** works by the App reading its stored section capture and pushing the resolved presentation snapshot (per the strategy chosen — frozen embedded vs. re-resolved via pMode lookup) into `input.presentation`.
 
-**No user-mode pMode toggle in DemoApp.** DemoApp omits user-facing pMode buttons by design. Users navigate by section tabs only. CustomApps can opt in to a user-mode pMode toggle by rendering their own buttons that swap `viewerInput.presentation` while leaving camera/visibility alone — this is App-side wiring with no contract change.
+**Optional user-mode pMode override in DemoApp.** DemoApp ships an opt-in **Visual Override** toggle in the header. When off (default), pMode pills are hidden in user mode and section replays use each section's authored presentation — today's minimal user-mode UX. When on, pills with stored snapshots become clickable; the active pill's snapshot replaces every section's resolved presentation as `viewerInput.presentation`, and the override **persists across section clicks** (the conceptual model is "show me all sections under this preset"). Camera and visibility still come from the section's capture; only presentation is overridden. CustomApps may use, modify, or omit this pattern — it's App-side wiring with no contract change. The same `usePModeResolver` hook that powers admin authoring also powers the user-mode override (DemoApp's section-click handler skips the hook's `onSectionSelected` call when the override is active, keeping the override persistent).
 
 ### Admin Mode (`input.admin.enabled = true`)
 

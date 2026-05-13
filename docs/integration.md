@@ -265,7 +265,7 @@ Two visibility lists and two material layers:
 ```ts
 scene: {
   visibilityAssignments: {
-    hiddenGeometryIds: allOptionGeometryIds,        // every option's geometry IDs (the pool)
+    hiddenGeometryIds: inactiveOptionGeometryIds,   // per-section: union of inactive options' geometry IDs
     shownGeometryIds: activeOptionGeometryIds,      // currently active option's geometry IDs
     sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
     isolatedGeometryIds: null,
@@ -500,15 +500,15 @@ For the full lifecycle of every capture family — payload shapes, replay paths,
 
 When the App drives option-based geometry visibility, it passes two flat lists:
 
-- `hiddenGeometryIds` — every geometry ID owned by every option in the section (the full pool)
+- `hiddenGeometryIds` — per-section union of every **inactive** option's geometry IDs
 - `shownGeometryIds` — geometry IDs owned by the currently active option
 
-The Viewer's rule: **show list wins over hide list**. The App never computes a set difference — it collects and passes; the Viewer resolves.
+The Viewer's rule: **show list wins over hide list**. The App never computes a set difference — it collects and passes; the Viewer resolves. (DemoApp scopes the hide list per-section, omitting the active option's geometry, since the cross-section ownership rule guarantees no geometry is in show/hide lists across sections — global vs scoped is semantically equivalent but scoped grows O(N×(M-1)) instead of O(N×M) at scale. A simpler global-pool implementation that includes the active option's geometry in `hiddenGeometryIds` also works because `shownGeometryIds` wins.)
 
 ```ts
 scene: {
   visibilityAssignments: {
-    hiddenGeometryIds: allOptionGeometryIds,
+    hiddenGeometryIds: inactiveOptionGeometryIds,
     shownGeometryIds: activeOptionGeometryIds,
     sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
   },

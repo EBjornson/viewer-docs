@@ -79,6 +79,15 @@ The descriptors flow into [`ViewerRuntime.jsx:360`](https://github.com/EBjornson
 - **Floor Nav / NavPath debug overlays** — visualize the walkable landing zones derived from `_RM` bounds and the path-graph segments between rooms.
 - **Auto-mode lights** — when `lightSourceMode === 'auto'`, [`SceneLights`](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/components/SceneLights.jsx#L155) places one point light per resolved `space`.
 
+### Fallback when no markers are authored
+
+When a model has no `_RM` / `_DW` markers, the navigation graph is empty and pathNav has no route to build. In that state the camera-routing table's three `pathNav` cells swap to a `directInterior` strategy:
+
+- **Quickview Interior** → camera lerps to bbox center at standing height.
+- **Floor-click** (interior or overhead) → camera lerps to the clicked point at standing height.
+
+Target heading preserves the camera's current view direction (leveled to horizontal, with the canonical interior down-tilt applied) — same as authored floor-click via `buildFloorPointDestinationPose`. Looking-straight-down sources (overhead → interior) fall back to facing the model's south side. No entry-approach orbit, no doorway choreography — pure direct lerp. A bbox-wide floor hotspot is rendered in place of the missing per-room hotspots so floor-click has something to receive the click. Authored markers always win; this fallback only fires on quick / unauthored models. See [`buildDirectInteriorPose`](https://github.com/EBjornson/BPViewer/blob/main/src/utils/cameraPoseUtils.js) and [`pickStrategy`](https://github.com/EBjornson/BPViewer/blob/main/src/viewer/navigation/cameraRoutingTable.js).
+
 ### Captures interact
 
 **No payload field references space markers directly.** The graph is rebuilt from the model on every load.

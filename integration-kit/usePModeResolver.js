@@ -1,28 +1,64 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 
 /**
- * Resolves DemoApp's three-source pMode merge into a single pair of derived
- * values (`activePMode` for indicator display, `resolvedPresentation` for
- * `viewerInput.presentation`).
+ * Reusable pMode resolution hook for CustomApps that maintain a presentation
+ * mode taxonomy. Handles the three-source merge — transient override, the
+ * section capture's pMode tag, and a sticky-across-clicks fallback — and
+ * produces the values the host App pushes into `viewerInput.presentation`
+ * plus an `activePMode` for indicator display.
  *
- * The three sources:
- *   1. `override` — transient flag set when admin clicks a pMode pill.
- *      Cleared on section selection and model switch.
+ * Used by both admin authoring (override = "load this preset to capture
+ * from") and optional user-mode override (override = "show me all sections
+ * under this preset"). The two modes differ only in whether the host App
+ * calls `onSectionSelected` on a section click (admin: yes, clears the
+ * override; user-mode-override: no, keeps the override persistent across
+ * section clicks).
+ *
+ * The three priority sources, in order:
+ *   1. `override` — transient flag set when a pMode pill is clicked. Cleared
+ *      by `onSectionSelected` (admin pattern). Persistent for user-mode
+ *      override patterns that skip the call.
  *   2. `sectionCapture.presentationMode` — App-side metadata tag attached
- *      when a section was captured under a particular pMode (re-skin
- *      support per v1.8 design Q2).
+ *      when a section was captured under a particular pMode. Enables re-skin:
+ *      updating a pMode's stored snapshot propagates to all sections tagged
+ *      with that pMode on next replay.
  *   3. `currentPModeRef.current` — sticky-across-clicks fallback. Used for
  *      uncaptured-section navigation (where #2 is undefined) and for
  *      attaching the pMode tag on new section captures.
  *
- * `currentPModeRef` is exposed because DemoApp's `viewerOutput` callbacks
- * read it directly to attach the pMode tag on `onSectionCaptured` and to
- * route `onPresentationModeCaptured`/`...Cleared` payloads to the correct
+ * `currentPModeRef` is exposed because the host App reads it directly to
+ * attach the pMode tag on `onSectionCaptured` and to route
+ * `onPresentationModeCaptured`/`...Cleared` payloads to the correct
  * `presentationModeCaptures[mode]` entry.
+ *
+ * @param {object} params
+ * @param {object | null} params.sectionCapture - Currently active section's stored capture, with optional `.presentationMode` tag.
+ * @param {Record<string, object>} params.presentationModeCaptures - The App's pMode store, keyed by pMode string.
+ * @param {number} params.selectionKey - Bumps on section/pill clicks; included as a memo dep so re-clicks force a fresh `resolvedPresentation` reference.
+ * @param {string} params.defaultMode - Cold-start sticky pMode. Should match the App's taxonomy (e.g. the first key in your pill grid).
+ *
+ * @returns {{
+ *   activePMode: string,
+ *   resolvedPresentation: object | undefined,
+ *   currentPModeRef: { current: string },
+ *   onSectionSelected: (cap: object | null) => void,
+ *   onPModeSelected: (mode: string) => void,
+ *   clearOverride: () => void,
+ * }} `activePMode` for indicator display; `resolvedPresentation` for
+ * `viewerInput.presentation` (undefined for uncaptured-section navigation,
+ * triggering preserve-on-undefined per the contract). `onSectionSelected`
+ * and `onPModeSelected` are click handlers; `clearOverride` is the explicit
+ * "clear the transient override" primitive — call from model-switch
+ * lifecycle handlers and from any user-facing "turn off override" UI.
  */
-export function usePModeResolver({ sectionCapture, presentationModeCaptures, selectionKey }) {
+export function usePModeResolver({
+  sectionCapture,
+  presentationModeCaptures,
+  selectionKey,
+  defaultMode,
+}) {
   const [override, setOverride] = useState(null)
-  const currentPModeRef = useRef('day')
+  const currentPModeRef = useRef(defaultMode)
 
   const activePMode = override
     ?? sectionCapture?.presentationMode
@@ -49,22 +85,24 @@ export function usePModeResolver({ sectionCapture, presentationModeCaptures, sel
 
   // Section click: clear admin override (so #2 or #3 drives), and inherit
   // the section's pMode tag into the sticky ref so future captures and pMode
-  // actions route to the section's "home" pMode.
+  // actions route to the section's "home" pMode. User-mode-override patterns
+  // skip this call to keep the override persistent across section clicks.
   const onSectionSelected = useCallback((cap) => {
     setOverride(null)
     if (cap?.presentationMode) currentPModeRef.current = cap.presentationMode
   }, [])
 
-  // Admin pMode pill click: set the transient override and update the sticky
-  // ref so capture callbacks route to this pMode.
+  // pMode pill click: set the transient override and update the sticky ref
+  // so capture callbacks route to this pMode.
   const onPModeSelected = useCallback((mode) => {
     setOverride(mode)
     currentPModeRef.current = mode
   }, [])
 
-  // Model switch: clear the override only (sticky ref persists across model
-  // switches, matching the prior inline behavior).
-  const onModelSwitch = useCallback(() => {
+  // Explicit clear-the-override primitive. Sticky ref persists. Call from
+  // model-switch lifecycle handlers and from any user-facing "turn off
+  // override" UI (e.g. DemoApp's Visual Override toggle).
+  const clearOverride = useCallback(() => {
     setOverride(null)
   }, [])
 
@@ -74,6 +112,6 @@ export function usePModeResolver({ sectionCapture, presentationModeCaptures, sel
     currentPModeRef,
     onSectionSelected,
     onPModeSelected,
-    onModelSwitch,
+    clearOverride,
   }
 }
