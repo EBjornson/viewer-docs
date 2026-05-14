@@ -536,6 +536,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Recommended shape: storage abstraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#previewing-generated-blobs-in-app-react-19-strictmode-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previewing generated blobs in-app — React 19 StrictMode trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -596,6 +613,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Sharing patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-rls-for-shared-private-bucket-reads-security-definer-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage RLS for shared private-bucket reads — SECURITY DEFINER pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1016,6 +1050,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Recommended shape: storage abstraction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#previewing-generated-blobs-in-app-react-19-strictmode-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Previewing generated blobs in-app — React 19 StrictMode trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1076,6 +1127,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Sharing patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-rls-for-shared-private-bucket-reads-security-definer-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage RLS for shared private-bucket reads — SECURITY DEFINER pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1152,55 +1220,85 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">fetchBlob</span><span class="p">(</span><span class="nx">idOrUrl</span><span class="p">)</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="cm">/* returns Blob */</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <p>Consumers (<code>&lt;App&gt;</code>, <code>&lt;ProjectView&gt;</code>, etc.) <code>await</code> these without caring whether the impl is IndexedDB, OPFS, Supabase, S3, or Firebase. The Viewer doesn't care either — it just receives a <code>modelUrl</code> (which can be a <code>blob:</code> URL from <code>URL.createObjectURL(fetchedBlob)</code> for local impls, or an HTTPS URL for server-side impls).</p>
+<h3 id="previewing-generated-blobs-in-app-react-19-strictmode-trap">Previewing generated blobs in-app — React 19 StrictMode trap<a class="headerlink" href="#previewing-generated-blobs-in-app-react-19-strictmode-trap" title="Permanent link">&para;</a></h3>
+<p>If your CustomApp lets users preview a generated blob (a PDF report, screenshot bundle, image export) before saving, watch out for a blob-URL lifecycle bug that's specific to <strong>React 19 StrictMode</strong> (the default in fresh <code>create vite</code> scaffolds). The natural React pattern — <code>useMemo(() =&gt; URL.createObjectURL(blob), [blob])</code> paired with a <code>useEffect</code> cleanup that revokes — quietly fails in dev mode: StrictMode double-invocation runs the cleanup once <em>between</em> the first setup and the second, silently revoking the URL while the iframe is still rendering from it. The iframe survives (it already has the blob bytes in memory), so the preview <em>looks</em> fine. But a subsequent <code>&lt;a href={url} download&gt;.click()</code> on the same URL navigates to the now-revoked URL, and Chrome surfaces this as <strong>"Check Internet Connection"</strong> with nothing useful in the console. The first encounter typically costs 30–60 minutes of chasing wrong leads (cache, CORS, the bundle's network requests).</p>
+<p><strong>Safe pattern</strong> — two parts:</p>
+<ol>
+<li>
+<p><strong>Create the iframe URL inside an effect, not a memo.</strong> Store it via <code>useState</code>; the effect's cleanup then fires only on real unmount, not on StrictMode's dev-mode double-invoke.<br />
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">[</span><span class="nx">previewUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">setPreviewUrl</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nx">useEffect</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">blob</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">setPreviewUrl</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">},</span><span class="w"> </span><span class="p">[</span><span class="nx">blob</span><span class="p">])</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">// &lt;iframe src={previewUrl} /&gt;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Mint a separate blob URL on each download click</strong>, revoked after a short <code>setTimeout</code>. Isolates the download URL from the iframe URL's lifecycle entirely.<br />
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">handleDownload</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">blob</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">a</span><span class="p">.</span><span class="nx">href</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nx">a</span><span class="p">.</span><span class="nx">download</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">filename</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nx">a</span><span class="p">.</span><span class="nx">click</span><span class="p">()</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">revokeObjectURL</span><span class="p">(</span><span class="nx">url</span><span class="p">),</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
+</code></pre></div></p>
+</li>
+</ol>
+<p>Production builds are unaffected — StrictMode double-invocation is dev-only — so the bug only surfaces during local verification. Adopt the safe pattern from day one and the dev/prod parity issue never arises.</p>
 <h2 id="three-viable-backends">Three viable backends<a class="headerlink" href="#three-viable-backends" title="Permanent link">&para;</a></h2>
 <h3 id="1-indexeddb-recommended-for-local-first-pocs">1. IndexedDB (recommended for local-first POCs)<a class="headerlink" href="#1-indexeddb-recommended-for-local-first-pocs" title="Permanent link">&para;</a></h3>
 <p>The browser's structured storage. Quota is much larger (typically 50% of free disk) and supports binary blobs natively. The raw API is verbose; <strong><code>idb-keyval</code></strong> wraps it in a <code>localStorage</code>-like key/value API.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">get</span><span class="p">,</span><span class="w"> </span><span class="nx">set</span><span class="p">,</span><span class="w"> </span><span class="nx">del</span><span class="p">,</span><span class="w"> </span><span class="nx">keys</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;idb-keyval&#39;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">getProject</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">get</span><span class="p">(</span><span class="sb">`project:</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">saveProject</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">set</span><span class="p">(</span><span class="sb">`project:</span><span class="si">${</span><span class="nx">project</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">project</span><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">uploadBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomUUID</span><span class="p">()</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">set</span><span class="p">(</span><span class="sb">`blob:</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="p">)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">id</span><span class="w">  </span><span class="c1">// consumers fetchBlob(id) → URL.createObjectURL(blob)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">}</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">fetchBlob</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">get</span><span class="p">(</span><span class="sb">`blob:</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="w">  </span><span class="c1">// returns Blob; caller decides createObjectURL or arrayBuffer</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">get</span><span class="p">,</span><span class="w"> </span><span class="nx">set</span><span class="p">,</span><span class="w"> </span><span class="nx">del</span><span class="p">,</span><span class="w"> </span><span class="nx">keys</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;idb-keyval&#39;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">getProject</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">get</span><span class="p">(</span><span class="sb">`project:</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">saveProject</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">set</span><span class="p">(</span><span class="sb">`project:</span><span class="si">${</span><span class="nx">project</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">project</span><span class="p">)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">uploadBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomUUID</span><span class="p">()</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">set</span><span class="p">(</span><span class="sb">`blob:</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="p">)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">id</span><span class="w">  </span><span class="c1">// consumers fetchBlob(id) → URL.createObjectURL(blob)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">fetchBlob</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">get</span><span class="p">(</span><span class="sb">`blob:</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="w">  </span><span class="c1">// returns Blob; caller decides createObjectURL or arrayBuffer</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Use for</strong>: v0.1 POCs, single-user local apps, or as the offline-cache layer in front of a server-side backend.<br />
 <strong>Don't use for</strong>: cross-device sync, sharing with end users.</p>
 <h3 id="2-origin-private-file-system-opfs">2. Origin Private File System (OPFS)<a class="headerlink" href="#2-origin-private-file-system-opfs" title="Permanent link">&para;</a></h3>
 <p>A newer browser API (Chrome 102+, Safari 15.2+, Firefox 111+) for storing actual files origin-private. Higher quotas than IndexedDB on some platforms; native file handles for streaming reads/writes. No library required — but the API is verbose, and the ecosystem is less mature than IDB. Worth considering if you need to handle very large <code>.glb</code> files (~100MB+) or want a file-tree mental model.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">navigator</span><span class="p">.</span><span class="nx">storage</span><span class="p">.</span><span class="nx">getDirectory</span><span class="p">()</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">fileHandle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">getFileHandle</span><span class="p">(</span><span class="s1">&#39;project.json&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">})</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">writable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fileHandle</span><span class="p">.</span><span class="nx">createWritable</span><span class="p">()</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">writable</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">project</span><span class="p">))</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">await</span><span class="w"> </span><span class="nx">writable</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">navigator</span><span class="p">.</span><span class="nx">storage</span><span class="p">.</span><span class="nx">getDirectory</span><span class="p">()</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">fileHandle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">getFileHandle</span><span class="p">(</span><span class="s1">&#39;project.json&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">})</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">writable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fileHandle</span><span class="p">.</span><span class="nx">createWritable</span><span class="p">()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">await</span><span class="w"> </span><span class="nx">writable</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">project</span><span class="p">))</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">await</span><span class="w"> </span><span class="nx">writable</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
 </code></pre></div>
 <p><strong>Use for</strong>: very-large-blob storage (multi-hundred MB), apps that benefit from a file-tree model.<br />
 <strong>Don't use for</strong>: anything that needs cross-device or sharing — same limitation as IDB.</p>
 <h3 id="3-server-side-supabase-firebase-s3-auth">3. Server-side (Supabase / Firebase / S3 + auth)<a class="headerlink" href="#3-server-side-supabase-firebase-s3-auth" title="Permanent link">&para;</a></h3>
 <p>When you need cross-device sync, multi-user access, or sharing with end users, you need a server. Two clean shapes:</p>
 <p><strong>Supabase (recommended for solo/small-team CustomApps):</strong> Postgres for project metadata, Storage for blobs, Auth for users, Edge Functions if you need server-side logic. Single vendor, generous free tier.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@supabase/supabase-js&#39;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">supabase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createClient</span><span class="p">(</span><span class="nx">URL</span><span class="p">,</span><span class="w"> </span><span class="nx">ANON_KEY</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">saveProject</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="s1">&#39;projects&#39;</span><span class="p">).</span><span class="nx">upsert</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">uploadBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomUUID</span><span class="p">()</span><span class="si">}</span><span class="sb">-</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">storage</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="s1">&#39;user-uploads&#39;</span><span class="p">).</span><span class="nx">upload</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="p">)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">storage</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="s1">&#39;user-uploads&#39;</span><span class="p">).</span><span class="nx">getPublicUrl</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">publicUrl</span><span class="w">  </span><span class="c1">// consumers: pass directly to viewerInput.model.modelUrl</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@supabase/supabase-js&#39;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">supabase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">createClient</span><span class="p">(</span><span class="nx">URL</span><span class="p">,</span><span class="w"> </span><span class="nx">ANON_KEY</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">saveProject</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="s1">&#39;projects&#39;</span><span class="p">).</span><span class="nx">upsert</span><span class="p">(</span><span class="nx">project</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">uploadBlob</span><span class="p">(</span><span class="nx">blob</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomUUID</span><span class="p">()</span><span class="si">}</span><span class="sb">-</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">storage</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="s1">&#39;user-uploads&#39;</span><span class="p">).</span><span class="nx">upload</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="nx">blob</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">supabase</span><span class="p">.</span><span class="nx">storage</span><span class="p">.</span><span class="kr">from</span><span class="p">(</span><span class="s1">&#39;user-uploads&#39;</span><span class="p">).</span><span class="nx">getPublicUrl</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">publicUrl</span><span class="w">  </span><span class="c1">// consumers: pass directly to viewerInput.model.modelUrl</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="p">}</span>
 </code></pre></div>
 <p><strong>Firebase</strong>: similar shape (Firestore + Storage + Auth). Best-in-class auth integration with Google ecosystem.</p>
 <p><strong>S3 + your own API</strong>: more flexible, more setup. Worth it only when you've outgrown the BaaS options.</p>
@@ -1233,6 +1331,46 @@
 </tbody>
 </table>
 <p>The unguessable-UUID pattern is the sweet spot for a "send a link to a customer by email" workflow. Combine with Supabase row-level security (RLS): the public-share path uses an anon-role policy that allows <code>SELECT</code> only when the project's <code>is_public_shared = true</code> flag is set; the project owner toggles that flag when they generate the share link.</p>
+<h3 id="storage-rls-for-shared-private-bucket-reads-security-definer-pattern">Storage RLS for shared private-bucket reads — <code>SECURITY DEFINER</code> pattern<a class="headerlink" href="#storage-rls-for-shared-private-bucket-reads-security-definer-pattern" title="Permanent link">&para;</a></h3>
+<p>The above is straightforward when the share-flag check is on the <strong>same</strong> table the policy targets. It gets subtle when the flag lives in a <strong>different</strong> table than <code>storage.objects</code> — typical for blobs (model files, photos, generated reports) stored under a private bucket where the owning project's <code>is_public_shared</code> flag lives in a sibling Postgres table.</p>
+<p>The natural Postgres RLS for the storage bucket reads cleanly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- DON&#39;T USE — silently fails for anon callers</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">create</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="ss">&quot;user_uploads_select_shared&quot;</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">bucket_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;user-uploads&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="k">and</span><span class="w"> </span><span class="k">exists</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="k">select</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">projects</span><span class="w"> </span><span class="n">p</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">      </span><span class="k">where</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">::</span><span class="nb">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">storage</span><span class="p">.</span><span class="n">foldername</span><span class="p">(</span><span class="n">name</span><span class="p">))[</span><span class="mi">2</span><span class="p">]</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="k">and</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">is_public_shared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="p">);</span>
+</code></pre></div>
+<p><strong>It looks right and silently doesn't work.</strong> Supabase Storage's <code>createSignedUrl</code> endpoint returns <code>StorageApiError: Object not found</code> (HTTP 400) for shared paths — same error you'd get for a non-existent file or a true permission denial. Nothing distinguishes "object missing" from "RLS evaluated false" from "subquery couldn't resolve under the anon role." The same anon caller can <code>SELECT</code> the project row directly via a symmetrically-shaped <code>projects_select_shared</code> policy on <code>public.projects</code>, so you'd expect the <code>exists()</code> to evaluate consistently. It doesn't — appears to be an RLS-in-RLS evaluation quirk specific to how the Storage API path executes the policy under the anon role.</p>
+<p><strong>Safe pattern</strong>: extract the cross-table lookup into a <code>SECURITY DEFINER</code> helper function and call it from the policy. The function bypasses RLS on the inner read but only returns a boolean, so nothing sensitive leaks (the "is this project shared" fact is implicit in the share link existing).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">create</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">replace</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">is_project_publicly_shared</span><span class="p">(</span><span class="n">project_uuid</span><span class="w"> </span><span class="n">uuid</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="k">returns</span><span class="w"> </span><span class="nb">boolean</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">language</span><span class="w"> </span><span class="k">sql</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="k">security</span><span class="w"> </span><span class="k">definer</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="k">set</span><span class="w"> </span><span class="n">search_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">public</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="k">stable</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">as</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="k">select</span><span class="w"> </span><span class="k">coalesce</span><span class="p">(</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="p">(</span><span class="k">select</span><span class="w"> </span><span class="n">is_public_shared</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">projects</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">project_uuid</span><span class="p">),</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="k">false</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="p">);</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="err">$$</span><span class="p">;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="k">revoke</span><span class="w"> </span><span class="k">execute</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">is_project_publicly_shared</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">public</span><span class="p">;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="k">grant</span><span class="w">  </span><span class="k">execute</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">is_project_publicly_shared</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">anon</span><span class="p">,</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="k">create</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="ss">&quot;user_uploads_select_shared&quot;</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">storage</span><span class="p">.</span><span class="n">objects</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="n">bucket_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;user-uploads&#39;</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="k">and</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">is_project_publicly_shared</span><span class="p">(</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">      </span><span class="p">((</span><span class="k">storage</span><span class="p">.</span><span class="n">foldername</span><span class="p">(</span><span class="n">name</span><span class="p">))[</span><span class="mi">2</span><span class="p">])::</span><span class="n">uuid</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span><span class="p">)</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">  </span><span class="p">);</span>
+</code></pre></div>
+<p>Storage RLS now consistently allows anon <code>SELECT</code> for shared paths. The <code>SECURITY DEFINER</code> sidestep is a well-known Postgres pattern for cross-table RLS but invisible to a first-time Supabase adopter; the failure mode (<code>Object not found</code> instead of "permission denied" or "RLS rejected") provides no diagnostic breadcrumb.</p>
 <h2 id="migrating-from-localstorage-demoapp-pattern-real-backend">Migrating from localStorage (DemoApp pattern → real backend)<a class="headerlink" href="#migrating-from-localstorage-demoapp-pattern-real-backend" title="Permanent link">&para;</a></h2>
 <p>If you start with DemoApp's localStorage pattern and later swap to Supabase or similar:</p>
 <ol>

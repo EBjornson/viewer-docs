@@ -682,6 +682,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#marker-ownership-viewer-vs-customapp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marker ownership: Viewer vs CustomApp
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#spaces-_rm-_dw" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1268,6 +1279,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#marker-ownership-viewer-vs-customapp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Marker ownership: Viewer vs CustomApp
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#spaces-_rm-_dw" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1650,6 +1672,23 @@
 <li><strong>Visible vs. helper-only marker subtrees.</strong> Space and Light markers wrap <em>authoring helpers</em> (boxes, cones, spheres) that exist only so the SketchUp author can locate the marker; their meshes are hidden at load via <code>hideMarkerSubtree</code> and tagged <code>userData.isHiddenMarker = true</code> so <code>useSceneVisibility</code> skips them. Pivot and Slide markers wrap <em>visible product geometry</em> (the swinging door slab, the sliding sash) — their descendants stay rendered and animate as a rigid unit.</li>
 <li><strong>Captured vs. session-only.</strong> Of the four families, only <strong>Spaces</strong> and <strong>Lights</strong> appear in capture payloads (indirectly — see each family's section). <strong>Pivots</strong> and <strong>Slides</strong> are session-only: clicking opens or closes them, page reload returns to closed, no payload field carries their state.</li>
 </ul>
+<hr />
+<h2 id="marker-ownership-viewer-vs-customapp">Marker ownership: Viewer vs CustomApp<a class="headerlink" href="#marker-ownership-viewer-vs-customapp" title="Permanent link">&para;</a></h2>
+<p>The marker conventions documented in this file — Spaces, Doorways, Entries, light markers, pivot/slide markers, and the per-mesh property prefixes (<code>Glass_*</code>, <code>Water_*</code>, <code>Fixture_*</code>, <code>Emissive_*</code>) — are <strong>the Viewer's slice</strong>: every one drives the Viewer's own runtime behavior (rendering, navigation, lighting, click-to-toggle interactions, shadow/visibility decisions). The Viewer parses these and only these.</p>
+<p><strong>Anything else in the scene-graph passes through untouched.</strong> Author-defined containers, custom naming conventions, arbitrary <code>userData</code> fields — none of it is read by the Viewer, none of it conflicts with the Viewer's parsing, and none of it requires a Viewer-side feature to be useful. CustomApps own this territory: they define their own SketchUp authoring rules for App-specific concerns and parse them on the loaded model directly.</p>
+<p>This split has practical consequences worth knowing up front:</p>
+<ul>
+<li>
+<p><strong>CustomApps don't need Viewer changes to add new markers.</strong> Want a <code>BOM</code> container that groups all bill-of-materials components for client-side extraction? A <code>THERMAL_*</code> family for energy-takeoff? Per-mesh metadata for asset tagging? All entirely App-side. Author the SketchUp convention, parse it in your CustomApp, done. The Viewer doesn't need to know.</p>
+</li>
+<li>
+<p><strong>CustomApps access the loaded scene by parsing the same <code>.glb</code> themselves.</strong> The Viewer doesn't currently expose a handle to its parsed <code>Object3D</code> tree; CustomApps load the user's uploaded <code>.glb</code> blob into their own <code>GLTFLoader</code> (or via <code>three-stdlib</code>'s loader), walk the tree to extract whatever App-specific markers they care about, and pass the same blob URL to the Viewer for rendering. Two parses of the same file (one for App-side marker extraction, one for the Viewer's rendering) costs a few milliseconds at load time — cheap compared to the architectural simplicity.</p>
+</li>
+<li>
+<p><strong>The Viewer's marker surface stays small and stable.</strong> Additions to the conventions in this doc require Viewer code changes, are subject to the same backward-compat care as the rest of the contract, and stay focused on rendering/navigation needs. If a new marker idea doesn't fit that scope, it belongs in the CustomApp's authoring conventions, not here.</p>
+</li>
+</ul>
+<p>The boundary keeps the Viewer's authoring complexity bounded while opening unbounded space for App-specific marker conventions per CustomApp. <strong>Worked example</strong>: a real walkthrough/inspection CustomApp groups all BOM-relevant components inside a single SketchUp container named <code>BOM</code> at authoring time. The CustomApp loads the uploaded <code>.glb</code> into its own loader, walks the tree, and extracts the <code>BOM</code> container's descendants — entirely client-side, with no Viewer-side parser, contract field, or callback involved. Future CustomApps adopt the same shape: define a marker convention, parse it directly.</p>
 <hr />
 <h2 id="spaces-_rm-_dw">Spaces — <code>_RM</code> / <code>_DW</code><a class="headerlink" href="#spaces-_rm-_dw" title="Permanent link">&para;</a></h2>
 <p>Author rooms (<code>_RM</code>) and connections (<code>_DW</code>) — the runtime turns these into a navigation graph used by camera routing, the Rooms panel, the floor-tile-click in overhead view, and the Floor Nav debug tools.</p>

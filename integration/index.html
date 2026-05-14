@@ -2042,6 +2042,7 @@
 </table>
 <p>The <strong>section-only walkthrough</strong> pattern is fully supported even though the contract talks about sections "containing options" — <code>sectionDemoConfig.js</code> in the kit shows entries with <code>options: []</code> (sections 2 and 5), and the kit DemoApp's right column gracefully handles them as "view-like stored moments." Strip the option-related machinery (cross-section conflicts, <code>usePModeResolver</code> if you also skip pModes) and you have a clean walkthrough App.</p>
 <p>The patterns above are descriptive, not prescriptive — your CustomApp can mix them or invent new ones. The kit is a menu, not a contract.</p>
+<p>CustomApps may also define their own SketchUp marker conventions for App-specific features (BOM extraction, asset metadata, anything outside the Viewer's rendering / navigation concerns) and parse them on the loaded model directly — see <a href="../marker_pipeline/#marker-ownership-viewer-vs-customapp">Marker ownership: Viewer vs CustomApp</a> for the boundary and the canonical extraction pattern.</p>
 <hr />
 <h2 id="delivery">Delivery<a class="headerlink" href="#delivery" title="Permanent link">&para;</a></h2>
 <p>The Viewer ships as a self-contained ESM bundle on jsDelivr. Loading the bundle auto-registers a <code>&lt;viewer-element&gt;</code> custom element that any host framework can mount.</p>
