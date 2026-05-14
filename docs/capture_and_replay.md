@@ -59,7 +59,7 @@ A section capture is a stored package for one section:
 - camera pose (`position`, `target`) — FOV is not stored; the Viewer derives it from `cameraMode` at replay
 - camera mode (`'exterior'` | `'interior'` | `'overhead'`)
 - **embedded presentation snapshot** — full `ViewerPresentationInput` (HDR, terrain, lighting, exposure, solar, light source mode, ui flags) inlined into the payload
-- visibility assignments (`hiddenGeometryIds`, `isolatedGeometryIds`)
+- visibility assignments (`sectionHiddenGeometryIds`, `isolatedGeometryIds`)
 
 ### Capturing
 
@@ -89,9 +89,11 @@ Identity-free payload shape:
     // ...full ViewerPresentationInput snapshot
     ui: { showSolarSitePanel: true, showNorthArrow: true, showSpaceMenu: true },
   },
-  visibilityAssignments: { hiddenGeometryIds: ['roof-1', 'roof-2'] },
+  visibilityAssignments: { sectionHiddenGeometryIds: ['roof-1', 'roof-2'] },
 }
 ```
+
+The `sectionHiddenGeometryIds` field name matches the input field the App pushes back on replay (`viewerInput.scene.visibilityAssignments.sectionHiddenGeometryIds`) — capture-pass-through (`{ ...capture.visibilityAssignments }`) works without translation. `hiddenGeometryIds` on the input side is reserved for the option-visibility pool and is not used by section captures.
 
 ### App-side metadata (optional)
 

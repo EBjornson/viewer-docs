@@ -13,11 +13,15 @@ import { usePModeResolver } from './usePModeResolver'
 
 // ─── Persistence ────────────────────────────────────────────────────────────
 
-// Storage key bumped v2 → v3 for the v1.8 contract. v1.7 captures (under
-// `demoapp_v2_*`) are orphaned cleanly — the App ignores them, but they
-// remain in localStorage until the user manually clears via DevTools or
-// switches browsers. No automatic migration path.
-const STORAGE_KEY = 'demoapp_v3'
+// Storage key bumped v3 → v4 for the section-capture / viewer-input field-name
+// symmetry fix (bundle v1.3.0): section captures now emit hides under
+// `visibilityAssignments.sectionHiddenGeometryIds` (matching the input field),
+// not `hiddenGeometryIds`. v3 captures (under `demoapp_v3_*`) are orphaned
+// cleanly — the App ignores them but they remain in localStorage until the
+// user manually clears via DevTools or switches browsers. No automatic
+// migration path. Same pattern as the earlier v2 → v3 bump for the v1.8
+// contract.
+const STORAGE_KEY = 'demoapp_v4'
 
 function loadCaptures(modelId) {
   if (!modelId) return null
@@ -495,7 +499,6 @@ export function DemoApp(props = {}) {
 
   const visibilityAssignments = useMemo(() => {
     const hasCapture = !!sectionCapture
-    const captureHidden = sectionCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
     // Uncaptured-section navigation: omit the whole assignments object so
     // preserve-on-undefined kicks in (per the contract — camera, presentation,
     // and sectionHiddenGeometryIds all preserve to make uncaptured nav a scene
@@ -507,7 +510,9 @@ export function DemoApp(props = {}) {
     return {
       hiddenGeometryIds: inactiveOptionGeometryIds,
       shownGeometryIds: activeOptionGeometryIds,
-      sectionHiddenGeometryIds: hasCapture ? captureHidden : undefined,
+      sectionHiddenGeometryIds: hasCapture
+        ? (sectionCapture.visibilityAssignments?.sectionHiddenGeometryIds ?? [])
+        : undefined,
     }
   }, [sectionCapture, inactiveOptionGeometryIds, activeOptionGeometryIds])
 
@@ -516,7 +521,7 @@ export function DemoApp(props = {}) {
       .map((section) => {
         const capture = sectionCaptures[section.id]
         if (!capture?.pose) return null
-        const captureHidden = capture.visibilityAssignments?.hiddenGeometryIds ?? []
+        const captureHidden = capture.visibilityAssignments?.sectionHiddenGeometryIds ?? []
         const hasVisibility = captureHidden.length > 0 || inactiveOptionGeometryIds.length > 0
         const mergedVisibility = hasVisibility ? {
           hiddenGeometryIds: inactiveOptionGeometryIds,
@@ -750,7 +755,7 @@ export function DemoApp(props = {}) {
             style={modelSelectStyle}
             value={selectedModelId ?? ''}
             onChange={(e) => { if (e.target.value) switchToManifestModel(e.target.value) }}
-            title="Manifest models from public/models. Each model has its own localStorage key (demoapp_v3_${modelId}) so captures persist per model. Switching loads that model's saved snapshot."
+            title="Manifest models from public/models. Each model has its own localStorage key (demoapp_v4_${modelId}) so captures persist per model. Switching loads that model's saved snapshot."
           >
             {!selectedModelId && <option value="">— uploaded file —</option>}
             {modelManifest.map((model) => (

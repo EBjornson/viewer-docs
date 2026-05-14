@@ -190,6 +190,13 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * attach its own `presentationMode` tag as App metadata for re-skin support;
  * that tag is App-side and not part of this contract.
  *
+ * The hides captured by Section Capture are emitted under
+ * `visibilityAssignments.sectionHiddenGeometryIds` — the same field name the
+ * App pushes back via `viewerInput.scene.visibilityAssignments` on replay.
+ * Capture-pass-through ({ ...capture.visibilityAssignments }) Just Works
+ * without translation. `hiddenGeometryIds` on the input side is reserved for
+ * the option-visibility pool, not section-level hides.
+ *
  * @typedef {object} ViewerSectionCapturePayload
  * @property {ViewerCameraPose} pose
  * @property {ViewerCameraMode} cameraMode

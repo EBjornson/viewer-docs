@@ -238,7 +238,7 @@ const appState = {
       pose: { position: [0, 18, 0], target: [0, 0, 0] },
       cameraMode: 'overhead',
       presentation: { /* full embedded snapshot */ },
-      visibilityAssignments: { hiddenGeometryIds: ['roof-geom-1'] },
+      visibilityAssignments: { sectionHiddenGeometryIds: ['roof-geom-1'] },
       presentationMode: 'day',  // optional App-side tag for re-skin
     },
   },
@@ -302,7 +302,7 @@ scene: {
   visibilityAssignments: {
     hiddenGeometryIds: inactiveOptionGeometryIds,   // per-section: union of inactive options' geometry IDs
     shownGeometryIds: activeOptionGeometryIds,      // currently active option's geometry IDs
-    sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
+    sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.sectionHiddenGeometryIds,
     isolatedGeometryIds: null,
   },
   defaultMaterialAssignments: appState.modelDefaultCapture?.defaultMaterialAssignments,
@@ -545,7 +545,7 @@ scene: {
   visibilityAssignments: {
     hiddenGeometryIds: inactiveOptionGeometryIds,
     shownGeometryIds: activeOptionGeometryIds,
-    sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.hiddenGeometryIds,
+    sectionHiddenGeometryIds: sectionCapture?.visibilityAssignments?.sectionHiddenGeometryIds,
   },
   materialAssignments: activeOptionCapture?.materialAssignments ?? [],
   defaultMaterialAssignments: appState.modelDefaultCapture?.defaultMaterialAssignments,
@@ -668,9 +668,9 @@ const items = sections
     camera: { pose: sectionCaptures[s.id].pose, cameraMode: sectionCaptures[s.id].cameraMode },
     scene: {
       visibilityAssignments: {
-        hiddenGeometryIds: sectionCaptures[s.id].visibilityAssignments?.hiddenGeometryIds ?? [],
+        hiddenGeometryIds: inactiveOptionGeometryIdsForSection(s.id),
         shownGeometryIds: activeOptionGeometryIdsForSection(s.id),
-        sectionHiddenGeometryIds: [],
+        sectionHiddenGeometryIds: sectionCaptures[s.id].visibilityAssignments?.sectionHiddenGeometryIds ?? [],
       },
     },
     presentation: presentationModeCaptures?.[sectionCaptures[s.id].presentationMode]

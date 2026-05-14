@@ -171,15 +171,18 @@ Two flat lists; the Viewer resolves `shownGeometryIds` wins over `hiddenGeometry
 ```js
 const visibilityAssignments = useMemo(() => {
   const hasCapture = !!sectionCapture
-  const captureHidden = sectionCapture?.visibilityAssignments?.hiddenGeometryIds ?? []
   if (!hasCapture && !inactiveOptionGeometryIds.length) return undefined  // uncaptured-section nav: preserve-on-undefined
   return {
     hiddenGeometryIds: inactiveOptionGeometryIds,    // per-section union of inactive options' geometry
     shownGeometryIds: activeOptionGeometryIds,        // active option's geometry per section
-    sectionHiddenGeometryIds: hasCapture ? captureHidden : undefined,  // section-level hides (typically the roof)
+    sectionHiddenGeometryIds: hasCapture
+      ? (sectionCapture.visibilityAssignments?.sectionHiddenGeometryIds ?? [])
+      : undefined,                                    // section-level hides (typically the roof)
   }
 }, [sectionCapture, inactiveOptionGeometryIds, activeOptionGeometryIds])
 ```
+
+Pass-through, no translation: `onSectionCaptured` emits hides under `payload.visibilityAssignments.sectionHiddenGeometryIds` (matching the input field name), so DemoApp pulls the same key out of the stored capture for replay. Bundle versions prior to `v1.3.0` emitted hides under `hiddenGeometryIds`, which forced every host App to translate field names — that asymmetry is gone in v1.3.0+.
 
 Critical detail: when the section has a capture but no hides, push `sectionHiddenGeometryIds: []` (not `undefined`) so the prior section's hides clear. Returning `undefined` for the whole assignments object only when truly nothing to express AND no capture exists. See [Capture & Replay → Section captures](capture_and_replay.md#section-captures) for the preserve-on-undefined contract.
 

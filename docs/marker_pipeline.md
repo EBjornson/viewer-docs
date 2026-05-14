@@ -131,7 +131,7 @@ Spawn point and spot lights at marker world positions. Unique among the marker f
 ```
 _PL / _SL node ─► resolveLightMarkers ─► visibleLightMarkers ─► SceneLights ─► (no light-marker capture;
                   → point[]              filter against         renders          but visibility & lightSourceMode
-                  → spot[]               hiddenGeometryIds       point/spot       ARE captured — see below)
+                  → spot[]               visibility state        point/spot       ARE captured — see below)
                   + boundGeometryIds                            lights
 ```
 
