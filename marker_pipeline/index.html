@@ -1743,7 +1743,7 @@
 <p>Spawn point and spot lights at marker world positions. Unique among the marker families because the runtime output is <strong>gated by capture-driven visibility</strong>: a light bound to a fixture hides automatically when the fixture's geometry is hidden.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>_PL / _SL node ─► resolveLightMarkers ─► visibleLightMarkers ─► SceneLights ─► (no light-marker capture;
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                  → point[]              filter against         renders          but visibility &amp; lightSourceMode
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                  → spot[]               hiddenGeometryIds       point/spot       ARE captured — see below)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                  → spot[]               visibility state        point/spot       ARE captured — see below)
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                  + boundGeometryIds                            lights
 </code></pre></div>
 <h3 id="author-writes_1">Author writes<a class="headerlink" href="#author-writes_1" title="Permanent link">&para;</a></h3>
