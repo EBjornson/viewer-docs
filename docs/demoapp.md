@@ -205,6 +205,38 @@ onOptionCaptured: (payload) => {
 
 If your CustomApp has only one option per section (or no options), the conflict-detection machinery isn't needed — skip [`crossSectionConflicts.js`](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/crossSectionConflicts.js) and [`CaptureConflictBanners.jsx`](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/CaptureConflictBanners.jsx).
 
+### Capture confirmation feedback
+
+When admin clicks a Capture button in the Viewer's Authoring Panel, the Viewer fires the corresponding `onXCaptured` callback. The button's own visual state acknowledges the click, but a brief App-side flash over the viewer panel gives stronger "capture succeeded and the App stored it" feedback — useful when the admin is rapidly authoring multiple sections and wants confirmation each one landed. DemoApp implements this in ~10 lines:
+
+```jsx
+const [showCaptureFlash, setShowCaptureFlash] = useState(false)
+const captureFlashTimerRef = useRef(null)
+const triggerCaptureFlash = useCallback(() => {
+  if (captureFlashTimerRef.current) clearTimeout(captureFlashTimerRef.current)
+  setShowCaptureFlash(true)
+  captureFlashTimerRef.current = setTimeout(() => setShowCaptureFlash(false), 180)
+}, [])
+
+// inside viewerOutput, call from each capture callback that should pulse:
+onSectionCaptured: (payload) => { /* store… */; triggerCaptureFlash() }
+onOptionCaptured: (payload) => { /* store… */; triggerCaptureFlash() }
+onMaterialDefaultsCaptured: (payload) => { /* store… */; triggerCaptureFlash() }
+onPresentationModeCaptured: (snapshot) => { /* store… */; triggerCaptureFlash() }
+
+// in the JSX, render the overlay above the Viewer mount when active:
+{showCaptureFlash && (
+  <div style={{
+    position: 'absolute', inset: 0,
+    background: 'rgba(72,127,255,0.22)',
+    pointerEvents: 'none', zIndex: 10,
+  }} />
+)}
+<ViewerComponent input={viewerInput} output={viewerOutput} />  // sibling, inside a position:relative parent
+```
+
+The 180ms duration and blue tint are DemoApp's choice — adjust to taste. The pattern itself (boolean + 180ms timer + absolute-positioned overlay sibling to the Viewer mount, parent with `position: relative` so `inset: 0` works) is what's recommended; the visual styling is yours.
+
 ---
 
 ## Source
