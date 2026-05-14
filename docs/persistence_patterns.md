@@ -39,6 +39,39 @@ export async function fetchBlob(idOrUrl)     { /* returns Blob */ }
 
 Consumers (`<App>`, `<ProjectView>`, etc.) `await` these without caring whether the impl is IndexedDB, OPFS, Supabase, S3, or Firebase. The Viewer doesn't care either — it just receives a `modelUrl` (which can be a `blob:` URL from `URL.createObjectURL(fetchedBlob)` for local impls, or an HTTPS URL for server-side impls).
 
+### How the interface evolves in practice
+
+The minimum-viable shape above is enough to start. As the App matures toward production (server-side backend, multiple entity types, domain operations), the interface refines in predictable ways:
+
+- **Split `createProject` from `saveProject`** when create implies an initial blob upload that update doesn't (e.g. the model file is uploaded once at create and immutable thereafter). Keeps the orphan-cleanup logic — *"if the Postgres insert fails, remove the just-uploaded blob"* — isolated to one place. Update calls then never have to think about model lifecycle.
+- **Domain-scope blob uploads** instead of one generic `uploadBlob`. `uploadPhoto(projectId, blob, sectionId)` lets the impl construct paths internally (`<userId>/<projectId>/photos/<photoId>`); the caller never has to manage path scoping. Generic `uploadBlob` pushes that bookkeeping out to every caller.
+- **Domain-specific operations belong in the abstraction.** `setProjectShared(id, value)` is just as much a storage operation as `saveProject` even though it touches a single boolean flag. Same with any "toggle this thing on the server" — the abstraction grows with the App. Resist the urge to keep the interface "pure CRUD" — App-domain mutations belong here too.
+- **Migration no-op stubs**: when swapping implementations (e.g. IDB → Supabase signed URLs), interface methods that no longer apply stay in the export surface as no-ops rather than being removed. Consumers keep working unchanged. A `revokeProjectBlobUrls(modelUrl, photoUrls)` function that did real work in IDB becomes a no-op for Supabase (signed URLs expire on their own, no client tracking) — but the export stays so callers don't break.
+
+### Reducer over `useState` chains for App-side project state
+
+For non-trivial App state — project, sections, photos, captures, notes — a single pure reducer over the project shape ages much better than scattered `useState` hooks. Mutations are named (`ADD_SECTION`, `SET_SECTION_CAPTURE`, `RENAME_SECTION`, etc.), the reducer is testable in isolation, and the debounced save effect is one watcher on the reduced state instead of N watchers on N hooks:
+
+```jsx
+const [project, dispatch] = useReducer(projectReducer, null)
+
+useEffect(() => {
+  if (!project || project === lastSavedRef.current) return
+  const handle = setTimeout(() => {
+    saveProject(project).then((saved) => { lastSavedRef.current = saved })
+  }, SAVE_DEBOUNCE_MS)
+  return () => clearTimeout(handle)
+}, [project])
+
+// every mutation is a dispatch:
+dispatch({ type: 'ADD_SECTION' })
+dispatch({ type: 'SET_SECTION_CAPTURE', sectionId, capture: payload })
+```
+
+The `lastSavedRef` reference-identity trick prevents the load-bumps-`updatedAt` bug — when `getProject` returns and you `dispatch({ type: 'LOAD', project })`, mark the loaded reference as already-saved so the debounced effect skips it.
+
+DemoApp's reference example currently uses scattered `useState` chains rather than a reducer (a function of its smaller state surface and historical evolution). For real CustomApps with sections + photos + notes + nested mutations, the reducer is the cleaner shape.
+
 ### Previewing generated blobs in-app — React 19 StrictMode trap
 
 If your CustomApp lets users preview a generated blob (a PDF report, screenshot bundle, image export) before saving, watch out for a blob-URL lifecycle bug that's specific to **React 19 StrictMode** (the default in fresh `create vite` scaffolds). The natural React pattern — `useMemo(() => URL.createObjectURL(blob), [blob])` paired with a `useEffect` cleanup that revokes — quietly fails in dev mode: StrictMode double-invocation runs the cleanup once *between* the first setup and the second, silently revoking the URL while the iframe is still rendering from it. The iframe survives (it already has the blob bytes in memory), so the preview *looks* fine. But a subsequent `<a href={url} download>.click()` on the same URL navigates to the now-revoked URL, and Chrome surfaces this as **"Check Internet Connection"** with nothing useful in the console. The first encounter typically costs 30–60 minutes of chasing wrong leads (cache, CORS, the bundle's network requests).
@@ -141,6 +174,51 @@ export async function uploadBlob(blob, name) {
 
 **S3 + your own API**: more flexible, more setup. Worth it only when you've outgrown the BaaS options.
 
+#### Always log Storage API errors visibly
+
+The Supabase JS client returns errors as values (`{ data, error }`) rather than throwing. The natural-looking pattern of returning `''` (or null) on error and letting downstream code handle "missing" produces *silent failures with misleading symptoms* — blank Viewer scenes (because `modelUrl` is empty), broken thumbnails, "Check Internet Connection" dialogs from `<a download>` clicks. None of which point at the actual cause (a Storage permission denial, a missing file, an RLS policy mismatch). Log the error before falling back to empty:
+
+```js
+async function signed(path) {
+  if (!path) return ''
+  const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(path, TTL)
+  if (error) {
+    console.error('[App] createSignedUrl failed for', path, error)
+    return ''
+  }
+  return data?.signedUrl ?? ''
+}
+```
+
+Same principle applies to all Storage and Postgres `{ data, error }` calls. The `console.error` line is the difference between a 5-minute fix and a 60-minute hunt.
+
+#### Schema as versioned migration files
+
+For Supabase (and any SQL backend), ship the schema as a **series of versioned migration files** rather than one ever-evolving canonical `schema.sql`. Each file does one thing, is idempotent (`drop policy if exists`, `create function ... or replace`, `add column if not exists`), and ends with a verification query that confirms the migration landed:
+
+```sql
+-- supabase/schema_v0_4.sql — adds public-share flag + anon-read policies.
+-- Idempotent: safe to re-run. Additive on top of supabase/schema.sql.
+
+alter table public.projects
+  add column if not exists is_public_shared boolean not null default false;
+
+drop policy if exists "projects_select_shared" on public.projects;
+create policy "projects_select_shared" on public.projects
+  for select using (is_public_shared = true);
+
+-- Verification — a single row with the flag confirming everything landed:
+select
+  exists(select 1 from information_schema.columns
+         where table_schema='public' and table_name='projects'
+           and column_name='is_public_shared') as column_added,
+  (select count(*) from pg_policies
+   where schemaname='public' and tablename='projects'
+     and policyname like '%_shared') as policies_added;
+```
+
+Two payoffs: (a) replaying a sequence on a fresh prod environment is mechanical (paste files in order); (b) the change history is preserved as a teaching artifact — a later `schema_v0_4_1.sql` that fixes a bug in the v0.4 schema (e.g. the cross-table `exists()` → `SECURITY DEFINER` swap from the section above) tells the full story to anyone reading later, without a `git blame` archaeology pass.
+
 ## Sharing patterns
 
 When end users (customers, reviewers) need read-only access to a CustomApp's project without an account:
@@ -152,6 +230,8 @@ When end users (customers, reviewers) need read-only access to a CustomApp's pro
 | **Tenant accounts** | End users sign in to your app | When you need per-user state for the end users themselves |
 
 The unguessable-UUID pattern is the sweet spot for a "send a link to a customer by email" workflow. Combine with Supabase row-level security (RLS): the public-share path uses an anon-role policy that allows `SELECT` only when the project's `is_public_shared = true` flag is set; the project owner toggles that flag when they generate the share link.
+
+For the routing side: a CustomApp with just two routes (the main app + the share viewer) doesn't need a router dependency. A single regex over `window.location.pathname` at module load (e.g. `/^\/share\/([0-9a-fA-F-]{16,})\/?$/` matched against the share UUID) is enough — render the share component for that path, the authenticated app otherwise. Trade-off: in-app navigation doesn't update the URL, no `popstate` handling. Add a router when in-app navigation gets richer.
 
 ### Storage RLS for shared private-bucket reads — `SECURITY DEFINER` pattern
 
@@ -210,6 +290,10 @@ If you start with DemoApp's localStorage pattern and later swap to Supabase or s
 1. **Wrap localStorage behind the storage interface above** on day one. Easy to do retroactively but easier upfront.
 2. **First-auth migration**: when a user first signs in, scan localStorage for any `demoapp_v3_*` keys (or whatever your prefix is), upload each to the backend, mark localStorage as migrated. After that, the backend is canonical and localStorage becomes a stale-cache fallback.
 3. **Don't try to support both stores indefinitely** — pick a canonical source and treat the other as cache.
+
+## Pre-deployment checklist
+
+Before serving real users, verify the items in [PRE_DEPLOYMENT_CHECKLIST.md](https://github.com/EBjornson/viewer-docs/blob/main/integration-kit/PRE_DEPLOYMENT_CHECKLIST.md) shipped in the integration kit. Generic Supabase + Vite + jsDelivr items are covered (custom SMTP, branded auth emails, prod auth URL config, full migration replay against the prod project, RLS audit, backup policy, Storage CORS, hosting + env vars + domain + SSL, share-link URL verification, Viewer bundle pinning decision, production build smoke test, error tracking, external-network test of share flow, privacy/ToS). **Your CustomApp will likely have additional pre-deployment items not in the template** — domain-specific flows to smoke test, integrations with third-party services, customer-data handling specific to your business — extend the template rather than treating it as exhaustive.
 
 ## Glossary
 
