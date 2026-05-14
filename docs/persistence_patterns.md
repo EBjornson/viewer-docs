@@ -39,6 +39,38 @@ export async function fetchBlob(idOrUrl)     { /* returns Blob */ }
 
 Consumers (`<App>`, `<ProjectView>`, etc.) `await` these without caring whether the impl is IndexedDB, OPFS, Supabase, S3, or Firebase. The Viewer doesn't care either — it just receives a `modelUrl` (which can be a `blob:` URL from `URL.createObjectURL(fetchedBlob)` for local impls, or an HTTPS URL for server-side impls).
 
+### Previewing generated blobs in-app — React 19 StrictMode trap
+
+If your CustomApp lets users preview a generated blob (a PDF report, screenshot bundle, image export) before saving, watch out for a blob-URL lifecycle bug that's specific to **React 19 StrictMode** (the default in fresh `create vite` scaffolds). The natural React pattern — `useMemo(() => URL.createObjectURL(blob), [blob])` paired with a `useEffect` cleanup that revokes — quietly fails in dev mode: StrictMode double-invocation runs the cleanup once *between* the first setup and the second, silently revoking the URL while the iframe is still rendering from it. The iframe survives (it already has the blob bytes in memory), so the preview *looks* fine. But a subsequent `<a href={url} download>.click()` on the same URL navigates to the now-revoked URL, and Chrome surfaces this as **"Check Internet Connection"** with nothing useful in the console. The first encounter typically costs 30–60 minutes of chasing wrong leads (cache, CORS, the bundle's network requests).
+
+**Safe pattern** — two parts:
+
+1. **Create the iframe URL inside an effect, not a memo.** Store it via `useState`; the effect's cleanup then fires only on real unmount, not on StrictMode's dev-mode double-invoke.
+   ```jsx
+   const [previewUrl, setPreviewUrl] = useState(null)
+   useEffect(() => {
+     if (!blob) return
+     const url = URL.createObjectURL(blob)
+     setPreviewUrl(url)
+     return () => URL.revokeObjectURL(url)
+   }, [blob])
+   // <iframe src={previewUrl} />
+   ```
+
+2. **Mint a separate blob URL on each download click**, revoked after a short `setTimeout`. Isolates the download URL from the iframe URL's lifecycle entirely.
+   ```jsx
+   function handleDownload() {
+     const url = URL.createObjectURL(blob)
+     const a = document.createElement('a')
+     a.href = url
+     a.download = filename
+     a.click()
+     setTimeout(() => URL.revokeObjectURL(url), 1000)
+   }
+   ```
+
+Production builds are unaffected — StrictMode double-invocation is dev-only — so the bug only surfaces during local verification. Adopt the safe pattern from day one and the dev/prod parity issue never arises.
+
 ## Three viable backends
 
 ### 1. IndexedDB (recommended for local-first POCs)
@@ -120,6 +152,56 @@ When end users (customers, reviewers) need read-only access to a CustomApp's pro
 | **Tenant accounts** | End users sign in to your app | When you need per-user state for the end users themselves |
 
 The unguessable-UUID pattern is the sweet spot for a "send a link to a customer by email" workflow. Combine with Supabase row-level security (RLS): the public-share path uses an anon-role policy that allows `SELECT` only when the project's `is_public_shared = true` flag is set; the project owner toggles that flag when they generate the share link.
+
+### Storage RLS for shared private-bucket reads — `SECURITY DEFINER` pattern
+
+The above is straightforward when the share-flag check is on the **same** table the policy targets. It gets subtle when the flag lives in a **different** table than `storage.objects` — typical for blobs (model files, photos, generated reports) stored under a private bucket where the owning project's `is_public_shared` flag lives in a sibling Postgres table.
+
+The natural Postgres RLS for the storage bucket reads cleanly:
+
+```sql
+-- DON'T USE — silently fails for anon callers
+create policy "user_uploads_select_shared" on storage.objects
+  for select using (
+    bucket_id = 'user-uploads'
+    and exists (
+      select 1 from public.projects p
+      where p.id::text = (storage.foldername(name))[2]
+        and p.is_public_shared = true
+    )
+  );
+```
+
+**It looks right and silently doesn't work.** Supabase Storage's `createSignedUrl` endpoint returns `StorageApiError: Object not found` (HTTP 400) for shared paths — same error you'd get for a non-existent file or a true permission denial. Nothing distinguishes "object missing" from "RLS evaluated false" from "subquery couldn't resolve under the anon role." The same anon caller can `SELECT` the project row directly via a symmetrically-shaped `projects_select_shared` policy on `public.projects`, so you'd expect the `exists()` to evaluate consistently. It doesn't — appears to be an RLS-in-RLS evaluation quirk specific to how the Storage API path executes the policy under the anon role.
+
+**Safe pattern**: extract the cross-table lookup into a `SECURITY DEFINER` helper function and call it from the policy. The function bypasses RLS on the inner read but only returns a boolean, so nothing sensitive leaks (the "is this project shared" fact is implicit in the share link existing).
+
+```sql
+create or replace function public.is_project_publicly_shared(project_uuid uuid)
+  returns boolean
+  language sql
+  security definer
+  set search_path = public
+  stable
+as $$
+  select coalesce(
+    (select is_public_shared from public.projects where id = project_uuid),
+    false
+  );
+$$;
+revoke execute on function public.is_project_publicly_shared(uuid) from public;
+grant  execute on function public.is_project_publicly_shared(uuid) to anon, authenticated;
+
+create policy "user_uploads_select_shared" on storage.objects
+  for select using (
+    bucket_id = 'user-uploads'
+    and public.is_project_publicly_shared(
+      ((storage.foldername(name))[2])::uuid
+    )
+  );
+```
+
+Storage RLS now consistently allows anon `SELECT` for shared paths. The `SECURITY DEFINER` sidestep is a well-known Postgres pattern for cross-table RLS but invisible to a first-time Supabase adopter; the failure mode (`Object not found` instead of "permission denied" or "RLS rejected") provides no diagnostic breadcrumb.
 
 ## Migrating from localStorage (DemoApp pattern → real backend)
 

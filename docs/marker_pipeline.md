@@ -42,6 +42,24 @@ A few cross-cutting notes:
 
 ---
 
+## Marker ownership: Viewer vs CustomApp
+
+The marker conventions documented in this file — Spaces, Doorways, Entries, light markers, pivot/slide markers, and the per-mesh property prefixes (`Glass_*`, `Water_*`, `Fixture_*`, `Emissive_*`) — are **the Viewer's slice**: every one drives the Viewer's own runtime behavior (rendering, navigation, lighting, click-to-toggle interactions, shadow/visibility decisions). The Viewer parses these and only these.
+
+**Anything else in the scene-graph passes through untouched.** Author-defined containers, custom naming conventions, arbitrary `userData` fields — none of it is read by the Viewer, none of it conflicts with the Viewer's parsing, and none of it requires a Viewer-side feature to be useful. CustomApps own this territory: they define their own SketchUp authoring rules for App-specific concerns and parse them on the loaded model directly.
+
+This split has practical consequences worth knowing up front:
+
+- **CustomApps don't need Viewer changes to add new markers.** Want a `BOM` container that groups all bill-of-materials components for client-side extraction? A `THERMAL_*` family for energy-takeoff? Per-mesh metadata for asset tagging? All entirely App-side. Author the SketchUp convention, parse it in your CustomApp, done. The Viewer doesn't need to know.
+
+- **CustomApps access the loaded scene by parsing the same `.glb` themselves.** The Viewer doesn't currently expose a handle to its parsed `Object3D` tree; CustomApps load the user's uploaded `.glb` blob into their own `GLTFLoader` (or via `three-stdlib`'s loader), walk the tree to extract whatever App-specific markers they care about, and pass the same blob URL to the Viewer for rendering. Two parses of the same file (one for App-side marker extraction, one for the Viewer's rendering) costs a few milliseconds at load time — cheap compared to the architectural simplicity.
+
+- **The Viewer's marker surface stays small and stable.** Additions to the conventions in this doc require Viewer code changes, are subject to the same backward-compat care as the rest of the contract, and stay focused on rendering/navigation needs. If a new marker idea doesn't fit that scope, it belongs in the CustomApp's authoring conventions, not here.
+
+The boundary keeps the Viewer's authoring complexity bounded while opening unbounded space for App-specific marker conventions per CustomApp. **Worked example**: a real walkthrough/inspection CustomApp groups all BOM-relevant components inside a single SketchUp container named `BOM` at authoring time. The CustomApp loads the uploaded `.glb` into its own loader, walks the tree, and extracts the `BOM` container's descendants — entirely client-side, with no Viewer-side parser, contract field, or callback involved. Future CustomApps adopt the same shape: define a marker convention, parse it directly.
+
+---
+
 ## Spaces — `_RM` / `_DW`
 
 Author rooms (`_RM`) and connections (`_DW`) — the runtime turns these into a navigation graph used by camera routing, the Rooms panel, the floor-tile-click in overhead view, and the Floor Nav debug tools.

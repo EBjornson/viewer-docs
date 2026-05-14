@@ -28,6 +28,8 @@ The **section-only walkthrough** pattern is fully supported even though the cont
 
 The patterns above are descriptive, not prescriptive — your CustomApp can mix them or invent new ones. The kit is a menu, not a contract.
 
+CustomApps may also define their own SketchUp marker conventions for App-specific features (BOM extraction, asset metadata, anything outside the Viewer's rendering / navigation concerns) and parse them on the loaded model directly — see [Marker ownership: Viewer vs CustomApp](marker_pipeline.md#marker-ownership-viewer-vs-customapp) for the boundary and the canonical extraction pattern.
+
 ---
 
 ## Delivery
