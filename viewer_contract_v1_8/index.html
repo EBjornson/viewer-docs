@@ -2111,8 +2111,9 @@
 <a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">    </span><span class="nx">showSolarSitePanel?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
 <a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">    </span><span class="nx">showNorthArrow?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
 <a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">    </span><span class="nx">showSpaceMenu?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="p">}</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">    </span><span class="nx">showSlowOrbitPanel?</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="p">}</span>
 </code></pre></div>
 <h4 id="presentation-notes">Presentation Notes<a class="headerlink" href="#presentation-notes" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2125,8 +2126,9 @@
 <p>The <code>ui</code> field controls user-facing panel visibility:<br />
 - <code>ui.showSolarSitePanel</code> — Solar / Site panel<br />
 - <code>ui.showNorthArrow</code> — North Arrow overlay<br />
-- <code>ui.showSpaceMenu</code> — Rooms panel (scrollable list of navigable spaces)</p>
-<p>In Admin Mode, all panels are always visible regardless of these flags. A dashed orange outline indicates a panel currently hidden from users.</p>
+- <code>ui.showSpaceMenu</code> — Rooms panel (scrollable list of navigable spaces)<br />
+- <code>ui.showSlowOrbitPanel</code> — Slow-Orbit player (play/pause + speed slider). Only renders when the active camera mode is <code>exterior</code>.</p>
+<p>All four default to <code>false</code> when omitted. Admin mode mirrors user mode: a panel whose flag is off is hidden in both — admin previews the capture as the user will see it. The AuthoringPanel's pMode-tab "User Visibility" pills are how admin discovers and toggles each flag.</p>
 <h3 id="selectionkey">selectionKey<a class="headerlink" href="#selectionkey" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">selectionKey?</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
 </code></pre></div>
