@@ -208,6 +208,7 @@ type ViewerPresentationInput = {
     showSolarSitePanel?: boolean
     showNorthArrow?: boolean
     showSpaceMenu?: boolean
+    showSlowOrbitPanel?: boolean
   }
 }
 ```
@@ -225,8 +226,9 @@ The `ui` field controls user-facing panel visibility:
 - `ui.showSolarSitePanel` — Solar / Site panel
 - `ui.showNorthArrow` — North Arrow overlay
 - `ui.showSpaceMenu` — Rooms panel (scrollable list of navigable spaces)
+- `ui.showSlowOrbitPanel` — Slow-Orbit player (play/pause + speed slider). Only renders when the active camera mode is `exterior`.
 
-In Admin Mode, all panels are always visible regardless of these flags. A dashed orange outline indicates a panel currently hidden from users.
+All four default to `false` when omitted. Admin mode mirrors user mode: a panel whose flag is off is hidden in both — admin previews the capture as the user will see it. The AuthoringPanel's pMode-tab "User Visibility" pills are how admin discovers and toggles each flag.
 
 ### selectionKey
 

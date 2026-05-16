@@ -98,6 +98,7 @@ export const VIEWER_LIGHT_SOURCE_MODES = Object.freeze(['import', 'auto', 'none'
  * @property {boolean} [showSolarSitePanel]
  * @property {boolean} [showNorthArrow]
  * @property {boolean} [showSpaceMenu]
+ * @property {boolean} [showSlowOrbitPanel]
  */
 
 /**
